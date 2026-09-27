@@ -1,5 +1,7 @@
 # Disjoint-union-free uniform hypergraphs: the coefficient-one threshold for fixed rank at least three
 
+**Yilin Liu**
+
 *27 September 2026.*
 
 **Abstract.** Let $g_r(n)$ be the largest size of an $r$-uniform family with no two distinct partitions of the same $2r$-set into disjoint edges. We prove $g_3(n)\le\binom n2$ for every $n$ and, for each fixed $r\ge4$, prove $g_r(n)=\binom{n-1}{r-1}+\lfloor(n-1)/r\rfloor$ for all sufficiently large $n$. Hence the least forcing threshold is asymptotic to $\binom n{r-1}$ for every fixed $r\ge3$.
@@ -2218,6 +2220,10 @@ r=5:\quad |H|\le\tfrac12|\partial H|+O_C(\eta n^4).
 This proves (IV.10.1), and hence (IV.10.2) and its equality classification.
 
 Theorem II.1, Theorem III.1, and (IV.10.2) prove Theorem 1.
+
+## Acknowledgments and AI assistance
+
+OpenAI Codex assisted with proof development, reconstruction of preliminary lemmas, critical review, and manuscript preparation. The named author reviewed the final arguments and takes responsibility for the manuscript.
 
 ## References
 
