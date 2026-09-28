@@ -3,7 +3,7 @@
 | JSP contribution role | Contributor | Contribution |
 | --- | --- | --- |
 | Mathematical solution | Yilin Liu | Mathematical proof and manuscript for JSP-000523, recorded in [paper/proof.md](paper/proof.md). |
-| Lean formalization | Yilin Liu | The selected Lean results in [JSP523/](JSP523/) and their theorem entry points in [README.md](README.md). Work toward the full all-rank formalization continues. |
+| Lean formalization | Yilin Liu | The selected Lean results in [JSP523/](JSP523/) and their theorem entry points in [README.md](README.md). The formalization is partial and in progress; the manuscript's all-rank main theorem has not yet been assembled in Lean. |
 
 ## AI assistance
 
