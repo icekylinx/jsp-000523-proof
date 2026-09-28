@@ -10,7 +10,7 @@ import JSP523.Rank5.LocalEqualityConstruction
 /-!
 # JSP-000523: selected Lean formalization
 
-This is a partial formalization of `paper/proof.md`, maintained by Yilin Liu.
+This is a partial formalization of `paper/proof.pdf`, maintained by Yilin Liu.
 The imports cover Theorem I.1, Theorem II.1 and Corollary II.2,
 the local rank-four Theorem III.2 and related finite lemmas, and the
 local rank-at-least-five Theorem IV.2.1 and its equality cases.

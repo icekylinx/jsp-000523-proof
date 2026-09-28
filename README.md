@@ -1,6 +1,6 @@
 # JSP-000523 proof
 
-The mathematical proof of JSP-000523 is [paper/proof.md](paper/proof.md). The author and formalization contributor is Yilin Liu; the [contribution record](CONTRIBUTIONS.md) distinguishes the two roles.
+The mathematical proof of JSP-000523 is [paper/proof.pdf](paper/proof.pdf). The author and formalization contributor is Yilin Liu; the [contribution record](CONTRIBUTIONS.md) distinguishes the two roles.
 
 ## Lean formalization
 
