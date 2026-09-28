@@ -11,6 +11,9 @@ The mathematical proof of JSP-000523 is [paper/proof.pdf](paper/proof.pdf). The 
 | Theorem I.1, coarse bound in every rank | `JSP523.Coarse.coarse_bound_all_rank` | Finite bound for `r ≥ 3`. |
 | Theorem II.1 and Corollary II.2 | `JSP523.Rank3.rank_three_part_ii_theorem`, `JSP523.Rank3.corollary_II_2_asymptotic` | Rank-three support bound and extremal asymptotic. |
 | Theorem III.2 | `JSP523.Rank4.rank_four_near_star_theorem_III2` | Rank-four local bound and forward equality classification under the stated near-star condition. |
+| Lemma IV.1.1, intersecting covers | `JSP523.intersecting_vertex_cover`, `JSP523.intersecting_pair_cover`, `JSP523.intersecting_one_pair_cover_of_two_centers`, and the two pair-degree bounds in `JSP523.Counting.IntersectingCovers` | Finite vertex-star and pair-star coverings; the pair-codegree cases used in (IV.1.3). |
+| Common cells and (IV.1.1)–(IV.1.3) | `JSP523.commonCell_intersecting`, `JSP523.commonCell_fiber_le_parent_codegree`, `JSP523.commonCell_card_le_parent_vertex_codegree`, `JSP523.commonCell_card_le_parent_pair_codegree`, `JSP523.commonCell_card_le_parent_pair_codegree_of_two_centers` | Crossed-completion obstruction and explicit parent-codegree covering bounds. |
+| Lemma IV.1.2, distance packing | `JSP523.distance_packing_at_most_one`, `JSP523.distance_packing_choose_bound` | Finite distance-packing count for all `t,d`. |
 | Theorem IV.2.1 and its equality cases | `JSP523.quantitative_near_star_exact`, `JSP523.quantitative_local_equality_classification`; converse constructions in `JSP523.Rank5.LocalEqualityConstruction` | Fixed-rank local bound and equality classification for `r ≥ 5` under explicit density and size conditions. |
 | Rank-four graph and colored-slot lemmas | `JSP523.Rank4.graphDeficit_marked`, `JSP523.Rank4.colored_family_payment` | Finite components of the simplified rank-four deficit argument. |
 

@@ -7,8 +7,7 @@ import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
 /-!
 # Distance packing for uniform finite families
 
-This is Lemma IV.1.2 of
-`jsp-000523-proof/paper/proof.md`.
+This is Lemma IV.1.2 of `paper/proof.pdf`, §IV.1.
 The proof counts small subsets inside each member.  Distinct members
 cannot contain the same small subset under the stated distance condition.
 -/
