@@ -49,7 +49,7 @@ theorem large_fibers_union_overlap_bound
       (X.card * C) hInner
     unfold orderedOverlap
     simpa [nsmul_eq_mul, mul_assoc, C] using hSum
-  have hBudget := sum_card_le_union_add_orderedOverlap X A
+  have hBudget := sum_card_le_union_add_ordered_overlap X A
   omega
 
 /-- If the displayed numerical gap holds at size `a`, no matching of

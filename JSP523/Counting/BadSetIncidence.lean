@@ -23,7 +23,7 @@ def setMultiplicity (M : Family α) (P : Edge α) : ℕ :=
 
 /-- Exact incidence count between a `t`-uniform family `M` and all its
 `k`-subsets, with the ambient ground set explicit. -/
-theorem sum_setMultiplicity_eq
+theorem sum_set_multiplicity_eq
     {M : Family α} {W : Edge α} {t k : ℕ}
     (hU : Uniform t M) (hW : ∀ S ∈ M, S ⊆ W) :
     (∑ P ∈ W.powersetCard k, setMultiplicity M P) =
@@ -75,7 +75,7 @@ theorem bad_set_incidence_bound
   have hUpper : (∑ P ∈ Bad, 2 * setMultiplicity M P) ≤
       ∑ P ∈ W.powersetCard k, 2 * setMultiplicity M P :=
     Finset.sum_le_sum_of_subset hBad
-  have hIdentity := sum_setMultiplicity_eq hU hW (k := k)
+  have hIdentity := sum_set_multiplicity_eq hU hW (k := k)
   calc
     Λ * Bad.card ≤ ∑ P ∈ Bad, 2 * setMultiplicity M P := hLower
     _ ≤ ∑ P ∈ W.powersetCard k, 2 * setMultiplicity M P := hUpper
@@ -84,13 +84,13 @@ theorem bad_set_incidence_bound
       ac_rfl
 
 /-- The missing star facets are uniform and lie in the outside ground set. -/
-theorem missingStarFacets_uniform
+theorem missing_star_facets_uniform
     (H : Family α) (W : Edge α) (v : α) (r : ℕ) :
     Uniform (r - 1) (missingStarFacets H W v r) := by
   intro S hS
   exact (Finset.mem_powersetCard.mp (Finset.mem_filter.mp hS).1).2
 
-theorem missingStarFacets_subset_ground
+theorem missing_star_facets_subset_ground
     (H : Family α) (W : Edge α) (v : α) (r : ℕ) :
     ∀ S ∈ missingStarFacets H W v r, S ⊆ W := by
   intro S hS
@@ -105,8 +105,8 @@ theorem missing_star_bad_set_bound
     Λ * Bad.card ≤
       2 * (r - 1).choose k * (missingStarFacets H W v r).card := by
   exact bad_set_incidence_bound
-    (missingStarFacets_uniform H W v r)
-    (missingStarFacets_subset_ground H W v r)
+    (missing_star_facets_uniform H W v r)
+    (missing_star_facets_subset_ground H W v r)
     hBad hThreshold
 
 /-- The actual bad `k`-sets of §IV.2, with the integer-safe convention
@@ -117,7 +117,7 @@ def badMissingSets (H : Family α) (W : Edge α) (v : α)
     Λ ≤ 2 * setMultiplicity (missingStarFacets H W v r) P
 
 /-- Equation (IV.2.3) for the manuscript's actual bad-set family. -/
-theorem badMissingSets_card_bound
+theorem bad_missing_sets_card_bound
     (H : Family α) (W : Edge α) (v : α) (r k Λ : ℕ) :
     Λ * (badMissingSets H W v r k Λ).card ≤
       2 * (r - 1).choose k * (missingStarFacets H W v r).card := by
@@ -175,7 +175,7 @@ def badSingletonVertices (H : Family α) (W : Edge α) (v : α)
 /-- Exact finite singleton consequence of (IV.2.3), underlying (IV.2.4).
 The manuscript's asymptotic form follows by estimating the binomial
 threshold for fixed rank and large `|W|`. -/
-theorem badSingletonVertices_card_bound
+theorem bad_singleton_vertices_card_bound
     (H : Family α) (W : Edge α) (v : α) (r : ℕ) :
     let Λ := (W.card - r - 1).choose (r - 2)
     Λ * (badSingletonVertices H W v r).card ≤
@@ -192,7 +192,7 @@ theorem badSingletonVertices_card_bound
     exact Finset.singleton_injective hEq
   have hDle : D.card ≤ Bad.card :=
     Finset.card_le_card_of_injOn (fun x : α => ({x} : Edge α)) hMap hInj
-  have hBad := badMissingSets_card_bound H W v r 1 Λ
+  have hBad := bad_missing_sets_card_bound H W v r 1 Λ
   rw [Nat.choose_one_right] at hBad
   change Λ * D.card ≤ 2 * (r - 1) *
     (missingStarFacets H W v r).card

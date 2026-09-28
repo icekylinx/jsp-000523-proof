@@ -14,9 +14,9 @@ namespace JSP523.Rank3
 variable {α : Type*} [DecidableEq α]
 
 /-- The finite upper half of Corollary II.2 for the extremal function. -/
-theorem rank_three_maxAvoidingCard_upper (V : Edge α) :
+theorem rank_three_max_avoiding_card_upper (V : Edge α) :
     maxAvoidingCard V 3 ≤ V.card.choose 2 := by
-  obtain ⟨F, hSupport, hAdm, hCard⟩ := maxAvoidingCard_attained V 3
+  obtain ⟨F, hSupport, hAdm, hCard⟩ := max_avoiding_card_attained V 3
   have hUniform : Uniform 3 F := by
     intro E hE
     exact (Finset.mem_powersetCard.mp (hSupport hE)).2
@@ -28,10 +28,10 @@ theorem rank_three_maxAvoidingCard_upper (V : Edge α) :
 
 /-- The finite two-sided inequality of Corollary II.2, for every ambient
 vertex set with at least three vertices. -/
-theorem corollary_II_2_finite (V : Edge α) (hV : 3 ≤ V.card) :
+theorem corollary_ii_2_finite (V : Edge α) (hV : 3 ≤ V.card) :
     (V.card - 1).choose 2 ≤ maxAvoidingCard V 3 ∧
       maxAvoidingCard V 3 ≤ V.card.choose 2 := by
   obtain ⟨c, hc⟩ : V.Nonempty := Finset.card_pos.mp (by omega)
-  exact ⟨corollary_II_2_lower V c hc, rank_three_maxAvoidingCard_upper V⟩
+  exact ⟨corollary_ii_2_lower V c hc, rank_three_max_avoiding_card_upper V⟩
 
 end JSP523.Rank3

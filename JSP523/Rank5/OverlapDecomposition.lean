@@ -18,23 +18,23 @@ section OverlapDecomposition
 
 variable {α : Type*} [DecidableEq α]
 
-theorem sharedFourShadow_subset_fourShadow (all : Family α) :
+theorem shared_four_shadow_subset_four_shadow (all : Family α) :
     sharedFourShadow all ⊆ fourShadow all := by
   intro A hA
   exact (Finset.mem_filter.mp hA).1
 
 /-- The overlap excess is supported exactly on faces with at least two
     parent edges. -/
-theorem facetOverlapExcess_eq_shared_sum (all : Family α) :
+theorem facet_overlap_excess_eq_shared_sum (all : Family α) :
     facetOverlapExcess all =
       (sharedFourShadow all).sum
         (fun A => (facetParents all A).card - 1) := by
   unfold facetOverlapExcess
   symm
-  apply Finset.sum_subset (sharedFourShadow_subset_fourShadow all)
+  apply Finset.sum_subset (shared_four_shadow_subset_four_shadow all)
   intro A hA hnot
   have hpos : 0 < (facetParents all A).card :=
-    Finset.card_pos.mpr (facetParents_nonempty_of_shadow all A hA)
+    Finset.card_pos.mpr (facet_parents_nonempty_of_shadow all A hA)
   have hlt : ¬ 2 ≤ (facetParents all A).card := by
     intro htwo
     exact hnot (Finset.mem_filter.mpr ⟨hA, htwo⟩)
@@ -48,7 +48,7 @@ def higherFacetOverlapExcess (all : Family α) : ℕ :=
 
 /-- Each shared face contributes one overlap, and any further parents
     contribute to the higher overlap excess. -/
-theorem facetOverlapExcess_eq_shared_card_add_higher
+theorem facet_overlap_excess_eq_shared_card_add_higher
     (all : Family α) :
     facetOverlapExcess all =
       (sharedFourShadow all).card + higherFacetOverlapExcess all := by
@@ -56,7 +56,7 @@ theorem facetOverlapExcess_eq_shared_card_add_higher
     facetOverlapExcess all =
         (sharedFourShadow all).sum
           (fun A => (facetParents all A).card - 1) :=
-      facetOverlapExcess_eq_shared_sum all
+      facet_overlap_excess_eq_shared_sum all
     _ = (sharedFourShadow all).sum
           (fun A => 1 + ((facetParents all A).card - 2)) := by
       apply Finset.sum_congr rfl
@@ -68,9 +68,9 @@ theorem facetOverlapExcess_eq_shared_card_add_higher
           higherFacetOverlapExcess all := by
       simp [higherFacetOverlapExcess, Finset.sum_add_distrib]
 
-theorem sharedFourShadow_card_le_overlapExcess (all : Family α) :
+theorem shared_four_shadow_card_le_overlap_excess (all : Family α) :
     (sharedFourShadow all).card ≤ facetOverlapExcess all := by
-  have hledger := facetOverlapExcess_eq_shared_card_add_higher all
+  have hledger := facet_overlap_excess_eq_shared_card_add_higher all
   omega
 
 /-- The exact parent multiplicity spectrum: private faces count once,
@@ -82,8 +82,8 @@ theorem four_shadow_parent_spectrum
         2 * (sharedFourShadow all).card +
           higherFacetOverlapExcess all := by
   have hledger := four_shadow_overlap_ledger all hUniform
-  have hpartition := fourShadow_private_shared_card_partition all
-  have hexcess := facetOverlapExcess_eq_shared_card_add_higher all
+  have hpartition := four_shadow_private_shared_card_partition all
+  have hexcess := facet_overlap_excess_eq_shared_card_add_higher all
   omega
 
 /-- Real signed surplus with the actual multiple-parent shadow retained

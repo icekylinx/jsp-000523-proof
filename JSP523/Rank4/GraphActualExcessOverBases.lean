@@ -39,7 +39,7 @@ theorem actual_selected_excess_over_bases_eq_on_label_tails
   have hPcard : P.card = 2 :=
     (Finset.mem_powersetCard.mp (Finset.mem_filter.mp hUsed).1).2
   let ab := pairRootRep P hPcard
-  have hSpec := pairRootRep_spec P hPcard
+  have hSpec := pair_root_rep_spec P hPcard
   have haP : ab.1 ∈ P := by rw [hSpec.2]; simp [ab]
   have hbP : ab.2 ∈ P := by rw [hSpec.2]; simp [ab]
   have hPsub : P ⊆ D.ground :=

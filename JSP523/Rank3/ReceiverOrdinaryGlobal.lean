@@ -31,13 +31,13 @@ theorem ordinary_double_pair_large_reciprocal_le_two
       rcases Finset.mem_insert.mp hyMem with hyx | hyu'
       · exact hxy hyx.symm
       · exact hyu (Finset.mem_singleton.mp hyu')
-    have hmap := reciprocalCellMap_eq_pair_symmDiff H V
+    have hmap := reciprocal_cell_map_eq_pair_symm_diff H V
       ({z, v} : Edge α) hcard hp hr hne
     have hmap' : reciprocalCellMap H V ({z, v} : Edge α) =
         ({y, u} : Edge α) := by
       rw [hmap]
       simpa only [Finset.pair_comm] using
-        (pair_symmDiff_shared_right hyu (Ne.symm hxy) (Ne.symm hxu))
+        (pair_symm_diff_shared_right hyu (Ne.symm hxy) (Ne.symm hxu))
     have hlarge' : 3 ≤ (commonLink H V ({y, u} : Edge α)).card := by
       rw [← hmap']
       exact hlarge
@@ -49,13 +49,13 @@ theorem ordinary_double_pair_large_reciprocal_le_two
       rcases Finset.mem_insert.mp hxMem with hxy' | hxu'
       · exact hxy hxy'
       · exact hxu (Finset.mem_singleton.mp hxu')
-    have hmap := reciprocalCellMap_eq_pair_symmDiff H V
+    have hmap := reciprocal_cell_map_eq_pair_symm_diff H V
       ({z, v} : Edge α) hcard hp hr hne
     have hmap' : reciprocalCellMap H V ({z, v} : Edge α) =
         ({x, u} : Edge α) := by
       rw [hmap]
       simpa only [Finset.pair_comm] using
-        (pair_symmDiff_shared_right hxu hxy (Ne.symm hyu))
+        (pair_symm_diff_shared_right hxu hxy (Ne.symm hyu))
     have hlarge' : 3 ≤ (commonLink H V ({x, u} : Edge α)).card := by
       rw [← hmap']
       exact hlarge
@@ -80,10 +80,10 @@ theorem ordinary_double_cell_large_reciprocal_le_two
   have hqUsed := (Finset.mem_filter.mp hq).1
   have hqCard := (Finset.mem_filter.mp hq).2
   have hq2 : q.card = 2 :=
-    (Finset.mem_powersetCard.mp (usedCells_subset H V hqUsed)).2
+    (Finset.mem_powersetCard.mp (used_cells_subset H V hqUsed)).2
   let e := corePairRep q hq2
-  have he := corePairRep_spec q hq2
-  have hsub := (Finset.mem_powersetCard.mp (usedCells_subset H V hqUsed)).1
+  have he := core_pair_rep_spec q hq2
+  have hsub := (Finset.mem_powersetCard.mp (used_cells_subset H V hqUsed)).1
   have hsub' : ({e.1, e.2} : Edge α) ⊆ V := by
     rw [← he.2]
     exact hsub

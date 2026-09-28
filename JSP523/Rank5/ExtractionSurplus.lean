@@ -18,7 +18,7 @@ the proof below records the evenness rather than assuming it. -/
 def unorderedLinkOverlap {ι β : Type*} [DecidableEq ι] [DecidableEq β]
     (X : Finset ι) (A : ι → Finset β) : ℕ := orderedOverlap X A / 2
 
-private theorem orderedOverlap_insert_local
+private theorem ordered_overlap_insert_local
     {ι β : Type*} [DecidableEq ι] [DecidableEq β]
     (S : Finset ι) (A : ι → Finset β) (a : ι) (ha : a ∉ S) :
     orderedOverlap (insert a S) A = orderedOverlap S A +
@@ -46,23 +46,23 @@ private theorem orderedOverlap_insert_local
   rw [hS]
   omega
 
-private theorem orderedOverlap_even_local
+private theorem ordered_overlap_even_local
     {ι β : Type*} [DecidableEq ι] [DecidableEq β]
     (X : Finset ι) (A : ι → Finset β) : 2 ∣ orderedOverlap X A := by
   classical
   induction X using Finset.induction_on with
   | empty => simp [orderedOverlap]
   | @insert a S ha ih =>
-      rw [orderedOverlap_insert_local S A a ha]
+      rw [ordered_overlap_insert_local S A a ha]
       exact dvd_add ih (dvd_mul_right 2 _)
 
-private theorem unorderedLinkOverlap_insert
+private theorem unordered_link_overlap_insert
     {ι β : Type*} [DecidableEq ι] [DecidableEq β]
     (S : Finset ι) (A : ι → Finset β) (a : ι) (ha : a ∉ S) :
     unorderedLinkOverlap (insert a S) A = unorderedLinkOverlap S A +
       (∑ y ∈ S, (A a ∩ A y).card) := by
-  have hEven := orderedOverlap_even_local S A
-  have hIns := orderedOverlap_insert_local S A a ha
+  have hEven := ordered_overlap_even_local S A
+  have hIns := ordered_overlap_insert_local S A a ha
   unfold unorderedLinkOverlap
   rw [hIns]
   have heq : orderedOverlap S A % 2 = 0 := Nat.dvd_iff_mod_eq_zero.mp hEven
@@ -71,7 +71,7 @@ private theorem unorderedLinkOverlap_insert
 /-- Unordered Bonferroni for finite fibers. A repeated point in `m`
 fibers is paid once by the union and then by each of its `choose(m,2)`
 colliding pairs. -/
-theorem sum_card_le_union_add_unorderedOverlap
+theorem sum_card_le_union_add_unordered_overlap
     {ι β : Type*} [DecidableEq ι] [DecidableEq β]
     (X : Finset ι) (A : ι → Finset β) :
     (∑ x ∈ X, (A x).card) ≤ (X.biUnion A).card + unorderedLinkOverlap X A := by
@@ -90,7 +90,7 @@ theorem sum_card_le_union_add_unorderedOverlap
   | @insert a S ha ih =>
       have hCap := hIntersect S A (A a)
       have hUnion := Finset.card_union_add_card_inter (A a) (S.biUnion A)
-      have hPair := unorderedLinkOverlap_insert S A a ha
+      have hPair := unordered_link_overlap_insert S A a ha
       simp only [Finset.sum_insert ha, Finset.biUnion_insert] at *
       rw [hPair]
       omega
@@ -171,20 +171,20 @@ theorem two_one_removed_links_overlap_bound_sharp
     intro T hT
     obtain ⟨hxT, hyT⟩ := Finset.mem_inter.mp hT
     obtain ⟨hTW, hTc⟩ := Finset.mem_powersetCard.mp
-      (oneRemovedLink_subset_facets hU hxT)
+      (one_removed_link_subset_facets hU hxT)
     have hnx : x ∉ T := fun h => hxW (hTW h)
     have hny : y ∉ T := fun h => hyW (hTW h)
-    apply mem_commonPrefixTails.mpr
-    refine ⟨hTW, hTc, ?_, oneRemovedLink_insert_mem hxT,
-      oneRemovedLink_insert_mem hyT⟩
+    apply mem_common_prefix_tails.mpr
+    refine ⟨hTW, hTc, ?_, one_removed_link_insert_mem hxT,
+      one_removed_link_insert_mem hyT⟩
     exact Finset.disjoint_union_right.mpr
       ⟨Finset.disjoint_singleton_right.mpr hnx,
        Finset.disjoint_singleton_right.mpr hny⟩
   have hCW : C ⊆ W.powersetCard (r - 1) := by
     intro T hT
-    obtain ⟨hTW, hTc, _, _, _⟩ := mem_commonPrefixTails.mp hT
+    obtain ⟨hTW, hTc, _, _, _⟩ := mem_common_prefix_tails.mp hT
     exact Finset.mem_powersetCard.mpr ⟨hTW, hTc⟩
-  have hI : PairwiseIntersecting C := commonPrefixTails_intersecting
+  have hI : PairwiseIntersecting C := common_prefix_tails_intersecting
     (W := W) hAdm (by simp) (by simp)
     (Finset.disjoint_singleton.mpr hxy) (by omega)
   exact (Finset.card_le_card hSub).trans
@@ -204,7 +204,7 @@ theorem unordered_one_removed_overlap_bound_sharp
   induction X using Finset.induction_on with
   | empty => simp [unorderedLinkOverlap, orderedOverlap]
   | @insert a S ha ih =>
-      rw [unorderedLinkOverlap_insert]
+      rw [unordered_link_overlap_insert]
       · have hEach : ∀ y ∈ S,
             (oneRemovedLink F W a ∩ oneRemovedLink F W y).card ≤ C := by
           intro y hy
@@ -259,7 +259,7 @@ theorem shadow_allocation_ledger_unordered
     rw [hEq]
     exact Finset.card_biUnion_le
   have hUnion := Finset.card_union_add_card_inter (X.biUnion A) S
-  have hFibers := sum_card_le_union_add_unorderedOverlap X A
+  have hFibers := sum_card_le_union_add_unordered_overlap X A
   have hCap := Finset.card_le_card hUnionSub
   omega
 
@@ -281,7 +281,7 @@ theorem actual_shadow_ledger_unordered
     (W.powersetCard (r - 1)) (shadowOn K W r)
     (oneRemovedLink F W)
     (Finset.filter_subset _ _)
-    (fun x _ => oneRemovedLink_subset_facets hU)
+    (fun x _ => one_removed_link_subset_facets hU)
   have hLayers := edge_layer_card_le hSupport
   have hInside := Finset.card_sdiff_add_card_eq_card hK
   rw [Finset.card_powersetCard] at hAlloc

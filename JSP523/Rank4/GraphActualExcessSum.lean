@@ -34,6 +34,6 @@ theorem on_label_pair_bases_sum_eq_tail_sum
       (fun w => f ({z, w} : Edge α))
   rw [← on_label_pair_bases_eq_tail_image D fallback hCenters P hUsed]
   exact Finset.sum_image
-    (on_label_tail_pair_map_injOn D fallback hCenters P)
+    (on_label_tail_pair_map_inj_on D fallback hCenters P)
 
 end JSP523.Rank4

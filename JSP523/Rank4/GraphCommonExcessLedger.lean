@@ -27,7 +27,7 @@ theorem ordered_common_multiplicity_at_vertex
     (∑ y ∈ Finset.univ.erase x,
       (graphCommonMultiplicity F x y : ℚ)) =
       (graphNeighborDegreeSum F x : ℚ) - F.degree x := by
-  have hTotal := sum_graphCommonMultiplicity F x
+  have hTotal := sum_graph_common_multiplicity F x
   have hTotalQ :
       (∑ y : α, (graphCommonMultiplicity F x y : ℚ)) =
         (graphNeighborDegreeSum F x : ℚ) := by
@@ -35,7 +35,7 @@ theorem ordered_common_multiplicity_at_vertex
   have hSplit := Finset.sum_erase_add Finset.univ
     (fun y : α => (graphCommonMultiplicity F x y : ℚ))
     (Finset.mem_univ x)
-  rw [graphCommonMultiplicity_self] at hSplit
+  rw [graph_common_multiplicity_self] at hSplit
   linarith
 
 omit [DecidableEq α] in
@@ -53,7 +53,7 @@ theorem sum_graph_neighbor_degrees_eq_sum_degree_squares
           simp only [graphNeighborDegreeSum, Nat.cast_sum]
     _ = ∑ x : α, ∑ y ∈ F.neighborFinset x,
           (F.degree x : ℚ) := by
-            exact sum_neighborFinset_swap F (fun _ y => (F.degree y : ℚ))
+            exact sum_neighbor_finset_swap F (fun _ y => (F.degree y : ℚ))
     _ = ∑ x : α, (F.degree x : ℚ) ^ 2 := by
           apply Finset.sum_congr rfl
           intro x _

@@ -21,7 +21,7 @@ noncomputable def localExactDensity (r : ℕ) : ℝ :=
 
 /-- The explicit quadratic coefficient is positive for every rank in the
 range of the local theorem. -/
-theorem outsideTotalErrorQuadraticCoefficient_pos
+theorem outside_total_error_quadratic_coefficient_pos
     (r : ℕ) (hr : 5 ≤ r) : 0 < outsideTotalErrorQuadraticCoefficient r := by
   have hK : 0 < 2 * (4 * r) ^ (r - 1) * (r - 1) := by
     apply Nat.mul_pos
@@ -37,11 +37,11 @@ theorem outsideTotalErrorQuadraticCoefficient_pos
 
 /-- The explicit real density constant is positive for every rank in the
 range of the theorem. -/
-theorem localExactDensity_pos (r : ℕ) (hr : 5 ≤ r) :
+theorem local_exact_density_pos (r : ℕ) (hr : 5 ≤ r) :
     0 < localExactDensity r := by
   unfold localExactDensity
   have hB : 0 < outsideTotalErrorQuadraticCoefficient r :=
-    outsideTotalErrorQuadraticCoefficient_pos r hr
+    outside_total_error_quadratic_coefficient_pos r hr
   have hDen : (0 : ℝ) <
       (4 * outsideTotalErrorQuadraticCoefficient r : ℕ) := by
     exact_mod_cast Nat.mul_pos (by omega : 0 < 4) hB
@@ -76,7 +76,7 @@ theorem quantitative_near_star_exact
     exact le_trans (Nat.le_max_right _ _) hOuter
   have hBpos : 0 < B := by
     dsimp [B]
-    exact outsideTotalErrorQuadraticCoefficient_pos r hr
+    exact outside_total_error_quadratic_coefficient_pos r hr
   have hSmallNat : 4 * B * (missingStarFacets H W v r).card ≤
       W.card ^ (r - 1) := by
     apply Counting.real_density_implies_power_small
@@ -106,7 +106,7 @@ theorem exists_quantitative_near_star_exact (r : ℕ) (hr : 5 ≤ r) :
         ((missingStarFacets H W v r).card : ℝ) ≤
           δ * (W.card : ℝ) ^ (r - 1) →
         H.card ≤ W.card.choose (r - 1) + W.card / r := by
-  refine ⟨localExactDensity r, localExactDensity_pos r hr,
+  refine ⟨localExactDensity r, local_exact_density_pos r hr,
     localExactGroundThreshold r, ?_⟩
   intro α _ H W v hAdm hUniform hSupport hvW hw₀ hDensity
   exact quantitative_near_star_exact H W v r hAdm hUniform hSupport hvW hr
@@ -143,7 +143,7 @@ theorem outside_linear_incidence_of_quantitative_baseline
     exact le_trans (Nat.le_max_left _ _) hw₀
   have hBpos : 0 < B := by
     dsimp [B]
-    exact outsideTotalErrorQuadraticCoefficient_pos r hr
+    exact outside_total_error_quadratic_coefficient_pos r hr
   have hSmallNat : 4 * B * q ≤ W.card ^ (r - 1) := by
     apply Counting.real_density_implies_power_small
       W.card q B (r - 1) hBpos

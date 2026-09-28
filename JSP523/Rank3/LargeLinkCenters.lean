@@ -22,15 +22,15 @@ variable {α : Type*} [DecidableEq α]
 def largeLinkCells (H : Family α) (V : Edge α) : Family α :=
   (usedCells H V).filter (fun q => 3 < (commonLink H V q).card)
 
-theorem largeLinkCells_subset_usedCells (H : Family α) (V : Edge α) :
+theorem large_link_cells_subset_used_cells (H : Family α) (V : Edge α) :
     largeLinkCells H V ⊆ usedCells H V := by
   intro q hq
   exact (Finset.mem_filter.mp hq).1
 
-theorem largeLinkCells_subset_groundPairs (H : Family α) (V : Edge α) :
+theorem large_link_cells_subset_ground_pairs (H : Family α) (V : Edge α) :
     largeLinkCells H V ⊆ V.powersetCard 2 := by
   intro q hq
-  exact usedCells_subset H V (largeLinkCells_subset_usedCells H V hq)
+  exact used_cells_subset H V (large_link_cells_subset_used_cells H V hq)
 
 /-- A large common-link star has a unique center in the ground set,
     outside its two-point cell. -/
@@ -42,7 +42,7 @@ theorem large_common_link_center_in_ground
       (∀ p ∈ commonLink H V q, x ∈ p) ∧
       ∀ y : α, (∀ p ∈ commonLink H V q, y ∈ p) → y = x := by
   have hqP : q ∈ V.powersetCard 2 :=
-    largeLinkCells_subset_groundPairs H V hq
+    large_link_cells_subset_ground_pairs H V hq
   have hlarge : 3 < (commonLink H V q).card :=
     (Finset.mem_filter.mp hq).2
   obtain ⟨x, hx, hunique⟩ :=

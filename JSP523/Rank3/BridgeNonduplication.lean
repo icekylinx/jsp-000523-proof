@@ -12,7 +12,7 @@ namespace JSP523.Rank3
 
 variable {α : Type*} [DecidableEq α]
 
-private theorem rootCommonNeighbors_comm
+private theorem root_common_neighbors_comm
     (H : Family α) (V : Edge α) (z x y : α) :
     rootCommonNeighbors H V z x y = rootCommonNeighbors H V z y x := by
   ext t
@@ -33,7 +33,7 @@ private def bridgeStd : Finset (Finset (Fin 5)) :=
   {{0, 1, 2}, {0, 1, 4}, {0, 2, 3}, {0, 3, 4}, {1, 2, 3},
     {1, 3, 4}, {0, 2, 4}, {0, 1, 3}, {2, 3, 4}}
 
-private theorem bridgeStd_card : bridgeStd.card = 9 := by
+private theorem bridge_std_card : bridgeStd.card = 9 := by
   decide
 
 private def bridgeF (a b c x u : α) (i : Fin 5) : α :=
@@ -42,7 +42,7 @@ private def bridgeF (a b c x u : α) (i : Fin 5) : α :=
 
 /-- The nine listed triples are distinct whenever their five vertices are
 pairwise distinct. -/
-theorem bridgeOverlapTripleSet_card
+theorem bridge_overlap_triple_set_card
     {a b c x u : α}
     (hab : a ≠ b) (hac : a ≠ c) (hax : a ≠ x) (hau : a ≠ u)
     (hbc : b ≠ c) (hbx : b ≠ x) (hbu : b ≠ u)
@@ -57,7 +57,7 @@ theorem bridgeOverlapTripleSet_card
     ext e
     simp [bridgeOverlapTripleSet, bridgeStd, f, bridgeF]
   rw [hset, Finset.card_image_of_injective _ (Finset.image_injective hf)]
-  exact bridgeStd_card
+  exact bridge_std_card
 
 
 /-- The two books from Theorem II.C.1, represented by their actual common
@@ -213,7 +213,7 @@ theorem common_link_center_eq_of_root_fiber_large
     (hmu : 2 ≤ (rootCommonNeighbors H V z x y).card)
     (hcenter : ∀ p ∈ commonLink H V ({x, y} : Edge α), center ∈ p) :
     center = z := by
-  have hfiber := rootCommonNeighbors_eq_commonLinkFiber H V hzV hzx hzy hxy
+  have hfiber := root_common_neighbors_eq_common_link_fiber H V hzV hzx hzy hxy
   have hbig : 1 < (commonLinkFiber H V ({x, y} : Edge α) z).card := by
     rw [← hfiber]
     omega
@@ -269,10 +269,10 @@ theorem two_large_root_fibers_impossible
       · exact htx ▸ hxV
       · exact (Finset.mem_singleton.mp hty) ▸ hyV
     · exact Finset.card_pair hxy
-  have hBfiber := rootCommonNeighbors_eq_commonLinkFiber H V hbV
+  have hBfiber := root_common_neighbors_eq_common_link_fiber H V hbV
     hbx hby hxy
   have hClarge : 3 < (commonLink H V ({x, y} : Edge α)).card := by
-    have hle := commonLinkFiber_card_le_commonLink_card
+    have hle := common_link_fiber_card_le_common_link_card
       H V ({x, y} : Edge α) b
     rw [← hBfiber] at hle
     omega
@@ -303,7 +303,7 @@ theorem positive_rooted_edge_forces_other_common_neighbors_large
       (Finset.mem_powersetCard.mp (Finset.mem_filter.mp hcy).1).2
     simp [h] at hcard
   have hyNeighbor : y ∈ rootNeighbors H V z c :=
-    (rootLink_edge_in_endpoint_neighbors H V hcy hcyNe).1
+    (root_link_edge_in_endpoint_neighbors H V hcy hcyNe).1
   have hyWeak : y ∈ weakLeftAlternatives H V z x c := by
     apply Finset.mem_filter.mpr
     constructor
@@ -313,7 +313,7 @@ theorem positive_rooted_edge_forces_other_common_neighbors_large
     Finset.card_pos.mpr ⟨y, hyWeak⟩
   have hright : 0 < (weakRightAlternatives H V z x c).card :=
     Finset.card_pos.mpr ⟨u, huWeak⟩
-  have hcount := positive_rootedSignedWeight_weak_count_le_one
+  have hcount := positive_rooted_signed_weight_weak_count_le_one
     H V hsource hxc hpositive
   omega
 
@@ -353,18 +353,18 @@ theorem double_bridge_books_x_ne_y_impossible
     rw [hBook.cu]
     simp
   have hxcRoot : ({x, c} : Edge α) ∈ rootLink H V b :=
-    orientedCommonLink_pair_mem_rootLink H V hxcLink
+    oriented_common_link_pair_mem_root_link H V hxcLink
   have hybRoot : ({y, b} : Edge α) ∈ rootLink H V c :=
-    orientedCommonLink_pair_mem_rootLink H V hybLink
+    oriented_common_link_pair_mem_root_link H V hybLink
   have hcyRoot : ({c, y} : Edge α) ∈ rootLink H V b :=
-    orientedCommonLink_pair_mem_rootLink H V hcyLink
+    oriented_common_link_pair_mem_root_link H V hcyLink
   have hbxRoot : ({b, x} : Edge α) ∈ rootLink H V c :=
-    orientedCommonLink_pair_mem_rootLink H V hbxLink
+    oriented_common_link_pair_mem_root_link H V hbxLink
   have huWeak : u ∈ weakRightAlternatives H V b x c :=
-    second_book_pair_mem_weakRightAlternatives hH hbV haV
+    second_book_pair_mem_weak_right_alternatives hH hbV haV
       (Ne.symm hab) hxc hxu (Ne.symm huc) hxcLink hxuLink
   have hvWeak : v ∈ weakRightAlternatives H V c y b :=
-    second_book_pair_mem_weakRightAlternatives hH hcV haV
+    second_book_pair_mem_weak_right_alternatives hH hcV haV
       (Ne.symm hac) hyb hyv (Ne.symm hvb) hybLink hyvLink
   have hmuB : 4 ≤ (rootCommonNeighbors H V b x y).card :=
     positive_rooted_edge_forces_other_common_neighbors_large
@@ -373,7 +373,7 @@ theorem double_bridge_books_x_ne_y_impossible
     positive_rooted_edge_forces_other_common_neighbors_large
       hybRoot hyb hposC hvWeak hbxRoot hxy
   have hmuC' : 4 ≤ (rootCommonNeighbors H V c x y).card := by
-    simpa only [rootCommonNeighbors_comm] using hmuC
+    simpa only [root_common_neighbors_comm] using hmuC
   exact two_large_root_fibers_impossible hH hbV hcV hxV hyV
     hbc (Ne.symm hxb) (Ne.symm hyb) (Ne.symm hxc) (Ne.symm hyc)
     hxy hmuB hmuC'
@@ -402,7 +402,7 @@ theorem double_bridge_books_do_not_overlap
       (Ne.symm hva) hyv hcu (Ne.symm hvb)
     subst v
     have hOverlapTripleCard : (bridgeOverlapTripleSet a b c x u).card = 9 :=
-      bridgeOverlapTripleSet_card hab hac hax hau hbc hbx hbu hcx hcu hxu
+      bridge_overlap_triple_set_card hab hac hax hau hbc hbx hbu hcx hcu hxu
     have h_ab_c : ({a, b} : Edge α) ∈ orientedCommonLink H V c u := by
       rw [hBook.cu]
       simp

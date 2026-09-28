@@ -31,18 +31,18 @@ theorem ordinary_double_book_large_reciprocal_le_two
   by_cases hcenter : ∃ a : α,
       ∀ p ∈ commonLink H V ({y, u} : Edge α), a ∈ p
   · obtain ⟨a, ha⟩ := hcenter
-    have h₁or := (mem_commonLink_pair_iff_oriented H V hzv _).mp h₁
-    have h₂or := (mem_commonLink_pair_iff_oriented H V hzv _).mp h₂
+    have h₁or := (mem_common_link_pair_iff_oriented H V hzv _).mp h₁
+    have h₂or := (mem_common_link_pair_iff_oriented H V hzv _).mp h₂
     have h₁rev : ({x, y} : Edge α) ∈
         commonLink H V ({v, z} : Edge α) := by
       simpa only [Finset.pair_comm] using h₁
     have h₂rev : ({x, u} : Edge α) ∈
         commonLink H V ({v, z} : Edge α) := by
       simpa only [Finset.pair_comm] using h₂
-    have h₁revOr := (mem_commonLink_pair_iff_oriented H V (Ne.symm hzv) _).mp h₁rev
-    have h₂revOr := (mem_commonLink_pair_iff_oriented H V (Ne.symm hzv) _).mp h₂rev
-    have hpv := reciprocal_pair_in_commonLink H V hvV hxy hxu hyu h₁or h₂or
-    have hpz := reciprocal_pair_in_commonLink H V hzV hxy hxu hyu h₁revOr h₂revOr
+    have h₁revOr := (mem_common_link_pair_iff_oriented H V (Ne.symm hzv) _).mp h₁rev
+    have h₂revOr := (mem_common_link_pair_iff_oriented H V (Ne.symm hzv) _).mp h₂rev
+    have hpv := reciprocal_pair_in_common_link H V hvV hxy hxu hyu h₁or h₂or
+    have hpz := reciprocal_pair_in_common_link H V hzV hxy hxu hyu h₁revOr h₂revOr
     have hav : a ∈ ({x, v} : Edge α) := by
       apply ha
       simpa only [Finset.pair_comm] using hpv

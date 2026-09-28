@@ -27,12 +27,12 @@ theorem double_receiver_star_capacity_le_two
     simpa only [Finset.pair_comm] using h₁
   have h₂rev : ({x, u} : Edge α) ∈ commonLink H V ({v, z} : Edge α) := by
     simpa only [Finset.pair_comm] using h₂
-  have h₁or := (mem_commonLink_pair_iff_oriented H V hzv _).mp h₁
-  have h₂or := (mem_commonLink_pair_iff_oriented H V hzv _).mp h₂
-  have h₁revOr := (mem_commonLink_pair_iff_oriented H V (Ne.symm hzv) _).mp h₁rev
-  have h₂revOr := (mem_commonLink_pair_iff_oriented H V (Ne.symm hzv) _).mp h₂rev
-  have hpv := reciprocal_pair_in_commonLink H V hvV hxy hxu hyu h₁or h₂or
-  have hpz := reciprocal_pair_in_commonLink H V hzV hxy hxu hyu h₁revOr h₂revOr
+  have h₁or := (mem_common_link_pair_iff_oriented H V hzv _).mp h₁
+  have h₂or := (mem_common_link_pair_iff_oriented H V hzv _).mp h₂
+  have h₁revOr := (mem_common_link_pair_iff_oriented H V (Ne.symm hzv) _).mp h₁rev
+  have h₂revOr := (mem_common_link_pair_iff_oriented H V (Ne.symm hzv) _).mp h₂rev
+  have hpv := reciprocal_pair_in_common_link H V hvV hxy hxu hyu h₁or h₂or
+  have hpz := reciprocal_pair_in_common_link H V hzV hxy hxu hyu h₁revOr h₂revOr
   have hpv' : ({x, v} : Edge α) ∈ commonLink H V ({y, u} : Edge α) := by
     simpa only [Finset.pair_comm] using hpv
   have hpz' : ({x, z} : Edge α) ∈ commonLink H V ({y, u} : Edge α) := by
@@ -210,13 +210,13 @@ theorem double_receiver_star_capacity_le_two
   have hcell := actual_cell_charge_total_eq_two_cores H V h₁ h₂ hne hcard
   have hxyCard : ({x, y} : Edge α).card = 2 := Finset.card_pair hxy
   have hxuCard : ({x, u} : Edge α).card = 2 := Finset.card_pair hxu
-  have hrep₁ := coreReceiverCharge_eq_displayed_pair H V
+  have hrep₁ := core_receiver_charge_eq_displayed_pair H V
     ({x, y} : Edge α) z v x y hxyCard rfl
-  have hrep₂ := coreReceiverCharge_eq_displayed_pair H V
+  have hrep₂ := core_receiver_charge_eq_displayed_pair H V
     ({x, y} : Edge α) v z x y hxyCard rfl
-  have hrep₃ := coreReceiverCharge_eq_displayed_pair H V
+  have hrep₃ := core_receiver_charge_eq_displayed_pair H V
     ({x, u} : Edge α) z v x u hxuCard rfl
-  have hrep₄ := coreReceiverCharge_eq_displayed_pair H V
+  have hrep₄ := core_receiver_charge_eq_displayed_pair H V
     ({x, u} : Edge α) v z x u hxuCard rfl
   rw [hcell, hrep₁, hrep₂, hrep₃, hrep₄]
   linarith [hcharge₁, hcharge₂, hcharge₃, hcharge₄, hdenXY, hdenXU]
@@ -239,12 +239,12 @@ theorem double_receiver_triangle_exception_of_no_center
     simpa only [Finset.pair_comm] using h₁
   have h₂rev : ({x, u} : Edge α) ∈ commonLink H V ({v, z} : Edge α) := by
     simpa only [Finset.pair_comm] using h₂
-  have h₁or := (mem_commonLink_pair_iff_oriented H V hzv _).mp h₁
-  have h₂or := (mem_commonLink_pair_iff_oriented H V hzv _).mp h₂
-  have h₁revOr := (mem_commonLink_pair_iff_oriented H V (Ne.symm hzv) _).mp h₁rev
-  have h₂revOr := (mem_commonLink_pair_iff_oriented H V (Ne.symm hzv) _).mp h₂rev
-  have hpv := reciprocal_pair_in_commonLink H V hvV hxy hxu hyu h₁or h₂or
-  have hpz := reciprocal_pair_in_commonLink H V hzV hxy hxu hyu h₁revOr h₂revOr
+  have h₁or := (mem_common_link_pair_iff_oriented H V hzv _).mp h₁
+  have h₂or := (mem_common_link_pair_iff_oriented H V hzv _).mp h₂
+  have h₁revOr := (mem_common_link_pair_iff_oriented H V (Ne.symm hzv) _).mp h₁rev
+  have h₂revOr := (mem_common_link_pair_iff_oriented H V (Ne.symm hzv) _).mp h₂rev
+  have hpv := reciprocal_pair_in_common_link H V hvV hxy hxu hyu h₁or h₂or
+  have hpz := reciprocal_pair_in_common_link H V hzV hxy hxu hyu h₁revOr h₂revOr
   have hpv' : ({x, v} : Edge α) ∈ commonLink H V ({y, u} : Edge α) := by
     simpa only [Finset.pair_comm] using hpv
   have hpz' : ({x, z} : Edge α) ∈ commonLink H V ({y, u} : Edge α) := by

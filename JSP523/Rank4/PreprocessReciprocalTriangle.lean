@@ -23,7 +23,7 @@ def reciprocalParentLabelTriples
     insert (D.label xy.1 xy.2) ({xy.1, xy.2} : Edge α)
 
 omit [Fintype α] in
-theorem mem_reciprocalParentLabelTriples
+theorem mem_reciprocal_parent_label_triples
     (D : FiniteCompletionCliqueData α) (V : Edge α)
     (x y : α) (hx : x ∈ V) (hy : y ∈ V) :
     insert (D.label x y) ({x, y} : Edge α) ∈
@@ -377,13 +377,13 @@ theorem reciprocal_triangle_rainbow_attachment_forbidden
       insert x ({b, t} : Edge α) ∈
         reciprocalParentLabelTriples D D.ground := by
     dsimp [x]
-    exact mem_reciprocalParentLabelTriples D D.ground b t
+    exact mem_reciprocal_parent_label_triples D D.ground b t
       hBW'.2.2.1 htGround
   have hTripleY :
       insert y ({w, t} : Edge α) ∈
         reciprocalParentLabelTriples D D.ground := by
     dsimp [y]
-    exact mem_reciprocalParentLabelTriples D D.ground w t
+    exact mem_reciprocal_parent_label_triples D D.ground w t
       hBW'.2.2.2.1 htGround
   have hRset : R ∪ {t} = insert x ({b, t} : Edge α) := by
     ext z
@@ -484,7 +484,7 @@ theorem reciprocal_triangle_isolated_after_reciprocal_cleanup
   exact reciprocal_triangle_isolated_of_parent_separation
     (clearReciprocalDifferentWitnesses D) P a b w hPcard hPground
     hab haw hbw hAB hAW hBW hABlabel hAWlabel hBWlabel
-    (clearReciprocalDifferentWitnesses_no_second D P hPcard hPground)
+    (clear_reciprocal_different_witnesses_no_second D P hPcard hPground)
     hSeparated
 
 end JSP523.Rank4

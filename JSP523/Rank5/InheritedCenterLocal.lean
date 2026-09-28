@@ -143,7 +143,7 @@ theorem actual_four_face_center_exists_unique
     ∃! v : α, v ∈ A ∧ ∀ S : Edge α, S ⊆ A → S.card = 3 →
       v ∈ S → z S = v := by
   obtain ⟨E, hE, hAE, hAc⟩ :=
-    (mem_fourShadow_iff_parent all A).mp hA
+    (mem_four_shadow_iff_parent all A).mp hA
   have hcardA : A.card = 4 := hAc
   have hHereditary : HereditaryDeletionCenters A z := by
     constructor
@@ -164,7 +164,7 @@ theorem actual_four_face_center_exists_unique
         hLocal b hb hbn
       exact hEq
   obtain ⟨v, hvA, hvFaces⟩ :=
-    (hereditary_center_existsUnique (by omega : 4 ≤ A.card) hHereditary).exists
+    (hereditary_center_exists_unique (by omega : 4 ≤ A.card) hHereditary).exists
   refine ⟨v, ?_, ?_⟩
   · refine ⟨hvA, ?_⟩
     intro S hSA hSc hVS
@@ -281,7 +281,7 @@ theorem shared_four_face_nonempty
     (all : Family α) {A : Edge α} (hA : A ∈ sharedFourShadow all) :
     A.Nonempty := by
   have hShadow : A ∈ fourShadow all := (Finset.mem_filter.mp hA).1
-  have hCard := (mem_fourShadow_iff_parent all A).mp hShadow
+  have hCard := (mem_four_shadow_iff_parent all A).mp hShadow
   exact Finset.card_pos.mp (by omega : 0 < A.card)
 
 /-- Choose a vertex of every actual shared four-face.  The later bad
@@ -313,7 +313,7 @@ theorem bad_unrooted_has_bad_facet_triple_incidence
   classical
   have hUnrooted : E ∈ unrootedEdges all tripleLabel :=
     bad_unrooted_edges_subset_unrooted all tripleLabel hE
-  have hAll : E ∈ all := unrootedEdges_subset all tripleLabel hUnrooted
+  have hAll : E ∈ all := unrooted_edges_subset all tripleLabel hUnrooted
   have hNotCoherent : ¬ SharedFacesCoherent all tripleLabel E :=
     (Finset.mem_filter.mp hE).2
   by_contra hNoBad
@@ -361,7 +361,7 @@ theorem bad_unrooted_card_le_bad_facet_parent_card
   change E ∈ all.filter
     (HasBadFacetTripleIncidence all facetCenter tripleLabel)
   exact Finset.mem_filter.mpr
-    ⟨unrootedEdges_subset all tripleLabel
+    ⟨unrooted_edges_subset all tripleLabel
       (bad_unrooted_edges_subset_unrooted all tripleLabel hE),
       bad_unrooted_has_bad_facet_triple_incidence all facetCenter tripleLabel
         hUniform hFacetCenters hE⟩
@@ -426,13 +426,13 @@ theorem shared_facet_inheritance_of_repair
   have hAshadowRepair : A ∈ fourShadow
       (repairSharedFacetInheritance all facetCenter tripleLabel) :=
     (Finset.mem_filter.mp hARepair).1
-  have hAparent := (mem_fourShadow_iff_parent
+  have hAparent := (mem_four_shadow_iff_parent
     (repairSharedFacetInheritance all facetCenter tripleLabel) A).mp hAshadowRepair
   obtain ⟨E, hERepair, hAE, hAcard⟩ := hAparent
   have hEparts := Finset.mem_filter.mp hERepair
   have hEall : E ∈ all := hEparts.1
   have hAshadowAll : A ∈ fourShadow all :=
-    (mem_fourShadow_iff_parent all A).mpr ⟨E, hEall, hAE, hAcard⟩
+    (mem_four_shadow_iff_parent all A).mpr ⟨E, hEall, hAE, hAcard⟩
   have hParentsMono : facetParents
       (repairSharedFacetInheritance all facetCenter tripleLabel) A ⊆
         facetParents all A := by
@@ -598,10 +598,10 @@ theorem shared_facet_second_parent_is_bad_partner
     rw [Finset.union_comm, Finset.sdiff_union_of_subset hBF]
     exact hKH hF
   have hRlink : E \ A.erase a ∈ parentPairLink H V (A.erase a) :=
-    mem_parentPairLink.mpr
+    mem_parent_pair_link.mpr
       ⟨hRsub, hRcard, hRdisj, hEdgeE⟩
   have hTlink : F \ A.erase a ∈ parentPairLink H V (A.erase a) :=
-    mem_parentPairLink.mpr
+    mem_parent_pair_link.mpr
       ⟨hTsub, hTcard, hTdisj, hEdgeF⟩
   have haR : a ∈ E \ A.erase a := by
     refine Finset.mem_sdiff.mpr ⟨hAE ha, ?_⟩
@@ -670,7 +670,7 @@ theorem bad_facet_parent_has_bad_partner
     shared_four_face_has_second_parent hShared hEK hAE
   have hAcard : A.card = 4 := by
     have hShadow : A ∈ fourShadow K := (Finset.mem_filter.mp hShared).1
-    obtain ⟨_, _, _, hCard⟩ := (mem_fourShadow_iff_parent K A).mp hShadow
+    obtain ⟨_, _, _, hCard⟩ := (mem_four_shadow_iff_parent K A).mp hShadow
     exact hCard
   let B := A.erase a
   let R := E \ B
@@ -693,7 +693,7 @@ theorem bad_facet_parent_has_bad_partner
     rw [Finset.union_comm, Finset.sdiff_union_of_subset hBE]
     exact hKH hEK
   have hRmem : R ∈ parentPairLink H V B :=
-    mem_parentPairLink.mpr
+    mem_parent_pair_link.mpr
       ⟨Finset.sdiff_subset.trans (hAmbient E hEK),
         hRcard, hRdisj, hEdge⟩
   have hPartner := shared_facet_second_parent_is_bad_partner

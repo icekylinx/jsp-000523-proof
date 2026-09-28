@@ -20,7 +20,7 @@ def commonCellEndpointEdges (H : Family α) (V : Edge α) (a b : α) : Family α
 
 /-- Removing the endpoint facets of a common cell costs at most twice the
 number of triples in that cell. -/
-theorem commonCellEndpointEdges_card_le
+theorem common_cell_endpoint_edges_card_le
     (H : Family α) (V : Edge α) (a b : α) :
     (commonCellEndpointEdges H V a b).card ≤
       2 * (commonTripleCell H V a b).card := by
@@ -39,7 +39,7 @@ theorem commonCellEndpointEdges_card_le
 /-- Clear one actual common triple cell by deleting its two endpoint
 facets.  The resulting family is a subfamily, and the number of deleted
 edges is at most twice the old cell size. -/
-theorem clear_commonTripleCell
+theorem clear_common_triple_cell
     (H : Family α) (V : Edge α) (a b : α) :
     ∃ H' : Family α,
       H' ⊆ H ∧
@@ -54,13 +54,13 @@ theorem clear_commonTripleCell
     ext T
     constructor
     · intro hT
-      have hcell := (mem_commonTripleCell.mp hT)
+      have hcell := (mem_common_triple_cell.mp hT)
       have hA : insert a T ∈ H' := by
-        exact (mem_commonTripleCell.mp hT).2.2.2.1
+        exact (mem_common_triple_cell.mp hT).2.2.2.1
       have hB : insert b T ∈ H' := by
-        exact (mem_commonTripleCell.mp hT).2.2.2.2
+        exact (mem_common_triple_cell.mp hT).2.2.2.2
       have hTold : T ∈ commonTripleCell H V a b := by
-        apply mem_commonTripleCell.mpr
+        apply mem_common_triple_cell.mpr
         refine ⟨hcell.1, hcell.2.1, hcell.2.2.1, ?_, ?_⟩
         · exact (Finset.mem_sdiff.mp hA).1
         · exact (Finset.mem_sdiff.mp hB).1
@@ -82,19 +82,19 @@ theorem clear_commonTripleCell
     calc
       (H \ H').card ≤ S.card := Finset.card_le_card hDiff
       _ ≤ 2 * (commonTripleCell H V a b).card := by
-        simpa [S] using commonCellEndpointEdges_card_le H V a b
+        simpa [S] using common_cell_endpoint_edges_card_le H V a b
 
 /-- The small-cell form used in repeated weak-cell clearing: if the cell
 has fewer than `t` triples, it can be emptied while deleting at most
 `2 * (t - 1)` edges. -/
-theorem clear_small_commonTripleCell
+theorem clear_small_common_triple_cell
     (H : Family α) (V : Edge α) (a b : α) (t : ℕ)
     (hSmall : (commonTripleCell H V a b).card < t) :
     ∃ H' : Family α,
       H' ⊆ H ∧
       (commonTripleCell H' V a b).card = 0 ∧
       (H \ H').card ≤ 2 * (t - 1) := by
-  obtain ⟨H', hSub, hEmpty, hLoss⟩ := clear_commonTripleCell H V a b
+  obtain ⟨H', hSub, hEmpty, hLoss⟩ := clear_common_triple_cell H V a b
   refine ⟨H', hSub, hEmpty, ?_⟩
   have hCard : (commonTripleCell H V a b).card ≤ t - 1 := by omega
   exact hLoss.trans (Nat.mul_le_mul_left 2 hCard)
@@ -106,7 +106,7 @@ noncomputable def pairRootRep (P : Edge α) (hP : P.card = 2) : α × α :=
     obtain ⟨a, b, hab, rfl⟩ := Finset.card_eq_two.mp hP
     exact ⟨(a, b), hab, rfl⟩)
 
-theorem pairRootRep_spec (P : Edge α) (hP : P.card = 2) :
+theorem pair_root_rep_spec (P : Edge α) (hP : P.card = 2) :
     (pairRootRep P hP).1 ≠ (pairRootRep P hP).2 ∧
       P = ({(pairRootRep P hP).1, (pairRootRep P hP).2} : Edge α) :=
   Classical.choose_spec (show ∃ e : α × α,
@@ -124,33 +124,33 @@ noncomputable def commonRootCell (H : Family α) (V P : Edge α) : Family α :=
 noncomputable def nonemptyCommonRoots (H : Family α) (V : Edge α) : Family α :=
   (V.powersetCard 2).filter fun P => 0 < (commonRootCell H V P).card
 
-theorem commonRootCell_mono {H K : Family α} {V P : Edge α}
+theorem common_root_cell_mono {H K : Family α} {V P : Edge α}
     (hKH : K ⊆ H) : commonRootCell K V P ⊆ commonRootCell H V P := by
   classical
   unfold commonRootCell
   split_ifs with hP
   · intro T hT
-    apply mem_commonTripleCell.mpr
-    have h := mem_commonTripleCell.mp hT
+    apply mem_common_triple_cell.mpr
+    have h := mem_common_triple_cell.mp hT
     refine ⟨h.1, h.2.1, h.2.2.1, ?_, ?_⟩
     · exact hKH h.2.2.2.1
     · exact hKH h.2.2.2.2
   · simp
 
-theorem nonemptyCommonRoots_mono {H K : Family α} {V : Edge α}
+theorem nonempty_common_roots_mono {H K : Family α} {V : Edge α}
     (hKH : K ⊆ H) : nonemptyCommonRoots K V ⊆ nonemptyCommonRoots H V := by
   intro P hP
   apply Finset.mem_filter.mpr
   have h := Finset.mem_filter.mp hP
   refine ⟨h.1, ?_⟩
   have hle := Finset.card_le_card
-    (commonRootCell_mono (V := V) (P := P) hKH)
+    (common_root_cell_mono (V := V) (P := P) hKH)
   omega
 
 /-- Iteratively clear currently small nonempty cells.  Every step permanently
 empties one pair root; cells can only shrink afterwards, so induction on the
 number of nonempty roots gives a finite process and the sharp per-root loss. -/
-theorem clear_all_small_commonCells_aux
+theorem clear_all_small_common_cells_aux
     (H : Family α) (V : Edge α) (t m : ℕ)
     (hMeasure : (nonemptyCommonRoots H V).card ≤ m) :
     ∃ K : Family α,
@@ -193,7 +193,7 @@ theorem clear_all_small_commonCells_aux
           rw [← hRootEq]
           exact hSmall
         obtain ⟨K₁, hK₁H, hEmpty, hLoss₁⟩ :=
-          clear_small_commonTripleCell H V ab.1 ab.2 t hSmall'
+          clear_small_common_triple_cell H V ab.1 ab.2 t hSmall'
         have hEmptySet : commonTripleCell K₁ V ab.1 ab.2 = ∅ :=
           Finset.card_eq_zero.mp hEmpty
         have hRootEqK : commonRootCell K₁ V P =
@@ -204,7 +204,7 @@ theorem clear_all_small_commonCells_aux
         have hRootEmpty' : (commonRootCell K₁ V P).card = 0 := by
           simp [hRootEmpty]
         have hRootsSub : nonemptyCommonRoots K₁ V ⊆ nonemptyCommonRoots H V :=
-          nonemptyCommonRoots_mono hK₁H
+          nonempty_common_roots_mono hK₁H
         have hPnot : P ∉ nonemptyCommonRoots K₁ V := by
           intro hmem
           have hMem' := Finset.mem_filter.mp hmem
@@ -262,7 +262,7 @@ theorem clear_all_small_commonCells_aux
 /-- Clear every small actual common triple cell over the pair roots of `V`.
 The resulting family has no nonempty cell of size below `t`, and the total
 edge loss is at most `2 (t-1) * choose(|V|,2)`. -/
-theorem clear_all_small_commonCells
+theorem clear_all_small_common_cells
     (H : Family α) (V : Edge α) (t : ℕ) :
     ∃ K : Family α,
       K ⊆ H ∧
@@ -271,7 +271,7 @@ theorem clear_all_small_commonCells
           t ≤ (commonRootCell K V P).card) ∧
       (H \ K).card ≤ 2 * (t - 1) * (V.card.choose 2) := by
   obtain ⟨K, hKH, hGood, hLoss⟩ :=
-    clear_all_small_commonCells_aux H V t
+    clear_all_small_common_cells_aux H V t
       (nonemptyCommonRoots H V).card (Nat.le_refl _)
   refine ⟨K, hKH, hGood, ?_⟩
   have hRoots : (nonemptyCommonRoots H V).card ≤ V.card.choose 2 := by

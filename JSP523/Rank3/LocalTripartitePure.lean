@@ -24,9 +24,9 @@ theorem one_pair_type_actual_local_payment
         (bipartitePhiTotal G.ab A B)
         (bipartitePhiTotal G.ac A C)
         (bipartitePhiTotal G.bc B C) := by
-  rw [bipartitePhiTotal_eq_zero_of_no_relevant_edge
+  rw [bipartite_phi_total_eq_zero_of_no_relevant_edge
       G.ac A C hAC,
-    bipartitePhiTotal_eq_zero_of_no_relevant_edge
+    bipartite_phi_total_eq_zero_of_no_relevant_edge
       G.bc B C hBC]
   exact one_pair_type_local_payment A.card B.card C.card
     (bipartitePhiTotal G.ab A B)
@@ -56,9 +56,9 @@ theorem two_pair_types_allocated_local_payment
     exact Finset.subset_union_left.trans hA
   have hAacSub : Aac ⊆ A := by
     exact Finset.subset_union_right.trans hA
-  have hABBound := bipartitePhiTotal_le_completePairScore_of_support
+  have hABBound := bipartite_phi_total_le_complete_pair_score_of_support
     G.ab A B Aab Bab hAabSub hB hAB
-  have hACBound := bipartitePhiTotal_le_completePairScore_of_support
+  have hACBound := bipartite_phi_total_le_complete_pair_score_of_support
     G.ac A C Aac Cac hAacSub hC hAC
   have hCardA := Finset.card_le_card hA
   rw [Finset.card_union_of_disjoint hADisj] at hCardA
@@ -66,7 +66,7 @@ theorem two_pair_types_allocated_local_payment
   have hCardC := Finset.card_le_card hC
   have hPay := two_bounded_pair_types_local_payment_with_isolates
     haAB haAC hCardA hCardB hCardC hABBound hACBound
-  rw [bipartitePhiTotal_eq_zero_of_no_relevant_edge
+  rw [bipartite_phi_total_eq_zero_of_no_relevant_edge
     G.bc B C hBC]
   exact hPay
 
@@ -105,11 +105,11 @@ theorem three_pair_types_allocated_local_payment
     exact Finset.subset_union_left.trans hC
   have hCbcSub : Cbc ⊆ C := by
     exact Finset.subset_union_right.trans hC
-  have hABBound := bipartitePhiTotal_le_completePairScore_of_support
+  have hABBound := bipartite_phi_total_le_complete_pair_score_of_support
     G.ab A B Aab Bab hAabSub hBabSub hAB
-  have hACBound := bipartitePhiTotal_le_completePairScore_of_support
+  have hACBound := bipartite_phi_total_le_complete_pair_score_of_support
     G.ac A C Aac Cac hAacSub hCacSub hAC
-  have hBCBound := bipartitePhiTotal_le_completePairScore_of_support
+  have hBCBound := bipartite_phi_total_le_complete_pair_score_of_support
     G.bc B C Bbc Cbc hBbcSub hCbcSub hBC
   have hCardA := Finset.card_le_card hA
   rw [Finset.card_union_of_disjoint hADisj] at hCardA
@@ -330,10 +330,10 @@ theorem pure_ab_bc_pair_types_local_payment
         bipLeftDegree G'.ac C b = 0 := by
     intro b hb
     simpa [G', swapPartsAB, bipLeftDegree, bipRightDegree,
-      mem_bipTranspose] using hPureB b hb
+      mem_bip_transpose] using hPureB b hb
   have hAB' : ∃ b ∈ B, ∃ a ∈ A, (b, a) ∈ G'.ab := by
     obtain ⟨a, ha, b, hb, hab⟩ := hABedge
-    exact ⟨b, hb, a, ha, (mem_bipTranspose G.ab b a).2 hab⟩
+    exact ⟨b, hb, a, ha, (mem_bip_transpose G.ab b a).2 hab⟩
   have hAC' : ∃ b ∈ B, ∃ c ∈ C, (b, c) ∈ G'.ac := by
     simpa [G', swapPartsAB] using hBCedge
   have h := pure_two_pair_types_local_payment G' B A C
@@ -344,13 +344,13 @@ theorem pure_ab_bc_pair_types_local_payment
         localGraphPayment B.card A.card C.card
           (bipartitePhiTotal G.ab A B)
           (bipartitePhiTotal G.bc B C) 0 := by
-    simpa [G', swapPartsAB, bipartitePhiTotal_transpose,
-      bipartitePhiTotal_eq_zero_of_no_relevant_edge
+    simpa [G', swapPartsAB, bipartite_phi_total_transpose,
+      bipartite_phi_total_eq_zero_of_no_relevant_edge
         G.ac A C hAC] using h
-  rw [localGraphPayment_swap_first_two B.card A.card C.card
+  rw [local_graph_payment_swap_first_two B.card A.card C.card
     (bipartitePhiTotal G.ab A B)
     (bipartitePhiTotal G.bc B C) 0] at h'
-  rw [bipartitePhiTotal_eq_zero_of_no_relevant_edge
+  rw [bipartite_phi_total_eq_zero_of_no_relevant_edge
     G.ac A C hAC]
   convert h' using 1
   ring
@@ -374,13 +374,13 @@ theorem pure_ac_bc_pair_types_local_payment
         bipLeftDegree G'.ac B c = 0 := by
     intro c hc
     simpa [G', movePartCFirst, bipLeftDegree, bipRightDegree,
-      mem_bipTranspose] using hPureC c hc
+      mem_bip_transpose] using hPureC c hc
   have hAB' : ∃ c ∈ C, ∃ a ∈ A, (c, a) ∈ G'.ab := by
     obtain ⟨a, ha, c, hc, hac⟩ := hACedge
-    exact ⟨c, hc, a, ha, (mem_bipTranspose G.ac c a).2 hac⟩
+    exact ⟨c, hc, a, ha, (mem_bip_transpose G.ac c a).2 hac⟩
   have hAC' : ∃ c ∈ C, ∃ b ∈ B, (c, b) ∈ G'.ac := by
     obtain ⟨b, hb, c, hc, hbc⟩ := hBCedge
-    exact ⟨c, hc, b, hb, (mem_bipTranspose G.bc c b).2 hbc⟩
+    exact ⟨c, hc, b, hb, (mem_bip_transpose G.bc c b).2 hbc⟩
   have h := pure_two_pair_types_local_payment G' C A B
     hPure (by simpa [G', movePartCFirst] using hAB) hAB' hAC'
   have h' :
@@ -389,16 +389,16 @@ theorem pure_ac_bc_pair_types_local_payment
         localGraphPayment C.card A.card B.card
           (bipartitePhiTotal G.ac A C)
           (bipartitePhiTotal G.bc B C) 0 := by
-    simpa [G', movePartCFirst, bipartitePhiTotal_transpose,
-      bipartitePhiTotal_eq_zero_of_no_relevant_edge
+    simpa [G', movePartCFirst, bipartite_phi_total_transpose,
+      bipartite_phi_total_eq_zero_of_no_relevant_edge
         G.ab A B hAB] using h
-  rw [localGraphPayment_swap_first_two C.card A.card B.card
+  rw [local_graph_payment_swap_first_two C.card A.card B.card
     (bipartitePhiTotal G.ac A C)
     (bipartitePhiTotal G.bc B C) 0,
-    localGraphPayment_swap_last_two A.card C.card B.card
+    local_graph_payment_swap_last_two A.card C.card B.card
       (bipartitePhiTotal G.ac A C) 0
       (bipartitePhiTotal G.bc B C)] at h'
-  rw [bipartitePhiTotal_eq_zero_of_no_relevant_edge
+  rw [bipartite_phi_total_eq_zero_of_no_relevant_edge
     G.ab A B hAB]
   convert h' using 1
   ring
@@ -448,18 +448,18 @@ theorem pure_tripartite_local_payment
     · by_cases hBC : ∃ b ∈ B, ∃ c ∈ C, (b, c) ∈ G.bc
       · exact pure_ac_bc_pair_types_local_payment G A B C
           hPureC (noAB hAB) hAC hBC
-      · rw [bipartitePhiTotal_eq_zero_of_no_relevant_edge
+      · rw [bipartite_phi_total_eq_zero_of_no_relevant_edge
           G.ab A B (noAB hAB),
-          bipartitePhiTotal_eq_zero_of_no_relevant_edge
+          bipartite_phi_total_eq_zero_of_no_relevant_edge
           G.bc B C (noBC hBC)]
-        exact one_pair_type_AC_local_payment A.card B.card C.card
+        exact one_pair_type_ac_local_payment A.card B.card C.card
           (bipartitePhiTotal G.ac A C)
     · by_cases hBC : ∃ b ∈ B, ∃ c ∈ C, (b, c) ∈ G.bc
-      · rw [bipartitePhiTotal_eq_zero_of_no_relevant_edge
+      · rw [bipartite_phi_total_eq_zero_of_no_relevant_edge
           G.ab A B (noAB hAB),
-          bipartitePhiTotal_eq_zero_of_no_relevant_edge
+          bipartite_phi_total_eq_zero_of_no_relevant_edge
           G.ac A C (noAC hAC)]
-        exact one_pair_type_BC_local_payment A.card B.card C.card
+        exact one_pair_type_bc_local_payment A.card B.card C.card
           (bipartitePhiTotal G.bc B C)
       · exact one_pair_type_actual_local_payment G A B C
           (noAC hAC) (noBC hBC)

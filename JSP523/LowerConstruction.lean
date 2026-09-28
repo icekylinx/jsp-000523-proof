@@ -33,7 +33,7 @@ def starPlusMatching (c : α) (r : ℕ) (M : Family α) : Family α :=
   starFamily c r ∪ M
 
 /-- The star-plus-matching construction is `r`-uniform when the matching is. -/
-theorem starPlusMatching_uniform
+theorem star_plus_matching_uniform
     {c : α} {r : ℕ} {M : Family α}
     (hU : Uniform r M) : Uniform r (starPlusMatching c r M) := by
   intro E hE
@@ -100,7 +100,7 @@ theorem center_mem_union_of_star_left
   exact Finset.mem_union.mpr (Or.inl (mem_starFamily.mp hS).2)
 
 /-- The full star-plus-matching lower construction is admissible. -/
-theorem starPlusMatching_admissible
+theorem star_plus_matching_admissible
     {c : α} {r : ℕ} {M : Family α}
     (hr : 0 < r)
     (hU : Uniform r M)
@@ -189,8 +189,8 @@ theorem exists_star_plus_matching_exact (c : α) (r : ℕ) (hr : 0 < r) :
     intro E hStar hM
     exact hAvoid hM (mem_starFamily.mp hStar).2
   refine ⟨starPlusMatching c r M,
-    starPlusMatching_uniform hMU,
-    starPlusMatching_admissible hr hMU hMatch hAvoid, ?_⟩
+    star_plus_matching_uniform hMU,
+    star_plus_matching_admissible hr hMU hMatch hAvoid, ?_⟩
   change (starFamily c r ∪ M).card = W.card.choose (r - 1) + W.card / r
   rw [Finset.card_union_of_disjoint hDisj,
     rank_r_star_card c r hr, hMcard]

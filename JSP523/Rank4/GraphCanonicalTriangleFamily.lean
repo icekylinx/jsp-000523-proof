@@ -4,7 +4,7 @@ namespace JSP523.Rank4
 
 variable {α : Type*} [Fintype α] [DecidableEq α]
 
-theorem canonical_triangle_family_actual_hRecords
+theorem canonical_triangle_family_actual_h_records
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     (D : FiniteCompletionCliqueData α) (C : Finset ι)
     (T : ι → Edge α) (hTInjective : Function.Injective T)
@@ -46,12 +46,12 @@ theorem canonical_triangle_family_actual_hRecords
     intro t ht x
     simp only [R, dite_eq_left ht]
     have hv : Function.Injective (v t ht) := by
-      simpa [v] using canonicalTriangleCompletion_injective D (T t) (hCard t ht)
+      simpa [v] using canonical_triangle_completion_injective D (T t) (hCard t ht)
     exact selected_actual_triangle_undirected_records_subset_global
       D (T t) (v t ht) (mark t ht) x S (S₀ t x)
       (hMarkSelected t ht x) (hVerticesSelected t ht x)
       (hTCard t ht) (hTSub t ht)
-      (fun i => canonicalTriangleCompletion_mem D (T t) (hCard t ht) i)
+      (fun i => canonical_triangle_completion_mem D (T t) (hCard t ht) i)
       hv
   have hDisjoint : ∀ t ∈ C, ∀ x, ∀ t' ∈ C, ∀ x',
       (t, x) ≠ (t', x') → Disjoint (R t x) (R t' x') := by
@@ -64,9 +64,9 @@ theorem canonical_triangle_family_actual_hRecords
         apply hne
         exact Prod.ext rfl h
       have hv : Function.Injective (v t ht) := by
-        simpa [v] using canonicalTriangleCompletion_injective D (T t) (hCard t ht)
+        simpa [v] using canonical_triangle_completion_injective D (T t) (hCard t ht)
       have hmark : Function.Injective (mark t ht) := by
-        simpa [mark] using canonicalTriangleMark_injective D (T t)
+        simpa [mark] using canonical_triangle_mark_injective D (T t)
           (hCard t ht) (hRainbow t ht)
       exact selected_actual_triangle_undirected_color_slots_disjoint
         D (T t) (v t ht) (mark t ht) hxy (S₀ t x) (S₀ t x')
@@ -75,16 +75,16 @@ theorem canonical_triangle_family_actual_hRecords
         intro heq
         exact hsame (hTInjective heq)
       have hv : Function.Injective (v t ht) := by
-        simpa [v] using canonicalTriangleCompletion_injective D (T t) (hCard t ht)
+        simpa [v] using canonical_triangle_completion_injective D (T t) (hCard t ht)
       have hw : Function.Injective (v t' ht') := by
-        simpa [v] using canonicalTriangleCompletion_injective D (T t') (hCard t' ht')
+        simpa [v] using canonical_triangle_completion_injective D (T t') (hCard t' ht')
       exact selected_triangle_undirected_records_disjoint_across_facets
         D (T t) (T t') (v t ht) (v t' ht') (mark t ht) (mark t' ht')
         x x' (S₀ t x) (S₀ t' x') hTT' (hTCard t ht) (hTSub t ht)
-        (fun i => canonicalTriangleCompletion_mem D (T t) (hCard t ht) i)
+        (fun i => canonical_triangle_completion_mem D (T t) (hCard t ht) i)
         hv
         (hTCard t' ht') (hTSub t' ht')
-        (fun i => canonicalTriangleCompletion_mem D (T t') (hCard t' ht') i)
+        (fun i => canonical_triangle_completion_mem D (T t') (hCard t' ht') i)
         hw
   simpa [R, k, actualColoredRecordBase, actualColoredSlotLoss,
     coloredFacetRecords, coloredSlotLoss] using
@@ -114,7 +114,7 @@ theorem canonical_triangle_family_colored_payment
           slotSlack 3 (S₀ t x).card) / 2 +
         ∑ t ∈ C, ∑ x : CliqueColor,
           coloredSlotMark 3 (S₀ t x).card := by
-  have hRecords := canonical_triangle_family_actual_hRecords
+  have hRecords := canonical_triangle_family_actual_h_records
     D C T hTInjective hCard hTCard hTSub hRainbow S S₀
     hMarkSelected hVerticesSelected
   have hk : ∀ t ∈ C, ∀ x : CliqueColor, (S₀ t x).card ≤ 3 := by

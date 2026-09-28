@@ -13,11 +13,11 @@ namespace JSP523.Rank3
 
 variable {α : Type*} [DecidableEq α]
 
-private theorem commonLink_eq_oriented_of_ne_global
+private theorem common_link_eq_oriented_of_ne_global
     (H : Family α) (V : Edge α) {z v : α} (hzv : z ≠ v) :
     commonLink H V ({z, v} : Edge α) = orientedCommonLink H V z v := by
   ext p
-  exact mem_commonLink_pair_iff_oriented H V hzv p
+  exact mem_common_link_pair_iff_oriented H V hzv p
 
 /-- Convert the canonical receiver-book equations into the oriented book
 needed by the manuscript payment theorem. -/
@@ -28,16 +28,16 @@ theorem exceptional_book_oriented_links
         ({{d.x, d.y}, {d.x, d.u}} : Family α) ∧
       orientedCommonLink H V d.y d.u =
         ({{d.x, d.z}, {d.x, d.v}, {d.z, d.v}} : Family α) := by
-  obtain ⟨hzv, hxy, hxu, hyu⟩ := exceptionalReceiverBookData_distinct d
+  obtain ⟨hzv, hxy, hxu, hyu⟩ := exceptional_receiver_book_data_distinct d
   have hq' : q = ({d.z, d.v} : Edge α) := d.hq
   constructor
   · calc
       orientedCommonLink H V d.z d.v = commonLink H V ({d.z, d.v} : Edge α) :=
-        (commonLink_eq_oriented_of_ne_global H V hzv).symm
+        (common_link_eq_oriented_of_ne_global H V hzv).symm
       _ = ({{d.x, d.y}, {d.x, d.u}} : Family α) := by simpa [hq'] using d.hbook
   · calc
       orientedCommonLink H V d.y d.u = commonLink H V ({d.y, d.u} : Edge α) :=
-        (commonLink_eq_oriented_of_ne_global H V hyu).symm
+        (common_link_eq_oriented_of_ne_global H V hyu).symm
       _ = ({{d.x, d.z}, {d.x, d.v}, {d.z, d.v}} : Family α) := by
         simpa [Finset.pair_comm] using d.hreciprocal
 
@@ -47,7 +47,7 @@ theorem exceptional_book_bridge_triples_mem
     (d : ExceptionalReceiverBookData H V q) :
     ({d.z, d.v, d.y} : Edge α) ∈ H ∧
       ({d.z, d.v, d.u} : Edge α) ∈ H := by
-  obtain ⟨_, _, _, _⟩ := exceptionalReceiverBookData_distinct d
+  obtain ⟨_, _, _, _⟩ := exceptional_receiver_book_data_distinct d
   have hPages := exceptional_book_oriented_links d
   have hPage : ({d.z, d.v} : Edge α) ∈ orientedCommonLink H V d.y d.u := by
     rw [hPages.2]
@@ -70,7 +70,7 @@ theorem exceptional_book_bridge_triples_mem
 /-- Cardinal bookkeeping for the full auxiliary degree argument: every
 noncentral receiver-link edge is assigned to a neighbor of one of the two
 marked local parts. -/
-theorem commonLink_card_le_one_add_two_neighbor_sets
+theorem common_link_card_le_one_add_two_neighbor_sets
     (H : Family α) (V : Edge α) {a c b t : α}
     (N₁ N₂ : Finset α)
     (hSplit : ∀ p ∈ commonLink H V ({b, t} : Edge α),
@@ -204,14 +204,14 @@ theorem bridge_book_receiver_link_card_le_total_degree
         rw [heq]; exact hBridge
   have hbB : b ∈ B := by
     change b ∈ actualLocalPartB H V c a t
-    apply mem_actualLocalPartB.mpr
+    apply mem_actual_local_part_b.mpr
     refine ⟨hbV, hbc, hab.symm, hbt, ?_⟩
     have heq : ({c, t, b} : Edge α) = ({b, c} : Edge α) ∪ {t} := by
       ext q; simp only [Finset.mem_union, Finset.mem_insert, Finset.mem_singleton]; tauto
     rw [heq]; exact hTBC
   have hbC : b ∈ C := by
     change b ∈ actualLocalPartC H V c a t
-    apply mem_actualLocalPartC.mpr
+    apply mem_actual_local_part_c.mpr
     refine ⟨hbV, hbc, hab.symm, hbt, ?_⟩
     have heq : ({c, a, b} : Edge α) = ({a, b, c} : Edge α) := by
       ext q; simp only [Finset.mem_insert, Finset.mem_singleton]; tauto
@@ -222,14 +222,14 @@ theorem bridge_book_receiver_link_card_le_total_degree
     rw [heq] at hABX; exact hABX
   have hABedge : (x, b) ∈ G.ab := by
     change (x, b) ∈ (actualLocalTripartite H V c a t).ab
-    apply mem_actualLocalAB.mpr
+    apply mem_actual_local_ab.mpr
     refine ⟨hx, hbB, ?_⟩
     have heq : ({t, b, x} : Edge α) = ({t, x, b} : Edge α) := by
       ext q; simp only [Finset.mem_insert, Finset.mem_singleton]; tauto
     rw [← heq]; exact hTBX'
   have hACedge : (x, b) ∈ G.ac := by
     change (x, b) ∈ (actualLocalTripartite H V c a t).ac
-    apply mem_actualLocalAC.mpr
+    apply mem_actual_local_ac.mpr
     refine ⟨hx, hbC, ?_⟩
     have heq : ({a, b, x} : Edge α) = ({a, x, b} : Edge α) := by
       ext q; simp only [Finset.mem_insert, Finset.mem_singleton]; tauto
@@ -285,7 +285,7 @@ theorem bridge_book_receiver_link_card_le_total_degree
       have huV : u ∈ V := (Finset.mem_powersetCard.mp hpV).1 huP
       have huA : u ∈ A := by
         change u ∈ actualLocalPartA H V c a t
-        apply mem_actualLocalPartA.mpr
+        apply mem_actual_local_part_a.mpr
         refine ⟨huV, ?_, Ne.symm hau, ?_, ?_⟩
         · intro he; subst u; exact huNeC huP
         · intro he; subst u; exact (Finset.disjoint_left.mp hpDisj) huP (by simp)
@@ -295,7 +295,7 @@ theorem bridge_book_receiver_link_card_le_total_degree
           rw [← heq]; exact hPT
       have huAC : (u, b) ∈ G.ac := by
         change (u, b) ∈ (actualLocalTripartite H V c a t).ac
-        apply mem_actualLocalAC.mpr
+        apply mem_actual_local_ac.mpr
         refine ⟨huA, hbC, ?_⟩
         have heq : p ∪ {b} = ({a, u, b} : Edge α) := by
           rw [pair_eq_of_two_members_global hp2 haP huP hau]
@@ -318,7 +318,7 @@ theorem bridge_book_receiver_link_card_le_total_degree
       have huV : u ∈ V := (Finset.mem_powersetCard.mp hpV).1 huP
       have huB : u ∈ B := by
         change u ∈ actualLocalPartB H V c a t
-        apply mem_actualLocalPartB.mpr
+        apply mem_actual_local_part_b.mpr
         refine ⟨huV, Ne.symm hcu, ?_, ?_, ?_⟩
         · intro he; subst u; exact huNeA huP
         · intro he; subst u
@@ -329,7 +329,7 @@ theorem bridge_book_receiver_link_card_le_total_degree
           rw [← heq]; exact hPT
       have huBC : (u, b) ∈ G.bc := by
         change (u, b) ∈ (actualLocalTripartite H V c a t).bc
-        apply mem_actualLocalBC.mpr
+        apply mem_actual_local_bc.mpr
         refine ⟨huB, hbC, ?_⟩
         have heq : p ∪ {b} = ({c, u, b} : Edge α) := by
           rw [pair_eq_of_two_members_global hp2 hcP huP hcu]
@@ -339,7 +339,7 @@ theorem bridge_book_receiver_link_card_le_total_degree
       right
       exact ⟨u, by change u ∈ B.filter (fun u => (u, b) ∈ G.bc); exact Finset.mem_filter.mpr ⟨huB, huBC⟩,
         pair_eq_of_two_members_global hp2 hcP huP hcu⟩
-  have hCard := commonLink_card_le_one_add_two_neighbor_sets H V N₁ N₂ hSplit
+  have hCard := common_link_card_le_one_add_two_neighbor_sets H V N₁ N₂ hSplit
   simpa [N₁, N₂, bipRightDegree, bipLeftDegree, A, B, G] using hCard
 
 /-- A positive source cannot have fewer than three total marked
@@ -391,12 +391,12 @@ theorem bridge_book_positive_source_forces_marked_total_degree
         (actualLocalPartA H V c a t) b +
       bipRightDegree (actualLocalTripartite H V c a t).bc
         (actualLocalPartB H V c a t) b + 1 := by
-    have heq := rootCommonNeighbors_eq_commonLinkFiber H V haV hab hat hbt
+    have heq := root_common_neighbors_eq_common_link_fiber H V haV hab hat hbt
     rw [heq]
-    exact (commonLinkFiber_card_le_commonLink_card H V {b, t} a).trans hCardBT
+    exact (common_link_fiber_card_le_common_link_card H V {b, t} a).trans hCardBT
   have hRoot : ({c, b} : Edge α) ∈ rootLink H V a := by
-    simpa [Finset.pair_comm] using orientedCommonLink_pair_mem_rootLink H V hPageBC
-  have hWeight := rootedSignedWeight_le_weightFraction_of_two_alternatives
+    simpa [Finset.pair_comm] using oriented_common_link_pair_mem_root_link H V hPageBC
+  have hWeight := rooted_signed_weight_le_weight_fraction_of_two_alternatives
     H V hRoot hbc.symm hAlt.2.1 hAlt.1 hCounts.1 hCommonA
   let D := bipRightDegree (actualLocalTripartite H V c a t).ac
         (actualLocalPartA H V c a t) b +
@@ -408,13 +408,13 @@ theorem bridge_book_positive_source_forces_marked_total_degree
   have hFractionPos : 0 < weightFraction (D + 1) := lt_of_lt_of_le hpositive hWeightD
   by_contra hD
   have hSmall : D + 1 ≤ 3 := by omega
-  rw [weightFraction_eq_zero_of_le_three hSmall] at hFractionPos
+  rw [weight_fraction_eq_zero_of_le_three hSmall] at hFractionPos
   norm_num at hFractionPos
 
 /-- Once the marked node has total degree at least three, the mixed-node
 property rules out BC neighbors and leaves at least two erased AC
 neighbors. -/
-theorem bridge_book_positive_source_forces_erased_AC_degree_ge_two
+theorem bridge_book_positive_source_forces_erased_ac_degree_ge_two
     {H : Family α} {V : Edge α} {a t b c x : α}
     (hH : Admissible H) (hUniform : Uniform 3 H)
     (hground : ∀ E ∈ H, E ⊆ V)
@@ -455,13 +455,13 @@ theorem bridge_book_positive_source_forces_erased_AC_degree_ge_two
   have htV : t ∈ V := hground _ hBridge (by simp)
   have haV : a ∈ V := hground _ hBridge (by simp)
   have hbB : b ∈ B := by
-    apply mem_actualLocalPartB.mpr
+    apply mem_actual_local_part_b.mpr
     refine ⟨hbV, hbc, hab.symm, hbt, ?_⟩
     have heq : ({c, t, b} : Edge α) = ({b, c} : Edge α) ∪ {t} := by
       ext q; simp only [Finset.mem_union, Finset.mem_insert, Finset.mem_singleton]; tauto
     rw [heq]; exact hTBC
   have hbC : b ∈ C := by
-    apply mem_actualLocalPartC.mpr
+    apply mem_actual_local_part_c.mpr
     refine ⟨hbV, hbc, hab.symm, hbt, ?_⟩
     have heq : ({c, a, b} : Edge α) = ({a, b, c} : Edge α) := by
       ext q; simp only [Finset.mem_insert, Finset.mem_singleton]; tauto
@@ -471,19 +471,19 @@ theorem bridge_book_positive_source_forces_erased_AC_degree_ge_two
       ext q; simp only [Finset.mem_union, Finset.mem_insert, Finset.mem_singleton]; tauto
     exact heq.symm ▸ hABX
   have hABedge : (x, b) ∈ G.ab := by
-    apply mem_actualLocalAB.mpr
+    apply mem_actual_local_ab.mpr
     refine ⟨hx, hbB, ?_⟩
     have heq : ({t, b, x} : Edge α) = ({t, x, b} : Edge α) := by
       ext q; simp only [Finset.mem_insert, Finset.mem_singleton]; tauto
     rw [← heq]; exact hTBX'
   have hACedge : (x, b) ∈ G.ac := by
-    apply mem_actualLocalAC.mpr
+    apply mem_actual_local_ac.mpr
     refine ⟨hx, hbC, ?_⟩
     have heq : ({a, b, x} : Edge α) = ({a, x, b} : Edge α) := by
       ext q; simp only [Finset.mem_insert, Finset.mem_singleton]; tauto
     rw [← heq]; exact hABX'
   have hMixed : MixedNodeDegreeTwo G A B C :=
-    actualLocalTripartite_mixed_degree_two hH hUniform hac.symm hct hat
+    actual_local_tripartite_mixed_degree_two hH hUniform hac.symm hct hat
   have hABpos : 0 < bipLeftDegree G.ab B x :=
     Finset.card_pos.mpr ⟨b, Finset.mem_filter.mpr ⟨hbB, hABedge⟩⟩
   have hACposX : 0 < bipLeftDegree G.ac C x :=
@@ -511,36 +511,36 @@ theorem bridge_book_positive_source_forces_erased_AC_degree_ge_two
     exact hTotal
   have hACerase : bipRightDegree G.ac A b =
       bipRightDegree G.ac (A.erase x) b + 1 :=
-    bipRightDegree_erase_left_neighbor G.ac A C x b hx hACone
+    bip_right_degree_erase_left_neighbor G.ac A C x b hx hACone
   rw [hACerase] at hACgeThree
   change 3 ≤ bipRightDegree G.ac (A.erase x) b + 1 at hACgeThree
   change 2 ≤ bipRightDegree G.ac (A.erase x) b
   omega
 
-private theorem bridge_local_A_swap_global
+private theorem bridge_local_a_swap_global
     (H : Family α) (V : Edge α) (a c t : α) :
     actualLocalPartA H V c t a = actualLocalPartA H V c a t := by
-  rw [actualLocalPartA_eq_completionVertices_erase,
-    actualLocalPartA_eq_completionVertices_erase]
+  rw [actual_local_part_a_eq_completion_vertices_erase,
+    actual_local_part_a_eq_completion_vertices_erase]
   simp [Finset.pair_comm]
 
-private theorem bridge_local_C_swap_global
+private theorem bridge_local_c_swap_global
     (H : Family α) (V : Edge α) (a c t : α) :
     actualLocalPartC H V c t a = actualLocalPartB H V c a t := by
-  rw [actualLocalPartC_eq_completionVertices_erase,
-    actualLocalPartB_eq_completionVertices_erase]
+  rw [actual_local_part_c_eq_completion_vertices_erase,
+    actual_local_part_b_eq_completion_vertices_erase]
 
-private theorem bridge_graph_AC_swap_global
+private theorem bridge_graph_ac_swap_global
     (H : Family α) (V : Edge α) (a c t : α) :
     (actualLocalTripartite H V c t a).ac =
       (actualLocalTripartite H V c a t).ab := by
   ext e
   rcases e with ⟨u, v⟩
-  rw [mem_actualLocalAC, mem_actualLocalAB,
-    bridge_local_A_swap_global H V a c t,
-    bridge_local_C_swap_global H V a c t]
+  rw [mem_actual_local_ac, mem_actual_local_ab,
+    bridge_local_a_swap_global H V a c t,
+    bridge_local_c_swap_global H V a c t]
 
-private theorem orientedCommonLink_swap_global
+private theorem oriented_common_link_swap_global
     (H : Family α) (V : Edge α) {a t : α} :
     orientedCommonLink H V t a = orientedCommonLink H V a t := by
   unfold orientedCommonLink
@@ -575,18 +575,18 @@ theorem bridge_book_both_positive_sources_force_erased_degrees
         ((actualLocalPartA H V c a t).erase x) b ∧
       2 ≤ bipRightDegree (actualLocalTripartite H V c a t).ab
         ((actualLocalPartA H V c a t).erase x) b := by
-  have hA := bridge_book_positive_source_forces_erased_AC_degree_ge_two
+  have hA := bridge_book_positive_source_forces_erased_ac_degree_ge_two
     hH hUniform hground hab hac hat hbc hbt hbx hct hcx htx hax hBridge
     hBookAt hBookCx hx hpositiveA
   have hBookSwap : orientedCommonLink H V t a =
       ({{b, c}, {b, x}} : Family α) := by
-    rw [orientedCommonLink_swap_global H V, hBookAt]
+    rw [oriented_common_link_swap_global H V, hBookAt]
   have hBridgeSwap : ({t, c, a} : Edge α) ∈ H := by
     have heq : ({t, c, a} : Edge α) = ({a, c, t} : Edge α) := by
       ext q; simp [or_comm, or_left_comm]
     exact heq ▸ hBridge
   have hxSwap : x ∈ actualLocalPartA H V c t a := by
-    rw [bridge_local_A_swap_global H V a c t]
+    rw [bridge_local_a_swap_global H V a c t]
     exact hx
   have hBookCxSwap : orientedCommonLink H V c x =
       ({{t, b}, {t, a}, {b, a}} : Family α) := by
@@ -594,14 +594,14 @@ theorem bridge_book_both_positive_sources_force_erased_degrees
     ext p
     simp [Finset.pair_comm]
     tauto
-  have hT := bridge_book_positive_source_forces_erased_AC_degree_ge_two
+  have hT := bridge_book_positive_source_forces_erased_ac_degree_ge_two
     (H := H) (V := V) (a := t) (t := a) (b := b) (c := c) (x := x)
     hH hUniform hground hbt.symm hct.symm hat.symm hbc hab.symm hbx
     hac.symm hcx hax htx hBridgeSwap hBookSwap hBookCxSwap hxSwap hpositiveT
   constructor
   · exact hA
-  · simpa [bridge_graph_AC_swap_global H V a c t,
-      bridge_local_A_swap_global H V a c t] using hT
+  · simpa [bridge_graph_ac_swap_global H V a c t,
+      bridge_local_a_swap_global H V a c t] using hT
 
 /-- The manuscript's marked-node payment with its degree hypotheses
 derived solely from positivity of the two directed source weights. -/
@@ -652,15 +652,15 @@ theorem exceptional_book_actual_charge_paid
     min (actualReceiverCharge H V d.z d.x d.y d.v)
       (actualReceiverCharge H V d.v d.x d.y d.z) ≤
       localSignedDefect H V ({d.z, d.v, d.y} : Edge α) := by
-  obtain ⟨hzv, hxy, hxu, hyu⟩ := exceptionalReceiverBookData_distinct d
+  obtain ⟨hzv, hxy, hxu, hyu⟩ := exceptional_receiver_book_data_distinct d
   obtain ⟨_, hzx, hzy, hzu, hvx, hvy, hvu, _, _, _⟩ :=
-    exceptionalReceiverBookData_five_distinct d
+    exceptional_receiver_book_data_five_distinct d
   have hPages := exceptional_book_oriented_links d
   have hBridgePair := exceptional_book_bridge_triples_mem d
   have hBridge := hBridgePair.1
   have hBridgeX := hBridgePair.2
   have hxA : d.u ∈ actualLocalPartA H V d.y d.z d.v := by
-    apply mem_actualLocalPartA.mpr
+    apply mem_actual_local_part_a.mpr
     refine ⟨d.huV, ?_, ?_, ?_, hBridgeX⟩
     · exact hyu.symm
     · exact hzu.symm
@@ -682,18 +682,18 @@ theorem exceptional_book_actual_charge_paid
     (H := H) (V := V) (a := d.z) (t := d.v) (b := d.x) (c := d.y) (x := d.u)
     hH hUniform hground hzx hzy hzv hxy hvx.symm hxu
     hvy.symm hyu hvu hzu hBridgeY hBookAt hBookCx' hxA
-    (by simpa [rootedSignedWeight_comm] using hpositiveZ)
-    (by simpa [rootedSignedWeight_comm] using hpositiveV)
+    (by simpa [rooted_signed_weight_comm] using hpositiveZ)
+    (by simpa [rooted_signed_weight_comm] using hpositiveV)
   have hRootZ : ({d.x, d.y} : Edge α) ∈ rootLink H V d.z := by
     have hp : ({d.x, d.y} : Edge α) ∈ orientedCommonLink H V d.z d.v := by
       rw [hBookAt]; simp
-    exact orientedCommonLink_pair_mem_rootLink H V hp
+    exact oriented_common_link_pair_mem_root_link H V hp
   have hBookSwap : orientedCommonLink H V d.v d.z =
-      orientedCommonLink H V d.z d.v := orientedCommonLink_swap_global H V
+      orientedCommonLink H V d.z d.v := oriented_common_link_swap_global H V
   have hRootV : ({d.x, d.y} : Edge α) ∈ rootLink H V d.v := by
     have hp : ({d.x, d.y} : Edge α) ∈ orientedCommonLink H V d.v d.z := by
       rw [hBookSwap, hBookAt]; simp
-    exact orientedCommonLink_pair_mem_rootLink H V hp
+    exact oriented_common_link_pair_mem_root_link H V hp
   have hzComp : d.z ∈ completionVertices H V ({d.x, d.y} : Edge α) :=
     root_mem_source_completion H V d.hzV hRootZ
   have hvComp : d.v ∈ completionVertices H V ({d.x, d.y} : Edge α) :=
@@ -713,8 +713,8 @@ theorem exceptional_book_actual_charge_paid
         (((completionVertices H V ({d.x, d.y} : Edge α)).card : ℚ) - 1) := by
     simp [actualReceiverCharge, hzErase, chargePerOtherCompletion]
   rw [hChargeZ, hChargeV]
-  rw [positiveRootedWeight_comm H V d.z d.x d.y,
-    positiveRootedWeight_comm H V d.v d.x d.y]
+  rw [positive_rooted_weight_comm H V d.z d.x d.y,
+    positive_rooted_weight_comm H V d.v d.x d.y]
   have hEdge : ({d.z, d.y, d.v} : Edge α) =
       ({d.z, d.v, d.y} : Edge α) := by
     ext q
@@ -724,18 +724,18 @@ theorem exceptional_book_actual_charge_paid
 
 /-- A nonpositive indexed bridge demand is paid by the actual local
 nonnegativity of the triple defect. -/
-theorem bridgeDemand_le_localSignedDefect_of_nonpositive
+theorem bridge_demand_le_local_signed_defect_of_nonpositive
     (H : Family α) (V : Edge α) (q E : Edge α)
     (hH : Admissible H) (hUniform : Uniform 3 H)
     (hground : ∀ F ∈ H, F ⊆ V) (hE : E ∈ H)
     (hDemand : bridgeDemand H V q E ≤ 0) :
     bridgeDemand H V q E ≤ localSignedDefect H V E := by
-  have hdef := localSignedDefect_nonneg hH hUniform hground hE
+  have hdef := local_signed_defect_nonneg hH hUniform hground hE
   linarith
 
 /-- Every positive indexed bridge demand is paid by the defect of its
 bridge triple. -/
-theorem bridgeDemand_le_localSignedDefect_of_positive
+theorem bridge_demand_le_local_signed_defect_of_positive
     (H : Family α) (V : Edge α) (q E : Edge α)
     (hH : Admissible H) (hUniform : Uniform 3 H)
     (hground : ∀ F ∈ H, F ⊆ V) (_hE : E ∈ H)
@@ -760,9 +760,9 @@ theorem bridgeDemand_le_localSignedDefect_of_positive
         rw [hFormula, ite_eq_left hEy] at hDemand
         exact hDemand
       have hsrcZ : 0 < rootedSignedWeight H V d.z d.x d.y :=
-        actualReceiverCharge_pos_signedWeight H V _ _ _ _ (lt_min_iff.mp hMinPos).1
+        actual_receiver_charge_pos_signed_weight H V _ _ _ _ (lt_min_iff.mp hMinPos).1
       have hsrcV : 0 < rootedSignedWeight H V d.v d.x d.y :=
-        actualReceiverCharge_pos_signedWeight H V _ _ _ _ (lt_min_iff.mp hMinPos).2
+        actual_receiver_charge_pos_signed_weight H V _ _ _ _ (lt_min_iff.mp hMinPos).2
       have hPaid := exceptional_book_actual_charge_paid d hH hUniform hground
         hsrcZ hsrcV
       have hEdge : ({d.z, d.v, d.y} : Edge α) = E := hEy.symm
@@ -777,11 +777,11 @@ theorem bridgeDemand_le_localSignedDefect_of_positive
         let d' := swapExceptionalReceiverBookPages d
         have hsrcZ : 0 < rootedSignedWeight H V d'.z d'.x d'.y := by
           simpa [d', swapExceptionalReceiverBookPages] using
-            actualReceiverCharge_pos_signedWeight H V d.z d.x d.u d.v
+            actual_receiver_charge_pos_signed_weight H V d.z d.x d.u d.v
               (lt_min_iff.mp hMinPos).1
         have hsrcV : 0 < rootedSignedWeight H V d'.v d'.x d'.y := by
           simpa [d', swapExceptionalReceiverBookPages] using
-            actualReceiverCharge_pos_signedWeight H V d.v d.x d.u d.z
+            actual_receiver_charge_pos_signed_weight H V d.v d.x d.u d.z
               (lt_min_iff.mp hMinPos).2
         have hPaid := exceptional_book_actual_charge_paid d' hH hUniform hground
           hsrcZ hsrcV
@@ -800,15 +800,15 @@ theorem bridgeDemand_le_localSignedDefect_of_positive
 
 /-- Geometry and nonnegativity together give the per demand payment used
 by the finite bridge-demand sum. -/
-theorem bridgeDemand_le_localSignedDefect_of_geometry
+theorem bridge_demand_le_local_signed_defect_of_geometry
     (H : Family α) (V : Edge α) (q E : Edge α)
     (hH : Admissible H) (hUniform : Uniform 3 H)
     (hground : ∀ F ∈ H, F ⊆ V) (hE : E ∈ H) :
     bridgeDemand H V q E ≤ localSignedDefect H V E := by
   by_cases hDemand : bridgeDemand H V q E ≤ 0
-  · exact bridgeDemand_le_localSignedDefect_of_nonpositive
+  · exact bridge_demand_le_local_signed_defect_of_nonpositive
       H V q E hH hUniform hground hE hDemand
-  · exact bridgeDemand_le_localSignedDefect_of_positive
+  · exact bridge_demand_le_local_signed_defect_of_positive
       H V q E hH hUniform hground hE (lt_of_not_ge hDemand)
 
 end JSP523.Rank3

@@ -20,7 +20,7 @@ set_option maxHeartbeats 1000000
 
 variable {α : Type*} [DecidableEq α]
 
-private theorem triple_pair_mem_rootLink
+private theorem triple_pair_mem_root_link
     {H : Family α} {V : Edge α} {z x y : α}
     (hground : ∀ E ∈ H, E ⊆ V)
     (hE : ({z, x, y} : Edge α) ∈ H)
@@ -50,7 +50,7 @@ private theorem triple_pair_mem_rootLink
       rw [heq]
       exact hE
 
-private theorem rootNeighbor_of_actual_triple
+private theorem root_neighbor_of_actual_triple
     {H : Family α} {V : Edge α} {z x y : α}
     (hground : ∀ E ∈ H, E ⊆ V)
     (hzx : z ≠ x) (hzy : z ≠ y) (hxy : x ≠ y)
@@ -119,10 +119,10 @@ theorem bridge_book_source_alternatives_mem
     exact hABX
   constructor
   · apply Finset.mem_erase.mpr
-    refine ⟨Ne.symm hbt, rootNeighbor_of_actual_triple hground hac hat hct hBridge⟩
+    refine ⟨Ne.symm hbt, root_neighbor_of_actual_triple hground hac hat hct hBridge⟩
   constructor
   · apply Finset.mem_erase.mpr
-    refine ⟨Ne.symm hcx, rootNeighbor_of_actual_triple hground hab hax
+    refine ⟨Ne.symm hcx, root_neighbor_of_actual_triple hground hab hax
       hbx hABX'⟩
   exact ⟨hABC', hABX'⟩
 
@@ -207,7 +207,7 @@ theorem bridge_three_page_root_common_count
   have hCommon : commonLink H V ({c, x} : Edge α) =
       ({{a, b}, {a, t}, {b, t}} : Family α) := by
     ext p
-    exact (mem_commonLink_pair_iff_oriented H V hcx p).trans
+    exact (mem_common_link_pair_iff_oriented H V hcx p).trans
       (by rw [hBook])
   have hCell : ({c, x} : Edge α) ∈ V.powersetCard 2 := by
     apply Finset.mem_powersetCard.mpr
@@ -217,13 +217,13 @@ theorem bridge_three_page_root_common_count
     · exact hqc ▸ hcV
     · exact (Finset.mem_singleton.mp hqx) ▸ hxV
   have hpbt : ({b, t} : Edge α) ∈ commonLink H V ({c, x} : Edge α) := by
-    exact (mem_commonLink_pair_iff_oriented H V hcx _).2
+    exact (mem_common_link_pair_iff_oriented H V hcx _).2
       (by rw [hBook]; simp)
   have hpab : ({a, b} : Edge α) ∈ commonLink H V ({c, x} : Edge α) := by
-    exact (mem_commonLink_pair_iff_oriented H V hcx _).2
+    exact (mem_common_link_pair_iff_oriented H V hcx _).2
       (by rw [hBook]; simp)
   have hpat : ({a, t} : Edge α) ∈ commonLink H V ({c, x} : Edge α) := by
-    exact (mem_commonLink_pair_iff_oriented H V hcx _).2
+    exact (mem_common_link_pair_iff_oriented H V hcx _).2
       (by rw [hBook]; simp)
   have hFiberA : commonLinkFiber H V ({c, x} : Edge α) a = {b, t} := by
     have haNot : a ∉ ({b, t} : Edge α) := by
@@ -233,7 +233,7 @@ theorem bridge_three_page_root_common_count
       · exact hab hab'
       · exact hat hat'
     apply Finset.Subset.antisymm
-    · exact commonLinkFiber_subset_pair hH hCell hpbt haNot
+    · exact common_link_fiber_subset_pair hH hCell hpbt haNot
     · intro q hq
       simp only [Finset.mem_insert, Finset.mem_singleton] at hq
       rcases hq with hqb | hqt
@@ -245,7 +245,7 @@ theorem bridge_three_page_root_common_count
         exact Finset.mem_filter.mpr ⟨htV, hpat⟩
   have hFiberT : commonLinkFiber H V ({c, x} : Edge α) t = {a, b} := by
     apply Finset.Subset.antisymm
-    · exact commonLinkFiber_subset_pair hH hCell hpab
+    · exact common_link_fiber_subset_pair hH hCell hpab
         (by simp [Ne.symm hat, hbt.symm])
     · intro q hq
       simp only [Finset.mem_insert, Finset.mem_singleton] at hq
@@ -258,9 +258,9 @@ theorem bridge_three_page_root_common_count
         unfold commonLinkFiber
         exact Finset.mem_filter.mpr
           ⟨hbV, by simpa [Finset.pair_comm] using hpbt⟩
-  have hA := rootCommonNeighbors_eq_commonLinkFiber H V
+  have hA := root_common_neighbors_eq_common_link_fiber H V
     haV hac hax hcx
-  have hT := rootCommonNeighbors_eq_commonLinkFiber H V
+  have hT := root_common_neighbors_eq_common_link_fiber H V
     htV htc htx hcx
   rw [hA, hFiberA, hT, hFiberT]
   constructor
@@ -375,7 +375,7 @@ theorem bridge_book_receiver_link_card_le_degree
     exact hABX
   have hbC : b ∈ C := by
     change b ∈ actualLocalPartC H V c a t
-    apply mem_actualLocalPartC.mpr
+    apply mem_actual_local_part_c.mpr
     refine ⟨hbV, ?_, ?_, ?_, ?_⟩
     · exact hbc
     · exact hab.symm
@@ -388,7 +388,7 @@ theorem bridge_book_receiver_link_card_le_degree
       exact hSrc
   have hbB : b ∈ B := by
     change b ∈ actualLocalPartB H V c a t
-    apply mem_actualLocalPartB.mpr
+    apply mem_actual_local_part_b.mpr
     refine ⟨hbV, ?_, ?_, ?_, ?_⟩
     · exact hbc
     · exact hab.symm
@@ -401,7 +401,7 @@ theorem bridge_book_receiver_link_card_le_degree
       exact hTBC
   have hABedge : (x, b) ∈ G.ab := by
     change (x, b) ∈ (actualLocalTripartite H V c a t).ab
-    apply mem_actualLocalAB.mpr
+    apply mem_actual_local_ab.mpr
     refine ⟨hx, hbB, ?_⟩
     have heq : ({t, b, x} : Edge α) = ({t, x, b} : Edge α) := by
       ext q
@@ -411,7 +411,7 @@ theorem bridge_book_receiver_link_card_le_degree
     exact hTBX'
   have hACedge : (x, b) ∈ G.ac := by
     change (x, b) ∈ (actualLocalTripartite H V c a t).ac
-    apply mem_actualLocalAC.mpr
+    apply mem_actual_local_ac.mpr
     refine ⟨hx, hbC, ?_⟩
     have heq : ({a, b, x} : Edge α) = ({a, x, b} : Edge α) := by
       ext q
@@ -420,7 +420,7 @@ theorem bridge_book_receiver_link_card_le_degree
     rw [← heq]
     exact hBookNotAB
   have hMixed : MixedNodeDegreeTwo G A B C :=
-    actualLocalTripartite_mixed_degree_two hH hUniform
+    actual_local_tripartite_mixed_degree_two hH hUniform
       hac.symm hct hat
   have hABpos : 0 < bipLeftDegree G.ab B x := by
     exact Finset.card_pos.mpr ⟨b, Finset.mem_filter.mpr ⟨hbB, hABedge⟩⟩
@@ -436,7 +436,7 @@ theorem bridge_book_receiver_link_card_le_degree
     have hbz : b = z := by simpa using hbmem
     simpa [hbz] using hz
   have hFullDegree : bipRightDegree G.ac A b = r + 1 := by
-    have h := bipRightDegree_erase_left_neighbor
+    have h := bip_right_degree_erase_left_neighbor
       G.ac A C x b hx hACone
     rw [hrDegree] at h
     exact h
@@ -516,7 +516,7 @@ theorem bridge_book_receiver_link_card_le_degree
           (Finset.mem_powersetCard.mp hpV).1 huP
         have huB : u ∈ B := by
           change u ∈ actualLocalPartB H V c a t
-          apply mem_actualLocalPartB.mpr
+          apply mem_actual_local_part_b.mpr
           refine ⟨huV, hcu, huNeA, huNeT, ?_⟩
           have hpEq : p = ({c, u} : Edge α) :=
             pair_eq_of_two_members_bridge hpCard hcP huP hcu.symm
@@ -529,7 +529,7 @@ theorem bridge_book_receiver_link_card_le_degree
           exact hpT
         have huBC : (u, b) ∈ G.bc := by
           change (u, b) ∈ (actualLocalTripartite H V c a t).bc
-          apply mem_actualLocalBC.mpr
+          apply mem_actual_local_bc.mpr
           refine ⟨huB, hbC, ?_⟩
           have hpEq : p = ({c, u} : Edge α) :=
             pair_eq_of_two_members_bridge hpCard hcP huP hcu.symm
@@ -567,7 +567,7 @@ theorem bridge_book_receiver_link_card_le_degree
       have huV : u ∈ V := (Finset.mem_powersetCard.mp hpV).1 huP
       have huA : u ∈ A := by
         change u ∈ actualLocalPartA H V c a t
-        apply mem_actualLocalPartA.mpr
+        apply mem_actual_local_part_a.mpr
         refine ⟨huV, huNeC, Ne.symm hau, huNeT, ?_⟩
         have hpEq : p = ({a, u} : Edge α) :=
           pair_eq_of_two_members_bridge hpCard haP huP hau
@@ -579,7 +579,7 @@ theorem bridge_book_receiver_link_card_le_degree
         exact hpt
       have huAC : (u, b) ∈ G.ac := by
         change (u, b) ∈ (actualLocalTripartite H V c a t).ac
-        apply mem_actualLocalAC.mpr
+        apply mem_actual_local_ac.mpr
         refine ⟨huA, hbC, ?_⟩
         have hpEq : p = ({a, u} : Edge α) :=
           pair_eq_of_two_members_bridge hpCard haP huP hau
@@ -609,7 +609,7 @@ theorem bridge_book_receiver_link_card_le_degree
   rw [hNCard] at hTCard
   omega
 
-private theorem orientedCommonLink_swap
+private theorem oriented_common_link_swap
     (H : Family α) (V : Edge α) {a t : α} (hat : a ≠ t) :
     orientedCommonLink H V t a = orientedCommonLink H V a t := by
   unfold orientedCommonLink
@@ -623,30 +623,30 @@ private theorem orientedCommonLink_swap
     refine ⟨hpV, ?_, hpt, hpa⟩
     simpa only [Finset.pair_comm] using hpDisj
 
-private theorem bridge_local_A_swap
+private theorem bridge_local_a_swap
     (H : Family α) (V : Edge α) (a c t : α) :
     actualLocalPartA H V c t a =
       actualLocalPartA H V c a t := by
-  rw [actualLocalPartA_eq_completionVertices_erase,
-    actualLocalPartA_eq_completionVertices_erase]
+  rw [actual_local_part_a_eq_completion_vertices_erase,
+    actual_local_part_a_eq_completion_vertices_erase]
   simp [Finset.pair_comm]
 
-private theorem bridge_local_C_swap
+private theorem bridge_local_c_swap
     (H : Family α) (V : Edge α) (a c t : α) :
     actualLocalPartC H V c t a =
       actualLocalPartB H V c a t := by
-  rw [actualLocalPartC_eq_completionVertices_erase,
-    actualLocalPartB_eq_completionVertices_erase]
+  rw [actual_local_part_c_eq_completion_vertices_erase,
+    actual_local_part_b_eq_completion_vertices_erase]
 
-private theorem bridge_graph_AC_swap
+private theorem bridge_graph_ac_swap
     (H : Family α) (V : Edge α) (a c t : α) :
     (actualLocalTripartite H V c t a).ac =
       (actualLocalTripartite H V c a t).ab := by
   ext e
   rcases e with ⟨u, v⟩
-  rw [mem_actualLocalAC, mem_actualLocalAB,
-    bridge_local_A_swap H V a c t,
-    bridge_local_C_swap H V a c t]
+  rw [mem_actual_local_ac, mem_actual_local_ab,
+    bridge_local_a_swap H V a c t,
+    bridge_local_c_swap H V a c t]
 
 /-- The other receiver-link bound follows by swapping the two bridge
 roots.  It controls J_ab using the actual A-degree of the other marked
@@ -667,7 +667,7 @@ theorem bridge_book_other_receiver_link_card_le_degree
     (commonLink H V ({a, b} : Edge α)).card ≤ s + 2 := by
   have hBookSwap : orientedCommonLink H V t a =
       ({{b, c}, {b, x}} : Family α) := by
-    rw [orientedCommonLink_swap H V hat, hBook]
+    rw [oriented_common_link_swap H V hat, hBook]
   have hBridgeSwap : ({t, c, a} : Edge α) ∈ H := by
     have heq : ({t, c, a} : Edge α) = ({a, c, t} : Edge α) := by
       ext q
@@ -676,12 +676,12 @@ theorem bridge_book_other_receiver_link_card_le_degree
     rw [heq]
     exact hBridge
   have hxSwap : x ∈ actualLocalPartA H V c t a := by
-    rw [bridge_local_A_swap H V a c t]
+    rw [bridge_local_a_swap H V a c t]
     exact hx
   have hDegSwap : bipRightDegree (actualLocalTripartite H V c t a).ac
       ((actualLocalPartA H V c t a).erase x) b = s := by
-    rw [bridge_graph_AC_swap H V a c t,
-      bridge_local_A_swap H V a c t]
+    rw [bridge_graph_ac_swap H V a c t,
+      bridge_local_a_swap H V a c t]
     exact hsDegree
   simpa [Finset.pair_comm] using bridge_book_receiver_link_card_le_degree
     (H := H) (V := V) (a := t) (t := a) (b := b) (c := c) (x := x)
@@ -694,7 +694,7 @@ theorem bridge_book_other_receiver_link_card_le_degree
 /-- Two specified alternatives in the endpoint deficit give the source
 weight bound used in (II.D.2).  The assumptions are actual rooted common
 neighbor counts; no deficit estimate is hidden in the conclusion. -/
-theorem rootedSignedWeight_le_weightFraction_of_two_alternatives
+theorem rooted_signed_weight_le_weight_fraction_of_two_alternatives
     (H : Family α) (V : Edge α) {z x y u v : α} {k : ℕ}
     (hxy : ({x, y} : Edge α) ∈ rootLink H V z)
     (hxyNe : x ≠ y)
@@ -717,8 +717,8 @@ theorem rootedSignedWeight_le_weightFraction_of_two_alternatives
     exact Finset.single_le_sum
       (f := fun q => weightFraction dx -
         weightFraction (rootCommonNeighbors H V z x q).card)
-      (fun q hq => sub_nonneg.mpr (weightFraction_mono (Finset.card_le_card
-        (rootCommonNeighbors_subset_rootNeighbors_left H V z x q)))) hu
+      (fun q hq => sub_nonneg.mpr (weight_fraction_mono (Finset.card_le_card
+        (root_common_neighbors_subset_root_neighbors_left H V z x q)))) hu
   have hDef2 : weightFraction dy - weightFraction k ≤
       (∑ q ∈ (rootNeighbors H V z x).erase y,
         (weightFraction dy -
@@ -726,13 +726,13 @@ theorem rootedSignedWeight_le_weightFraction_of_two_alternatives
     have hAtV : weightFraction dy - weightFraction k ≤
         weightFraction dy -
           weightFraction (rootCommonNeighbors H V z y v).card := by
-      exact sub_le_sub_left (weightFraction_mono hvCount) _
+      exact sub_le_sub_left (weight_fraction_mono hvCount) _
     exact hAtV.trans (Finset.single_le_sum
       (f := fun q => weightFraction dy -
         weightFraction (rootCommonNeighbors H V z y q).card)
-      (fun q hq => sub_nonneg.mpr (weightFraction_mono
+      (fun q hq => sub_nonneg.mpr (weight_fraction_mono
         (Finset.card_le_card
-          (rootCommonNeighbors_subset_rootNeighbors_left H V z y q)))) hv)
+          (root_common_neighbors_subset_root_neighbors_left H V z y q)))) hv)
   have hDef : weightFraction dx + weightFraction dy -
       (weightFraction 2 + weightFraction k) ≤
       rootedWeightDeficit H V z x y := by
@@ -740,15 +740,15 @@ theorem rootedSignedWeight_le_weightFraction_of_two_alternatives
     have := add_le_add hDef1 hDef2
     dsimp [dx, dy] at this ⊢
     linarith
-  have hEq := rootedSignedWeight_eq_base_sub_deficit H V hxy hxyNe
-  have hBase := baseWeight_le_twice_min dx dy
+  have hEq := rooted_signed_weight_eq_base_sub_deficit H V hxy hxyNe
+  have hBase := base_weight_le_twice_min dx dy
   have hMin : 2 * min (weightFraction dx) (weightFraction dy) ≤
       weightFraction dx + weightFraction dy := by
     have h₁ := min_le_left (weightFraction dx) (weightFraction dy)
     have h₂ := min_le_right (weightFraction dx) (weightFraction dy)
     linarith
   have h2 : weightFraction 2 = 0 := by norm_num [weightFraction]
-  have hkNonneg := weightFraction_nonneg k
+  have hkNonneg := weight_fraction_nonneg k
   rw [h2] at hDef
   rw [hEq]
   have hTarget : weightFraction dx + weightFraction dy -
@@ -760,7 +760,7 @@ theorem rootedSignedWeight_le_weightFraction_of_two_alternatives
 directed source: a degree bound on the second specified common-neighbor
 fiber, together with the two-alternative count `2`, gives the manuscript's
 `phi(r+1) = localPhi(r+1)` bound. -/
-theorem rootedSignedWeight_le_localPhi_of_bridge_alternatives
+theorem rooted_signed_weight_le_local_phi_of_bridge_alternatives
     (H : Family α) (V : Edge α) {z x y u v : α} {r : ℕ}
     (hxy : ({x, y} : Edge α) ∈ rootLink H V z)
     (hxyNe : x ≠ y)
@@ -769,7 +769,7 @@ theorem rootedSignedWeight_le_localPhi_of_bridge_alternatives
     (huCount : (rootCommonNeighbors H V z x u).card = 2)
     (hvCount : (rootCommonNeighbors H V z y v).card ≤ r + 2) :
     rootedSignedWeight H V z x y ≤ localPhi (r + 1) := by
-  have h := rootedSignedWeight_le_weightFraction_of_two_alternatives
+  have h := rooted_signed_weight_le_weight_fraction_of_two_alternatives
     H V hxy hxyNe hu hv huCount hvCount
   simpa [localPhi, Nat.add_assoc] using h
 
@@ -794,9 +794,9 @@ theorem bridge_core_pair_completion_degree_ge_two
       rw [heq]
       exact hE
   have hxComp : x ∈ completionVertices H V ({b, c} : Edge α) := by
-    rw [actualLocalPartA_eq_completionVertices_erase] at hx
+    rw [actual_local_part_a_eq_completion_vertices_erase] at hx
     exact (Finset.mem_erase.mp hx).2
-  have hax : a ≠ x := (mem_actualLocalPartA.mp hx |>.2.1).symm
+  have hax : a ≠ x := (mem_actual_local_part_a.mp hx |>.2.1).symm
   have hpair : ({a, x} : Edge α) ⊆
       completionVertices H V ({b, c} : Edge α) := by
     intro t ht
@@ -828,9 +828,9 @@ theorem bridge_other_pair_completion_degree_ge_two
       rw [heq]
       exact hE
   have hdComp : d ∈ completionVertices H V ({a, b} : Edge α) := by
-    rw [actualLocalPartC_eq_completionVertices_erase] at hd
+    rw [actual_local_part_c_eq_completion_vertices_erase] at hd
     exact (Finset.mem_erase.mp hd).2
-  have hcd : c ≠ d := (mem_actualLocalPartC.mp hd |>.2.2.2.1).symm
+  have hcd : c ≠ d := (mem_actual_local_part_c.mp hd |>.2.2.2.1).symm
   have hpair : ({c, d} : Edge α) ⊆
       completionVertices H V ({a, b} : Edge α) := by
     intro t ht
@@ -896,7 +896,7 @@ theorem bridge_actual_defect_pays_minimum_demand
     have hq : (2 : ℚ) ≤ (completionVertices H V ({a, b} : Edge α)).card := by
       exact_mod_cast hdegT
     linarith
-  have hSourceA := triple_pair_mem_rootLink (z := a) (x := b) (y := c)
+  have hSourceA := triple_pair_mem_root_link (z := a) (x := b) (y := c)
     hground hE hab hac hbc
   have hTripleT : ({c, a, b} : Edge α) ∈ H := by
     have heq : ({c, a, b} : Edge α) = ({a, b, c} : Edge α) := by
@@ -905,11 +905,11 @@ theorem bridge_actual_defect_pays_minimum_demand
       tauto
     rw [heq]
     exact hE
-  have hSourceT := triple_pair_mem_rootLink (z := c) (x := a) (y := b)
+  have hSourceT := triple_pair_mem_root_link (z := c) (x := a) (y := b)
     hground hTripleT hac.symm hbc.symm hab
-  have hwa := rootedSignedWeight_le_localPhi_of_bridge_alternatives
+  have hwa := rooted_signed_weight_le_local_phi_of_bridge_alternatives
     H V hSourceA hbc hu₁ hv₁ hu₁Count hv₁Count
-  have hwt := rootedSignedWeight_le_localPhi_of_bridge_alternatives
+  have hwt := rooted_signed_weight_le_local_phi_of_bridge_alternatives
     H V hSourceT hab hu₂ hv₂ hu₂Count hv₂Count
   have hPosA : 0 ≤ positiveRootedWeight H V a b c := by
     unfold positiveRootedWeight
@@ -919,10 +919,10 @@ theorem bridge_actual_defect_pays_minimum_demand
     exact le_max_right _ _
   have hMaxA : positiveRootedWeight H V a b c ≤ localPhi (r + 1) := by
     unfold positiveRootedWeight
-    exact max_le hwa (localPhi_nonneg _)
+    exact max_le hwa (local_phi_nonneg _)
   have hMaxT : positiveRootedWeight H V c a b ≤ localPhi (s + 1) := by
     unfold positiveRootedWeight
-    exact max_le hwt (localPhi_nonneg _)
+    exact max_le hwt (local_phi_nonneg _)
   have hPayA : positiveRootedWeight H V a b c /
       (((completionVertices H V ({b, c} : Edge α)).card : ℚ) - 1) ≤
       localPhi (r + 1) := by
@@ -1006,7 +1006,7 @@ theorem bridge_book_manuscript_payment
   have hxt : x ∈ (rootNeighbors H V t b).erase c := by
     apply Finset.mem_erase.mpr
     refine ⟨hcx.symm, ?_⟩
-    exact rootNeighbor_of_actual_triple hground hbt.symm htx hbx hTBX'
+    exact root_neighbor_of_actual_triple hground hbt.symm htx hbx hTBX'
   have hatN : a ∈ (rootNeighbors H V t c).erase b := by
     apply Finset.mem_erase.mpr
     refine ⟨hab, ?_⟩
@@ -1016,7 +1016,7 @@ theorem bridge_book_manuscript_payment
         simp only [Finset.mem_insert, Finset.mem_singleton]
         tauto
       exact heq ▸ hBridge
-    exact rootNeighbor_of_actual_triple hground hct.symm hat.symm hac.symm hBridgeTCA
+    exact root_neighbor_of_actual_triple hground hct.symm hat.symm hac.symm hBridgeTCA
   have haV : a ∈ V := hground _ hBridge (by simp)
   have htV : t ∈ V := hground _ hBridge (by simp)
   have hcV : c ∈ V := hground _ hBridge (by simp)
@@ -1037,14 +1037,14 @@ theorem bridge_book_manuscript_payment
       bridge_book_other_receiver_link_card_le_degree hH hUniform hground
         hab hac hat hbc hbt hct hBridge hBookAt hx hsDegree hs
   have hCommonA : (rootCommonNeighbors H V a b t).card ≤ r + 2 := by
-    have heq := rootCommonNeighbors_eq_commonLinkFiber H V haV hab hat hbt
+    have heq := root_common_neighbors_eq_common_link_fiber H V haV hab hat hbt
     rw [heq]
-    exact (commonLinkFiber_card_le_commonLink_card H V {b, t} a).trans hCardBT
+    exact (common_link_fiber_card_le_common_link_card H V {b, t} a).trans hCardBT
   have hCommonT : (rootCommonNeighbors H V t b a).card ≤ s + 2 := by
-    have heq := rootCommonNeighbors_eq_commonLinkFiber H V htV hbt.symm
+    have heq := root_common_neighbors_eq_common_link_fiber H V htV hbt.symm
       hat.symm hab.symm
     rw [heq]
-    exact (commonLinkFiber_card_le_commonLink_card H V {b, a} t).trans hCardBA
+    exact (common_link_fiber_card_le_common_link_card H V {b, a} t).trans hCardBA
   have hACB : ({a, c, b} : Edge α) ∈ H := by
     have heq : ({a, c, b} : Edge α) = ({a, b, c} : Edge α) := by
       ext q
@@ -1056,20 +1056,20 @@ theorem bridge_book_manuscript_payment
       ext q
       simp [or_comm, or_left_comm]
     exact heq ▸ hTBC'
-  have hRootA := triple_pair_mem_rootLink (z := a) (x := c) (y := b)
+  have hRootA := triple_pair_mem_root_link (z := a) (x := c) (y := b)
     hground hACB hac hab hbc.symm
-  have hRootT := triple_pair_mem_rootLink (z := t) (x := c) (y := b)
+  have hRootT := triple_pair_mem_root_link (z := t) (x := c) (y := b)
     hground hTCB hct.symm hbt.symm hbc.symm
-  have hWeightA := rootedSignedWeight_le_localPhi_of_bridge_alternatives
+  have hWeightA := rooted_signed_weight_le_local_phi_of_bridge_alternatives
     H V hRootA hbc.symm hxb hta hCounts.1 hCommonA
-  have hWeightT := rootedSignedWeight_le_localPhi_of_bridge_alternatives
+  have hWeightT := rooted_signed_weight_le_local_phi_of_bridge_alternatives
     H V hRootT hbc.symm hxt hatN hCounts.2 hCommonT
   have hPositiveA : positiveRootedWeight H V a c b ≤ localPhi (r + 1) := by
     unfold positiveRootedWeight
-    exact max_le hWeightA (localPhi_nonneg _)
+    exact max_le hWeightA (local_phi_nonneg _)
   have hPositiveT : positiveRootedWeight H V t c b ≤ localPhi (s + 1) := by
     unfold positiveRootedWeight
-    exact max_le hWeightT (localPhi_nonneg _)
+    exact max_le hWeightT (local_phi_nonneg _)
   have hdeg := bridge_book_source_pair_degree_ge_two hground hab hac hat
     hbc hbt hbx hct hcx htx hBridge hBookAt
   have hden : 1 ≤
@@ -1096,14 +1096,14 @@ theorem bridge_book_manuscript_payment
       exact le_max_right _ _
     nlinarith
   have hPartB : b ∈ actualLocalPartB H V c a t := by
-    apply mem_actualLocalPartB.mpr
+    apply mem_actual_local_part_b.mpr
     refine ⟨hbV, hbc, hab.symm, hbt, ?_⟩
     have heq : ({c, t, b} : Edge α) = ({t, b, c} : Edge α) := by
       ext q
       simp [or_comm, or_left_comm]
     exact heq ▸ hTBC'
   have hPartC : b ∈ actualLocalPartC H V c a t := by
-    apply mem_actualLocalPartC.mpr
+    apply mem_actual_local_part_c.mpr
     refine ⟨hbV, hbc, hab.symm, hbt, ?_⟩
     have heq : ({c, a, b} : Edge α) = ({a, c, b} : Edge α) := by
       ext q
@@ -1132,10 +1132,10 @@ theorem bridge_book_manuscript_payment
     (r := s) (s := r)
     hH hUniform hground hac.symm hct hat hBridgeCAT hx hPartB hPartC
     (by
-      apply mem_actualLocalAB.mpr
+      apply mem_actual_local_ab.mpr
       exact ⟨hx, hPartB, hTBXCanon⟩)
     (by
-      apply mem_actualLocalAC.mpr
+      apply mem_actual_local_ac.mpr
       exact ⟨hx, hPartC, hABXCanon⟩)
     hBookAt hsDegree hrDegree hs hr
   have hMin : min (localPhi (r + 1)) (localPhi (s + 1)) ≤
@@ -1177,23 +1177,23 @@ theorem bridge_book_manuscript_payment_symm
       ≤ localSignedDefect H V ({a, c, t} : Edge α) := by
   have hBookSwap : orientedCommonLink H V t a =
       ({{b, c}, {b, x}} : Family α) := by
-    rw [orientedCommonLink_swap H V hat, hBookAt]
+    rw [oriented_common_link_swap H V hat, hBookAt]
   have hBridgeSwap : ({t, c, a} : Edge α) ∈ H := by
     have heq : ({t, c, a} : Edge α) = ({a, c, t} : Edge α) := by
       ext q
       simp [or_comm, or_left_comm]
     exact heq ▸ hBridge
   have hxSwap : x ∈ actualLocalPartA H V c t a := by
-    rw [bridge_local_A_swap H V a c t]
+    rw [bridge_local_a_swap H V a c t]
     exact hx
   have hrSwap : bipRightDegree (actualLocalTripartite H V c t a).ac
       ((actualLocalPartA H V c t a).erase x) b = s := by
-    rw [bridge_graph_AC_swap H V a c t, bridge_local_A_swap H V a c t]
+    rw [bridge_graph_ac_swap H V a c t, bridge_local_a_swap H V a c t]
     exact hsDegree
   have hsSwap : bipRightDegree (actualLocalTripartite H V c t a).ab
       ((actualLocalPartA H V c t a).erase x) b = r := by
-    rw [← bridge_graph_AC_swap H V t c a,
-      ← bridge_local_A_swap H V t c a]
+    rw [← bridge_graph_ac_swap H V t c a,
+      ← bridge_local_a_swap H V t c a]
     exact hrDegree
   have hBookCxSwap : orientedCommonLink H V c x =
       ({{t, b}, {t, a}, {b, a}} : Family α) := by

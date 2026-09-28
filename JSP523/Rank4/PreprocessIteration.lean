@@ -20,7 +20,7 @@ def iterateFiniteCleanup (clean : Family α → Family α) : ℕ → Family α �
 
 omit [DecidableEq α] in
 /-- Every step of an iterated cleanup is a subfamily of its input. -/
-theorem iterateFiniteCleanup_mono
+theorem iterate_finite_cleanup_mono
     (clean : Family α → Family α)
     (hClean : ∀ H, clean H ⊆ H) :
     ∀ n H, iterateFiniteCleanup clean n H ⊆ H := by
@@ -33,7 +33,7 @@ theorem iterateFiniteCleanup_mono
 
 /-- Exact finite layer accounting: deleting successively nested subfamilies
 costs at most the sum of the sizes of the actual stepwise deletion sets. -/
-theorem iterateFiniteCleanup_loss_le_sum
+theorem iterate_finite_cleanup_loss_le_sum
     (clean : Family α → Family α)
     (hClean : ∀ H, clean H ⊆ H) (H : Family α) (N : ℕ) :
     (H \ iterateFiniteCleanup clean N H).card ≤
@@ -64,7 +64,7 @@ theorem iterateFiniteCleanup_loss_le_sum
 
 /-- If every round has a specified deletion budget, the total iterated loss
 is bounded by the sum of those budgets. -/
-theorem iterateFiniteCleanup_loss_le_budgets
+theorem iterate_finite_cleanup_loss_le_budgets
     (clean : Family α → Family α)
     (hClean : ∀ H, clean H ⊆ H) (H : Family α) (N : ℕ)
     (budget : ℕ → ℕ)
@@ -77,7 +77,7 @@ theorem iterateFiniteCleanup_loss_le_budgets
     _ ≤ ∑ i ∈ Finset.range N,
         (iterateFiniteCleanup clean i H \
           iterateFiniteCleanup clean (i + 1) H).card :=
-            iterateFiniteCleanup_loss_le_sum clean hClean H N
+            iterate_finite_cleanup_loss_le_sum clean hClean H N
     _ ≤ ∑ i ∈ Finset.range N, budget i := by
       apply Finset.sum_le_sum
       intro i hi

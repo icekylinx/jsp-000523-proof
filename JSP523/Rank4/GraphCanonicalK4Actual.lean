@@ -10,7 +10,7 @@ noncomputable def facetLabelColor (T : Finset α) (hTcard : T.card = 3)
     ((Fintype.equivFin {x // x ∈ T}) ⟨z, hz⟩)
 
 omit [Fintype α] [DecidableEq α] in
-theorem facetLabelColor_injective (T : Finset α) (hTcard : T.card = 3) :
+theorem facet_label_color_injective (T : Finset α) (hTcard : T.card = 3) :
     ∀ {z w : α} (hz : z ∈ T) (hw : w ∈ T),
       facetLabelColor T hTcard z hz = facetLabelColor T hTcard w hw → z = w := by
   intro z w hz hw h
@@ -58,10 +58,10 @@ theorem canonical_k4_labels_are_proper_pattern
       D.label (completionK4Ends v 1).1 (completionK4Ends v 1).2 ≠
         D.label (completionK4Ends v 2).1 (completionK4Ends v 2).2) := by
   let v := canonicalK4Completion D T hcard
-  have hv : Function.Injective v := canonicalK4Completion_injective D T hcard
+  have hv : Function.Injective v := canonical_k4_completion_injective D T hcard
   have hmem : ∀ i, v i ∈ graphFacetCompletions D.K D.ground T := by
     intro i
-    exact canonicalK4Completion_mem D T hcard i
+    exact canonical_k4_completion_mem D T hcard i
   have hneq : ∀ {i j : Fin 4}, i ≠ j → v i ≠ v j := by
     intro i j hij heq
     exact hij (hv heq)
@@ -70,7 +70,7 @@ theorem canonical_k4_labels_are_proper_pattern
     exact completion_pair_label_mem_facet D T hTcard hTsub _ _
       (hmem (completionK4IndexPair i).1)
       (hmem (completionK4IndexPair i).2)
-      (completionK4Ends_offdiag v hv i)
+      (completion_k4_ends_offdiag v hv i)
   let code (i : Fin 6) : CliqueColor :=
     facetLabelColor T hTcard
       (D.label (completionK4Ends v i).1 (completionK4Ends v i).2) (hLabel i)
@@ -89,15 +89,15 @@ theorem canonical_k4_labels_are_proper_pattern
     · apply Or.inr
       refine ⟨?_, ?_, ?_⟩
       · intro heq
-        exact hrain.1 (facetLabelColor_injective T hTcard
+        exact hrain.1 (facet_label_color_injective T hTcard
           (completion_pair_label_mem_facet D T hTcard hTsub _ _ (hmem i) (hmem j) (hneq hij))
           (completion_pair_label_mem_facet D T hTcard hTsub _ _ (hmem i) (hmem k) (hneq hik)) heq)
       · intro heq
-        exact hrain.2.1 (facetLabelColor_injective T hTcard
+        exact hrain.2.1 (facet_label_color_injective T hTcard
           (completion_pair_label_mem_facet D T hTcard hTsub _ _ (hmem i) (hmem j) (hneq hij))
           (completion_pair_label_mem_facet D T hTcard hTsub _ _ (hmem j) (hmem k) (hneq hjk)) heq)
       · intro heq
-        exact hrain.2.2 (facetLabelColor_injective T hTcard
+        exact hrain.2.2 (facet_label_color_injective T hTcard
           (completion_pair_label_mem_facet D T hTcard hTsub _ _ (hmem i) (hmem k) (hneq hik))
           (completion_pair_label_mem_facet D T hTcard hTsub _ _ (hmem j) (hmem k) (hneq hjk)) heq)
   have hTriangle012 := hMonoOrRainbow 0 1 2 (by decide) (by decide) (by decide)
@@ -124,7 +124,7 @@ theorem canonical_k4_labels_are_proper_pattern
     · have hbad := hProper (v 0) (hmem 0) (v 1) (hmem 1) (v 2) (hmem 2)
         (hneq (by decide)) (hneq (by decide)) (hneq (by decide))
       have hab : D.label (v 0) (v 1) = D.label (v 0) (v 2) :=
-        facetLabelColor_injective T hTcard (hLabel 0) (hLabel 1)
+        facet_label_color_injective T hTcard (hLabel 0) (hLabel 1)
           (by simpa [a, b, code, completionK4Ends, completionK4IndexPair] using hMono.1)
       exact False.elim (hbad hab)
     · exact hColoring
@@ -136,9 +136,9 @@ theorem canonical_k4_labels_are_proper_pattern
       D.label (completionK4Ends v 3).1 (completionK4Ends v 3).2 =
         D.label (completionK4Ends v 2).1 (completionK4Ends v 2).2 := by
     refine ⟨?_, ?_, ?_⟩
-    · exact facetLabelColor_injective T hTcard (hLabel 0) (hLabel 5) hOpp.1
-    · exact facetLabelColor_injective T hTcard (hLabel 1) (hLabel 4) hOpp.2.1
-    · exact facetLabelColor_injective T hTcard (hLabel 3) (hLabel 2) hOpp.2.2.1
+    · exact facet_label_color_injective T hTcard (hLabel 0) (hLabel 5) hOpp.1
+    · exact facet_label_color_injective T hTcard (hLabel 1) (hLabel 4) hOpp.2.1
+    · exact facet_label_color_injective T hTcard (hLabel 3) (hLabel 2) hOpp.2.2.1
   have hProperRaw :
       D.label (completionK4Ends v 0).1 (completionK4Ends v 0).2 ≠
         D.label (completionK4Ends v 1).1 (completionK4Ends v 1).2 ∧
@@ -162,7 +162,7 @@ theorem canonical_k4_labels_are_proper_pattern
 
 /-- The canonical proper completion K4 contributes at least the paper's
 `2 - properFourRecordLoss k` actual undirected records at every color slot. -/
-theorem canonical_actual_K4_undirected_records_card_lower_bound
+theorem canonical_actual_k4_undirected_records_card_lower_bound
     (D : FiniteCompletionCliqueData α) (T : Edge α)
     (hcard : (graphFacetCompletions D.K D.ground T).card = 4)
     (hTcard : T.card = 3) (hTsub : T ⊆ D.ground)
@@ -177,7 +177,7 @@ theorem canonical_actual_K4_undirected_records_card_lower_bound
   let mark := canonicalActualK4ColorMark D T hcard
   obtain ⟨hOpp, hAdj⟩ := canonical_k4_labels_are_proper_pattern
     D T hcard hTcard hTsub hProper
-  have hv : Function.Injective v := canonicalK4Completion_injective D T hcard
+  have hv : Function.Injective v := canonical_k4_completion_injective D T hcard
   have hmark : Function.Injective mark := by
     intro i j hij
     fin_cases i <;> fin_cases j <;>
@@ -187,9 +187,9 @@ theorem canonical_actual_K4_undirected_records_card_lower_bound
       (completionK4Ends v i).2 ∈ T := by
     intro i
     exact completion_pair_label_mem_facet D T hTcard hTsub _ _
-      (canonicalK4Completion_mem D T hcard (completionK4IndexPair i).1)
-      (canonicalK4Completion_mem D T hcard (completionK4IndexPair i).2)
-      (completionK4Ends_offdiag v hv i)
+      (canonical_k4_completion_mem D T hcard (completionK4IndexPair i).1)
+      (canonical_k4_completion_mem D T hcard (completionK4IndexPair i).2)
+      (completion_k4_ends_offdiag v hv i)
   have hColor : ∀ i : Fin 6,
       D.label (completionK4Ends v i).1 (completionK4Ends v i).2 =
         mark (properK4EdgeColor 0 1 2 i) := by
@@ -207,7 +207,7 @@ theorem canonical_actual_K4_undirected_records_card_lower_bound
     · change D.label (completionK4Ends v 5).1 (completionK4Ends v 5).2 =
         D.label (completionK4Ends v 0).1 (completionK4Ends v 0).2
       simpa [v] using hOpp.1.symm
-  exact selected_actual_K4_undirected_records_card_lower_bound
+  exact selected_actual_k4_undirected_records_card_lower_bound
     D T v mark 0 1 2 x S k hk hv hmark hLabelMem hColor (by decide)
 
 end JSP523.Rank4

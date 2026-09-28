@@ -22,7 +22,7 @@ def oneHitEdges {α : Type*} [DecidableEq α]
 
 /-- The layer removed with `X` splits into edges meeting it once and edges
 meeting it at least twice. -/
-theorem avoidX_layer_le_one_hit_plus_multi
+theorem avoid_x_layer_le_one_hit_plus_multi
     {α : Type*} [DecidableEq α]
     (H : Family α) (X : Edge α) :
     H.card - (H.filter fun E => Disjoint E X).card ≤
@@ -59,20 +59,20 @@ theorem avoidX_layer_le_one_hit_plus_multi
 
 /-- With a pair-codegree cap, the multi-hit part of the removed layer is
 paid by `choose(|X|,2) D₂(H)`, as in (IV.4.3). -/
-theorem avoidX_layer_le_one_hit_plus_pair_budget
+theorem avoid_x_layer_le_one_hit_plus_pair_budget
     {α : Type*} [DecidableEq α]
     (H : Family α) (X : Edge α) (D : ℕ)
     (hPair : ∀ Q ∈ X.powersetCard 2,
       (H.filter fun E => Q ⊆ E).card ≤ D) :
     H.card - (H.filter fun E => Disjoint E X).card ≤
       (oneHitEdges H X).card + X.card.choose 2 * D := by
-  have hLayer := avoidX_layer_le_one_hit_plus_multi H X
+  have hLayer := avoid_x_layer_le_one_hit_plus_multi H X
   have hMulti := multiple_removed_edges_le_pair_codegree H X D hPair
   omega
 
 /-- On an `r`-uniform family supported in `V`, completing an `(r-1)`-facet
 is exactly the corresponding ordinary codegree fiber. -/
-theorem facetCompletions_card_eq_codegree
+theorem facet_completions_card_eq_codegree
     {α : Type*} [DecidableEq α]
     {H : Family α} {V A : Edge α} {r : ℕ}
     (hU : Uniform r H) (hGround : ∀ E ∈ H, E ⊆ V)
@@ -141,7 +141,7 @@ theorem regularization_round_from_cover_and_layer_bound
   let H₀ : Family α := H.filter fun E => Disjoint E X
   let H' : Family α := facetCleanedFamily H₀ V r t
   have hH₀sub : H₀ ⊆ H := Finset.filter_subset _ _
-  have hH'sub₀ : H' ⊆ H₀ := facetCleanedFamily_subset H₀ V r t
+  have hH'sub₀ : H' ⊆ H₀ := facet_cleaned_family_subset H₀ V r t
   have hH'sub : H' ⊆ H := hH'sub₀.trans hH₀sub
   have hAdm₀ : Admissible H₀ := admissible_mono hH₀sub hAdm
   have hU₀ : Uniform r H₀ := fun E hE => hU (hH₀sub hE)
@@ -198,21 +198,21 @@ theorem regularization_round_from_cover_and_layer_bound
     intro A hA
     have hGround' : ∀ E ∈ H', E ⊆ V :=
       fun E hE => hGround E (hH'sub hE)
-    rw [← facetCompletions_card_eq_codegree
-      (facetCleanedFamily_uniform hU₀) hGround' (by omega : 1 ≤ r) hA]
-    exact facetCleanedFamily_facet_degree_le H₀ V r t hA
+    rw [← facet_completions_card_eq_codegree
+      (facet_cleaned_family_uniform hU₀) hGround' (by omega : 1 ≤ r) hA]
+    exact facet_cleaned_family_facet_degree_le H₀ V r t hA
   have hFacetBudget :
       (t - 1) * (H₀.card - H'.card) ≤
         2 * (V.card.choose 2 * ((r - 1) * D)) := by
-    exact facetCleanedFamily_loss_bound hAdm₀ hU₀ hGround₀
+    exact facet_cleaned_family_loss_bound hAdm₀ hU₀ hGround₀
       (by omega : 2 ≤ r) hPair₀
   have hLossSplit : H.card - H'.card =
       (H.card - H₀.card) + (H₀.card - H'.card) := by
     have hCard₀ := Finset.card_le_card hH₀sub
     have hCard' := Finset.card_le_card hH'sub₀
     omega
-  refine ⟨H', hH'sub, facetCleanedFamily_admissible hAdm₀,
-    facetCleanedFamily_uniform hU₀, hSmall', hFacet, ?_⟩
+  refine ⟨H', hH'sub, facet_cleaned_family_admissible hAdm₀,
+    facet_cleaned_family_uniform hU₀, hSmall', hFacet, ?_⟩
   rw [hLossSplit, mul_add]
   exact Nat.add_le_add (Nat.mul_le_mul_left (t - 1) hLayer) hFacetBudget
 

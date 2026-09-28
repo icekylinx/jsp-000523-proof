@@ -47,7 +47,7 @@ theorem hereditary_deletion_centers_compatible
 /-- Every hereditary system of deletion-face centers extends uniquely to
     a center of the whole set.  It lies in the set, even when this was not
     assumed in advance for a free facet. -/
-theorem hereditary_center_existsUnique
+theorem hereditary_center_exists_unique
     {T : Edge α} {z : Edge α → α}
     (hcard : 4 ≤ T.card)
     (h : HereditaryDeletionCenters T z) :
@@ -62,7 +62,7 @@ theorem hereditary_center_existsUnique
     exact (Finset.mem_erase.mp (h.1 a ha)).1
   have hcomp : PartialCompatible T f :=
     hereditary_deletion_centers_compatible h
-  exact partial_root_existsUnique_in_ambient hcard hmap hcomp hnofix
+  exact partial_root_exists_unique_in_ambient hcard hmap hcomp hnofix
 
 /-- An already assigned center that agrees with every deletion face is
     exactly the center produced by the extension theorem. -/

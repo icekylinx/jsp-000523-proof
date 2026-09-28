@@ -57,7 +57,7 @@ theorem actual_selected_common_zero_of_right_mem_base
       (selectedCompletionPairGraph D
         (actualEligiblePairSlotVertices D Q) Q) a b = 0 := by
   classical
-  rw [graphCommonMultiplicity_symm]
+  rw [graph_common_multiplicity_symm]
   exact actual_selected_common_zero_of_left_mem_base D Q b a hbQ
 
 /-- A positive common-neighbor multiplicity in an actual selected

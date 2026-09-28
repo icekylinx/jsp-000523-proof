@@ -58,7 +58,7 @@ theorem native_tail_edge_count_eq_common_root_cell
     have hT' : T ∈ commonTripleCell K U
         (pairRootRep P hPcard).1 (pairRootRep P hPcard).2 := by
       simpa only [J, commonRootCell, dite_eq_left hPcard] using hT
-    exact (mem_commonTripleCell.mp hT').2.1
+    exact (mem_common_triple_cell.mp hT').2.1
   have hFilter : (J.filter fun T => z ∈ T) = J := by
     ext T
     simp only [Finset.mem_filter]
@@ -100,10 +100,10 @@ theorem native_tail_active_vertex_support
   have hCell : insert z ({x, y} : Edge α) ∈
       commonRootCell K U P := hAdj.2
   simp only [commonRootCell, dite_eq_left hPcard] at hCell
-  have hCell' := mem_commonTripleCell.mp hCell
+  have hCell' := mem_common_triple_cell.mp hCell
   have hxT : x ∈ insert z ({x, y} : Edge α) := by simp
   have hxU : x ∈ U := hCell'.1 hxT
-  have hPspec := pairRootRep_spec P hPcard
+  have hPspec := pair_root_rep_spec P hPcard
   have hDisj : Disjoint (insert z ({x, y} : Edge α)) P := by
     rw [hPspec.2]
     exact hCell'.2.2.1

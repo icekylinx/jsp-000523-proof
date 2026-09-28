@@ -18,19 +18,19 @@ variable {α : Type*} [DecidableEq α]
 
 /-- Actual common neighbors and reciprocal common-link pairs through `z`
     are the same vertices. -/
-theorem rootCommonNeighbors_eq_commonLinkFiber
+theorem root_common_neighbors_eq_common_link_fiber
     (H : Family α) (V : Edge α)
     {z x u : α}
     (hzV : z ∈ V) (hzx : z ≠ x) (hzu : z ≠ u) (hxu : x ≠ u) :
     rootCommonNeighbors H V z x u =
       commonLinkFiber H V ({x, u} : Edge α) z := by
   apply Finset.Subset.antisymm
-  · exact rootCommonNeighbors_subset_commonLinkFiber H V
+  · exact root_common_neighbors_subset_common_link_fiber H V
       hzV hzx hzu hxu
   · intro t ht
     obtain ⟨htV, hztLink⟩ := Finset.mem_filter.mp ht
     have hztOrient : ({z, t} : Edge α) ∈ orientedCommonLink H V x u :=
-      (mem_commonLink_pair_iff_oriented H V hxu _).mp hztLink
+      (mem_common_link_pair_iff_oriented H V hxu _).mp hztLink
     obtain ⟨_, hdis, hzxEdge, hzuEdge⟩ :=
       Finset.mem_filter.mp hztOrient
     have htz : t ≠ z := by
@@ -67,7 +67,7 @@ theorem rootCommonNeighbors_eq_commonLinkFiber
       exact heq.symm ▸ hzuEdge
     exact Finset.mem_filter.mpr ⟨htV, htz, htx, htu, hxTriple, huTriple⟩
 
-private theorem commonLinkFiber_vertex_ne_root
+private theorem common_link_fiber_vertex_ne_root
     (H : Family α) (V q : Edge α) (z : α)
     {t : α} (ht : t ∈ commonLinkFiber H V q z) : t ≠ z := by
   intro h
@@ -79,7 +79,7 @@ private theorem commonLinkFiber_vertex_ne_root
 
 /-- If every base pair in a common link contains `z`, then the common
     link and the fiber through `z` have the same cardinality. -/
-theorem commonLinkFiber_card_eq_of_center
+theorem common_link_fiber_card_eq_of_center
     (H : Family α) (V q : Edge α) (z : α)
     (hcenter : ∀ p ∈ commonLink H V q, z ∈ p) :
     (commonLinkFiber H V q z).card = (commonLink H V q).card := by
@@ -87,8 +87,8 @@ theorem commonLinkFiber_card_eq_of_center
   · intro t ht
     exact (Finset.mem_filter.mp ht).2
   · intro t ht u hu heq
-    have htz := commonLinkFiber_vertex_ne_root H V q z ht
-    have huz := commonLinkFiber_vertex_ne_root H V q z hu
+    have htz := common_link_fiber_vertex_ne_root H V q z ht
+    have huz := common_link_fiber_vertex_ne_root H V q z hu
     have htMem : t ∈ ({z, t} : Edge α) := by simp
     have htOther : t ∈ ({z, u} : Edge α) := heq ▸ htMem
     rcases Finset.mem_insert.mp htOther with htz' | htu
@@ -118,7 +118,7 @@ theorem commonLinkFiber_card_eq_of_center
     exact heq.symm ▸ hp
 
 /-- The fiber through one root is bounded by the whole common link. -/
-theorem commonLinkFiber_card_le_commonLink_card
+theorem common_link_fiber_card_le_common_link_card
     (H : Family α) (V q : Edge α) (z : α) :
     (commonLinkFiber H V q z).card ≤ (commonLink H V q).card := by
   apply Finset.card_le_card_of_injOn
@@ -126,7 +126,7 @@ theorem commonLinkFiber_card_le_commonLink_card
   · intro t ht
     exact (Finset.mem_filter.mp ht).2
   · intro t ht u hu heq
-    have htz := commonLinkFiber_vertex_ne_root H V q z ht
+    have htz := common_link_fiber_vertex_ne_root H V q z ht
     have htMem : t ∈ ({z, t} : Edge α) := by simp
     change ({z, t} : Edge α) = ({z, u} : Edge α) at heq
     have htOther : t ∈ ({z, u} : Edge α) := heq ▸ htMem
@@ -136,30 +136,30 @@ theorem commonLinkFiber_card_le_commonLink_card
 
 /-- A centered common link is counted exactly at its root in the graph
     common-neighbor statistic. -/
-theorem rootCommonNeighbors_card_eq_commonLink_card_of_center
+theorem root_common_neighbors_card_eq_common_link_card_of_center
     (H : Family α) (V : Edge α)
     {z x u : α}
     (hzV : z ∈ V) (hzx : z ≠ x) (hzu : z ≠ u) (hxu : x ≠ u)
     (hcenter : ∀ p ∈ commonLink H V ({x, u} : Edge α), z ∈ p) :
     (rootCommonNeighbors H V z x u).card =
       (commonLink H V ({x, u} : Edge α)).card := by
-  rw [rootCommonNeighbors_eq_commonLinkFiber H V hzV hzx hzu hxu]
-  exact commonLinkFiber_card_eq_of_center H V _ z hcenter
+  rw [root_common_neighbors_eq_common_link_fiber H V hzV hzx hzu hxu]
+  exact common_link_fiber_card_eq_of_center H V _ z hcenter
 
 /-- Every rooted common-neighbor count is at most its reciprocal
     common-link size. -/
-theorem rootCommonNeighbors_card_le_commonLink_card
+theorem root_common_neighbors_card_le_common_link_card
     (H : Family α) (V : Edge α)
     {z x u : α}
     (hzV : z ∈ V) (hzx : z ≠ x) (hzu : z ≠ u) (hxu : x ≠ u) :
     (rootCommonNeighbors H V z x u).card ≤
       (commonLink H V ({x, u} : Edge α)).card := by
-  rw [rootCommonNeighbors_eq_commonLinkFiber H V hzV hzx hzu hxu]
-  exact commonLinkFiber_card_le_commonLink_card H V _ z
+  rw [root_common_neighbors_eq_common_link_fiber H V hzV hzx hzu hxu]
+  exact common_link_fiber_card_le_common_link_card H V _ z
 
 /-- If a common link is centered at `c`, every different root has at
     most one common neighbor in its graph link. -/
-theorem rootCommonNeighbors_card_le_one_of_other_center
+theorem root_common_neighbors_card_le_one_of_other_center
     (H : Family α) (V : Edge α)
     {z x u c : α}
     (hzV : z ∈ V) (hzx : z ≠ x) (hzu : z ≠ u) (hxu : x ≠ u)
@@ -174,12 +174,12 @@ theorem rootCommonNeighbors_card_le_one_of_other_center
     rcases Finset.mem_insert.mp hc with hcz | hct
     · exact False.elim (hzc hcz.symm)
     · exact Finset.mem_singleton.mpr (Finset.mem_singleton.mp hct).symm
-  rw [rootCommonNeighbors_eq_commonLinkFiber H V hzV hzx hzu hxu]
+  rw [root_common_neighbors_eq_common_link_fiber H V hzV hzx hzu hxu]
   exact (Finset.card_le_card hsub).trans (by simp)
 
 /-- The manuscript's common-link surplus appears at exactly its unique
     center root when the link is large, and nowhere else. -/
-theorem sum_root_linkSurplus_eq_linkSurplus
+theorem sum_root_link_surplus_eq_link_surplus
     {H : Family α} {V : Edge α} {x u : α}
     (hH : Admissible H)
     (hxV : x ∈ V) (huV : u ∈ V) (hxu : x ≠ u) :
@@ -197,7 +197,7 @@ theorem sum_root_linkSurplus_eq_linkSurplus
     · exact Finset.card_pair hxu
   by_cases hlarge : 3 < (commonLink H V q).card
   · have hqUsed : q ∈ usedCells H V :=
-      (mem_usedCells_iff_commonLink_nonempty H V q).mpr
+      (mem_used_cells_iff_common_link_nonempty H V q).mpr
         ⟨hqV, Finset.card_pos.mp (by omega)⟩
     have hqLarge : q ∈ largeLinkCells H V :=
       Finset.mem_filter.mpr ⟨hqUsed, hlarge⟩
@@ -218,10 +218,10 @@ theorem sum_root_linkSurplus_eq_linkSurplus
       apply Finset.sum_eq_single_of_mem c hcFiltered
       intro z hz hzc
       obtain ⟨hzV, hzx, hzu⟩ := Finset.mem_filter.mp hz
-      have hsmall := rootCommonNeighbors_card_le_one_of_other_center
+      have hsmall := root_common_neighbors_card_le_one_of_other_center
         H V hzV hzx hzu hxu hzc hcenter
       simp [linkSurplus, show ¬ 3 < (rootCommonNeighbors H V z x u).card by omega]
-    rw [hsingle, rootCommonNeighbors_card_eq_commonLink_card_of_center
+    rw [hsingle, root_common_neighbors_card_eq_common_link_card_of_center
       H V hcV hcx hcu hxu hcenter]
   · have hzero : linkSurplus (commonLink H V q).card = 0 := by
       simp [linkSurplus, hlarge]
@@ -229,7 +229,7 @@ theorem sum_root_linkSurplus_eq_linkSurplus
     apply Finset.sum_eq_zero
     intro z hz
     obtain ⟨hzV, hzx, hzu⟩ := Finset.mem_filter.mp hz
-    have hbound := rootCommonNeighbors_card_le_commonLink_card
+    have hbound := root_common_neighbors_card_le_common_link_card
       H V hzV hzx hzu hxu
     dsimp [q] at hlarge
     have hsmall : ¬ 3 < (rootCommonNeighbors H V z x u).card := by

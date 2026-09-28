@@ -19,7 +19,7 @@ noncomputable def singletonDifferenceVertex (T P : Edge α) [Inhabited α] : α 
     Classical.choose (Finset.card_eq_one.mp h)
   else default
 
-theorem singletonDifferenceVertex_spec
+theorem singleton_difference_vertex_spec
     [Inhabited α] {T P : Edge α} (h : (T \ P).card = 1) :
     T \ P = {singletonDifferenceVertex T P} := by
   unfold singletonDifferenceVertex
@@ -46,7 +46,7 @@ noncomputable def crossCellIncidences
 
 /-- The distinct-link incidence injection used for the global IV.3.2
 collision reindexing. -/
-theorem distinctStarLayerIncidence_injects_crossCells
+theorem distinct_star_layer_incidence_injects_cross_cells
     [Inhabited α] {H : Family α} {U : Edge α} {z w : α} {r : ℕ}
     (hzu : z ∉ U) (hwu : w ∉ U) (hr : 4 ≤ r)
     (A B : Family α)
@@ -98,9 +98,9 @@ theorem distinctStarLayerIncidence_injects_crossCells
     let x := singletonDifferenceVertex T P
     let y := singletonDifferenceVertex S P
     have hTdiffEq : T \ P = {x} :=
-      singletonDifferenceVertex_spec hTdiff
+      singleton_difference_vertex_spec hTdiff
     have hSdiffEq : S \ P = {y} :=
-      singletonDifferenceVertex_spec hSdiff
+      singleton_difference_vertex_spec hSdiff
     have hxT : x ∈ T \ P := by rw [hTdiffEq]; simp
     have hyS : y ∈ S \ P := by rw [hSdiffEq]; simp
     have hxU : x ∈ U :=
@@ -205,22 +205,22 @@ theorem distinctStarLayerIncidence_injects_crossCells
       calc
           T = P ∪ (T \ P) := (Finset.union_sdiff_of_subset hTsub).symm
         _ = P ∪ {singletonDifferenceVertex T P} :=
-          by rw [singletonDifferenceVertex_spec hTdiff]
+          by rw [singleton_difference_vertex_spec hTdiff]
     have hSrep : S = P ∪ {singletonDifferenceVertex S P} := by
       calc
           S = P ∪ (S \ P) := (Finset.union_sdiff_of_subset hSsub).symm
         _ = P ∪ {singletonDifferenceVertex S P} :=
-          by rw [singletonDifferenceVertex_spec hSdiff]
+          by rw [singleton_difference_vertex_spec hSdiff]
     have hT'rep : T' = P' ∪ {singletonDifferenceVertex T' P'} := by
       calc
           T' = P' ∪ (T' \ P') := (Finset.union_sdiff_of_subset hT'sub).symm
         _ = P' ∪ {singletonDifferenceVertex T' P'} :=
-          by rw [singletonDifferenceVertex_spec hT'diff]
+          by rw [singleton_difference_vertex_spec hT'diff]
     have hS'rep : S' = P' ∪ {singletonDifferenceVertex S' P'} := by
       calc
           S' = P' ∪ (S' \ P') := (Finset.union_sdiff_of_subset hS'sub).symm
         _ = P' ∪ {singletonDifferenceVertex S' P'} :=
-          by rw [singletonDifferenceVertex_spec hS'diff]
+          by rw [singleton_difference_vertex_spec hS'diff]
     have hfx' : singletonDifferenceVertex T P' =
         singletonDifferenceVertex T' P' := by simpa [hfp] using hfx
     have hfy' : singletonDifferenceVertex S P' =
@@ -243,7 +243,7 @@ theorem distinctStarLayerIncidence_injects_crossCells
 
 /-- Counting the source incidences by their ordered link-member pair gives
 exactly the distinct-member part of the pairwise collision identity. -/
-theorem distinctStarLayerIncidences_card_eq_sum
+theorem distinct_star_layer_incidences_card_eq_sum
     (U : Edge α) (A B : Family α) (k : ℕ) :
     (distinctStarLayerIncidences U A B k).card =
       ∑ T ∈ A, ∑ S ∈ B.filter (fun S => S ≠ T),
@@ -257,7 +257,7 @@ theorem distinctStarLayerIncidences_card_eq_sum
 
 /-- The actual collision moment for two star layers is bounded by the
 equal-completion and distinct-completion codegree budgets in (IV.3.3). -/
-theorem starLayerActualCollision_moment_le
+theorem star_layer_actual_collision_moment_le
     [Inhabited α] {H : Family α} {U : Edge α} {z w : α} {r D₂ D₃ : ℕ}
     (hH : Admissible H) (hzw : z ≠ w)
     (hzU : z ∉ U) (hwU : w ∉ U) (hr : 4 ≤ r)
@@ -275,7 +275,7 @@ theorem starLayerActualCollision_moment_le
   let B := actualStarLink H U w r
   let C := commonPrefixTails H U ({z} : Edge α) {w} (r - 1)
   have hCell : C.card ≤ (r - 1) * D₂ :=
-    starLayerEqualCompletionCell_card_le hH hzw hzU hwU (by omega) hD₂
+    star_layer_equal_completion_cell_card_le hH hzw hzU hwU (by omega) hD₂
   have hABsub : A ∩ B ⊆ C := by
     intro T hT
     obtain ⟨hTA, hTB⟩ := Finset.mem_inter.mp hT
@@ -292,13 +292,13 @@ theorem starLayerActualCollision_moment_le
       · have hxw' : x = w := Finset.mem_singleton.mp hxw
         subst w
         exact hwU (hTpow.1 hxT)
-    apply mem_commonPrefixTails.mpr
+    apply mem_common_prefix_tails.mpr
     refine ⟨hTpow.1, hTpow.2, hDisj, ?_, ?_⟩
     · simpa [A, actualStarLink] using hTA'.2
     · simpa [B, actualStarLink] using hTB'.2
   have hEqualCard : (A ∩ B).card ≤ (r - 1) * D₂ :=
     (Finset.card_le_card hABsub).trans hCell
-  have hDistinct := distinctStarLayerIncidence_injects_crossCells
+  have hDistinct := distinct_star_layer_incidence_injects_cross_cells
     hzU hwU hr A B (by intro T hT; exact hT)
       (by intro T hT; exact hT)
   have hDistinctBound : (distinctStarLayerIncidences U A B (r - 1)).card ≤
@@ -308,9 +308,9 @@ theorem starLayerActualCollision_moment_le
       _ = starLayerDistinctCompletionIncidence H U z w r := by
         simp [crossCellIncidences, starLayerDistinctCompletionIncidence]
       _ ≤ U.card * (U.card - 1) * (r - 2) * D₃ :=
-        starLayerDistinctCompletionIncidence_le hH hzw hzU hwU hr hD₃
-  have hSourceSum := distinctStarLayerIncidences_card_eq_sum U A B (r - 1)
-  have hPairId := starLayerPairwiseCollision_identity U (r - 1) A B
+        star_layer_distinct_completion_incidence_le hH hzw hzU hwU hr hD₃
+  have hSourceSum := distinct_star_layer_incidences_card_eq_sum U A B (r - 1)
+  have hPairId := star_layer_pairwise_collision_identity U (r - 1) A B
   have hRow : ∀ T ∈ A,
       (∑ S ∈ B, (sharedStarLayerFacets U T S (r - 1)).card) ≤
         (if T ∈ B then r - 1 else 0) +
@@ -333,7 +333,7 @@ theorem starLayerActualCollision_moment_le
         (Finset.mem_powersetCard.mp (Finset.mem_filter.mp hT).1).2
       have hTsub := (Finset.mem_powersetCard.mp
         (Finset.mem_filter.mp hT).1).1
-      rw [sharedStarLayerFacets_card_eq_of_eq U T (r - 1)
+      rw [shared_star_layer_facets_card_eq_of_eq U T (r - 1)
         hTsub hTsize (by omega)]
       simp [hTB]
     · have hFilter : B.filter (fun S => S ≠ T) = B := by

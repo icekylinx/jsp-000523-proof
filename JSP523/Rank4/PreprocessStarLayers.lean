@@ -91,7 +91,7 @@ noncomputable def maximumDegreePairOwner (L : ι → Family α) [Nonempty ι]
     (fun i => starLinkPairDegree L i P) Finset.univ_nonempty)
 
 omit [DecidableEq ι] in
-theorem maximumDegreePairOwner_spec (L : ι → Family α) [Nonempty ι]
+theorem maximum_degree_pair_owner_spec (L : ι → Family α) [Nonempty ι]
     (P : Edge α) (i : ι) :
     starLinkPairDegree L i P ≤
       starLinkPairDegree L (maximumDegreePairOwner L P) P := by
@@ -143,7 +143,7 @@ theorem deleted_star_link_subset_nonowner_incidence
   exact ⟨hTL, hPTwo'.1⟩
 
 omit [Fintype ι] in
-theorem nonownerPairIncidences_card_le
+theorem nonowner_pair_incidences_card_le
     (L : ι → Family α) (owner : Edge α → ι) (V : Edge α) (i : ι) :
     (nonownerPairIncidences L owner V i).card ≤
       ∑ P ∈ V.powersetCard 2,
@@ -183,7 +183,7 @@ theorem pair_owner_cleaning_deletion_bound
         (if owner P ≠ i then ((L i).filter fun T => P ⊆ T).card else 0) := by
       apply Finset.sum_le_sum
       intro i hi
-      exact nonownerPairIncidences_card_le L owner V i
+      exact nonowner_pair_incidences_card_le L owner V i
     _ = ∑ P ∈ V.powersetCard 2, ∑ i ∈ (Finset.univ : Finset ι),
         if owner P ≠ i then starLinkPairDegree L i P else 0 := by
       rw [Finset.sum_comm]
@@ -233,7 +233,7 @@ theorem maximum_pair_owner_cleaning_deletion_bound
   apply pair_owner_cleaning_deletion_bound L (maximumDegreePairOwner L) V
     hGround
   intro P hP i
-  exact maximumDegreePairOwner_spec L P i
+  exact maximum_degree_pair_owner_spec L P i
 
 /-- Cauchy-Schwarz turns the owner deletion bound into a squared bound by
 the ordered pairwise cross moments of the link degrees. -/
@@ -369,7 +369,7 @@ theorem clear_small_cells_and_get_unique_labels
           ∃! z : α, ∀ ⦃T : Edge α⦄,
             T ∈ commonRootCell K V P → z ∈ T) := by
   classical
-  obtain ⟨K, hKH, hCells, hLoss⟩ := clear_all_small_commonCells H V t
+  obtain ⟨K, hKH, hCells, hLoss⟩ := clear_all_small_common_cells H V t
   refine ⟨K, hKH, hLoss, ?_⟩
   have hKAdmissible : Admissible K := admissible_mono hKH hH
   have hCapK : ∀ T : Edge α, T.card = 3 →
@@ -393,13 +393,13 @@ theorem clear_small_cells_and_get_unique_labels
         (commonTripleCell K V ab.1 ab.2).card := by
       rw [← hRootEq]
       omega
-    have hab : ab.1 ≠ ab.2 := (pairRootRep_spec P hPcard).1
+    have hab : ab.1 ≠ ab.2 := (pair_root_rep_spec P hPcard).1
     obtain ⟨z, hz⟩ :=
-      commonTripleCell_large_has_center_of_facet_cap
+      common_triple_cell_large_has_center_of_facet_cap
         hKAdmissible hab hCapK hCellBig
     have hPairCap : ∀ Q : Edge α, Q.card = 2 →
         triplePairDegree (commonTripleCell K V ab.1 ab.2) Q ≤ D :=
-      commonTripleCell_pairDegree_le_of_facet_cap hCapK
+      common_triple_cell_pair_degree_le_of_facet_cap hCapK
     refine Or.inr ⟨z, ?_, ?_⟩
     · intro T hT
       rw [hRootEq] at hT
@@ -409,7 +409,7 @@ theorem clear_small_cells_and_get_unique_labels
           T ∈ commonTripleCell K V ab.1 ab.2 → y ∈ T := by
         intro T hT
         exact hy (hRootEq.symm ▸ hT)
-      exact (commonTripleCell_center_unique hPairCap
+      exact (common_triple_cell_center_unique hPairCap
         (by omega : D < (commonTripleCell K V ab.1 ab.2).card)
         hz hy').symm
 

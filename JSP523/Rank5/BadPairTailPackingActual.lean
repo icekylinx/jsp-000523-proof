@@ -14,7 +14,7 @@ namespace JSP523
 variable {α : Type*} [DecidableEq α]
 
 /-- A bad two-set contains a pair root, so it has the prescribed size. -/
-theorem badPair_card_of_mem
+theorem bad_pair_card_of_mem
     {H : Family α} {W P : Edge α} {v : α} {r : ℕ}
     {Λ₂ : ℕ} (hP : P ∈ badMissingSets H W v r 2 Λ₂) :
     P.card = 2 :=
@@ -47,7 +47,7 @@ noncomputable def noDisjointBadPairEdges
   exact B.filter fun E =>
     ∀ P ∈ Bad₂, P ⊆ E → ∀ R ∈ Bad₂, R ⊆ E → ¬ Disjoint P R
 
-theorem mem_noDisjointBadPairEdges
+theorem mem_no_disjoint_bad_pair_edges
     {B Bad₂ : Family α} {E : Edge α} :
     E ∈ noDisjointBadPairEdges B Bad₂ ↔
       E ∈ B ∧ ∀ P ∈ Bad₂, P ⊆ E →
@@ -68,8 +68,8 @@ theorem disjoint_bad_pair_root_tail_packing_bound
     (hP : P ∈ Bad₂) (hR : R ∈ Bad₂) (hPR : Disjoint P R) :
     (B.filter fun E => P ∪ R ⊆ E).card ≤
       if 2 ≤ r - 4 then W.card.choose (r - 4 - 2 + 1) else 1 := by
-  have hPcard : P.card = 2 := by rw [hBad₂] at hP; exact badPair_card_of_mem hP
-  have hRcard : R.card = 2 := by rw [hBad₂] at hR; exact badPair_card_of_mem hR
+  have hPcard : P.card = 2 := by rw [hBad₂] at hP; exact bad_pair_card_of_mem hP
+  have hRcard : R.card = 2 := by rw [hBad₂] at hR; exact bad_pair_card_of_mem hR
   let S := P ∪ R
   have hScard : S.card = 4 := by
     dsimp [S]
@@ -111,8 +111,8 @@ theorem intersecting_bad_pair_root_tail_packing_bound
     ((noDisjointBadPairEdges B Bad₂).filter
       fun E => P ∪ R ⊆ E).card ≤
       if 3 ≤ r - 3 then W.card.choose (r - 3 - 3 + 1) else 1 := by
-  have hPcard : P.card = 2 := by rw [hBad₂] at hP; exact badPair_card_of_mem hP
-  have hRcard : R.card = 2 := by rw [hBad₂] at hR; exact badPair_card_of_mem hR
+  have hPcard : P.card = 2 := by rw [hBad₂] at hP; exact bad_pair_card_of_mem hP
+  have hRcard : R.card = 2 := by rw [hBad₂] at hR; exact bad_pair_card_of_mem hR
   have hInterCard : (P ∩ R).card = 1 := by
     have hPos : 0 < (P ∩ R).card :=
       Finset.card_pos.mpr (Finset.not_disjoint_iff_nonempty_inter.mp hNotDisj)
@@ -138,17 +138,17 @@ theorem intersecting_bad_pair_root_tail_packing_bound
   let B₀ := noDisjointBadPairEdges B Bad₂
   have hB₀H : B₀ ⊆ H := by
     intro E hE
-    exact hBH ((mem_noDisjointBadPairEdges.mp hE).1)
+    exact hBH ((mem_no_disjoint_bad_pair_edges.mp hE).1)
   have hB₀uniform : Uniform r B₀ := by
     intro E hE
-    exact hBuniform ((mem_noDisjointBadPairEdges.mp hE).1)
+    exact hBuniform ((mem_no_disjoint_bad_pair_edges.mp hE).1)
   have hB₀W : ∀ E ∈ B₀, E ⊆ W := by
     intro E hE
-    exact hW E ((mem_noDisjointBadPairEdges.mp hE).1)
+    exact hW E ((mem_no_disjoint_bad_pair_edges.mp hE).1)
   have hB₀ordinary : ∀ E ∈ B₀,
       E ⊆ W \ badSingletonVertices H W v r := by
     intro E hE
-    exact hOrdinary E ((mem_noDisjointBadPairEdges.mp hE).1)
+    exact hOrdinary E ((mem_no_disjoint_bad_pair_edges.mp hE).1)
   have hBound := fixed_root_fiber_packing_bound_general
     (H := H) (B := B₀) (W := W) (P := S) (v := v) (r := r)
     (s := 3) (d := 3) hH hB₀H hB₀uniform hB₀W hvW hScard (by omega) (by omega)
@@ -178,7 +178,7 @@ theorem intersecting_bad_pair_root_tail_packing_bound
           intro x hxP hxQ
           have hxNotS : x ∉ S := (Finset.mem_sdiff.mp (hQsub hxQ)).2
           exact hxNotS (Finset.mem_union_left R hxP)
-        exact (mem_noDisjointBadPairEdges.mp hE).2 P hP
+        exact (mem_no_disjoint_bad_pair_edges.mp hE).2 P hP
           (fun x hx => hSE (Finset.mem_union_left R hx))
           Q hQbad (fun x hx => (Finset.mem_sdiff.mp (hQsub hx)).1) hQdisj)
   have hEq : (B₀.filter fun E => P ∪ R ⊆ E) =
@@ -233,7 +233,7 @@ theorem bad_pair_edges_covered_by_filtered_strata
         intro A hA C hC hDisj
         exact hSomeDisjoint ⟨A, hA, C, hC, hDisj⟩
       have hEfiltered : E ∈ noDisjointBadPairEdges B Bad₂ := by
-        apply mem_noDisjointBadPairEdges.mpr
+        apply mem_no_disjoint_bad_pair_edges.mpr
         refine ⟨hEB, ?_⟩
         intro A hA hAE C hC hCE
         exact hAllIntersect A (Finset.mem_filter.mpr ⟨hA, hAE⟩)

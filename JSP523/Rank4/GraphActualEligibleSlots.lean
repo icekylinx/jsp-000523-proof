@@ -38,7 +38,7 @@ theorem actual_pair_label_eq_chosen_center
   let P : Edge α := {a, b}
   have hPcard : P.card = 2 := Finset.card_pair hab
   let r := pairRootRep P hPcard
-  have hSpec := pairRootRep_spec P hPcard
+  have hSpec := pair_root_rep_spec P hPcard
   have hRootLabel : D.label r.1 r.2 = D.label a b := by
     have hOrient := pair_finset_eq_oriented_eq hab hSpec.2.symm
     rcases hOrient with hSame | hSwap

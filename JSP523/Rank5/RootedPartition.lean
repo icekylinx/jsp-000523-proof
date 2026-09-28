@@ -32,39 +32,39 @@ noncomputable def unrootedEdges (all : Family α) (z : Edge α → α) : Family 
   classical
   exact all.filter (fun E => ¬ ∃ v : α, TripleRoot E z v)
 
-theorem mem_rootedEdges_iff
+theorem mem_rooted_edges_iff
     (all : Family α) (z : Edge α → α) (E : Edge α) :
     E ∈ rootedEdges all z ↔
       E ∈ all ∧ ∃ v : α, TripleRoot E z v := by
   classical
   exact Finset.mem_filter
 
-theorem mem_unrootedEdges_iff
+theorem mem_unrooted_edges_iff
     (all : Family α) (z : Edge α → α) (E : Edge α) :
     E ∈ unrootedEdges all z ↔
       E ∈ all ∧ ¬ ∃ v : α, TripleRoot E z v := by
   classical
   exact Finset.mem_filter
 
-theorem rootedEdges_subset
+theorem rooted_edges_subset
     (all : Family α) (z : Edge α → α) :
     rootedEdges all z ⊆ all := by
   intro E hE
-  exact ((mem_rootedEdges_iff all z E).mp hE).1
+  exact ((mem_rooted_edges_iff all z E).mp hE).1
 
-theorem unrootedEdges_subset
+theorem unrooted_edges_subset
     (all : Family α) (z : Edge α → α) :
     unrootedEdges all z ⊆ all := by
   intro E hE
-  exact ((mem_unrootedEdges_iff all z E).mp hE).1
+  exact ((mem_unrooted_edges_iff all z E).mp hE).1
 
 theorem rooted_unrooted_disjoint
     (all : Family α) (z : Edge α → α) :
     Disjoint (rootedEdges all z) (unrootedEdges all z) := by
   apply Finset.disjoint_left.mpr
   intro E hr hu
-  have hroot := ((mem_rootedEdges_iff all z E).mp hr).2
-  have hnroot := ((mem_unrootedEdges_iff all z E).mp hu).2
+  have hroot := ((mem_rooted_edges_iff all z E).mp hr).2
+  have hnroot := ((mem_unrooted_edges_iff all z E).mp hu).2
   exact hnroot hroot
 
 theorem rooted_unrooted_union
@@ -75,14 +75,14 @@ theorem rooted_unrooted_union
   constructor
   · intro hE
     rcases Finset.mem_union.mp hE with hr | hu
-    · exact rootedEdges_subset all z hr
-    · exact unrootedEdges_subset all z hu
+    · exact rooted_edges_subset all z hr
+    · exact unrooted_edges_subset all z hu
   · intro hE
     by_cases hr : ∃ v : α, TripleRoot E z v
     · exact Finset.mem_union.mpr (Or.inl
-        ((mem_rootedEdges_iff all z E).mpr ⟨hE, hr⟩))
+        ((mem_rooted_edges_iff all z E).mpr ⟨hE, hr⟩))
     · exact Finset.mem_union.mpr (Or.inr
-        ((mem_unrootedEdges_iff all z E).mpr ⟨hE, hr⟩))
+        ((mem_unrooted_edges_iff all z E).mpr ⟨hE, hr⟩))
 
 theorem rooted_unrooted_card_partition
     (all : Family α) (z : Edge α → α) :
@@ -99,7 +99,7 @@ theorem unrooted_has_no_triple_root
     {E : Edge α} (hE : E ∈ unrootedEdges all z) :
     ¬ ∃ v ∈ E, ∀ S : Edge α,
       S ⊆ E → S.card = 3 → v ∈ S → z S = v := by
-  exact ((mem_unrootedEdges_iff all z E).mp hE).2
+  exact ((mem_unrooted_edges_iff all z E).mp hE).2
 
 /-- The actual finite shadow inequality no longer asks for an abstract
     partition or a separate rootlessness proof. -/
@@ -113,9 +113,9 @@ theorem actual_four_shadow_bound_of_shared_coherence
       2 * (rootedEdges all z).card := by
   apply actual_four_shadow_bound_of_rootless_coherence z
     (rooted_unrooted_card_partition all z)
-    (unrootedEdges_subset all z)
+    (unrooted_edges_subset all z)
   · intro E hE
-    exact hUniform (unrootedEdges_subset all z hE)
+    exact hUniform (unrooted_edges_subset all z hE)
   · intro E hE
     exact unrooted_has_no_triple_root all z hE
   · exact hshared
@@ -133,9 +133,9 @@ theorem actual_four_shadow_real_surplus_of_shared_coherence
       -(all.card : ℝ) + 2 * ε := by
   apply actual_four_shadow_real_surplus_with_error z ε
     (rooted_unrooted_card_partition all z)
-    (unrootedEdges_subset all z)
+    (unrooted_edges_subset all z)
   · intro E hE
-    exact hUniform (unrootedEdges_subset all z hE)
+    exact hUniform (unrooted_edges_subset all z hE)
   · intro E hE
     exact unrooted_has_no_triple_root all z hE
   · exact hshared

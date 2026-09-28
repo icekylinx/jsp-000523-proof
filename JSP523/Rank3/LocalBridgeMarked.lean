@@ -66,11 +66,11 @@ theorem bridge_book_old_neighbors_disjoint
   have huA : u ∈ actualLocalPartA H V a b c :=
     (Finset.mem_erase.mp huAErase).2
   have hux : u ≠ x := (Finset.mem_erase.mp huAErase).1
-  have huData := mem_actualLocalPartA.mp huA
-  have hABData := mem_actualLocalAB.mp (Finset.mem_filter.mp huAB).2
-  have hACData := mem_actualLocalAC.mp (Finset.mem_filter.mp huAC).2
-  have hdB := mem_actualLocalPartB.mp hABData.2.1
-  have hdC := mem_actualLocalPartC.mp hACData.2.1
+  have huData := mem_actual_local_part_a.mp huA
+  have hABData := mem_actual_local_ab.mp (Finset.mem_filter.mp huAB).2
+  have hACData := mem_actual_local_ac.mp (Finset.mem_filter.mp huAC).2
+  have hdB := mem_actual_local_part_b.mp hABData.2.1
+  have hdC := mem_actual_local_part_c.mp hACData.2.1
   have hdu : d ≠ u := by
     intro hEq
     have hCard := hUniform hABData.2.2
@@ -160,7 +160,7 @@ theorem bridge_book_actual_defect_gain
   let B := actualLocalPartB H V a b c
   let C := actualLocalPartC H V a b c
   have hMixed : MixedNodeDegreeTwo G A B C :=
-    actualLocalTripartite_mixed_degree_two hH hUniform hab hac hbc
+    actual_local_tripartite_mixed_degree_two hH hUniform hab hac hbc
   have hABPos : 0 < bipLeftDegree G.ab B x :=
     Finset.card_pos.mpr
       ⟨d, Finset.mem_filter.mpr ⟨hdB, hABEdge⟩⟩

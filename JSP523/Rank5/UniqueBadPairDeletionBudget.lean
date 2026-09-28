@@ -70,7 +70,7 @@ theorem unique_bad_pair_outside_deletion_budget
         Finset.sum_le_sum hRoot
       _ = Bad₂.card * W.card.choose (r - 4) := by
         simp [Finset.sum_const]
-  have hIncidence := badMissingSets_card_bound H W v r 2 Λ
+  have hIncidence := bad_missing_sets_card_bound H W v r 2 Λ
   rw [← hBad₂] at hIncidence
   calc
     Λ * (p * (uniqueBadPairEdges B Bad₂).card) ≤

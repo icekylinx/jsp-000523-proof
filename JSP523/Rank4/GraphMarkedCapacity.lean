@@ -112,9 +112,9 @@ theorem marked_restricted_charge_capacity
             · simp [charge, hxM]
       _ = ∑ x ∈ M, restrictedIncidentCharge F M x := by
             simp
-  have hSwapCharge := sum_neighborFinset_swap F charge
-  have hSwapRatio := sum_neighborFinset_swap F ratio
-  have hSwapLeaf := sum_neighborFinset_swap F leaf
+  have hSwapCharge := sum_neighbor_finset_swap F charge
+  have hSwapRatio := sum_neighbor_finset_swap F ratio
+  have hSwapLeaf := sum_neighbor_finset_swap F leaf
   have hLeft :
       (∑ x : α, ∑ y ∈ F.neighborFinset x,
         (charge x y + charge y x)) =
@@ -163,7 +163,7 @@ theorem marked_three_restricted_local_credit
     (hMarked : ∀ y : α, y ≠ x →
       graphCommonMultiplicity F x y ≤ 2) :
     2 ≤ graphVertexDeficit F x + restrictedIncidentCharge F M x := by
-  have hD := graphVertexDeficit_marked_formula F x (by omega) hMarked
+  have hD := graph_vertex_deficit_marked_formula F x (by omega) hMarked
   rw [hx] at hD
   have hEach : ∀ y ∈ F.neighborFinset x,
       (1 : ℚ) ≤ (F.degree y : ℚ) / 3 +
@@ -228,7 +228,7 @@ theorem marked_four_restricted_local_credit
     (hMarked : ∀ y : α, y ≠ x →
       graphCommonMultiplicity F x y ≤ 2) :
     4 ≤ graphVertexDeficit F x + restrictedIncidentCharge F M x := by
-  have hD := graphVertexDeficit_marked_formula F x (by omega) hMarked
+  have hD := graph_vertex_deficit_marked_formula F x (by omega) hMarked
   rw [hx] at hD
   have hEach : ∀ y ∈ F.neighborFinset x,
       (3 / 2 : ℚ) ≤ (F.degree y : ℚ) / 2 +
@@ -288,7 +288,7 @@ theorem marked_four_restricted_local_credit
 /-- The rank-four finite graph deficit lemma with arbitrary adjacent
 marked vertices.  The two marked sets record the degree-three and
 degree-four vertices satisfying the common-neighbor multiplicity bound. -/
-theorem graphDeficit_marked
+theorem graph_deficit_marked
     (F : SimpleGraph α) [DecidableRel F.Adj]
     (M3 M4 : Finset α)
     (hDisj : Disjoint M3 M4)
@@ -317,7 +317,7 @@ theorem graphDeficit_marked
   have hDnonneg (x : α) : 0 ≤ nonleafVertexDeficit F x := by
     by_cases hx : 2 ≤ F.degree x
     · simpa [nonleafVertexDeficit, hx] using
-        graphVertexDeficit_nonneg F x hx
+        graph_vertex_deficit_nonneg F x hx
     · simp [nonleafVertexDeficit, hx]
   have hSubset : M3 ∪ M4 ⊆ (Finset.univ : Finset α) := by simp
   have hDsub :
@@ -357,7 +357,7 @@ theorem graphDeficit_marked
       simp [nonleafVertexDeficit, hdeg]
     rw [Finset.sum_congr rfl hD]
     simpa [Finset.sum_const, nsmul_eq_mul, mul_comm] using hSum
-  have hExact := graphDeficit_exact_local_identity F
+  have hExact := graph_deficit_exact_local_identity F
   linarith
 
 end JSP523.Rank4

@@ -23,7 +23,7 @@ def commonTripleCell (H : Family α) (V : Edge α) (a b : α) : Family α :=
 def rawCommonTripleCell (H : Family α) (V : Edge α) (a b : α) : Family α :=
   (V.powersetCard 3).filter fun T => insert a T ∈ H ∧ insert b T ∈ H
 
-theorem mem_commonTripleCell
+theorem mem_common_triple_cell
     {H : Family α} {V T : Edge α} {a b : α} :
     T ∈ commonTripleCell H V a b ↔
       T ⊆ V ∧ T.card = 3 ∧ Disjoint T ({a, b} : Edge α) ∧
@@ -33,7 +33,7 @@ theorem mem_commonTripleCell
 
 /-- In a uniform four-family, the two completions force the tail to avoid
 both completion vertices, so the explicit and raw cells agree. -/
-theorem rawCommonTripleCell_eq_commonTripleCell
+theorem raw_common_triple_cell_eq_common_triple_cell
     {H : Family α} {V : Edge α} {a b : α}
     (hU : Uniform 4 H) :
     rawCommonTripleCell H V a b = commonTripleCell H V a b := by
@@ -64,18 +64,18 @@ theorem rawCommonTripleCell_eq_commonTripleCell
 
 /-- The rank-four common cell is the general disjoint-prefix system
 specialized to singleton prefixes. -/
-theorem commonTripleCell_eq_commonPrefixTriples
+theorem common_triple_cell_eq_common_prefix_triples
     (H : Family α) (V : Edge α) (a b : α) :
     commonTripleCell H V a b =
       commonPrefixTriples H V ({a} : Edge α) ({b} : Edge α) := by
   ext T
-  simp [mem_commonTripleCell, mem_commonPrefixTriples, Finset.singleton_union]
+  simp [mem_common_triple_cell, mem_common_prefix_triples, Finset.singleton_union]
 
-theorem commonTripleCell_intersecting
+theorem common_triple_cell_intersecting
     {H : Family α} {V : Edge α} {a b : α}
     (hH : Admissible H) (hab : a ≠ b) :
     PairwiseIntersecting (commonTripleCell H V a b) := by
-  rw [commonTripleCell_eq_commonPrefixTriples]
+  rw [common_triple_cell_eq_common_prefix_triples]
   apply common_prefix_triples_intersecting hH
   · simp
   · simp
@@ -88,7 +88,7 @@ def facetCompletions (H : Family α) (V T : Edge α) : Finset α :=
 /-- Pair degree in `J_{ab}` is bounded by the degree of the actual facet
 `aP`.  The map removes the fixed pair `P` from each common triple; its
 singleton remainder records a different completion of `aP`. -/
-theorem commonTripleCell_pairDegree_le_facetCompletions
+theorem common_triple_cell_pair_degree_le_facet_completions
     (H : Family α) (V : Edge α) (a b : α) (P : Edge α)
     (hPcard : P.card = 2) :
     triplePairDegree (commonTripleCell H V a b) P ≤
@@ -101,7 +101,7 @@ theorem commonTripleCell_pairDegree_le_facetCompletions
   have hmap : ∀ T ∈ C, f T ∈ W := by
     intro T hTC
     have hTC' := Finset.mem_filter.mp hTC
-    have hT := (mem_commonTripleCell.mp hTC'.1)
+    have hT := (mem_common_triple_cell.mp hTC'.1)
     have hPT : P ⊆ T := hTC'.2
     have hdiffCard : (T \ P).card = 1 := by
       rw [Finset.card_sdiff_of_subset hPT]
@@ -140,7 +140,7 @@ theorem commonTripleCell_pairDegree_le_facetCompletions
 
 /-- A uniform bound on actual facet completions supplies the pair-degree
 assumption in the nine-pair lemma. -/
-theorem commonTripleCell_pairDegree_le_of_facet_cap
+theorem common_triple_cell_pair_degree_le_of_facet_cap
     {H : Family α} {V : Edge α} {a b : α} {D : ℕ}
     (hCap : ∀ T : Edge α, T.card = 3 →
       (facetCompletions H V T).card ≤ D)
@@ -153,7 +153,7 @@ theorem commonTripleCell_pairDegree_le_of_facet_cap
       simp only [Finset.mem_filter]
       constructor
       · rintro ⟨hT, hPT⟩
-        have hcell := (mem_commonTripleCell.mp hT)
+        have hcell := (mem_common_triple_cell.mp hT)
         have haT : a ∈ T := hPT haP
         exact False.elim
           ((Finset.disjoint_left.mp hcell.2.2.1) haT (by simp))
@@ -161,12 +161,12 @@ theorem commonTripleCell_pairDegree_le_of_facet_cap
     omega
   · have hFacetCard : (insert a P).card = 3 := by
       rw [Finset.card_insert_of_notMem haP, hPcard]
-    exact (commonTripleCell_pairDegree_le_facetCompletions
+    exact (common_triple_cell_pair_degree_le_facet_completions
       H V a b P hPcard).trans (hCap (insert a P) hFacetCard)
 
 /-- The large rank-four common cell has a center under the manuscript's
 actual maximum facet-degree hypothesis. -/
-theorem commonTripleCell_large_has_center_of_facet_cap
+theorem common_triple_cell_large_has_center_of_facet_cap
     {H : Family α} {V : Edge α} {a b : α} {D : ℕ}
     (hH : Admissible H) (hab : a ≠ b)
     (hCap : ∀ T : Edge α, T.card = 3 →
@@ -176,14 +176,14 @@ theorem commonTripleCell_large_has_center_of_facet_cap
       T ∈ commonTripleCell H V a b → z ∈ T := by
   apply intersecting_triples_large_has_center
   · intro T hT
-    exact (mem_commonTripleCell.mp hT).2.1
-  · exact commonTripleCell_intersecting hH hab
-  · exact commonTripleCell_pairDegree_le_of_facet_cap hCap
+    exact (mem_common_triple_cell.mp hT).2.1
+  · exact common_triple_cell_intersecting hH hab
+  · exact common_triple_cell_pair_degree_le_of_facet_cap hCap
   · exact hLarge
 
 /-- A bounded pair degree forces a common center after the weak cells
 have been cleared. -/
-theorem commonTripleCell_large_has_center
+theorem common_triple_cell_large_has_center
     {H : Family α} {V : Edge α} {a b : α} {D : ℕ}
     (hH : Admissible H) (hab : a ≠ b)
     (hD : ∀ P : Edge α, P.card = 2 →
@@ -193,13 +193,13 @@ theorem commonTripleCell_large_has_center
       T ∈ commonTripleCell H V a b → z ∈ T := by
   apply intersecting_triples_large_has_center
   · intro T hT
-    exact (mem_commonTripleCell.mp hT).2.1
-  · exact commonTripleCell_intersecting hH hab
+    exact (mem_common_triple_cell.mp hT).2.1
+  · exact common_triple_cell_intersecting hH hab
   · exact hD
   · exact hLarge
 
 /-- Once a cell is larger than its pair-degree cap, its center is unique. -/
-theorem commonTripleCell_center_unique
+theorem common_triple_cell_center_unique
     {H : Family α} {V : Edge α} {a b x y : α} {D : ℕ}
     (hD : ∀ P : Edge α, P.card = 2 →
       triplePairDegree (commonTripleCell H V a b) P ≤ D)
@@ -243,7 +243,7 @@ theorem three_parent_tails_force_label_in_pair
     (hT : insert z T ∈ commonTripleCell H V a b) :
     z ∈ P := by
   by_contra hzP
-  have hI := commonTripleCell_intersecting (V := V) hH hab
+  have hI := common_triple_cell_intersecting (V := V) hH hab
   have hContradict (Q : Edge α)
       (hcQ : c ∉ Q)
       (hPQ : Disjoint P Q)

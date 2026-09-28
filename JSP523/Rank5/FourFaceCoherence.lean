@@ -80,7 +80,7 @@ theorem four_coherent_deleted_faces_imply_triple_root
   have hcomp : PartialCompatible U f :=
     coherent_deleted_faces_compatible hEcard hUE hcoh
   obtain ⟨v, ⟨hvE, hvroot⟩, _⟩ :=
-    partial_root_existsUnique_in_ambient hUcard hmap hcomp hnofix
+    partial_root_exists_unique_in_ambient hUcard hmap hcomp hnofix
   refine ⟨v, hvE, ?_⟩
   intro S hSE hS3 hvS
   have hout : ∃ a ∈ U, a ∉ S := by

@@ -13,7 +13,7 @@ namespace JSP523.Rank3
 
 variable {α : Type*} [DecidableEq α]
 
-theorem noNineOrTenTripleBlock_of_ground_blockFree
+theorem no_nine_or_ten_triple_block_of_ground_block_free
     (H : Family α) (V : Edge α)
     (hU : Uniform 3 H)
     (hGround : ∀ E ∈ H, E ⊆ V)

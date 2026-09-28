@@ -23,7 +23,7 @@ variable {α τ : Type*} [DecidableEq α]
 def orderedDisjointPrefixes (F : Family α) : Finset (Edge α × Edge α) :=
   (F ×ˢ F).filter (fun YZ => Disjoint YZ.1 YZ.2)
 
-theorem orderedDisjointPrefixes_card_eq_sum (F : Family α) :
+theorem ordered_disjoint_prefixes_card_eq_sum (F : Family α) :
     (orderedDisjointPrefixes F).card =
       ∑ Y ∈ F, (F.filter (fun Z => Disjoint Y Z)).card := by
   classical
@@ -32,11 +32,11 @@ theorem orderedDisjointPrefixes_card_eq_sum (F : Family α) :
     (fun Y Z => if Disjoint Y Z then (1 : ℕ) else 0)
 
 /-- The exact finite number of ordered disjoint p-prefix pairs. -/
-theorem orderedDisjointPrefixes_powersetCard_card (V : Edge α) (p : ℕ) :
+theorem ordered_disjoint_prefixes_powerset_card_card (V : Edge α) (p : ℕ) :
     (orderedDisjointPrefixes (V.powersetCard p)).card =
       V.card.choose p * (V.card - p).choose p := by
   classical
-  rw [orderedDisjointPrefixes_card_eq_sum]
+  rw [ordered_disjoint_prefixes_card_eq_sum]
   have hTerm : ∀ Y ∈ V.powersetCard p,
       ((V.powersetCard p).filter (fun Z => Disjoint Y Z)).card =
         (V.card - p).choose p := by
@@ -99,7 +99,7 @@ theorem prefix_card_square_le
         (F.filter (fun Z => Disjoint Y Z)).card) := Finset.sum_le_sum hRow
     _ = (1 + p * (D - 1)) * F.card +
         (orderedDisjointPrefixes F).card := by
-      rw [Finset.sum_add_distrib, ← orderedDisjointPrefixes_card_eq_sum]
+      rw [Finset.sum_add_distrib, ← ordered_disjoint_prefixes_card_eq_sum]
       simp [Nat.mul_comm]
 
 /-- Exact reindexing of assigned disjoint pairs by prefix pair instead of
@@ -203,7 +203,7 @@ theorem prefix_collision_quadratic_bound
       V.card.choose p * (V.card - p).choose p * B := by
     have h := assigned_disjoint_pairs_le T (V.powersetCard p)
       assigned B hAssigned hCommon
-    simpa only [orderedDisjointPrefixes_powersetCard_card] using h
+    simpa only [ordered_disjoint_prefixes_powerset_card_card] using h
   have hCauchy := _root_.sq_sum_le_card_mul_sum_sq
     (s := T) (f := fun P => (assigned P).card)
   exact hCauchy.trans (Nat.mul_le_mul_left _
@@ -242,7 +242,7 @@ theorem prefix_collision_quadratic_bound_real
         exact hCommon YZ.1 hY YZ.2 hZ hDisj
       _ = _ := by
         simp only [Finset.sum_const, nsmul_eq_mul, F,
-          orderedDisjointPrefixes_powersetCard_card]
+          ordered_disjoint_prefixes_powerset_card_card]
   have hUpperNat := assigned_prefix_second_moment_le V T p D assigned
     hD hAssigned hDegree
   have hUpper :

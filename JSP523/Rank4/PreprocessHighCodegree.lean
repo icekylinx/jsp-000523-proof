@@ -27,7 +27,7 @@ def highCodegreeDeletion (F : Family α) (V : Edge α) (R : ℕ) : Family α :=
     (tripleCompletionVertices F V T).image fun x => insert x T
 
 /-- The deletion is contained in the original four-family. -/
-theorem highCodegreeDeletion_subset
+theorem high_codegree_deletion_subset
     (F : Family α) (V : Edge α) (R : ℕ) :
     highCodegreeDeletion F V R ⊆ F := by
   classical
@@ -38,7 +38,7 @@ theorem highCodegreeDeletion_subset
   simpa [hEq] using hxF
 
 /-- Every remaining triple has degree at most the target. -/
-theorem tripleCompletionVertices_card_le_of_survives
+theorem triple_completion_vertices_card_le_of_survives
     (F : Family α) (V : Edge α) (R : ℕ) (T : Edge α)
     (hT : T ∈ V.powersetCard 3)
     (hSurvive : ∀ x ∈ tripleCompletionVertices F V T,
@@ -60,7 +60,7 @@ theorem tripleCompletionVertices_card_le_of_survives
 
 /-- Cardinality of the high-codegree deletion is at most the sum of the
 degrees of its high triple roots. -/
-theorem highCodegreeDeletion_card_le
+theorem high_codegree_deletion_card_le
     (F : Family α) (V : Edge α) (R : ℕ) :
     (highCodegreeDeletion F V R).card ≤
       ∑ T ∈ highCodegreeTriples F V R,
@@ -79,7 +79,7 @@ theorem highCodegreeDeletion_card_le
 
 /-- Actual tail deletion bound from the pair-collision moment.  For a
 triple degree `d > R`, its contribution `R*d` is bounded by `d*(d-1)`. -/
-theorem highCodegreeDeletion_mul_le_collisionMoment
+theorem high_codegree_deletion_mul_le_collision_moment
     (F : Family α) (V : Edge α) (R : ℕ) :
     R * (highCodegreeDeletion F V R).card ≤
       ∑ T ∈ V.powersetCard 3,
@@ -108,14 +108,14 @@ theorem highCodegreeDeletion_mul_le_collisionMoment
   calc
     R * (highCodegreeDeletion F V R).card ≤
         R * (∑ T ∈ highCodegreeTriples F V R, d T) :=
-          Nat.mul_le_mul_left R (highCodegreeDeletion_card_le F V R)
+          Nat.mul_le_mul_left R (high_codegree_deletion_card_le F V R)
     _ ≤ ∑ T ∈ highCodegreeTriples F V R, d T * (d T - 1) := hTail
     _ ≤ ∑ T ∈ V.powersetCard 3, d T * (d T - 1) := hSum
 
 /-- The high-codegree deletion leaves a subfamily in which every triple has
 degree at most `R`.  A supplied collision-moment bound gives its explicit
 finite deletion budget. -/
-theorem highCodegreeDeletion_regularizes
+theorem high_codegree_deletion_regularizes
     (F : Family α) (V : Edge α) (R M : ℕ)
     (hMoment : ∑ T ∈ V.powersetCard 3,
         (tripleCompletionVertices F V T).card *
@@ -128,7 +128,7 @@ theorem highCodegreeDeletion_regularizes
   classical
   let D := highCodegreeDeletion F V R
   let K := F \ D
-  have hDF : D ⊆ F := highCodegreeDeletion_subset F V R
+  have hDF : D ⊆ F := high_codegree_deletion_subset F V R
   have hRemoved : F \ K = D := by
     ext E
     simp [K, D, hDF]
@@ -136,7 +136,7 @@ theorem highCodegreeDeletion_regularizes
   · intro E hE
     exact (Finset.mem_sdiff.mp hE).1
   · rw [hRemoved]
-    exact (highCodegreeDeletion_mul_le_collisionMoment F V R).trans hMoment
+    exact (high_codegree_deletion_mul_le_collision_moment F V R).trans hMoment
   · intro T hT
     have hSub : tripleCompletionVertices K V T ⊆
         tripleCompletionVertices F V T := by

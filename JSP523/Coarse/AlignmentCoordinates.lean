@@ -31,26 +31,26 @@ def prefixColor (s : ℕ) (i : Fin (s + 1)) : Fin (s + 3) :=
 def lastColor₁ (s : ℕ) : Fin (s + 3) := ⟨s + 1, by omega⟩
 def lastColor₂ (s : ℕ) : Fin (s + 3) := ⟨s + 2, by omega⟩
 
-theorem prefixColor_injective (s : ℕ) :
+theorem prefix_color_injective (s : ℕ) :
     Function.Injective (prefixColor s) := by
   intro i j h
   exact Fin.ext (by simpa [prefixColor] using congrArg Fin.val h)
 
-theorem prefixColor_ne_last₁ (s : ℕ) (i : Fin (s + 1)) :
+theorem prefix_color_ne_last_1 (s : ℕ) (i : Fin (s + 1)) :
     prefixColor s i ≠ lastColor₁ s := by
   intro h
   have := congrArg Fin.val h
   simp only [prefixColor, lastColor₁] at this
   omega
 
-theorem prefixColor_ne_last₂ (s : ℕ) (i : Fin (s + 1)) :
+theorem prefix_color_ne_last_2 (s : ℕ) (i : Fin (s + 1)) :
     prefixColor s i ≠ lastColor₂ s := by
   intro h
   have := congrArg Fin.val h
   simp only [prefixColor, lastColor₂] at this
   omega
 
-theorem lastColor₁_ne_lastColor₂ (s : ℕ) :
+theorem last_color_1_ne_last_color_2 (s : ℕ) :
     lastColor₁ s ≠ lastColor₂ s := by
   intro h
   have := congrArg Fin.val h
@@ -77,37 +77,37 @@ noncomputable def familyVertex
   vertexAtColor E.1 (s + 3) κ (hU E.2) (hC E.1 E.2) i
 
 omit [Fintype α] [DecidableEq α] in
-theorem familyVertex_mem
+theorem family_vertex_mem
     (F : Family α) (s : ℕ) (κ : α → Fin (s + 3))
     (hU : Uniform (s + 3) F)
     (hC : ∀ E ∈ F, CrossingOn (s + 3) κ E)
     (E : ↥F) (i : Fin (s + 3)) :
     familyVertex F s κ hU hC E i ∈ E.1 :=
-  vertexAtColor_mem E.1 (s + 3) κ (hU E.2) (hC E.1 E.2) i
+  vertex_at_color_mem E.1 (s + 3) κ (hU E.2) (hC E.1 E.2) i
 
 omit [Fintype α] [DecidableEq α] in
-theorem familyVertex_color
+theorem family_vertex_color
     (F : Family α) (s : ℕ) (κ : α → Fin (s + 3))
     (hU : Uniform (s + 3) F)
     (hC : ∀ E ∈ F, CrossingOn (s + 3) κ E)
     (E : ↥F) (i : Fin (s + 3)) :
     κ (familyVertex F s κ hU hC E i) = i :=
-  color_vertexAtColor E.1 (s + 3) κ (hU E.2) (hC E.1 E.2) i
+  color_vertex_at_color E.1 (s + 3) κ (hU E.2) (hC E.1 E.2) i
 
 omit [Fintype α] [DecidableEq α] in
-theorem familyVertex_surjective_on_edge
+theorem family_vertex_surjective_on_edge
     (F : Family α) (s : ℕ) (κ : α → Fin (s + 3))
     (hU : Uniform (s + 3) F)
     (hC : ∀ E ∈ F, CrossingOn (s + 3) κ E)
     (E : ↥F) (v : α) (hv : v ∈ E.1) :
     familyVertex F s κ hU hC E (κ v) = v := by
   obtain ⟨i, hi⟩ :=
-    (mem_edge_iff_exists_vertexAtColor E.1 (s + 3) κ
+    (mem_edge_iff_exists_vertex_at_color E.1 (s + 3) κ
       (hU E.2) (hC E.1 E.2) v).mp hv
   have hi' : familyVertex F s κ hU hC E i = v := hi
   have hcol : κ v = i := by
     rw [← hi']
-    exact familyVertex_color F s κ hU hC E i
+    exact family_vertex_color F s κ hU hC E i
   rw [hcol]
   exact hi'
 
@@ -139,7 +139,7 @@ noncomputable def familyDifference
     (prefixColor s (Fin.succ i))) - familyAnchor F s κ hU hC e E
 
 omit [Fintype α] [DecidableEq α] [Fintype β] [DecidableEq β] in
-theorem familyVertex_prefix_coordinate
+theorem family_vertex_prefix_coordinate
     (F : Family α) (s : ℕ) (κ : α → Fin (s + 3))
     (hU : Uniform (s + 3) F)
     (hC : ∀ E ∈ F, CrossingOn (s + 3) κ E)
@@ -161,7 +161,7 @@ noncomputable def prefixBlock
     κ v = prefixColor s i ∧ e v = j + prefixOffset δ i
 
 omit [DecidableEq α] [Fintype β] in
-theorem mem_prefixBlock_iff
+theorem mem_prefix_block_iff
     (s : ℕ) (κ : α → Fin (s + 3)) (e : α ≃ β)
     (δ : Fin s → β) (j : β) (v : α) :
     v ∈ prefixBlock s κ e δ j ↔ ∃ i : Fin (s + 1),
@@ -169,7 +169,7 @@ theorem mem_prefixBlock_iff
   simp [prefixBlock]
 
 omit [DecidableEq α] [Fintype β] in
-theorem prefixBlock_disjoint
+theorem prefix_block_disjoint
     (s : ℕ) (κ : α → Fin (s + 3)) (e : α ≃ β)
     (δ : Fin s → β) {j k : β} (hjk : j ≠ k) :
     Disjoint (prefixBlock s κ e δ j)
@@ -177,10 +177,10 @@ theorem prefixBlock_disjoint
   apply Finset.disjoint_left.mpr
   intro v hvj hvk
   obtain ⟨i, hci, hei⟩ :=
-    (mem_prefixBlock_iff s κ e δ j v).mp hvj
+    (mem_prefix_block_iff s κ e δ j v).mp hvj
   obtain ⟨i', hci', hei'⟩ :=
-    (mem_prefixBlock_iff s κ e δ k v).mp hvk
-  have hii' : i = i' := prefixColor_injective s (hci.symm.trans hci')
+    (mem_prefix_block_iff s κ e δ k v).mp hvk
+  have hii' : i = i' := prefix_color_injective s (hci.symm.trans hci')
   subst i'
   exact hjk (add_right_cancel (hei.symm.trans hei'))
 
@@ -193,9 +193,9 @@ theorem family_prefix_vertex_mem_block
     familyVertex F s κ hU hC E (prefixColor s i) ∈
       prefixBlock s κ e (familyDifference F s κ hU hC e E)
         (familyAnchor F s κ hU hC e E) := by
-  apply (mem_prefixBlock_iff ..).2
-  exact ⟨i, familyVertex_color F s κ hU hC E _,
-    familyVertex_prefix_coordinate F s κ hU hC e E i⟩
+  apply (mem_prefix_block_iff ..).2
+  exact ⟨i, family_vertex_color F s κ hU hC E _,
+    family_vertex_prefix_coordinate F s κ hU hC e E i⟩
 
 omit [Fintype β] in
 /-- In its unique difference fiber, a crossing edge is its prefix block
@@ -214,56 +214,56 @@ theorem family_edge_reconstruct
   · intro hv
     rcases Finset.mem_union.mp hv with hb | ht
     · obtain ⟨i, _, heq⟩ :=
-        (mem_prefixBlock_iff ..).mp hb
+        (mem_prefix_block_iff ..).mp hb
       have hv' : v = familyVertex F s κ hU hC E (prefixColor s i) := by
         apply e.injective
-        exact heq.trans (familyVertex_prefix_coordinate F s κ hU hC e E i).symm
+        exact heq.trans (family_vertex_prefix_coordinate F s κ hU hC e E i).symm
       rw [hv']
-      exact familyVertex_mem F s κ hU hC E _
+      exact family_vertex_mem F s κ hU hC E _
     · simp only [Finset.mem_insert, Finset.mem_singleton] at ht
       rcases ht with rfl | rfl
-      · exact familyVertex_mem F s κ hU hC E _
-      · exact familyVertex_mem F s κ hU hC E _
+      · exact family_vertex_mem F s κ hU hC E _
+      · exact family_vertex_mem F s κ hU hC E _
   · intro hv
     rcases color_eq_prefix_or_last s (κ v) with ⟨i, hi⟩ | hi | hi
     · apply Finset.mem_union.mpr
       left
       have hv' : familyVertex F s κ hU hC E (prefixColor s i) = v := by
         rw [← hi]
-        exact familyVertex_surjective_on_edge F s κ hU hC E v hv
+        exact family_vertex_surjective_on_edge F s κ hU hC E v hv
       rw [← hv']
       exact family_prefix_vertex_mem_block F s κ hU hC e E i
     · apply Finset.mem_union.mpr
       right
       have hv' : familyVertex F s κ hU hC E (lastColor₁ s) = v := by
         rw [← hi]
-        exact familyVertex_surjective_on_edge F s κ hU hC E v hv
+        exact family_vertex_surjective_on_edge F s κ hU hC E v hv
       simp [hv']
     · apply Finset.mem_union.mpr
       right
       have hv' : familyVertex F s κ hU hC E (lastColor₂ s) = v := by
         rw [← hi]
-        exact familyVertex_surjective_on_edge F s κ hU hC E v hv
+        exact family_vertex_surjective_on_edge F s κ hU hC E v hv
       simp [hv']
 
 omit [DecidableEq α] [Fintype β] in
-theorem prefixBlock_no_last₁
+theorem prefix_block_no_last_1
     (s : ℕ) (κ : α → Fin (s + 3)) (e : α ≃ β)
     (δ : Fin s → β) (j : β) {v : α}
     (hv : κ v = lastColor₁ s) :
     v ∉ prefixBlock s κ e δ j := by
   intro hb
-  obtain ⟨i, hi, _⟩ := (mem_prefixBlock_iff ..).mp hb
-  exact prefixColor_ne_last₁ s i (hi.symm.trans hv)
+  obtain ⟨i, hi, _⟩ := (mem_prefix_block_iff ..).mp hb
+  exact prefix_color_ne_last_1 s i (hi.symm.trans hv)
 
 omit [DecidableEq α] [Fintype β] in
-theorem prefixBlock_no_last₂
+theorem prefix_block_no_last_2
     (s : ℕ) (κ : α → Fin (s + 3)) (e : α ≃ β)
     (δ : Fin s → β) (j : β) {v : α}
     (hv : κ v = lastColor₂ s) :
     v ∉ prefixBlock s κ e δ j := by
   intro hb
-  obtain ⟨i, hi, _⟩ := (mem_prefixBlock_iff ..).mp hb
-  exact prefixColor_ne_last₂ s i (hi.symm.trans hv)
+  obtain ⟨i, hi, _⟩ := (mem_prefix_block_iff ..).mp hb
+  exact prefix_color_ne_last_2 s i (hi.symm.trans hv)
 
 end JSP523.Coarse

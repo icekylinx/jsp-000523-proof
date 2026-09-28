@@ -18,24 +18,24 @@ variable {α : Type*} [DecidableEq α]
 def actualFixedCenterLinkRoots (Q : Family α) (V : Edge α) (x : α) : Family α :=
   (V.powersetCard 2).filter fun P => insert x P ∈ Q
 
-theorem actualFixedCenterLinkRoot_card
+theorem actual_fixed_center_link_root_card
     (Q : Family α) (V : Edge α) (x : α) (P : Edge α)
     (hP : P ∈ actualFixedCenterLinkRoots Q V x) : P.card = 2 := by
   exact (Finset.mem_powersetCard.mp (Finset.mem_filter.mp hP).1).2
 
-theorem actualFixedCenter_root_avoids_center
+theorem actual_fixed_center_root_avoids_center
     (Q : Family α) (V : Edge α) (x : α)
     (hUniform : Uniform 3 Q) (P : Edge α)
     (hP : P ∈ actualFixedCenterLinkRoots Q V x) : x ∉ P := by
   intro hxP
   have hQ : insert x P ∈ Q := (Finset.mem_filter.mp hP).2
   have hcardQ := hUniform hQ
-  have hcardP := actualFixedCenterLinkRoot_card Q V x P hP
+  have hcardP := actual_fixed_center_link_root_card Q V x P hP
   rw [Finset.insert_eq_of_mem hxP] at hcardQ
   omega
 
 /-- Endpoint codegree in a fixed-center link is at most the Q pair-degree. -/
-theorem actualFixedCenterLinkRoots_endpoint_codegree_le
+theorem actual_fixed_center_link_roots_endpoint_codegree_le
     (Q : Family α) (V : Edge α) (x a : α) (κ : ℕ)
     (hUniform : Uniform 3 Q)
     (hx : x ∈ V)
@@ -49,7 +49,7 @@ theorem actualFixedCenterLinkRoots_endpoint_codegree_le
     have hEmpty : (L.filter fun P => x ∈ P) = ∅ := by
       apply Finset.eq_empty_iff_forall_notMem.mpr
       intro P hP
-      exact actualFixedCenter_root_avoids_center Q V x hUniform P
+      exact actual_fixed_center_root_avoids_center Q V x hUniform P
         (Finset.mem_filter.mp hP).1 (Finset.mem_filter.mp hP).2
     simp [L, hEmpty]
   · by_cases ha : a ∈ V
@@ -81,9 +81,9 @@ theorem actualFixedCenterLinkRoots_endpoint_codegree_le
         · exact Finset.mem_insert_of_mem haP
       have hinj : (S : Set (Edge α)).InjOn (fun P => insert x P) := by
         intro P hP Q' hQ' heq
-        have hxP := actualFixedCenter_root_avoids_center Q V x hUniform P
+        have hxP := actual_fixed_center_root_avoids_center Q V x hUniform P
           (Finset.mem_filter.mp hP).1
-        have hxQ := actualFixedCenter_root_avoids_center Q V x hUniform Q'
+        have hxQ := actual_fixed_center_root_avoids_center Q V x hUniform Q'
           (Finset.mem_filter.mp hQ').1
         have herase := congrArg (fun E : Edge α => E.erase x) heq
         rw [Finset.erase_insert hxP, Finset.erase_insert hxQ] at herase
@@ -103,7 +103,7 @@ theorem actualFixedCenterLinkRoots_endpoint_codegree_le
 
 /-- The actual fixed-center Q-link admits the `2κ-1` proper pair-root
 coloring required by bounded-label separation. -/
-theorem actualFixedCenterLinkRoots_colorable
+theorem actual_fixed_center_link_roots_colorable
     (Q : Family α) (V : Edge α) (x : α) (κ : ℕ) (hκ : 1 ≤ κ)
     (hUniform : Uniform 3 Q)
     (hx : x ∈ V)
@@ -114,13 +114,13 @@ theorem actualFixedCenterLinkRoots_colorable
       ∀ R ∈ actualFixedCenterLinkRoots Q V x,
         pairRootConflict P R → color P ≠ color R := by
   exact pair_roots_greedy_color (actualFixedCenterLinkRoots Q V x) κ hκ
-    (actualFixedCenterLinkRoot_card Q V x)
-    (fun a => actualFixedCenterLinkRoots_endpoint_codegree_le Q V x a κ
+    (actual_fixed_center_link_root_card Q V x)
+    (fun a => actual_fixed_center_link_roots_endpoint_codegree_le Q V x a κ
       hUniform hx hPair)
 
 /-- The greedy coloring, transferred to the project's subtype of actual
 fixed-center pair nodes. -/
-theorem fixedCenterPairNodes_actual_coloring
+theorem fixed_center_pair_nodes_actual_coloring
     [Fintype α]
     (Q : Family α) (V : Edge α) (x : α) (κ : ℕ) (hκ : 1 ≤ κ)
     (hUniform : Uniform 3 Q) (hx : x ∈ V)
@@ -129,7 +129,7 @@ theorem fixedCenterPairNodes_actual_coloring
     ∃ color : fixedCenterPairNodes Q V x → Fin (2 * κ - 1),
       ∀ P R : fixedCenterPairNodes Q V x,
         P.1 ≠ R.1 → ¬ Disjoint P.1 R.1 → color P ≠ color R := by
-  obtain ⟨rootColor, hroot⟩ := actualFixedCenterLinkRoots_colorable
+  obtain ⟨rootColor, hroot⟩ := actual_fixed_center_link_roots_colorable
     Q V x κ hκ hUniform hx hPair
   refine ⟨fun P => rootColor P.1, ?_⟩
   intro P R hne hnotDisj heq
@@ -143,7 +143,7 @@ theorem fixedCenterPairNodes_actual_coloring
 color classes is at most twice the edge count of their actual bipartite
 pair-node graph.  This is the ordered-adjacency form of the graph edge
 count, so no injectivity of the union representation is assumed. -/
-theorem fixedCenter_colorPair_witnesses_le_twice_graphEdges
+theorem fixed_center_color_pair_witnesses_le_twice_graph_edges
     [Fintype α]
     (F Q : Family α) (V : Edge α) (x : α)
     (color : fixedCenterPairNodes Q V x → ℕ) (i j : ℕ)
@@ -191,7 +191,7 @@ theorem fixedCenter_colorPair_witnesses_le_twice_graphEdges
 /-- At a fixed center, all actual represented four-edges are charged to
 ordered pair-root witnesses, and those witnesses split among the colored
 bipartite pair-node graphs. -/
-theorem fixedCenterPairNodeDeletion_card_le_graphWitnessBudget
+theorem fixed_center_pair_node_deletion_card_le_graph_witness_budget
     [Fintype α]
     (F Q : Family α) (V : Edge α) (x : α) (c : ℕ)
     (color : fixedCenterPairNodes Q V x → Fin c) :
@@ -238,7 +238,7 @@ theorem fixedCenterPairNodeDeletion_card_le_graphWitnessBudget
           _ ≤ (classWitnesses ij).card := Finset.card_image_le
           _ ≤ 2 * (fixedCenterPairNodeGraph F Q V x nodeColor
               ij.1.val ij.2.val).edgeFinset.card := by
-            apply fixedCenter_colorPair_witnesses_le_twice_graphEdges
+            apply fixed_center_color_pair_witnesses_le_twice_graph_edges
             intro z hz
             exact (Finset.mem_filter.mp hz).2
   have hsurj : Set.SurjOn
@@ -259,7 +259,7 @@ theorem fixedCenterPairNodeDeletion_card_le_graphWitnessBudget
 coloring makes every pair-node graph eligible for the finite C4-free edge
 bound, and all represented four-edges are charged to the sum of those graph
 bounds. -/
-theorem actualFixedCenter_separation_budget
+theorem actual_fixed_center_separation_budget
     [Fintype α]
     (F Q : Family α) (V : Edge α) (x : α) (κ : ℕ) (hκ : 1 ≤ κ)
     (hUniform : Uniform 3 Q) (hx : x ∈ V)
@@ -281,13 +281,13 @@ theorem actualFixedCenter_separation_budget
             (Fintype.card (Sum
               {P : fixedCenterPairNodes Q V x // (color P).val = i.val}
               {P : fixedCenterPairNodes Q V x // (color P).val = j.val}) : ℝ) / 2) / 2 := by
-  obtain ⟨color, hProper⟩ := fixedCenterPairNodes_actual_coloring
+  obtain ⟨color, hProper⟩ := fixed_center_pair_nodes_actual_coloring
     Q V x κ hκ hUniform hx hPair
   refine ⟨color, ?_, ?_⟩
-  · exact fixedCenterPairNodeDeletion_card_le_graphWitnessBudget
+  · exact fixed_center_pair_node_deletion_card_le_graph_witness_budget
       F Q V x (2 * κ - 1) color
   · intro i j
-    apply fixedCenterPairNodeGraph_edge_bound
+    apply fixed_center_pair_node_graph_edge_bound
     · intro P R hne hnotDisj heq
       apply hProper P R hne hnotDisj
       exact Fin.ext heq
@@ -295,7 +295,7 @@ theorem actualFixedCenter_separation_budget
 
 /-- Real-valued aggregate form of the fixed-center separation budget.  The
 right side is the explicit sum of the finite C4-free graph bounds. -/
-theorem actualFixedCenter_separation_explicit_bound
+theorem actual_fixed_center_separation_explicit_bound
     [Fintype α]
     (F Q : Family α) (V : Edge α) (x : α) (κ : ℕ) (hκ : 1 ≤ κ)
     (hUniform : Uniform 3 Q) (hx : x ∈ V)
@@ -312,7 +312,7 @@ theorem actualFixedCenter_separation_explicit_bound
             (Fintype.card (Sum
               {P : fixedCenterPairNodes Q V x // (color P).val = ij.1.val}
               {P : fixedCenterPairNodes Q V x // (color P).val = ij.2.val}) : ℝ) / 2) / 2) := by
-  obtain ⟨color, hBudget, hEdge⟩ := actualFixedCenter_separation_budget
+  obtain ⟨color, hBudget, hEdge⟩ := actual_fixed_center_separation_budget
     F Q V x κ hκ hUniform hx hPair hAdmissible
   refine ⟨color, ?_⟩
   calc

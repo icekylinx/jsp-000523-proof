@@ -21,7 +21,7 @@ def triplePairDegree (H : Family α) (P : Edge α) : ℕ :=
 
 /-- If an intersecting triple family has no common point, nine pairs cover
 all its triples.  Consequently a pair-degree cap `D` gives `|H| ≤ 9D`. -/
-theorem intersecting_triples_card_le_nine_mul_pairDegree
+theorem intersecting_triples_card_le_nine_mul_pair_degree
     {H : Family α} {D : ℕ}
     (hU : Uniform 3 H)
     (hI : PairwiseIntersecting H)
@@ -120,7 +120,7 @@ theorem intersecting_triples_large_has_center
     intro E hE
     by_contra hxE
     exact hx ⟨E, hE, hxE⟩
-  have hSmall := intersecting_triples_card_le_nine_mul_pairDegree
+  have hSmall := intersecting_triples_card_le_nine_mul_pair_degree
     hU hI hN hD
   omega
 

@@ -211,9 +211,9 @@ theorem actual_triangle_undirected_record_key_injective
     simpa [actualTriangleUndirectedRecordKey, completionTriangleRecordKeys,
       completionPairRecord, completionRecordForgetOrientation] using h
   have horient := pair_finset_eq_oriented_eq
-    (completionTriangleEnds_offdiag v hv j) hEndsSet
+    (completion_triangle_ends_offdiag v hv j) hEndsSet
   rcases horient with hSame | hSwap
-  · exact completionTriangleEnds_injective v hv (Prod.ext hSame.1.symm hSame.2.symm)
+  · exact completion_triangle_ends_injective v hv (Prod.ext hSame.1.symm hSame.2.symm)
   · have hIndex : completionTriangleIndexPair i =
         (completionTriangleIndexPair j).swap := by
       apply Prod.ext <;> apply hv
@@ -223,7 +223,7 @@ theorem actual_triangle_undirected_record_key_injective
       norm_num [completionTriangleIndexPair] at hIndex
 
 omit [Fintype α] in
-theorem actual_K4_undirected_record_key_injective
+theorem actual_k4_undirected_record_key_injective
     (D : FiniteCompletionCliqueData α) (T : Edge α) (v : Fin 4 → α)
     (hv : Function.Injective v) :
     Function.Injective (actualK4UndirectedRecordKey D T v) := by
@@ -236,9 +236,9 @@ theorem actual_K4_undirected_record_key_injective
     simpa [actualK4UndirectedRecordKey, completionK4RecordKeys,
       completionPairRecord, completionRecordForgetOrientation] using h
   have horient := pair_finset_eq_oriented_eq
-    (completionK4Ends_offdiag v hv j) hEndsSet
+    (completion_k4_ends_offdiag v hv j) hEndsSet
   rcases horient with hSame | hSwap
-  · exact completionK4Ends_injective v hv (Prod.ext hSame.1.symm hSame.2.symm)
+  · exact completion_k4_ends_injective v hv (Prod.ext hSame.1.symm hSame.2.symm)
   · have hIndex : completionK4IndexPair i =
         (completionK4IndexPair j).swap := by
       apply Prod.ext <;> apply hv
@@ -274,7 +274,7 @@ theorem actual_triangle_undirected_key_eq_implies_facet_eq
       completionPairRecord, completionRecordForgetOrientation] using
       congrArg Prod.snd hKey
   have hOrient := pair_finset_eq_oriented_eq
-    (completionTriangleEnds_offdiag w hw j) hSet
+    (completion_triangle_ends_offdiag w hw j) hSet
   have hLabel : D.label (completionTriangleEnds v i).1
       (completionTriangleEnds v i).2 =
       D.label (completionTriangleEnds w j).1 (completionTriangleEnds w j).2 := by
@@ -286,12 +286,12 @@ theorem actual_triangle_undirected_key_eq_implies_facet_eq
     (completionTriangleEnds v i).1 (completionTriangleEnds v i).2
     (hTCompletion (completionTriangleIndexPair i).1)
     (hTCompletion (completionTriangleIndexPair i).2)
-    (completionTriangleEnds_offdiag v hv i)
+    (completion_triangle_ends_offdiag v hv i)
   have hLabelT' := completion_pair_label_mem_facet D T' hT'card hT'sub
     (completionTriangleEnds w j).1 (completionTriangleEnds w j).2
     (hT'Completion (completionTriangleIndexPair j).1)
     (hT'Completion (completionTriangleIndexPair j).2)
-    (completionTriangleEnds_offdiag w hw j)
+    (completion_triangle_ends_offdiag w hw j)
   have hErase : T.erase (D.label (completionTriangleEnds w j).1
       (completionTriangleEnds w j).2) =
       T'.erase (D.label (completionTriangleEnds w j).1
@@ -312,7 +312,7 @@ theorem actual_triangle_undirected_key_eq_implies_facet_eq
     _ = T' := Finset.insert_erase hLabelT'
 
 omit [Fintype α] in
-theorem actual_K4_undirected_key_eq_implies_facet_eq
+theorem actual_k4_undirected_key_eq_implies_facet_eq
     (D : FiniteCompletionCliqueData α)
     (T T' : Edge α) (v : Fin 4 → α) (w : Fin 4 → α) (i : Fin 6) (j : Fin 6)
     (hTcard : T.card = 3) (hTsub : T ⊆ D.ground)
@@ -338,7 +338,7 @@ theorem actual_K4_undirected_key_eq_implies_facet_eq
       completionPairRecord, completionRecordForgetOrientation] using
       congrArg Prod.snd hKey
   have hOrient := pair_finset_eq_oriented_eq
-    (completionK4Ends_offdiag w hw j) hSet
+    (completion_k4_ends_offdiag w hw j) hSet
   have hLabel : D.label (completionK4Ends v i).1
       (completionK4Ends v i).2 =
       D.label (completionK4Ends w j).1 (completionK4Ends w j).2 := by
@@ -350,12 +350,12 @@ theorem actual_K4_undirected_key_eq_implies_facet_eq
     (completionK4Ends v i).1 (completionK4Ends v i).2
     (hTCompletion (completionK4IndexPair i).1)
     (hTCompletion (completionK4IndexPair i).2)
-    (completionK4Ends_offdiag v hv i)
+    (completion_k4_ends_offdiag v hv i)
   have hLabelT' := completion_pair_label_mem_facet D T' hT'card hT'sub
     (completionK4Ends w j).1 (completionK4Ends w j).2
     (hT'Completion (completionK4IndexPair j).1)
     (hT'Completion (completionK4IndexPair j).2)
-    (completionK4Ends_offdiag w hw j)
+    (completion_k4_ends_offdiag w hw j)
   have hErase : T.erase (D.label (completionK4Ends w j).1
       (completionK4Ends w j).2) =
       T'.erase (D.label (completionK4Ends w j).1
@@ -376,7 +376,7 @@ theorem actual_K4_undirected_key_eq_implies_facet_eq
     _ = T' := Finset.insert_erase hLabelT'
 
 omit [Fintype α] in
-theorem actual_triangle_K4_undirected_key_eq_implies_facet_eq
+theorem actual_triangle_k4_undirected_key_eq_implies_facet_eq
     (D : FiniteCompletionCliqueData α)
     (T T' : Edge α) (v : Fin 3 → α) (w : Fin 4 → α) (i : Fin 3) (j : Fin 6)
     (hTcard : T.card = 3) (hTsub : T ⊆ D.ground)
@@ -404,7 +404,7 @@ theorem actual_triangle_K4_undirected_key_eq_implies_facet_eq
       completionPairRecord, completionRecordForgetOrientation] using
       congrArg Prod.snd hKey
   have hOrient := pair_finset_eq_oriented_eq
-    (completionK4Ends_offdiag w hw j) hSet
+    (completion_k4_ends_offdiag w hw j) hSet
   have hLabel : D.label (completionTriangleEnds v i).1
       (completionTriangleEnds v i).2 =
       D.label (completionK4Ends w j).1 (completionK4Ends w j).2 := by
@@ -416,12 +416,12 @@ theorem actual_triangle_K4_undirected_key_eq_implies_facet_eq
     (completionTriangleEnds v i).1 (completionTriangleEnds v i).2
     (hTCompletion (completionTriangleIndexPair i).1)
     (hTCompletion (completionTriangleIndexPair i).2)
-    (completionTriangleEnds_offdiag v hv i)
+    (completion_triangle_ends_offdiag v hv i)
   have hLabelT' := completion_pair_label_mem_facet D T' hT'card hT'sub
     (completionK4Ends w j).1 (completionK4Ends w j).2
     (hT'Completion (completionK4IndexPair j).1)
     (hT'Completion (completionK4IndexPair j).2)
-    (completionK4Ends_offdiag w hw j)
+    (completion_k4_ends_offdiag w hw j)
   have hErase : T.erase (D.label (completionK4Ends w j).1
       (completionK4Ends w j).2) =
       T'.erase (D.label (completionK4Ends w j).1
@@ -472,13 +472,13 @@ theorem selected_actual_triangle_undirected_records_card_eq
       (selectedActualTriangleColorSlotRecords D T v mark x S).card := by
   unfold selectedActualTriangleUndirectedColorSlotRecords
     selectedActualTriangleColorSlotRecords
-  rw [coloredSlotRecordImage_card _ _
+  rw [colored_slot_record_image_card _ _
       (actual_triangle_undirected_record_key_injective D T v hv),
-    coloredSlotRecordImage_card _ _ (completionTriangleRecordKeys_injective
+    colored_slot_record_image_card _ _ (completion_triangle_record_keys_injective
       D T v hv hLabelMem)]
 
 omit [Fintype α] in
-theorem selected_actual_K4_undirected_records_card_eq
+theorem selected_actual_k4_undirected_records_card_eq
     (D : FiniteCompletionCliqueData α) (T : Edge α) (v : Fin 4 → α)
     (mark : CliqueColor → α) (x : CliqueColor) (S : Finset (Fin 4))
     (hv : Function.Injective v)
@@ -488,9 +488,9 @@ theorem selected_actual_K4_undirected_records_card_eq
       (selectedActualK4ColorSlotRecords D T v mark x S).card := by
   unfold selectedActualK4UndirectedColorSlotRecords
     selectedActualK4ColorSlotRecords
-  rw [coloredSlotRecordImage_card _ _
-      (actual_K4_undirected_record_key_injective D T v hv),
-    coloredSlotRecordImage_card _ _ (completionK4RecordKeys_injective
+  rw [colored_slot_record_image_card _ _
+      (actual_k4_undirected_record_key_injective D T v hv),
+    colored_slot_record_image_card _ _ (completion_k4_record_keys_injective
       D T v hv hLabelMem)]
 
 omit [Fintype α] in
@@ -528,8 +528,8 @@ theorem canonical_actual_triangle_undirected_records_card_lower_bound
         (canonicalTriangleMark D T hcard) x S).card := by
   let v := canonicalTriangleCompletion D T hcard
   let mark := canonicalTriangleMark D T hcard
-  have hv : Function.Injective v := canonicalTriangleCompletion_injective D T hcard
-  have hmark : Function.Injective mark := canonicalTriangleMark_injective
+  have hv : Function.Injective v := canonical_triangle_completion_injective D T hcard
+  have hmark : Function.Injective mark := canonical_triangle_mark_injective
     D T hcard hRainbow
   have hLabelMem : ∀ i, D.label (completionTriangleEnds v i).1
       (completionTriangleEnds v i).2 ∈ T := by
@@ -552,7 +552,7 @@ theorem canonical_actual_triangle_undirected_records_card_lower_bound
       hLabelMem hColor hColors
 
 omit [Fintype α] in
-theorem selected_actual_K4_undirected_records_card_lower_bound
+theorem selected_actual_k4_undirected_records_card_lower_bound
     (D : FiniteCompletionCliqueData α) (T : Edge α) (v : Fin 4 → α)
     (mark : CliqueColor → α) (a b c x : CliqueColor) (S : Finset (Fin 4))
     (k : ℕ) (hk : k = S.card)
@@ -564,9 +564,9 @@ theorem selected_actual_K4_undirected_records_card_lower_bound
     (hProper : a ≠ b ∧ a ≠ c ∧ b ≠ c) :
     2 - properFourRecordLoss k ≤
       (selectedActualK4UndirectedColorSlotRecords D T v mark x S).card := by
-  have h := selected_actual_K4_color_slot_records_card_lower_bound
+  have h := selected_actual_k4_color_slot_records_card_lower_bound
     D T v mark a b c x S hv hmark hLabelMem hColor hProper
-  have hEq := selected_actual_K4_undirected_records_card_eq
+  have hEq := selected_actual_k4_undirected_records_card_eq
     D T v mark x S hv hLabelMem
   rw [hk]
   rw [hEq]
@@ -586,7 +586,7 @@ theorem selected_actual_triangle_undirected_records_eq_forget
     completionTriangleRecordKeys, completionPairRecord]
 
 omit [Fintype α] in
-theorem selected_actual_K4_undirected_records_eq_forget
+theorem selected_actual_k4_undirected_records_eq_forget
     (D : FiniteCompletionCliqueData α) (T : Edge α) (v : Fin 4 → α)
     (mark : CliqueColor → α) (x : CliqueColor) (S : Finset (Fin 4)) :
     selectedActualK4UndirectedColorSlotRecords D T v mark x S =
@@ -620,7 +620,7 @@ theorem completion_triangle_record_key_eq_implies_facet_eq
   exact congrArg (fun p : CompletionRecordIndex D => p.val.1) hIndices
 
 omit [Fintype α] in
-theorem completion_K4_record_key_eq_implies_facet_eq
+theorem completion_k4_record_key_eq_implies_facet_eq
     (D : FiniteCompletionCliqueData α)
     (T T' : Edge α) (v : Fin 4 → α) (w : Fin 4 → α) (i j : Fin 6)
     (hTcard : T.card = 3) (hTsub : T ⊆ D.ground)
@@ -661,12 +661,12 @@ theorem selected_actual_triangle_color_records_subset_global
       (completionTriangleEnds v i).2 ∈ S := by
     rw [hslot.1]
     exact hmarkS
-  have hm := completionTriangle_selected_record_mem D T v i S
+  have hm := completion_triangle_selected_record_mem D T v i S
     hTcard hTsub hCompletion hv hleft hright hlabel
   rw [← hir]
   exact hm
 
-theorem selected_actual_K4_color_records_subset_global
+theorem selected_actual_k4_color_records_subset_global
     (D : FiniteCompletionCliqueData α)
     (T : Edge α) (v : Fin 4 → α) (mark : CliqueColor → α)
     (x : CliqueColor) (S : Finset α) (S₀ : Finset (Fin 4))
@@ -688,7 +688,7 @@ theorem selected_actual_K4_color_records_subset_global
       (completionK4Ends v i).2 ∈ S := by
     rw [hslot.1]
     exact hmarkS
-  have hm := completionK4_selected_record_mem D T v i S
+  have hm := completion_k4_selected_record_mem D T v i S
     hTcard hTsub hCompletion hv hleft hright hlabel
   rw [← hir]
   exact hm
@@ -709,7 +709,7 @@ theorem selected_actual_triangle_color_undirected_records_subset_global
   exact selected_actual_triangle_color_records_subset_global
     D T v mark x S S₀ hmarkS hSelected hTcard hTsub hCompletion hv
 
-theorem selected_actual_K4_color_undirected_records_subset_global
+theorem selected_actual_k4_color_undirected_records_subset_global
     (D : FiniteCompletionCliqueData α)
     (T : Edge α) (v : Fin 4 → α) (mark : CliqueColor → α)
     (x : CliqueColor) (S : Finset α) (S₀ : Finset (Fin 4))
@@ -722,7 +722,7 @@ theorem selected_actual_K4_color_undirected_records_subset_global
       (fun p => (p.1, ({p.2.1, p.2.2} : Edge α))) ⊆
         selectedUndirectedCompletionRecordKeys D S := by
   apply directed_selected_records_forget_orientation_subset
-  exact selected_actual_K4_color_records_subset_global
+  exact selected_actual_k4_color_records_subset_global
     D T v mark x S S₀ hmarkS hSelected hTcard hTsub hCompletion hv
 
 omit [Fintype α] in
@@ -748,7 +748,7 @@ theorem selected_triangle_color_records_disjoint_across_facets
   exact hTT' hFacet
 
 omit [Fintype α] in
-theorem selected_K4_color_records_disjoint_across_facets
+theorem selected_k4_color_records_disjoint_across_facets
     (D : FiniteCompletionCliqueData α)
     (T T' : Edge α) (v w : Fin 4 → α) (mark : CliqueColor → α)
     (x y : CliqueColor) (S S' : Finset (Fin 4)) (hTT' : T ≠ T')
@@ -764,7 +764,7 @@ theorem selected_K4_color_records_disjoint_across_facets
   intro r hr hs
   obtain ⟨i, _, hri⟩ := Finset.mem_image.mp hr
   obtain ⟨j, _, hrj⟩ := Finset.mem_image.mp hs
-  have hFacet := completion_K4_record_key_eq_implies_facet_eq
+  have hFacet := completion_k4_record_key_eq_implies_facet_eq
     D T T' v w i j hTcard hTsub hTCompletion hv hT'card hT'sub
     hT'Completion hw (hri.trans hrj.symm)
   exact hTT' hFacet
@@ -792,7 +792,7 @@ theorem selected_triangle_undirected_records_disjoint_across_facets
   exact hTT' hFacet
 
 omit [Fintype α] in
-theorem selected_K4_undirected_records_disjoint_across_facets
+theorem selected_k4_undirected_records_disjoint_across_facets
     (D : FiniteCompletionCliqueData α)
     (T T' : Edge α) (v w : Fin 4 → α) (mark mark' : CliqueColor → α)
     (x y : CliqueColor) (S S' : Finset (Fin 4)) (hTT' : T ≠ T')
@@ -808,13 +808,13 @@ theorem selected_K4_undirected_records_disjoint_across_facets
   intro r hr hs
   obtain ⟨i, _, hri⟩ := Finset.mem_image.mp hr
   obtain ⟨j, _, hrj⟩ := Finset.mem_image.mp hs
-  have hFacet := actual_K4_undirected_key_eq_implies_facet_eq
+  have hFacet := actual_k4_undirected_key_eq_implies_facet_eq
     D T T' v w i j hTcard hTsub hTCompletion hv hT'card hT'sub
     hT'Completion hw (hri.trans hrj.symm)
   exact hTT' hFacet
 
 omit [Fintype α] in
-theorem selected_triangle_K4_undirected_records_disjoint_across_facets
+theorem selected_triangle_k4_undirected_records_disjoint_across_facets
     (D : FiniteCompletionCliqueData α)
     (T T' : Edge α) (v : Fin 3 → α) (w : Fin 4 → α)
     (mark mark' : CliqueColor → α) (x y : CliqueColor)
@@ -831,7 +831,7 @@ theorem selected_triangle_K4_undirected_records_disjoint_across_facets
   intro r hr hs
   obtain ⟨i, _, hri⟩ := Finset.mem_image.mp hr
   obtain ⟨j, _, hrj⟩ := Finset.mem_image.mp hs
-  have hFacet := actual_triangle_K4_undirected_key_eq_implies_facet_eq
+  have hFacet := actual_triangle_k4_undirected_key_eq_implies_facet_eq
     D T T' v w i j hTcard hTsub hTCompletion hv hT'card hT'sub
     hT'Completion hw (hri.trans hrj.symm)
   exact hTT' hFacet
@@ -856,7 +856,7 @@ theorem selected_actual_triangle_undirected_color_slots_disjoint
   exact hxy (hmark (hcol.symm.trans hcol'))
 
 omit [Fintype α] in
-theorem selected_actual_K4_undirected_color_slots_disjoint
+theorem selected_actual_k4_undirected_color_slots_disjoint
     (D : FiniteCompletionCliqueData α) (T : Edge α) (v : Fin 4 → α)
     (mark : CliqueColor → α) {x y : CliqueColor} (hxy : x ≠ y)
     (S S' : Finset (Fin 4)) (hv : Function.Injective v)
@@ -867,7 +867,7 @@ theorem selected_actual_K4_undirected_color_slots_disjoint
   intro r hr hs
   obtain ⟨i, hi, hri⟩ := Finset.mem_image.mp hr
   obtain ⟨j, hj, hrj⟩ := Finset.mem_image.mp hs
-  have hij : i = j := actual_K4_undirected_record_key_injective D T v hv
+  have hij : i = j := actual_k4_undirected_record_key_injective D T v hv
     (hri.trans hrj.symm)
   subst j
   have hcol := (Finset.mem_filter.mp hi).2.1
@@ -889,7 +889,7 @@ theorem selected_actual_triangle_undirected_records_subset_global
   exact selected_actual_triangle_color_records_subset_global
     D T v mark x S S₀ hmarkS hSelected hTcard hTsub hCompletion hv
 
-theorem selected_actual_K4_undirected_records_subset_global
+theorem selected_actual_k4_undirected_records_subset_global
     (D : FiniteCompletionCliqueData α) (T : Edge α) (v : Fin 4 → α)
     (mark : CliqueColor → α) (x : CliqueColor) (S : Finset α)
     (S₀ : Finset (Fin 4)) (hmarkS : mark x ∈ S)
@@ -899,9 +899,9 @@ theorem selected_actual_K4_undirected_records_subset_global
     (hv : Function.Injective v) :
     selectedActualK4UndirectedColorSlotRecords D T v mark x S₀ ⊆
       selectedUndirectedCompletionRecordKeys D S := by
-  rw [selected_actual_K4_undirected_records_eq_forget]
+  rw [selected_actual_k4_undirected_records_eq_forget]
   apply directed_selected_records_forget_orientation_subset
-  exact selected_actual_K4_color_records_subset_global
+  exact selected_actual_k4_color_records_subset_global
     D T v mark x S S₀ hmarkS hSelected hTcard hTsub hCompletion hv
 
 end JSP523.Rank4

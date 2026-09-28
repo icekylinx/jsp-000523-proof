@@ -164,7 +164,7 @@ theorem actual_graph_squared_accounting_identity
   classical
   let R3 := ∑ T ∈ D.ground.powersetCard 3,
     (facetCompletions D.K D.ground T).card.choose 2
-  have hB8 := actual_native_representation_III_B8 D fallback hCenters
+  have hB8 := actual_native_representation_iii_b8 D fallback hCenters
   have hB8q : (actualSelectedDegreePairTotal D : ℚ) +
       (nativeTailVertexTotal D.K D.ground
         (nonemptyCommonRoots D.K D.ground)

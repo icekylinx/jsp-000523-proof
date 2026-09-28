@@ -39,7 +39,7 @@ theorem linear_outside_present_opposite_unique
     rw [hU hF] at h
     omega
   have hTcell : E.erase a ∈ commonTripleCell H (insert v W) v a := by
-    apply mem_commonTripleCell.mpr
+    apply mem_common_triple_cell.mpr
     refine ⟨?_, hTcard, ?_, hStarE, ?_⟩
     · intro x hx
       exact Finset.mem_insert_of_mem
@@ -52,7 +52,7 @@ theorem linear_outside_present_opposite_unique
       · exact (Finset.notMem_erase a E) (hxa ▸ hx)
     · simpa only [Finset.insert_erase haE] using hBH hE
   have hScell : F.erase a ∈ commonTripleCell H (insert v W) v a := by
-    apply mem_commonTripleCell.mpr
+    apply mem_common_triple_cell.mpr
     refine ⟨?_, hScard, ?_, hStarF, ?_⟩
     · intro x hx
       exact Finset.mem_insert_of_mem
@@ -87,7 +87,7 @@ theorem linear_outside_present_opposite_unique
     have hFeq : insert a (F.erase a) = F := Finset.insert_erase haF
     exact hEF (by rw [← hEeq, ← hFeq, hEq])
   have hMeet :=
-    commonTripleCell_intersecting hH hva hTcell hScell hEraseNe
+    common_triple_cell_intersecting hH hva hTcell hScell hEraseNe
   exact Finset.not_nonempty_iff_eq_empty.mpr
     (Finset.disjoint_iff_inter_eq_empty.mp hDisj) hMeet
 
@@ -126,7 +126,7 @@ theorem missing_outside_opposite_eq_unique
   have hEq : E.erase a = P := by simpa using hFacet
   exact ⟨hEq, by rw [← Finset.insert_erase hEa.2, hEq]⟩
 
-theorem presentOutsideEdgesAt_card_le_one
+theorem present_outside_edges_at_card_le_one
     {H B : Family α} {W : Edge α} {v a : α}
     (hH : Admissible H) (hBH : B ⊆ H)
     (hU : Uniform 4 B) (hLin : LinearFamily B)
@@ -142,7 +142,7 @@ theorem presentOutsideEdgesAt_card_le_one
   exact linear_outside_present_opposite_unique hH hBH hU hLin
     hW hvW hEa.1 hFa.1 hEa.2 hFa.2 hE'.2 hF'.2
 
-theorem missingOutsideEdgesAt_card_le_one
+theorem missing_outside_edges_at_card_le_one
     {H B : Family α} {W P : Edge α} {v a : α}
     (hU : Uniform 4 B)
     (hW : ∀ E ∈ B, E ⊆ W)
@@ -156,7 +156,7 @@ theorem missingOutsideEdgesAt_card_le_one
     _ = F := (missing_outside_opposite_eq_unique hU hW hMissing hF).2.symm
 
 /-- The two kinds of incidences partition the actual outside degree. -/
-theorem outsideEdgesAt_eq_present_union_missing
+theorem outside_edges_at_eq_present_union_missing
     (H B : Family α) (v a : α) :
     outsideEdgesAt B a =
       presentOutsideEdgesAt H B v a ∪ missingOutsideEdgesAt H B v a := by
@@ -165,17 +165,17 @@ theorem outsideEdgesAt_eq_present_union_missing
     Finset.mem_filter, Finset.mem_union]
   tauto
 
-theorem outsideEdgesAt_card_le_two
+theorem outside_edges_at_card_le_two
     {H B : Family α} {W P : Edge α} {v a : α}
     (hH : Admissible H) (hBH : B ⊆ H)
     (hU : Uniform 4 B) (hLin : LinearFamily B)
     (hW : ∀ E ∈ B, E ⊆ W) (hvW : v ∉ W)
     (hMissing : missingStarTriples H W v = {P}) :
     (outsideEdgesAt B a).card ≤ 2 := by
-  rw [outsideEdgesAt_eq_present_union_missing H B v a]
-  have hP := presentOutsideEdgesAt_card_le_one
+  rw [outside_edges_at_eq_present_union_missing H B v a]
+  have hP := present_outside_edges_at_card_le_one
     (a := a) hH hBH hU hLin hW hvW
-  have hM := missingOutsideEdgesAt_card_le_one
+  have hM := missing_outside_edges_at_card_le_one
     (a := a) hU hW hMissing
   have hUcard := Finset.card_union_le
     (presentOutsideEdgesAt H B v a)
@@ -221,7 +221,7 @@ theorem unique_missing_opposite_vertex
   omega
 
 /-- Double-count actual outside edge-vertex incidences. -/
-theorem sum_outsideEdgesAt_card
+theorem sum_outside_edges_at_card
     (B : Family α) (W : Edge α)
     (hU : Uniform 4 B) (hW : ∀ E ∈ B, E ⊆ W) :
     (∑ a ∈ W, (outsideEdgesAt B a).card) = 4 * B.card := by
@@ -254,7 +254,7 @@ def missingOppositeVertices
     (H B : Family α) (W : Edge α) (v : α) : Edge α :=
   W.filter fun a => (missingOutsideEdgesAt H B v a).Nonempty
 
-theorem missingOppositeVertices_card_le_one
+theorem missing_opposite_vertices_card_le_one
     {H B : Family α} {W P : Edge α} {v : α}
     (hU : Uniform 4 B) (hLin : LinearFamily B)
     (hW : ∀ E ∈ B, E ⊆ W)
@@ -269,7 +269,7 @@ theorem missingOppositeVertices_card_le_one
 
 /-- Every outside vertex has at most one present incidence, and only the
 unique missing opposite facet can allow a second incidence. -/
-theorem outsideEdgesAt_card_le_one_add_special
+theorem outside_edges_at_card_le_one_add_special
     {H B : Family α} {W P : Edge α} {v a : α}
     (hH : Admissible H) (hBH : B ⊆ H)
     (hU : Uniform 4 B) (hLin : LinearFamily B)
@@ -281,14 +281,14 @@ theorem outsideEdgesAt_card_le_one_add_special
   classical
   by_cases hSpecial : a ∈ missingOppositeVertices H B W v
   · simp only [hSpecial, ↓reduceIte]
-    simpa using outsideEdgesAt_card_le_two hH hBH hU hLin hW hvW hMissing
+    simpa using outside_edges_at_card_le_two hH hBH hU hLin hW hvW hMissing
   · have hEmpty : missingOutsideEdgesAt H B v a = ∅ := by
       apply Finset.not_nonempty_iff_eq_empty.mp
       intro hNon
       exact hSpecial (Finset.mem_filter.mpr ⟨haW, hNon⟩)
-    rw [outsideEdgesAt_eq_present_union_missing H B v a, hEmpty]
+    rw [outside_edges_at_eq_present_union_missing H B v a, hEmpty]
     simpa [hSpecial] using
-      (presentOutsideEdgesAt_card_le_one
+      (present_outside_edges_at_card_le_one
         (a := a) hH hBH hU hLin hW hvW)
 
 /-- At the one-hole equality count, exactly one ordinary vertex carries
@@ -305,12 +305,12 @@ theorem one_missing_equality_unique_special_vertex
   classical
   let X := missingOppositeVertices H B W v
   have hXle : X.card ≤ 1 :=
-    missingOppositeVertices_card_le_one hU hLin hW hMissing hPcard
+    missing_opposite_vertices_card_le_one hU hLin hW hMissing hPcard
   have hTerm : ∀ a ∈ W,
       (outsideEdgesAt B a).card ≤
         1 + if a ∈ X then 1 else 0 := by
     intro a ha
-    exact outsideEdgesAt_card_le_one_add_special
+    exact outside_edges_at_card_le_one_add_special
       hH hBH hU hLin hW hvW hMissing ha
   have hSum := Finset.sum_le_sum hTerm
   have hXsub : X ⊆ W := Finset.filter_subset _ _
@@ -326,7 +326,7 @@ theorem one_missing_equality_unique_special_vertex
         W.card + X.card := by
     rw [Finset.sum_add_distrib, hIndicator]
     simp
-  rw [sum_outsideEdgesAt_card B W hU hW, hUpper, hCount] at hSum
+  rw [sum_outside_edges_at_card B W hU hW, hUpper, hCount] at hSum
   have hXeq : X.card = 1 := by omega
   obtain ⟨x, hx⟩ := Finset.card_eq_one.mp hXeq
   refine ⟨x, ?_, ?_⟩
@@ -379,7 +379,7 @@ theorem one_missing_equality_vertex_degrees
       (outsideEdgesAt B y).card ≤
         1 + if y ∈ X then 1 else 0 := by
     intro y hy
-    exact outsideEdgesAt_card_le_one_add_special
+    exact outside_edges_at_card_le_one_add_special
       hH hBH hU hLin hW hvW hMissing hy
   have hXsub : X ⊆ W := Finset.filter_subset _ _
   have hIndicator :
@@ -397,7 +397,7 @@ theorem one_missing_equality_vertex_degrees
   have hSumEq :
       (∑ y ∈ W, (outsideEdgesAt B y).card) =
         ∑ y ∈ W, (1 + if y ∈ X then 1 else 0) := by
-    rw [sum_outsideEdgesAt_card B W hU hW, hUpper, hXeq]
+    rw [sum_outside_edges_at_card B W hU hW, hUpper, hXeq]
     simpa using hCount
   have hPoint := (Finset.sum_eq_sum_iff_of_le hTerm).mp hSumEq
   refine ⟨x, hxW, hxP, hPx, ?_, ?_⟩

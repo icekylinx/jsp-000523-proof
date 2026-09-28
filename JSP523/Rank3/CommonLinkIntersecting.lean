@@ -162,7 +162,7 @@ theorem oriented_common_link_intersecting
 /-- The unordered common-link definition on `{x,y}` agrees with the
     oriented definition: reversing the witnesses only swaps the two
     required edge-membership facts. -/
-theorem mem_commonLink_pair_iff_oriented
+theorem mem_common_link_pair_iff_oriented
     (H : Family α) (V : Edge α) {x y : α}
     (hxy : x ≠ y) (p : Edge α) :
     p ∈ commonLink H V ({x, y} : Edge α) ↔
@@ -199,8 +199,8 @@ theorem common_link_pair_intersecting
     (hp : p ∈ commonLink H V ({x, y} : Edge α))
     (hq : q ∈ commonLink H V ({x, y} : Edge α)) :
     ¬ Disjoint p q := by
-  have hp' := (mem_commonLink_pair_iff_oriented H V hxy p).mp hp
-  have hq' := (mem_commonLink_pair_iff_oriented H V hxy q).mp hq
+  have hp' := (mem_common_link_pair_iff_oriented H V hxy p).mp hp
+  have hq' := (mem_common_link_pair_iff_oriented H V hxy q).mp hq
   exact oriented_common_link_intersecting hH hxy hp' hq'
 
 end CommonLink

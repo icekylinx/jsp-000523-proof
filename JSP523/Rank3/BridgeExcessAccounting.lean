@@ -52,7 +52,7 @@ theorem exceptional_book_page_charge_bounds
     actualReceiverCharge H V d.z d.x w d.v ≤ 1 ∧
     0 ≤ actualReceiverCharge H V d.v d.x w d.z ∧
     actualReceiverCharge H V d.v d.x w d.z ≤ 1 := by
-  obtain ⟨hzv, _, _, _⟩ := exceptionalReceiverBookData_distinct d
+  obtain ⟨hzv, _, _, _⟩ := exceptional_receiver_book_data_distinct d
   have hp' : ({d.x, w} : Edge α) ∈
       commonLink H V ({d.z, d.v} : Edge α) := by
     simpa only [d.hq] using hp
@@ -66,7 +66,7 @@ theorem exceptional_book_page_charge_bounds
       (completionVertices H V ({d.x, w} : Edge α)).erase d.v :=
     Finset.mem_erase.mpr ⟨hzv, hzComp⟩
   have hcard : (commonLink H V ({d.z, d.v} : Edge α)).card = 2 := by
-    simpa only [d.hq] using exceptionalReceiverBookData_cell_card d
+    simpa only [d.hq] using exceptional_receiver_book_data_cell_card d
   have hcardRev : (commonLink H V ({d.v, d.z} : Edge α)).card = 2 := by
     simpa only [Finset.pair_comm] using hcard
   exact ⟨actual_book_charge_nonneg d.hzV hsrc.1 hvRecv,
@@ -75,13 +75,13 @@ theorem exceptional_book_page_charge_bounds
     (actual_charge_lt_one_at_double_receiver hH d.hvV hsrc.2 hxw hzRecv hcardRev).le⟩
 
 /-- Every indexed bridge demand is nonnegative. -/
-theorem bridgeDemand_nonneg
+theorem bridge_demand_nonneg
     (H : Family α) (V q E : Edge α) (hH : Admissible H) :
     0 ≤ bridgeDemand H V q E := by
   classical
   by_cases hq : triangleExceptionalReceiverCell H V q
   · let d := canonicalExceptionalReceiverBookData H V q hq
-    obtain ⟨_, hxy, hxu, _⟩ := exceptionalReceiverBookData_distinct d
+    obtain ⟨_, hxy, hxu, _⟩ := exceptional_receiver_book_data_distinct d
     have hpY : ({d.x, d.y} : Edge α) ∈ commonLink H V q := by
       rw [d.hbook]
       simp
@@ -123,7 +123,7 @@ theorem exceptional_book_bridge_triples
     ({d.z, d.v, d.y} : Edge α) ∈ H ∧
     ({d.z, d.v, d.u} : Edge α) ∈ H ∧
     ({d.z, d.v, d.y} : Edge α) ≠ ({d.z, d.v, d.u} : Edge α) := by
-  obtain ⟨_, _, _, hyu⟩ := exceptionalReceiverBookData_distinct d
+  obtain ⟨_, _, _, hyu⟩ := exceptional_receiver_book_data_distinct d
   have hp : ({d.z, d.v} : Edge α) ∈
       commonLink H V ({d.y, d.u} : Edge α) := by
     rw [d.hreciprocal]
@@ -164,7 +164,7 @@ theorem exceptional_book_bridge_triples
 
 /-- A bridge demand vanishes away from the two triples of its selected
 book. -/
-theorem bridgeDemand_eq_zero_of_not_book_triples
+theorem bridge_demand_eq_zero_of_not_book_triples
     (H : Family α) (V q E : Edge α)
     (hq : triangleExceptionalReceiverCell H V q)
     (hY : E ≠ ({(canonicalExceptionalReceiverBookData H V q hq).z,
@@ -187,7 +187,7 @@ theorem exceptional_book_excess_le_page_minima
       min (actualReceiverCharge H V d.z d.x d.u d.v)
         (actualReceiverCharge H V d.v d.x d.u d.z) := by
   classical
-  obtain ⟨_, hxy, hxu, _⟩ := exceptionalReceiverBookData_distinct d
+  obtain ⟨_, hxy, hxu, _⟩ := exceptional_receiver_book_data_distinct d
   have hpY : ({d.x, d.y} : Edge α) ∈ commonLink H V q := by
     rw [d.hbook]
     simp
@@ -198,7 +198,7 @@ theorem exceptional_book_excess_le_page_minima
     exceptional_book_page_charge_bounds hH d hxy hpY
   obtain ⟨hc0, hc1, hd0, hd1⟩ :=
     exceptional_book_page_charge_bounds hH d hxu hpU
-  rw [exceptionalReceiverBookData_charge_four_sources d]
+  rw [exceptional_receiver_book_data_charge_four_sources d]
   let a := actualReceiverCharge H V d.z d.x d.y d.v
   let b := actualReceiverCharge H V d.v d.x d.y d.z
   let c := actualReceiverCharge H V d.z d.x d.u d.v
@@ -283,7 +283,7 @@ theorem exceptional_receiver_demand_sum_eq_two
     have hEU : E ≠ ({d.z, d.v, d.u} : Edge α) := by
       intro he
       exact hEout (by simp [he])
-    exact bridgeDemand_eq_zero_of_not_book_triples H V q E hq hEY hEU
+    exact bridge_demand_eq_zero_of_not_book_triples H V q E hq hEY hEU
   change (∑ E ∈ H, bridgeDemand H V q E) =
     bridgeDemand H V q ({d.z, d.v, d.y} : Edge α) +
     bridgeDemand H V q ({d.z, d.v, d.u} : Edge α)
@@ -293,7 +293,7 @@ theorem exceptional_receiver_demand_sum_eq_two
 /-- The total actual exceptional excess is bounded by the demand assigned
 to actual bridge triples, before any nonduplication or local payment is used.
 This is the global form of (II.10). -/
-theorem actualXi_le_bridgeDemandTotal
+theorem actual_xi_le_bridge_demand_total
     (H : Family α) (V : Edge α) (hH : Admissible H) :
     actualXi H V ≤ bridgeDemandTotal H V := by
   classical

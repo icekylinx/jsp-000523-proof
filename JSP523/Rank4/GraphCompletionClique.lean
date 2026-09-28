@@ -52,13 +52,13 @@ def completionK4IndexPair (i : Fin 6) : Fin 4 × Fin 4 :=
 def properK4ColorRecords (a b c x : CliqueColor) : Finset (Fin 6) :=
   Finset.univ.filter fun i => properK4EdgeColor a b c i = x
 
-theorem completionTriangleIndexPair_injective :
+theorem completion_triangle_index_pair_injective :
     Function.Injective completionTriangleIndexPair := by
   intro i j hij
   fin_cases i <;> fin_cases j <;>
     norm_num [completionTriangleIndexPair] at *
 
-theorem completionK4IndexPair_injective :
+theorem completion_k4_index_pair_injective :
     Function.Injective completionK4IndexPair := by
   intro i j hij
   fin_cases i <;> fin_cases j <;>
@@ -69,13 +69,13 @@ def coloredSlotRecordImage {ι ρ : Type*} [Fintype ι] [DecidableEq ι]
     [DecidableEq ρ] (slots : Finset ι) (record : ι → ρ) : Finset ρ :=
   slots.image record
 
-theorem coloredSlotRecordImage_card {ι ρ : Type*} [Fintype ι]
+theorem colored_slot_record_image_card {ι ρ : Type*} [Fintype ι]
     [DecidableEq ι] [DecidableEq ρ] (slots : Finset ι) (record : ι → ρ)
     (hinj : Function.Injective record) :
     (coloredSlotRecordImage slots record).card = slots.card := by
   exact Finset.card_image_of_injective slots hinj
 
-theorem coloredSlotRecordImage_disjoint {ι ρ : Type*} [Fintype ι]
+theorem colored_slot_record_image_disjoint {ι ρ : Type*} [Fintype ι]
     [DecidableEq ι] [DecidableEq ρ]
     (left right : Finset ι) (record : ι → ρ)
     (hinj : Function.Injective record) (hdisj : Disjoint left right) :
@@ -89,7 +89,7 @@ theorem coloredSlotRecordImage_disjoint {ι ρ : Type*} [Fintype ι]
   subst j
   exact (Finset.disjoint_left.mp hdisj) hi hj
 
-theorem rainbowTriangleColorRecords_card (a b c : CliqueColor)
+theorem rainbow_triangle_color_records_card (a b c : CliqueColor)
     (h : a ≠ b ∧ a ≠ c ∧ b ≠ c) :
     ∀ x : CliqueColor, (rainbowTriangleColorRecords a b c x).card = 1 := by
   intro x
@@ -97,7 +97,7 @@ theorem rainbowTriangleColorRecords_card (a b c : CliqueColor)
     norm_num [rainbowTriangleColorRecords, rainbowTriangleEdgeColor] at *
   all_goals decide
 
-theorem properK4ColorRecords_card (a b c : CliqueColor)
+theorem proper_k4_color_records_card (a b c : CliqueColor)
     (hAdj : a ≠ b ∧ a ≠ c ∧ b ≠ c) :
     ∀ x : CliqueColor, (properK4ColorRecords a b c x).card = 2 := by
   intro x
@@ -141,7 +141,7 @@ theorem selected_rainbow_records_lower_bound
     rw [hFull]
     simp
     rw [hEq]
-    have hCard := rainbowTriangleColorRecords_card a b c h x
+    have hCard := rainbow_triangle_color_records_card a b c h x
     have hpos : 0 < (rainbowTriangleColorRecords a b c x).card := by
       rw [hCard]
       decide
@@ -183,7 +183,7 @@ theorem selected_proper_k4_records_lower_bound
     rw [hFull]
     simp
     rw [hEq]
-    have hCard := properK4ColorRecords_card a b c h x
+    have hCard := proper_k4_color_records_card a b c h x
     have hpos : 0 < (properK4ColorRecords a b c x).card := by
       rw [hCard]
       decide
@@ -227,7 +227,7 @@ theorem selected_proper_k4_records_lower_bound
       have hLoss : min 2 (4 - S.card) = 2 := by omega
       simp [hLoss]
 
-theorem colorSlotRecords_disjoint {ι : Type*} [Fintype ι]
+theorem color_slot_records_disjoint {ι : Type*} [Fintype ι]
     [DecidableEq ι] (label : ι → CliqueColor) {c d : CliqueColor}
     (hcd : c ≠ d) : Disjoint (colorSlotRecords label c)
       (colorSlotRecords label d) := by
@@ -286,20 +286,20 @@ theorem proper_k4_color_occurs_twice
     norm_num at *
 
 /-- Every color has exactly one edge record in a rainbow triangle. -/
-theorem rainbowTriangleRecordImage_card_eq_one {ρ : Type*}
+theorem rainbow_triangle_record_image_card_eq_one {ρ : Type*}
     [DecidableEq ρ] (a b c x : CliqueColor) (record : Fin 3 → ρ)
     (hinj : Function.Injective record)
     (h : a ≠ b ∧ a ≠ c ∧ b ≠ c) :
     (coloredSlotRecordImage (rainbowTriangleColorRecords a b c x) record).card = 1 := by
-  rw [coloredSlotRecordImage_card _ _ hinj,
-    rainbowTriangleColorRecords_card a b c h x]
+  rw [colored_slot_record_image_card _ _ hinj,
+    rainbow_triangle_color_records_card a b c h x]
 
-theorem properK4RecordImage_card_eq_two {ρ : Type*}
+theorem proper_k4_record_image_card_eq_two {ρ : Type*}
     [DecidableEq ρ] (a b c x : CliqueColor) (record : Fin 6 → ρ)
     (hinj : Function.Injective record)
     (h : a ≠ b ∧ a ≠ c ∧ b ≠ c) :
     (coloredSlotRecordImage (properK4ColorRecords a b c x) record).card = 2 := by
-  rw [coloredSlotRecordImage_card _ _ hinj,
-    properK4ColorRecords_card a b c h x]
+  rw [colored_slot_record_image_card _ _ hinj,
+    proper_k4_color_records_card a b c h x]
 
 end JSP523.Rank4

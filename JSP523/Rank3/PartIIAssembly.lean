@@ -61,7 +61,7 @@ theorem actual_support_of_capacity_and_bridge_payment
 
 /-- Reduction of Theorem II.1 to the two remaining estimates on
 block-free admissible triple systems. -/
-theorem rank_three_bound_of_blockFree_capacity_and_payment
+theorem rank_three_bound_of_block_free_capacity_and_payment
     (H : Family α) (V : Edge α)
     (hU : Uniform 3 H) (hAdm : Admissible H)
     (hGround : ∀ E ∈ H, E ⊆ V)
@@ -76,7 +76,7 @@ theorem rank_three_bound_of_blockFree_capacity_and_payment
           2 * ((doubleLinkCells K V).card : ℚ) + Ξ ∧
         Ξ ≤ ∑ E ∈ K, localSignedDefect K V E) :
     H.card ≤ V.card.choose 2 := by
-  apply triple_family_card_le_choose_two_of_blockFree_case
+  apply triple_family_card_le_choose_two_of_block_free_case
     H V hU hAdm hGround
   intro K hUK hAdmK hGroundK hFreeK
   obtain ⟨Ξ, hCapacity, hPaid⟩ :=
@@ -101,7 +101,7 @@ theorem rank_three_bound_of_incoming_capacity_and_exception_payment
         actualXi K V ∧
       actualXi K V ≤ ∑ E ∈ K, localSignedDefect K V E) :
     H.card ≤ V.card.choose 2 := by
-  apply rank_three_bound_of_blockFree_capacity_and_payment
+  apply rank_three_bound_of_block_free_capacity_and_payment
     H V hU hAdm hGround
   intro K hUK hAdmK hGroundK hFreeK
   obtain ⟨hIncoming, hPaid⟩ :=

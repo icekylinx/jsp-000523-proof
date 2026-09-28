@@ -19,7 +19,7 @@ private def liftGroundEdge (W : Finset α) (E : Edge α) (hE : E ⊆ W) :
     Edge {x // x ∈ W} :=
   E.attach.image fun x => (⟨x.1, hE x.2⟩ : {x // x ∈ W})
 
-private theorem mem_liftGroundEdge_iff
+private theorem mem_lift_ground_edge_iff
     (W : Finset α) (E : Edge α) (hE : E ⊆ W)
     (x : {x // x ∈ W}) :
     x ∈ liftGroundEdge W E hE ↔ (x : α) ∈ E := by
@@ -34,7 +34,7 @@ private theorem mem_liftGroundEdge_iff
     apply Subtype.ext
     rfl
 
-private theorem liftGroundEdge_val
+private theorem lift_ground_edge_val
     (W : Finset α) (E : Edge α) (hE : E ⊆ W) :
     (liftGroundEdge W E hE).image Subtype.val = E := by
   ext x
@@ -42,21 +42,21 @@ private theorem liftGroundEdge_val
   · intro hx
     obtain ⟨y, hy, hxy⟩ := Finset.mem_image.mp hx
     subst x
-    exact (mem_liftGroundEdge_iff W E hE y).mp hy
+    exact (mem_lift_ground_edge_iff W E hE y).mp hy
   · intro hx
     let y : {x // x ∈ W} := ⟨x, hE hx⟩
     apply Finset.mem_image.mpr
-    refine ⟨y, (mem_liftGroundEdge_iff W E hE y).2 hx, ?_⟩
+    refine ⟨y, (mem_lift_ground_edge_iff W E hE y).2 hx, ?_⟩
     rfl
 
-private theorem liftGroundEdge_card
+private theorem lift_ground_edge_card
     (W : Finset α) (E : Edge α) (hE : E ⊆ W) :
     (liftGroundEdge W E hE).card = E.card := by
   calc
     (liftGroundEdge W E hE).card =
         ((liftGroundEdge W E hE).image Subtype.val).card :=
       (Finset.card_image_of_injective _ Subtype.val_injective).symm
-    _ = E.card := congrArg Finset.card (liftGroundEdge_val W E hE)
+    _ = E.card := congrArg Finset.card (lift_ground_edge_val W E hE)
 
 /-- The arbitrary finite-ground-set version of the all-rank coarse bound.
 The universe size on the right is the size of `W`, irrespective of the
@@ -74,13 +74,13 @@ theorem coarse_bound_on_ground_set
   have hLiftInj : Set.InjOn lift (H.attach : Set {E // E ∈ H}) := by
     intro E hE E' hE' hEq
     have hv := congrArg (fun T : Edge β => T.image Subtype.val) hEq
-    simpa [lift, liftGroundEdge_val] using hv
+    simpa [lift, lift_ground_edge_val] using hv
   have hKcard : K.card = H.card := by
     simp [K, Finset.card_image_of_injOn hLiftInj]
   have hKU : Uniform r K := by
     intro A hA
     obtain ⟨E, hE, rfl⟩ := Finset.mem_image.mp hA
-    exact (liftGroundEdge_card W E.1 (hW E.1 E.2)).trans (hU E.2)
+    exact (lift_ground_edge_card W E.1 (hW E.1 E.2)).trans (hU E.2)
   have hKAdm : Admissible K := by
     intro A B C D hA hB hC hD hq
     obtain ⟨EA, hEA, rfl⟩ := Finset.mem_image.mp hA
@@ -137,17 +137,17 @@ theorem coarse_bound_on_ground_set
       apply Finset.disjoint_left.mpr
       intro x hxA hxB
       have hxA' : (⟨x, hW eA EA.2 hxA⟩ : β) ∈ liftGroundEdge W eA (hW eA EA.2) :=
-        (mem_liftGroundEdge_iff W eA _ _).2 hxA
+        (mem_lift_ground_edge_iff W eA _ _).2 hxA
       have hxB' : (⟨x, hW eB EB.2 hxB⟩ : β) ∈ liftGroundEdge W eB (hW eB EB.2) :=
-        (mem_liftGroundEdge_iff W eB _ _).2 hxB
+        (mem_lift_ground_edge_iff W eB _ _).2 hxB
       exact (Finset.disjoint_left.mp hq.disjAB) hxA' hxB'
     have hdisjCD : Disjoint eC eD := by
       apply Finset.disjoint_left.mpr
       intro x hxC hxD
       have hxC' : (⟨x, hW eC EC.2 hxC⟩ : β) ∈ liftGroundEdge W eC (hW eC EC.2) :=
-        (mem_liftGroundEdge_iff W eC _ _).2 hxC
+        (mem_lift_ground_edge_iff W eC _ _).2 hxC
       have hxD' : (⟨x, hW eD ED.2 hxD⟩ : β) ∈ liftGroundEdge W eD (hW eD ED.2) :=
-        (mem_liftGroundEdge_iff W eD _ _).2 hxD
+        (mem_lift_ground_edge_iff W eD _ _).2 hxD
       exact (Finset.disjoint_left.mp hq.disjCD) hxC' hxD'
     have hUnion : eA ∪ eB = eC ∪ eD := by
       have hv := congrArg (fun T : Edge β => T.image Subtype.val) hq.sameUnion
@@ -156,8 +156,8 @@ theorem coarse_bound_on_ground_set
           (liftGroundEdge W eB (hW eB EB.2)).image Subtype.val =
         (liftGroundEdge W eC (hW eC EC.2)).image Subtype.val ∪
           (liftGroundEdge W eD (hW eD ED.2)).image Subtype.val at hv
-      rw [liftGroundEdge_val, liftGroundEdge_val,
-        liftGroundEdge_val, liftGroundEdge_val] at hv
+      rw [lift_ground_edge_val, lift_ground_edge_val,
+        lift_ground_edge_val, lift_ground_edge_val] at hv
       exact hv
     exact hAdm EA.2 EB.2 EC.2 ED.2
       ⟨⟨hAneB, hAneC, hAneD, hBneC, hBneD, hCneD⟩,

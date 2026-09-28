@@ -30,21 +30,21 @@ def actualLocalPartC
   V.filter fun z => z ≠ a ∧ z ≠ b ∧ z ≠ c ∧
     ({a, b, z} : Edge α) ∈ H
 
-theorem mem_actualLocalPartA
+theorem mem_actual_local_part_a
     {H : Family α} {V : Edge α} {a b c x : α} :
     x ∈ actualLocalPartA H V a b c ↔
       x ∈ V ∧ x ≠ a ∧ x ≠ b ∧ x ≠ c ∧
         ({b, c, x} : Edge α) ∈ H := by
   simp [actualLocalPartA]
 
-theorem mem_actualLocalPartB
+theorem mem_actual_local_part_b
     {H : Family α} {V : Edge α} {a b c y : α} :
     y ∈ actualLocalPartB H V a b c ↔
       y ∈ V ∧ y ≠ a ∧ y ≠ b ∧ y ≠ c ∧
         ({a, c, y} : Edge α) ∈ H := by
   simp [actualLocalPartB]
 
-theorem mem_actualLocalPartC
+theorem mem_actual_local_part_c
     {H : Family α} {V : Edge α} {a b c z : α} :
     z ∈ actualLocalPartC H V a b c ↔
       z ∈ V ∧ z ≠ a ∧ z ≠ b ∧ z ≠ c ∧
@@ -53,7 +53,7 @@ theorem mem_actualLocalPartC
 
 /-- The tagged `A` nodes are exactly the other actual completions of
     the central pair `{b,c}`. -/
-theorem actualLocalPartA_eq_completionVertices_erase
+theorem actual_local_part_a_eq_completion_vertices_erase
     (H : Family α) (V : Edge α) (a b c : α) :
     actualLocalPartA H V a b c =
       (completionVertices H V ({b, c} : Edge α)).erase a := by
@@ -63,13 +63,13 @@ theorem actualLocalPartA_eq_completionVertices_erase
     ext w
     simp only [Finset.mem_union, Finset.mem_insert, Finset.mem_singleton]
     tauto
-  simp only [mem_actualLocalPartA, Finset.mem_erase,
+  simp only [mem_actual_local_part_a, Finset.mem_erase,
     completionVertices, Finset.mem_filter]
   rw [hEdgeEq]
   simp only [Finset.mem_insert, Finset.mem_singleton]
   tauto
 
-theorem actualLocalPartB_eq_completionVertices_erase
+theorem actual_local_part_b_eq_completion_vertices_erase
     (H : Family α) (V : Edge α) (a b c : α) :
     actualLocalPartB H V a b c =
       (completionVertices H V ({a, c} : Edge α)).erase b := by
@@ -79,13 +79,13 @@ theorem actualLocalPartB_eq_completionVertices_erase
     ext w
     simp only [Finset.mem_union, Finset.mem_insert, Finset.mem_singleton]
     tauto
-  simp only [mem_actualLocalPartB, Finset.mem_erase,
+  simp only [mem_actual_local_part_b, Finset.mem_erase,
     completionVertices, Finset.mem_filter]
   rw [hEdgeEq]
   simp only [Finset.mem_insert, Finset.mem_singleton]
   tauto
 
-theorem actualLocalPartC_eq_completionVertices_erase
+theorem actual_local_part_c_eq_completion_vertices_erase
     (H : Family α) (V : Edge α) (a b c : α) :
     actualLocalPartC H V a b c =
       (completionVertices H V ({a, b} : Edge α)).erase c := by
@@ -95,7 +95,7 @@ theorem actualLocalPartC_eq_completionVertices_erase
     ext w
     simp only [Finset.mem_union, Finset.mem_insert, Finset.mem_singleton]
     tauto
-  simp only [mem_actualLocalPartC, Finset.mem_erase,
+  simp only [mem_actual_local_part_c, Finset.mem_erase,
     completionVertices, Finset.mem_filter]
   rw [hEdgeEq]
   simp only [Finset.mem_insert, Finset.mem_singleton]
@@ -116,7 +116,7 @@ def actualLocalTripartite
    (B.product C).filter (fun e =>
       ({a, e.1, e.2} : Edge α) ∈ H)⟩
 
-theorem mem_actualLocalAB
+theorem mem_actual_local_ab
     {H : Family α} {V : Edge α} {a b c x y : α} :
     (x, y) ∈ (actualLocalTripartite H V a b c).ab ↔
       x ∈ actualLocalPartA H V a b c ∧
@@ -130,7 +130,7 @@ theorem mem_actualLocalAB
   · rintro ⟨hx, hy, hEdge⟩
     exact ⟨Finset.mem_product.mpr ⟨hx, hy⟩, hEdge⟩
 
-theorem mem_actualLocalAC
+theorem mem_actual_local_ac
     {H : Family α} {V : Edge α} {a b c x z : α} :
     (x, z) ∈ (actualLocalTripartite H V a b c).ac ↔
       x ∈ actualLocalPartA H V a b c ∧
@@ -144,7 +144,7 @@ theorem mem_actualLocalAC
   · rintro ⟨hx, hz, hEdge⟩
     exact ⟨Finset.mem_product.mpr ⟨hx, hz⟩, hEdge⟩
 
-theorem mem_actualLocalBC
+theorem mem_actual_local_bc
     {H : Family α} {V : Edge α} {a b c y z : α} :
     (y, z) ∈ (actualLocalTripartite H V a b c).bc ↔
       y ∈ actualLocalPartB H V a b c ∧
@@ -217,18 +217,18 @@ private theorem outer_vertices_distinct_of_triple
 /-- A node in the actual `A` part touching both other parts has the same
     physical label at every neighbor in those two parts.  The proof uses
     four actual hyperedges in a forbidden crossed-completion switch. -/
-theorem actual_A_cross_neighbor_labels_eq
+theorem actual_a_cross_neighbor_labels_eq
     {H : Family α} {V : Edge α} {a b c x y z : α}
     (hH : Admissible H) (hUniform : Uniform 3 H)
     (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c)
     (hAB : (x, y) ∈ (actualLocalTripartite H V a b c).ab)
     (hAC : (x, z) ∈ (actualLocalTripartite H V a b c).ac) :
     y = z := by
-  obtain ⟨hxA, hyB, hCXY⟩ := mem_actualLocalAB.mp hAB
-  obtain ⟨_, hzC, hBXZ⟩ := mem_actualLocalAC.mp hAC
-  obtain ⟨_, hxa, hxb, hxc, _⟩ := mem_actualLocalPartA.mp hxA
-  obtain ⟨_, hya, hyb, hyc, hACY⟩ := mem_actualLocalPartB.mp hyB
-  obtain ⟨_, hza, hzb, hzc, hABZ⟩ := mem_actualLocalPartC.mp hzC
+  obtain ⟨hxA, hyB, hCXY⟩ := mem_actual_local_ab.mp hAB
+  obtain ⟨_, hzC, hBXZ⟩ := mem_actual_local_ac.mp hAC
+  obtain ⟨_, hxa, hxb, hxc, _⟩ := mem_actual_local_part_a.mp hxA
+  obtain ⟨_, hya, hyb, hyc, hACY⟩ := mem_actual_local_part_b.mp hyB
+  obtain ⟨_, hza, hzb, hzc, hABZ⟩ := mem_actual_local_part_c.mp hzC
   have hxy : x ≠ y :=
     outer_vertices_distinct_of_triple hUniform hCXY hxc.symm
   have hxz : x ≠ z :=
@@ -271,7 +271,7 @@ theorem actual_A_cross_neighbor_labels_eq
 
 /-- The `A`-part clause of §II.A.1's mixed-node degree-two property,
     derived from actual triple edges and admissibility. -/
-theorem actual_A_mixed_degrees_one
+theorem actual_a_mixed_degrees_one
     {H : Family α} {V : Edge α} {a b c x : α}
     (hH : Admissible H) (hUniform : Uniform 3 H)
     (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c)
@@ -298,14 +298,14 @@ theorem actual_A_mixed_degrees_one
       ({z} : Edge α) := by
     intro y' hy'
     have hAB' : (x, y') ∈ G.ab := (Finset.mem_filter.mp hy').2
-    have hy'z := actual_A_cross_neighbor_labels_eq
+    have hy'z := actual_a_cross_neighbor_labels_eq
       hH hUniform hab hac hbc hAB' hAC
     exact Finset.mem_singleton.mpr hy'z
   have hACsub : C.filter (fun z' => (x, z') ∈ G.ac) ⊆
       ({y} : Edge α) := by
     intro z' hz'
     have hAC' : (x, z') ∈ G.ac := (Finset.mem_filter.mp hz').2
-    have hyz' := actual_A_cross_neighbor_labels_eq
+    have hyz' := actual_a_cross_neighbor_labels_eq
       hH hUniform hab hac hbc hAB hAC'
     exact Finset.mem_singleton.mpr hyz'.symm
   have hABle : (B.filter fun y' => (x, y') ∈ G.ab).card ≤ 1 :=
@@ -317,18 +317,18 @@ theorem actual_A_mixed_degrees_one
   constructor <;> omega
 
 /-- The cyclic `B`-part crossed-completion obstruction. -/
-theorem actual_B_cross_neighbor_labels_eq
+theorem actual_b_cross_neighbor_labels_eq
     {H : Family α} {V : Edge α} {a b c x y z : α}
     (hH : Admissible H) (hUniform : Uniform 3 H)
     (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c)
     (hAB : (x, y) ∈ (actualLocalTripartite H V a b c).ab)
     (hBC : (y, z) ∈ (actualLocalTripartite H V a b c).bc) :
     z = x := by
-  obtain ⟨hxA, hyB, hCXY⟩ := mem_actualLocalAB.mp hAB
-  obtain ⟨_, hzC, hAYZ⟩ := mem_actualLocalBC.mp hBC
-  obtain ⟨_, hxa, hxb, hxc, hBCX⟩ := mem_actualLocalPartA.mp hxA
-  obtain ⟨_, hya, hyb, hyc, _⟩ := mem_actualLocalPartB.mp hyB
-  obtain ⟨_, hza, hzb, hzc, hABZ⟩ := mem_actualLocalPartC.mp hzC
+  obtain ⟨hxA, hyB, hCXY⟩ := mem_actual_local_ab.mp hAB
+  obtain ⟨_, hzC, hAYZ⟩ := mem_actual_local_bc.mp hBC
+  obtain ⟨_, hxa, hxb, hxc, hBCX⟩ := mem_actual_local_part_a.mp hxA
+  obtain ⟨_, hya, hyb, hyc, _⟩ := mem_actual_local_part_b.mp hyB
+  obtain ⟨_, hza, hzb, hzc, hABZ⟩ := mem_actual_local_part_c.mp hzC
   have hxy : x ≠ y :=
     outer_vertices_distinct_of_triple hUniform hCXY hxc.symm
   have hyz : y ≠ z :=
@@ -370,18 +370,18 @@ theorem actual_B_cross_neighbor_labels_eq
     hAZ_B hAZ_Y hCX_B hCX_Y
 
 /-- The cyclic `C`-part crossed-completion obstruction. -/
-theorem actual_C_cross_neighbor_labels_eq
+theorem actual_c_cross_neighbor_labels_eq
     {H : Family α} {V : Edge α} {a b c x y z : α}
     (hH : Admissible H) (hUniform : Uniform 3 H)
     (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c)
     (hAC : (x, z) ∈ (actualLocalTripartite H V a b c).ac)
     (hBC : (y, z) ∈ (actualLocalTripartite H V a b c).bc) :
     x = y := by
-  obtain ⟨hxA, hzC, hBXZ⟩ := mem_actualLocalAC.mp hAC
-  obtain ⟨hyB, _, hAYZ⟩ := mem_actualLocalBC.mp hBC
-  obtain ⟨_, hxa, hxb, hxc, hBCX⟩ := mem_actualLocalPartA.mp hxA
-  obtain ⟨_, hya, hyb, hyc, hACY⟩ := mem_actualLocalPartB.mp hyB
-  obtain ⟨_, hza, hzb, hzc, _⟩ := mem_actualLocalPartC.mp hzC
+  obtain ⟨hxA, hzC, hBXZ⟩ := mem_actual_local_ac.mp hAC
+  obtain ⟨hyB, _, hAYZ⟩ := mem_actual_local_bc.mp hBC
+  obtain ⟨_, hxa, hxb, hxc, hBCX⟩ := mem_actual_local_part_a.mp hxA
+  obtain ⟨_, hya, hyb, hyc, hACY⟩ := mem_actual_local_part_b.mp hyB
+  obtain ⟨_, hza, hzb, hzc, _⟩ := mem_actual_local_part_c.mp hzC
   have hxz : x ≠ z :=
     outer_vertices_distinct_of_triple hUniform hBXZ hxb.symm
   have hyz : y ≠ z :=
@@ -454,7 +454,7 @@ private theorem paired_left_degrees_one_of_cross_eq
   constructor <;> omega
 
 /-- The `B`-part clause of the actual mixed-node property. -/
-theorem actual_B_mixed_degrees_one
+theorem actual_b_mixed_degrees_one
     {H : Family α} {V : Edge α} {a b c y : α}
     (hH : Admissible H) (hUniform : Uniform 3 H)
     (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c)
@@ -472,23 +472,23 @@ theorem actual_B_mixed_degrees_one
   let A := actualLocalPartA H V a b c
   let C := actualLocalPartC H V a b c
   have hFlipPos : 0 < bipLeftDegree (flipBipartiteGraph G.ab) A y := by
-    rw [flip_bipLeftDegree]
+    rw [flip_bip_left_degree]
     exact hABpos
   have hCross : ∀ z x,
       (y, z) ∈ G.bc →
       (y, x) ∈ flipBipartiteGraph G.ab → z = x := by
     intro z x hBC hFlip
     have hAB : (x, y) ∈ G.ab :=
-      (mem_flipBipartiteGraph G.ab x y).mp hFlip
-    exact actual_B_cross_neighbor_labels_eq
+      (mem_flip_bipartite_graph G.ab x y).mp hFlip
+    exact actual_b_cross_neighbor_labels_eq
       hH hUniform hab hac hbc hAB hBC
   have hPair := paired_left_degrees_one_of_cross_eq
     G.bc (flipBipartiteGraph G.ab) C A y hBCpos hFlipPos hCross
-  rw [flip_bipLeftDegree] at hPair
+  rw [flip_bip_left_degree] at hPair
   exact ⟨hPair.2, hPair.1⟩
 
 /-- The `C`-part clause of the actual mixed-node property. -/
-theorem actual_C_mixed_degrees_one
+theorem actual_c_mixed_degrees_one
     {H : Family α} {V : Edge α} {a b c z : α}
     (hH : Admissible H) (hUniform : Uniform 3 H)
     (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c)
@@ -506,30 +506,30 @@ theorem actual_C_mixed_degrees_one
   let A := actualLocalPartA H V a b c
   let B := actualLocalPartB H V a b c
   have hFlipAC : 0 < bipLeftDegree (flipBipartiteGraph G.ac) A z := by
-    rw [flip_bipLeftDegree]
+    rw [flip_bip_left_degree]
     exact hACpos
   have hFlipBC : 0 < bipLeftDegree (flipBipartiteGraph G.bc) B z := by
-    rw [flip_bipLeftDegree]
+    rw [flip_bip_left_degree]
     exact hBCpos
   have hCross : ∀ x y,
       (z, x) ∈ flipBipartiteGraph G.ac →
       (z, y) ∈ flipBipartiteGraph G.bc → x = y := by
     intro x y hFlipACEdge hFlipBCEdge
     have hAC : (x, z) ∈ G.ac :=
-      (mem_flipBipartiteGraph G.ac x z).mp hFlipACEdge
+      (mem_flip_bipartite_graph G.ac x z).mp hFlipACEdge
     have hBC : (y, z) ∈ G.bc :=
-      (mem_flipBipartiteGraph G.bc y z).mp hFlipBCEdge
-    exact actual_C_cross_neighbor_labels_eq
+      (mem_flip_bipartite_graph G.bc y z).mp hFlipBCEdge
+    exact actual_c_cross_neighbor_labels_eq
       hH hUniform hab hac hbc hAC hBC
   have hPair := paired_left_degrees_one_of_cross_eq
     (flipBipartiteGraph G.ac) (flipBipartiteGraph G.bc)
     A B z hFlipAC hFlipBC hCross
-  rw [flip_bipLeftDegree, flip_bipLeftDegree] at hPair
+  rw [flip_bip_left_degree, flip_bip_left_degree] at hPair
   exact hPair
 
 /-- §II.A.1's mixed-node graph property for the graph formed from
     the actual triple system. -/
-theorem actualLocalTripartite_mixed_degree_two
+theorem actual_local_tripartite_mixed_degree_two
     {H : Family α} {V : Edge α} {a b c : α}
     (hH : Admissible H) (hUniform : Uniform 3 H)
     (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c) :
@@ -539,11 +539,11 @@ theorem actualLocalTripartite_mixed_degree_two
       (actualLocalPartC H V a b c) := by
   refine ⟨?_, ?_, ?_⟩
   · intro x hx hAB hAC
-    exact actual_A_mixed_degrees_one hH hUniform hab hac hbc hAB hAC
+    exact actual_a_mixed_degrees_one hH hUniform hab hac hbc hAB hAC
   · intro y hy hAB hBC
-    exact actual_B_mixed_degrees_one hH hUniform hab hac hbc hAB hBC
+    exact actual_b_mixed_degrees_one hH hUniform hab hac hbc hAB hBC
   · intro z hz hAC hBC
-    exact actual_C_mixed_degrees_one hH hUniform hab hac hbc hAC hBC
+    exact actual_c_mixed_degrees_one hH hUniform hab hac hbc hAC hBC
 
 /-- Inequality (II.A.2) on the genuine graph attached to any triple of an
 admissible rank-three family.  The full finite graph theorem supplies
@@ -562,7 +562,7 @@ theorem actual_local_payment
     (actualLocalPartA H V a b c)
     (actualLocalPartB H V a b c)
     (actualLocalPartC H V a b c)
-    (actualLocalTripartite_mixed_degree_two
+    (actual_local_tripartite_mixed_degree_two
       hH hUniform hab hac hbc)
 
 /-- The pure-node branch of §II.A.4 applies directly to the graph
@@ -641,12 +641,12 @@ theorem actual_positive_ab_local_payment
     (actualLocalPartA H V a b c)
     (actualLocalPartB H V a b c)
     (actualLocalPartC H V a b c)
-    (actualLocalTripartite_mixed_degree_two hH hUniform hab hac hbc)
+    (actual_local_tripartite_mixed_degree_two hH hUniform hab hac hbc)
     hPositive
 
 /-- At an `A_x` node, the rooted common neighbors of `a,x` at root `c`
     are the central vertex `b` together with its actual `AB` neighbors. -/
-theorem actual_AB_left_common_neighbors
+theorem actual_ab_left_common_neighbors
     {H : Family α} {V : Edge α} {a b c x : α}
     (hUniform : Uniform 3 H)
     (hground : ∀ E ∈ H, E ⊆ V)
@@ -656,7 +656,7 @@ theorem actual_AB_left_common_neighbors
     rootCommonNeighbors H V c a x =
       insert b ((actualLocalPartB H V a b c).filter fun y =>
         (x, y) ∈ (actualLocalTripartite H V a b c).ab) := by
-  obtain ⟨_, _, hxb, hxc, hBCX⟩ := mem_actualLocalPartA.mp hxA
+  obtain ⟨_, _, hxb, hxc, hBCX⟩ := mem_actual_local_part_a.mp hxA
   have hbV : b ∈ V := hground _ hE (by simp)
   have hbRoot : b ∈ rootCommonNeighbors H V c a x := by
     apply Finset.mem_filter.mpr
@@ -698,18 +698,18 @@ theorem actual_AB_left_common_neighbors
           tauto
         exact hEq ▸ hXCT
       have htB : t ∈ actualLocalPartB H V a b c :=
-        mem_actualLocalPartB.mpr ⟨htV, hta, htb, htc, hACY⟩
+        mem_actual_local_part_b.mpr ⟨htV, hta, htb, htc, hACY⟩
       have hAB : (x, t) ∈ (actualLocalTripartite H V a b c).ab :=
-        mem_actualLocalAB.mpr ⟨hxA, htB, hCXT⟩
+        mem_actual_local_ab.mpr ⟨hxA, htB, hCXT⟩
       exact Finset.mem_insert.mpr
         (Or.inr (Finset.mem_filter.mpr ⟨htB, hAB⟩))
   · intro ht
     rcases Finset.mem_insert.mp ht with htb | htTail
     · exact htb ▸ hbRoot
     · obtain ⟨htB, hAB⟩ := Finset.mem_filter.mp htTail
-      obtain ⟨htV, hta, _, htc, hACT⟩ := mem_actualLocalPartB.mp htB
+      obtain ⟨htV, hta, _, htc, hACT⟩ := mem_actual_local_part_b.mp htB
       have hCXT : ({c, x, t} : Edge α) ∈ H :=
-        (mem_actualLocalAB.mp hAB).2.2
+        (mem_actual_local_ab.mp hAB).2.2
       have hxt : x ≠ t :=
         outer_vertices_distinct_of_triple hUniform hCXT hxc.symm
       apply Finset.mem_filter.mpr
@@ -731,7 +731,7 @@ theorem actual_AB_left_common_neighbors
 
 /-- At a `B_y` node, the rooted common neighbors of `b,y` at root `c`
     are the central vertex `a` together with its actual `AB` neighbors. -/
-theorem actual_AB_right_common_neighbors
+theorem actual_ab_right_common_neighbors
     {H : Family α} {V : Edge α} {a b c y : α}
     (hUniform : Uniform 3 H)
     (hground : ∀ E ∈ H, E ⊆ V)
@@ -741,7 +741,7 @@ theorem actual_AB_right_common_neighbors
     rootCommonNeighbors H V c b y =
       insert a ((actualLocalPartA H V a b c).filter fun x =>
         (x, y) ∈ (actualLocalTripartite H V a b c).ab) := by
-  obtain ⟨_, hya, _, hyc, hACY⟩ := mem_actualLocalPartB.mp hyB
+  obtain ⟨_, hya, _, hyc, hACY⟩ := mem_actual_local_part_b.mp hyB
   have haV : a ∈ V := hground _ hE (by simp)
   have haRoot : a ∈ rootCommonNeighbors H V c b y := by
     apply Finset.mem_filter.mpr
@@ -783,18 +783,18 @@ theorem actual_AB_right_common_neighbors
           tauto
         exact hEq ▸ hYCT
       have htA : t ∈ actualLocalPartA H V a b c :=
-        mem_actualLocalPartA.mpr ⟨htV, hta, htb, htc, hBCX⟩
+        mem_actual_local_part_a.mpr ⟨htV, hta, htb, htc, hBCX⟩
       have hAB : (t, y) ∈ (actualLocalTripartite H V a b c).ab :=
-        mem_actualLocalAB.mpr ⟨htA, hyB, hCXT⟩
+        mem_actual_local_ab.mpr ⟨htA, hyB, hCXT⟩
       exact Finset.mem_insert.mpr
         (Or.inr (Finset.mem_filter.mpr ⟨htA, hAB⟩))
   · intro ht
     rcases Finset.mem_insert.mp ht with hta | htTail
     · exact hta ▸ haRoot
     · obtain ⟨htA, hAB⟩ := Finset.mem_filter.mp htTail
-      obtain ⟨htV, _, htb, htc, hBCT⟩ := mem_actualLocalPartA.mp htA
+      obtain ⟨htV, _, htb, htc, hBCT⟩ := mem_actual_local_part_a.mp htA
       have hCTY : ({c, t, y} : Edge α) ∈ H :=
-        (mem_actualLocalAB.mp hAB).2.2
+        (mem_actual_local_ab.mp hAB).2.2
       have hty : t ≠ y :=
         outer_vertices_distinct_of_triple hUniform hCTY (Ne.symm htc)
       apply Finset.mem_filter.mpr
@@ -814,7 +814,7 @@ theorem actual_AB_right_common_neighbors
           tauto
         exact hEq.symm ▸ hCTY
 
-theorem actual_AB_left_common_neighbor_fraction
+theorem actual_ab_left_common_neighbor_fraction
     {H : Family α} {V : Edge α} {a b c x : α}
     (hUniform : Uniform 3 H)
     (hground : ∀ E ∈ H, E ⊆ V)
@@ -825,18 +825,18 @@ theorem actual_AB_left_common_neighbor_fraction
       localPhi (bipLeftDegree
         (actualLocalTripartite H V a b c).ab
         (actualLocalPartB H V a b c) x) := by
-  rw [actual_AB_left_common_neighbors hUniform hground hab hbc hE hxA]
+  rw [actual_ab_left_common_neighbors hUniform hground hab hbc hE hxA]
   have hbNot : b ∉
       (actualLocalPartB H V a b c).filter
         (fun y => (x, y) ∈ (actualLocalTripartite H V a b c).ab) := by
     intro hb
     have hbPart := (Finset.mem_filter.mp hb).1
-    obtain ⟨_, _, hbb, _, _⟩ := mem_actualLocalPartB.mp hbPart
+    obtain ⟨_, _, hbb, _, _⟩ := mem_actual_local_part_b.mp hbPart
     exact hbb rfl
   rw [Finset.card_insert_of_notMem hbNot]
   rfl
 
-theorem actual_AB_right_common_neighbor_fraction
+theorem actual_ab_right_common_neighbor_fraction
     {H : Family α} {V : Edge α} {a b c y : α}
     (hUniform : Uniform 3 H)
     (hground : ∀ E ∈ H, E ⊆ V)
@@ -847,18 +847,18 @@ theorem actual_AB_right_common_neighbor_fraction
       localPhi (bipRightDegree
         (actualLocalTripartite H V a b c).ab
         (actualLocalPartA H V a b c) y) := by
-  rw [actual_AB_right_common_neighbors hUniform hground hab hac hE hyB]
+  rw [actual_ab_right_common_neighbors hUniform hground hab hac hE hyB]
   have haNot : a ∉
       (actualLocalPartA H V a b c).filter
         (fun x => (x, y) ∈ (actualLocalTripartite H V a b c).ab) := by
     intro ha
     have haPart := (Finset.mem_filter.mp ha).1
-    obtain ⟨_, haa, _, _, _⟩ := mem_actualLocalPartA.mp haPart
+    obtain ⟨_, haa, _, _, _⟩ := mem_actual_local_part_a.mp haPart
     exact haa rfl
   rw [Finset.card_insert_of_notMem haNot]
   rfl
 
-theorem actual_AB_left_root_neighbors_erase
+theorem actual_ab_left_root_neighbors_erase
     (H : Family α) (V : Edge α) (a b c : α) :
     (rootNeighbors H V c b).erase a =
       actualLocalPartA H V a b c := by
@@ -868,9 +868,9 @@ theorem actual_AB_left_root_neighbors_erase
     simp only [Finset.mem_insert, Finset.mem_singleton]
     tauto
   rw [hPair]
-  exact (actualLocalPartA_eq_completionVertices_erase H V a b c).symm
+  exact (actual_local_part_a_eq_completion_vertices_erase H V a b c).symm
 
-theorem actual_AB_right_root_neighbors_erase
+theorem actual_ab_right_root_neighbors_erase
     (H : Family α) (V : Edge α) (a b c : α) :
     (rootNeighbors H V c a).erase b =
       actualLocalPartB H V a b c := by
@@ -880,9 +880,9 @@ theorem actual_AB_right_root_neighbors_erase
     simp only [Finset.mem_insert, Finset.mem_singleton]
     tauto
   rw [hPair]
-  exact (actualLocalPartB_eq_completionVertices_erase H V a b c).symm
+  exact (actual_local_part_b_eq_completion_vertices_erase H V a b c).symm
 
-theorem actual_AB_left_root_neighbors_card
+theorem actual_ab_left_root_neighbors_card
     {H : Family α} {V : Edge α} {a b c : α}
     (hground : ∀ E ∈ H, E ⊆ V)
     (hab : a ≠ b) (hac : a ≠ c)
@@ -901,10 +901,10 @@ theorem actual_AB_left_root_neighbors_card
         tauto
       exact hEq.symm ▸ hE
   have hCard := Finset.card_erase_add_one haRoot
-  rw [actual_AB_left_root_neighbors_erase] at hCard
+  rw [actual_ab_left_root_neighbors_erase] at hCard
   exact hCard.symm
 
-theorem actual_AB_right_root_neighbors_card
+theorem actual_ab_right_root_neighbors_card
     {H : Family α} {V : Edge α} {a b c : α}
     (hground : ∀ E ∈ H, E ⊆ V)
     (hab : a ≠ b) (hbc : b ≠ c)
@@ -923,13 +923,13 @@ theorem actual_AB_right_root_neighbors_card
         tauto
       exact hEq.symm ▸ hE
   have hCard := Finset.card_erase_add_one hbRoot
-  rw [actual_AB_right_root_neighbors_erase] at hCard
+  rw [actual_ab_right_root_neighbors_erase] at hCard
   exact hCard.symm
 
 /-- §II.A.1 for the root `c`: the actual signed weight of the
     central link edge `{a,b}` is exactly the `AB` graph score minus the
     two actual part budgets. -/
-theorem actual_AB_signed_weight_eq_graph_score
+theorem actual_ab_signed_weight_eq_graph_score
     {H : Family α} {V : Edge α} {a b c : α}
     (hUniform : Uniform 3 H)
     (hground : ∀ E ∈ H, E ⊆ V)
@@ -950,7 +950,7 @@ theorem actual_AB_signed_weight_eq_graph_score
       ∑ x ∈ A, localPhi (bipLeftDegree G.ab B x) := by
     apply Finset.sum_congr rfl
     intro x hx
-    exact actual_AB_left_common_neighbor_fraction
+    exact actual_ab_left_common_neighbor_fraction
       hUniform hground hab hbc hE hx
   have hRightSum :
       (∑ y ∈ B,
@@ -958,83 +958,83 @@ theorem actual_AB_signed_weight_eq_graph_score
       ∑ y ∈ B, localPhi (bipRightDegree G.ab A y) := by
     apply Finset.sum_congr rfl
     intro y hy
-    exact actual_AB_right_common_neighbor_fraction
+    exact actual_ab_right_common_neighbor_fraction
       hUniform hground hab hac hE hy
   have hBudgetA : weightPairBudget (rootNeighbors H V c b).card =
       localGraphBudget A.card := by
-    rw [actual_AB_left_root_neighbors_card hground hab hac hE]
-    exact (localGraphBudget_eq_shifted_pairBudget A.card).symm
+    rw [actual_ab_left_root_neighbors_card hground hab hac hE]
+    exact (local_graph_budget_eq_shifted_pair_budget A.card).symm
   have hBudgetB : weightPairBudget (rootNeighbors H V c a).card =
       localGraphBudget B.card := by
-    rw [actual_AB_right_root_neighbors_card hground hab hbc hE]
-    exact (localGraphBudget_eq_shifted_pairBudget B.card).symm
+    rw [actual_ab_right_root_neighbors_card hground hab hbc hE]
+    exact (local_graph_budget_eq_shifted_pair_budget B.card).symm
   unfold rootedSignedWeight bipartitePhiTotal
-  rw [actual_AB_left_root_neighbors_erase,
-    actual_AB_right_root_neighbors_erase,
+  rw [actual_ab_left_root_neighbors_erase,
+    actual_ab_right_root_neighbors_erase,
     hLeftSum, hRightSum, hBudgetA, hBudgetB]
   ring
 
-private theorem actualPartA_swap_bc
+private theorem actual_part_a_swap_bc
     (H : Family α) (V : Edge α) (a b c : α) :
     actualLocalPartA H V a c b = actualLocalPartA H V a b c := by
-  rw [actualLocalPartA_eq_completionVertices_erase,
-    actualLocalPartA_eq_completionVertices_erase]
+  rw [actual_local_part_a_eq_completion_vertices_erase,
+    actual_local_part_a_eq_completion_vertices_erase]
   have hPair : ({c, b} : Edge α) = ({b, c} : Edge α) := by
     ext x
     simp only [Finset.mem_insert, Finset.mem_singleton]
     tauto
   rw [hPair]
 
-private theorem actualPartB_acb_eq_C
+private theorem actual_part_b_acb_eq_c
     (H : Family α) (V : Edge α) (a b c : α) :
     actualLocalPartB H V a c b = actualLocalPartC H V a b c := by
-  rw [actualLocalPartB_eq_completionVertices_erase,
-    actualLocalPartC_eq_completionVertices_erase]
+  rw [actual_local_part_b_eq_completion_vertices_erase,
+    actual_local_part_c_eq_completion_vertices_erase]
 
-private theorem actualGraphAB_acb_eq_AC
+private theorem actual_graph_ab_acb_eq_ac
     (H : Family α) (V : Edge α) (a b c : α) :
     (actualLocalTripartite H V a c b).ab =
       (actualLocalTripartite H V a b c).ac := by
   ext p
   rcases p with ⟨x, z⟩
-  rw [mem_actualLocalAB, mem_actualLocalAC,
-    actualPartA_swap_bc H V a b c,
-    actualPartB_acb_eq_C H V a b c]
+  rw [mem_actual_local_ab, mem_actual_local_ac,
+    actual_part_a_swap_bc H V a b c,
+    actual_part_b_acb_eq_c H V a b c]
 
-private theorem actualPartA_bca_eq_B
+private theorem actual_part_a_bca_eq_b
     (H : Family α) (V : Edge α) (a b c : α) :
     actualLocalPartA H V b c a = actualLocalPartB H V a b c := by
-  rw [actualLocalPartA_eq_completionVertices_erase,
-    actualLocalPartB_eq_completionVertices_erase]
+  rw [actual_local_part_a_eq_completion_vertices_erase,
+    actual_local_part_b_eq_completion_vertices_erase]
   have hPair : ({c, a} : Edge α) = ({a, c} : Edge α) := by
     ext x
     simp only [Finset.mem_insert, Finset.mem_singleton]
     tauto
   rw [hPair]
 
-private theorem actualPartB_bca_eq_C
+private theorem actual_part_b_bca_eq_c
     (H : Family α) (V : Edge α) (a b c : α) :
     actualLocalPartB H V b c a = actualLocalPartC H V a b c := by
-  rw [actualLocalPartB_eq_completionVertices_erase,
-    actualLocalPartC_eq_completionVertices_erase]
+  rw [actual_local_part_b_eq_completion_vertices_erase,
+    actual_local_part_c_eq_completion_vertices_erase]
   have hPair : ({b, a} : Edge α) = ({a, b} : Edge α) := by
     ext x
     simp only [Finset.mem_insert, Finset.mem_singleton]
     tauto
   rw [hPair]
 
-private theorem actualGraphAB_bca_eq_BC
+private theorem actual_graph_ab_bca_eq_bc
     (H : Family α) (V : Edge α) (a b c : α) :
     (actualLocalTripartite H V b c a).ab =
       (actualLocalTripartite H V a b c).bc := by
   ext p
   rcases p with ⟨y, z⟩
-  rw [mem_actualLocalAB, mem_actualLocalBC,
-    actualPartA_bca_eq_B H V a b c,
-    actualPartB_bca_eq_C H V a b c]
+  rw [mem_actual_local_ab, mem_actual_local_bc,
+    actual_part_a_bca_eq_b H V a b c,
+    actual_part_b_bca_eq_c H V a b c]
 
 /-- §II.A.1 for the root `b`, corresponding to the `AC` type. -/
-theorem actual_AC_signed_weight_eq_graph_score
+theorem actual_ac_signed_weight_eq_graph_score
     {H : Family α} {V : Edge α} {a b c : α}
     (hUniform : Uniform 3 H)
     (hground : ∀ E ∈ H, E ⊆ V)
@@ -1052,15 +1052,15 @@ theorem actual_AC_signed_weight_eq_graph_score
       simp only [Finset.mem_insert, Finset.mem_singleton]
       tauto
     exact hEq.symm ▸ hE
-  have hAB := actual_AB_signed_weight_eq_graph_score
+  have hAB := actual_ab_signed_weight_eq_graph_score
     hUniform hground hac hab hbc.symm hPerm
-  rw [actualPartA_swap_bc H V a b c,
-    actualPartB_acb_eq_C H V a b c,
-    actualGraphAB_acb_eq_AC H V a b c] at hAB
+  rw [actual_part_a_swap_bc H V a b c,
+    actual_part_b_acb_eq_c H V a b c,
+    actual_graph_ab_acb_eq_ac H V a b c] at hAB
   exact hAB
 
 /-- §II.A.1 for the root `a`, corresponding to the `BC` type. -/
-theorem actual_BC_signed_weight_eq_graph_score
+theorem actual_bc_signed_weight_eq_graph_score
     {H : Family α} {V : Edge α} {a b c : α}
     (hUniform : Uniform 3 H)
     (hground : ∀ E ∈ H, E ⊆ V)
@@ -1078,11 +1078,11 @@ theorem actual_BC_signed_weight_eq_graph_score
       simp only [Finset.mem_insert, Finset.mem_singleton]
       tauto
     exact hEq.symm ▸ hE
-  have hAB := actual_AB_signed_weight_eq_graph_score
+  have hAB := actual_ab_signed_weight_eq_graph_score
     hUniform hground hbc hab.symm hac.symm hPerm
-  rw [actualPartA_bca_eq_B H V a b c,
-    actualPartB_bca_eq_C H V a b c,
-    actualGraphAB_bca_eq_BC H V a b c] at hAB
+  rw [actual_part_a_bca_eq_b H V a b c,
+    actual_part_b_bca_eq_c H V a b c,
+    actual_graph_ab_bca_eq_bc H V a b c] at hAB
   exact hAB
 
 /-- The complete graph theorem and the three exact score identities give
@@ -1104,11 +1104,11 @@ theorem actual_three_root_negative_payment
   have hPay := actual_local_payment
     (V := V) (a := a) (b := b) (c := c)
     hH hUniform hab hac hbc
-  have hAB := actual_AB_signed_weight_eq_graph_score
+  have hAB := actual_ab_signed_weight_eq_graph_score
     hUniform hground hab hac hbc hE
-  have hAC := actual_AC_signed_weight_eq_graph_score
+  have hAC := actual_ac_signed_weight_eq_graph_score
     hUniform hground hab hac hbc hE
-  have hBC := actual_BC_signed_weight_eq_graph_score
+  have hBC := actual_bc_signed_weight_eq_graph_score
     hUniform hground hab hac hbc hE
   unfold TripartiteLocalPayment localGraphPayment at hPay
   unfold negativeRootedWeight

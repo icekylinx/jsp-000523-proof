@@ -22,11 +22,11 @@ theorem rank_three_forcing_threshold_bounds (n : ℕ) (hn : 3 ≤ n) :
         maxAvoidingCard (Finset.univ : Edge (Fin n)) 3 + 1 ∧
       maxAvoidingCard (Finset.univ : Edge (Fin n)) 3 + 1 ≤
         n.choose 2 + 1 := by
-  have hLower := maxAvoidingCard_fin_lower_all_rank n 3 (by omega) (by omega)
+  have hLower := max_avoiding_card_fin_lower_all_rank n 3 (by omega) (by omega)
   have hLower' : (n - 1).choose 2 + (n - 1) / 3 ≤
       maxAvoidingCard (Finset.univ : Edge (Fin n)) 3 := by
     simpa using hLower
-  have hUpper := rank_three_maxAvoidingCard_upper
+  have hUpper := rank_three_max_avoiding_card_upper
     (Finset.univ : Edge (Fin n))
   simp only [Finset.card_univ, Fintype.card_fin] at hUpper
   omega
@@ -73,7 +73,7 @@ theorem rank_three_forcing_density_tendsto_one :
   have hSum : Tendsto
       (fun n : ℕ => rankThreeDensity n + (n.choose 2 : ℝ)⁻¹)
       atTop (nhds 1) := by
-    simpa using corollary_II_2_asymptotic.add hExtra
+    simpa using corollary_ii_2_asymptotic.add hExtra
   exact hSum.congr' (hEq.mono fun _ h => h.symm)
 
 end JSP523.Rank3

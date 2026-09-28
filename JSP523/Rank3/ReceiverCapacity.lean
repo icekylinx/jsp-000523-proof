@@ -34,7 +34,7 @@ noncomputable def corePairRep (p : Edge α) (hp : p.card = 2) : α × α :=
     obtain ⟨x, y, hxy, rfl⟩ := Finset.card_eq_two.mp hp
     exact ⟨(x, y), hxy, rfl⟩)
 
-theorem corePairRep_spec (p : Edge α) (hp : p.card = 2) :
+theorem core_pair_rep_spec (p : Edge α) (hp : p.card = 2) :
     (corePairRep p hp).1 ≠ (corePairRep p hp).2 ∧
       p = ({(corePairRep p hp).1, (corePairRep p hp).2} : Edge α) :=
   Classical.choose_spec (show ∃ e : α × α, e.1 ≠ e.2 ∧
@@ -93,7 +93,7 @@ theorem positive_rooted_weight_lt_two
     (hsource : ({x, y} : Edge α) ∈ rootLink H V z)
     (hxy : x ≠ y) :
     positiveRootedWeight H V z x y < 2 := by
-  have hlt := rootedSignedWeight_lt_two H V hsource hxy
+  have hlt := rooted_signed_weight_lt_two H V hsource hxy
   by_cases hnonpos : rootedSignedWeight H V z x y ≤ 0
   · simp [positiveRootedWeight, max_eq_right hnonpos]
   · have hpos : 0 < rootedSignedWeight H V z x y := lt_of_not_ge hnonpos
@@ -185,7 +185,7 @@ theorem actual_charge_eq_zero_of_low_root_degree
   have hnonpos : rootedSignedWeight H V z x y ≤ 0 := by
     by_contra h
     have hpos : 0 < rootedSignedWeight H V z x y := lt_of_not_ge h
-    have hhigh := positive_rootedSignedWeight_high_degrees H V
+    have hhigh := positive_rooted_signed_weight_high_degrees H V
       hsource hxy hpos
     have hdeg : 4 ≤ (completionVertices H V ({z, x} : Edge α)).card := hhigh.1
     omega
@@ -222,11 +222,11 @@ theorem actual_double_charge_lt_inverse_degree
   have heq : commonLink H V ({z, v} : Edge α) =
       orientedCommonLink H V z v := by
     ext p
-    exact mem_commonLink_pair_iff_oriented H V hzv p
+    exact mem_common_link_pair_iff_oriented H V hzv p
   have hdoubleOrient : (orientedCommonLink H V z v).card = 2 := by
     rw [← heq]
     exact hdouble
-  have hweight := rootedSignedWeight_lt_one_of_double_receiving_link
+  have hweight := rooted_signed_weight_lt_one_of_double_receiving_link
     hH hzV hvV hzv hxy hsourceLink hdoubleOrient
   have hpositive : positiveRootedWeight H V z x y < 1 := by
     by_cases hw : rootedSignedWeight H V z x y ≤ 0
@@ -418,7 +418,7 @@ theorem source_receiver_iff_common_link
       rcases Finset.mem_insert.mp ha with haz | hav
       · exact haz ▸ hzComp
       · exact (Finset.mem_singleton.mp hav) ▸ hvComp
-    exact (mem_commonLink_iff_mem_completionCells H V _ _ hqV hpV).2 hpCells
+    exact (mem_common_link_iff_mem_completion_cells H V _ _ hqV hpV).2 hpCells
   · intro hp
     have hsrc := common_link_pair_gives_two_sources hzv hp
     have hvComp : v ∈ completionVertices H V p := by
@@ -435,7 +435,7 @@ noncomputable def oneWayReceiverChargeTotal
 
 /-- Reindex one oriented receiver's actual rooted sources by the common-link
 base pairs of its cell. -/
-theorem oneWay_receiver_charge_eq_commonLink_sum
+theorem one_way_receiver_charge_eq_common_link_sum
     (H : Family α) (V : Edge α) {z v : α}
     (hzV : z ∈ V) (hvV : v ∈ V) (hzv : z ≠ v) :
     oneWayReceiverChargeTotal H V z v =
@@ -473,7 +473,7 @@ noncomputable def incomingCommonLinkChargeTotal
 
 /-- The incoming source sum is exactly the sum over actual receiving cells and
 their common-link base pairs. -/
-theorem incoming_charge_commonLink_reindex
+theorem incoming_charge_common_link_reindex
     (H : Family α) (V : Edge α) :
     incomingCoreChargeTotal H V = incomingCommonLinkChargeTotal H V := by
   classical
@@ -484,19 +484,19 @@ theorem incoming_charge_commonLink_reindex
   intro v hv
   have hvV : v ∈ V := (Finset.mem_erase.mp hv).2
   have hzv : z ≠ v := Ne.symm (Finset.mem_erase.mp hv).1
-  exact oneWay_receiver_charge_eq_commonLink_sum H V hz hvV hzv
+  exact one_way_receiver_charge_eq_common_link_sum H V hz hvV hzv
 
 /-- Full Fubini identity for actual charges: order first by source core or by
 receiving common-link cell. -/
-theorem actual_charge_fubini_by_commonLink
+theorem actual_charge_fubini_by_common_link
     (H : Family α) (V : Edge α) :
     outgoingCoreChargeTotal H V = incomingCommonLinkChargeTotal H V := by
-  rw [← incoming_charge_commonLink_reindex H V]
+  rw [← incoming_charge_common_link_reindex H V]
   exact actual_core_charge_fubini H V
 
 /-- Reversing the two endpoints of an actual core leaves its sent charge
 unchanged. -/
-theorem actualReceiverCharge_comm
+theorem actual_receiver_charge_comm
     (H : Family α) (V : Edge α) (z v x y : α) :
     actualReceiverCharge H V z x y v =
       actualReceiverCharge H V z y x v := by
@@ -504,17 +504,17 @@ theorem actualReceiverCharge_comm
       completionVertices H V ({y, x} : Edge α) := by
     simp only [Finset.pair_comm]
   simp only [actualReceiverCharge, hcomp, chargePerOtherCompletion,
-    positiveRootedWeight, rootedSignedWeight_comm]
+    positiveRootedWeight, rooted_signed_weight_comm]
 
 /-- A core charge obtained from the chosen endpoint representation agrees
 with the charge on any displayed representation of the same pair. -/
-theorem coreReceiverCharge_eq_displayed_pair
+theorem core_receiver_charge_eq_displayed_pair
     (H : Family α) (V p : Edge α) (z v x y : α)
     (hp : p.card = 2) (hpair : p = ({x, y} : Edge α)) :
     coreReceiverCharge H V z v p = actualReceiverCharge H V z x y v := by
   classical
   let e := corePairRep p hp
-  have he := corePairRep_spec p hp
+  have he := core_pair_rep_spec p hp
   have heq : ({e.1, e.2} : Edge α) = ({x, y} : Edge α) :=
     he.2.symm.trans hpair
   have he1 : e.1 = x ∨ e.1 = y := by
@@ -540,7 +540,7 @@ theorem coreReceiverCharge_eq_displayed_pair
       · exact False.elim (he.1 (h1.trans h2.symm))
   rcases hcases with ⟨h1, h2⟩ | ⟨h1, h2⟩
   · simp [coreReceiverCharge, hp, e, h1, h2]
-  · rw [actualReceiverCharge_comm]
+  · rw [actual_receiver_charge_comm]
     simp [coreReceiverCharge, hp, e, h1, h2]
 
 /-- Total charge received at the ordered cell `{z,v}`, grouped by its actual
@@ -573,7 +573,7 @@ theorem common_link_core_bidirectional_charge_lt_four
   have hp2 : p.card = 2 := (Finset.mem_powersetCard.mp
     (Finset.mem_filter.mp hp).1).2
   let e := corePairRep p hp2
-  have he := corePairRep_spec p hp2
+  have he := core_pair_rep_spec p hp2
   have hsrc := common_link_pair_gives_two_sources hzv hp
   have hsrcZ : ({e.1, e.2} : Edge α) ∈ rootLink H V z := by
     rw [← he.2]
@@ -675,14 +675,14 @@ theorem double_receiver_has_reciprocal_cell
   have ht : t ∈ commonLink H V ({z, v} : Edge α) := by
     rw [hcells]
     simp
-  have hpOrient := (mem_commonLink_pair_iff_oriented H V hzv p).mp hp
-  have htOrient := (mem_commonLink_pair_iff_oriented H V hzv t).mp ht
+  have hpOrient := (mem_common_link_pair_iff_oriented H V hzv p).mp hp
+  have htOrient := (mem_common_link_pair_iff_oriented H V hzv t).mp ht
   have hpSwap : p ∈ commonLink H V ({v, z} : Edge α) := by
     simpa only [Finset.pair_comm] using hp
   have htSwap : t ∈ commonLink H V ({v, z} : Edge α) := by
     simpa only [Finset.pair_comm] using ht
-  have hpRev := (mem_commonLink_pair_iff_oriented H V (Ne.symm hzv) p).mp hpSwap
-  have htRev := (mem_commonLink_pair_iff_oriented H V (Ne.symm hzv) t).mp htSwap
+  have hpRev := (mem_common_link_pair_iff_oriented H V (Ne.symm hzv) p).mp hpSwap
+  have htRev := (mem_common_link_pair_iff_oriented H V (Ne.symm hzv) t).mp htSwap
   have hp2 : p.card = 2 :=
     (Finset.mem_powersetCard.mp (Finset.mem_filter.mp hpOrient).1).2
   obtain ⟨x, y, hxy, hpEq⟩ := Finset.card_eq_two.mp hp2
@@ -705,19 +705,19 @@ theorem double_receiver_has_reciprocal_cell
     have hxu : x ≠ u := by
       intro h
       subst u
-      exact rootNeighbors_not_self H V z x (Finset.mem_erase.mp huMem).2
+      exact root_neighbors_not_self H V z x (Finset.mem_erase.mp huMem).2
     have h_yu : y ≠ u := Ne.symm huy
-    have huV : u ∈ V := rootNeighbors_subset_ground H V z x
+    have huV : u ∈ V := root_neighbors_subset_ground H V z x
       (Finset.mem_erase.mp huMem).2
     have hxuLink : ({x, u} : Edge α) ∈ orientedCommonLink H V z v := by
       rw [htu]
       exact htOrient
-    have hrecip := reciprocal_pair_in_commonLink H V hvV
+    have hrecip := reciprocal_pair_in_common_link H V hvV
       hxy hxu h_yu hpOrient hxuLink
     have hxuLinkRev : ({x, u} : Edge α) ∈ orientedCommonLink H V v z := by
       rw [htu]
       exact htRev
-    have hrecipRev := reciprocal_pair_in_commonLink H V hzV
+    have hrecipRev := reciprocal_pair_in_common_link H V hzV
       hxy hxu h_yu hpRev hxuLinkRev
     have hxuCore : ({x, u} : Edge α) ∈ commonLink H V ({z, v} : Edge α) := by
       rw [htu]
@@ -731,23 +731,23 @@ theorem double_receiver_has_reciprocal_cell
     have hyu : y ≠ u := by
       intro h
       subst u
-      exact rootNeighbors_not_self H V z y (Finset.mem_erase.mp huMem).2
+      exact root_neighbors_not_self H V z y (Finset.mem_erase.mp huMem).2
     have hxu : x ≠ u := Ne.symm hux
-    have huV : u ∈ V := rootNeighbors_subset_ground H V z y
+    have huV : u ∈ V := root_neighbors_subset_ground H V z y
       (Finset.mem_erase.mp huMem).2
     have hyxSource : ({y, x} : Edge α) ∈ orientedCommonLink H V z v := by
       simpa only [Finset.pair_comm] using hpOrient
     have hyuLink : ({y, u} : Edge α) ∈ orientedCommonLink H V z v := by
       rw [htu]
       exact htOrient
-    have hrecip := reciprocal_pair_in_commonLink H V hvV
+    have hrecip := reciprocal_pair_in_common_link H V hvV
       (Ne.symm hxy) hyu hxu hyxSource hyuLink
     have hyxSourceRev : ({y, x} : Edge α) ∈ orientedCommonLink H V v z := by
       simpa only [Finset.pair_comm] using hpRev
     have hyuLinkRev : ({y, u} : Edge α) ∈ orientedCommonLink H V v z := by
       rw [htu]
       exact htRev
-    have hrecipRev := reciprocal_pair_in_commonLink H V hzV
+    have hrecipRev := reciprocal_pair_in_common_link H V hzV
       (Ne.symm hxy) hyu hxu hyxSourceRev hyuLinkRev
     have hyuCore : ({y, u} : Edge α) ∈ commonLink H V ({z, v} : Edge α) := by
       rw [htu]
@@ -772,9 +772,9 @@ theorem double_receiver_reciprocal_returns
     have hzx' : ({x, z} : Edge α) ∈ commonLink H V ({y, u} : Edge α) := by
       simpa only [Finset.pair_comm] using hzx
     have hxvLink : ({x, v} : Edge α) ∈ orientedCommonLink H V y u :=
-      (mem_commonLink_pair_iff_oriented H V hyu _).mp hvx'
+      (mem_common_link_pair_iff_oriented H V hyu _).mp hvx'
     have hxzLink : ({x, z} : Edge α) ∈ orientedCommonLink H V y u :=
-      (mem_commonLink_pair_iff_oriented H V hyu _).mp hzx'
+      (mem_common_link_pair_iff_oriented H V hyu _).mp hzx'
     have hxvNe : x ≠ v := by
       have hc := (Finset.mem_powersetCard.mp
         (Finset.mem_filter.mp hvx).1).2
@@ -784,7 +784,7 @@ theorem double_receiver_reciprocal_returns
         (Finset.mem_filter.mp hzx).1).2
       exact Ne.symm (Finset.card_pair_eq_two_iff.mp hc)
     have hvzNe : v ≠ z := Ne.symm hzv
-    have hback := reciprocal_pair_in_commonLink H V huV
+    have hback := reciprocal_pair_in_common_link H V huV
       hxvNe hxzNe hvzNe hxvLink hxzLink
     have hback' : ({u, x} : Edge α) ∈ commonLink H V ({z, v} : Edge α) := by
       simpa only [Finset.pair_comm] using hback
@@ -794,9 +794,9 @@ theorem double_receiver_reciprocal_returns
     have hzy' : ({y, z} : Edge α) ∈ commonLink H V ({x, u} : Edge α) := by
       simpa only [Finset.pair_comm] using hzy
     have hyvLink : ({y, v} : Edge α) ∈ orientedCommonLink H V x u :=
-      (mem_commonLink_pair_iff_oriented H V hxu _).mp hvy'
+      (mem_common_link_pair_iff_oriented H V hxu _).mp hvy'
     have hyzLink : ({y, z} : Edge α) ∈ orientedCommonLink H V x u :=
-      (mem_commonLink_pair_iff_oriented H V hxu _).mp hzy'
+      (mem_common_link_pair_iff_oriented H V hxu _).mp hzy'
     have hyvNe : y ≠ v := by
       have hc := (Finset.mem_powersetCard.mp
         (Finset.mem_filter.mp hvy).1).2
@@ -806,7 +806,7 @@ theorem double_receiver_reciprocal_returns
         (Finset.mem_filter.mp hzy).1).2
       exact Ne.symm (Finset.card_pair_eq_two_iff.mp hc)
     have hvzNe : v ≠ z := Ne.symm hzv
-    have hback := reciprocal_pair_in_commonLink H V huV
+    have hback := reciprocal_pair_in_common_link H V huV
       hyvNe hyzNe hvzNe hyvLink hyzLink
     have hback' : ({u, y} : Edge α) ∈ commonLink H V ({z, v} : Edge α) := by
       simpa only [Finset.pair_comm] using hback
@@ -1033,28 +1033,28 @@ theorem actual_reciprocal_double_cell_capacity_le_four
     simpa [d₄, d₁, Finset.pair_comm] using c₄₁
   have hscalar := reciprocal_eight_charge_capacity_le_four
     d₁ d₂ d₃ d₄ _ _ _ _ _ _ _ _ c₁₃' c₁₄' c₂₃' c₂₄' c₃₁' c₃₂' c₄₁' c₄₂'
-  have hrep₁ := coreReceiverCharge_eq_displayed_pair H V
+  have hrep₁ := core_receiver_charge_eq_displayed_pair H V
     ({x, y} : Edge α) z v x y hcard₁ rfl
-  have hrep₂ := coreReceiverCharge_eq_displayed_pair H V
+  have hrep₂ := core_receiver_charge_eq_displayed_pair H V
     ({x, u} : Edge α) z v x u hcard₂ rfl
-  have hrep₃ := coreReceiverCharge_eq_displayed_pair H V
+  have hrep₃ := core_receiver_charge_eq_displayed_pair H V
     ({x, v} : Edge α) y u x v hcard₃ rfl
-  have hrep₄ := coreReceiverCharge_eq_displayed_pair H V
+  have hrep₄ := core_receiver_charge_eq_displayed_pair H V
     ({x, z} : Edge α) y u x z hcard₄ rfl
-  have hrep₁b := coreReceiverCharge_eq_displayed_pair H V
+  have hrep₁b := core_receiver_charge_eq_displayed_pair H V
     ({x, y} : Edge α) v z x y hcard₁ rfl
-  have hrep₂b := coreReceiverCharge_eq_displayed_pair H V
+  have hrep₂b := core_receiver_charge_eq_displayed_pair H V
     ({x, u} : Edge α) v z x u hcard₂ rfl
-  have hrep₃b := coreReceiverCharge_eq_displayed_pair H V
+  have hrep₃b := core_receiver_charge_eq_displayed_pair H V
     ({x, v} : Edge α) u y x v hcard₃ rfl
-  have hrep₄b := coreReceiverCharge_eq_displayed_pair H V
+  have hrep₄b := core_receiver_charge_eq_displayed_pair H V
     ({x, z} : Edge α) u y x z hcard₄ rfl
   rw [hcell₁, hcell₂, hrep₁, hrep₂, hrep₃, hrep₄,
     hrep₁b, hrep₂b, hrep₃b, hrep₄b]
   linarith
 
 /-- The two-root receiver total is independent of which endpoint is listed first. -/
-theorem actualCellChargeTotal_comm (H : Family α) (V : Edge α) (z v : α) :
+theorem actual_cell_charge_total_comm (H : Family α) (V : Edge α) (z v : α) :
     actualCellChargeTotal H V z v = actualCellChargeTotal H V v z := by
   classical
   unfold actualCellChargeTotal
@@ -1191,7 +1191,7 @@ theorem double_receiver_reciprocal_pair_capacity_le_four
       hvV hzV hxV huV hyv hyz hyu (Ne.symm hxy) hxu (Ne.symm hzv)
       hr₁ hr₂ hs₂ hs₁ hc₁' hc₂'
     have hcap' : actualCellChargeTotal H V z v + actualCellChargeTotal H V x u ≤ 4 := by
-      rw [← actualCellChargeTotal_comm H V z v] at hcap
+      rw [← actual_cell_charge_total_comm H V z v] at hcap
       linarith
     exact ⟨x, y, u, hxy, hxu, hyu, hyV, huV,
       Or.inr ⟨h₁, h₂, h₃, h₄, hcap'⟩⟩

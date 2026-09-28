@@ -125,7 +125,7 @@ theorem raw_pair_common_neighbor_iff_native_neighbor
     have hCell' : T ∈ commonTripleCell K U
         (pairRootRep P hPcard).1 (pairRootRep P hPcard).2 := by
       simpa only [commonRootCell, dite_eq_left hPcard] using hCell
-    have hData := mem_commonTripleCell.mp hCell'
+    have hData := mem_common_triple_cell.mp hCell'
     have hTmem : T ∈ U.powersetCard 3 :=
       Finset.mem_powersetCard.mpr ⟨hData.1, hData.2.1⟩
     have hTcard : T.card = 3 := hData.2.1

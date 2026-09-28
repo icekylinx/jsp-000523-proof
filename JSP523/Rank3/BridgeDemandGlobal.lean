@@ -14,11 +14,11 @@ namespace JSP523.Rank3
 
 variable {α : Type*} [DecidableEq α]
 
-private theorem commonLink_eq_oriented_of_ne
+private theorem common_link_eq_oriented_of_ne
     (H : Family α) (V : Edge α) {z v : α} (hzv : z ≠ v) :
     commonLink H V ({z, v} : Edge α) = orientedCommonLink H V z v := by
   ext p
-  exact mem_commonLink_pair_iff_oriented H V hzv p
+  exact mem_common_link_pair_iff_oriented H V hzv p
 
 private theorem pair_subset_triple_other_edge
     {a b c z v : α}
@@ -155,7 +155,7 @@ noncomputable def bridgeDemand
   · exact 0
 
 /-- The endpoints and pages in any actual exceptional book are distinct. -/
-theorem exceptionalReceiverBookData_distinct
+theorem exceptional_receiver_book_data_distinct
     {H : Family α} {V q : Edge α}
     (d : ExceptionalReceiverBookData H V q) :
     d.z ≠ d.v ∧ d.x ≠ d.y ∧ d.x ≠ d.u ∧ d.y ≠ d.u := by
@@ -228,13 +228,13 @@ private theorem pair_disjoint_cross
     exact hnb (by simp)
 
 /-- All five named vertices of a concrete exceptional book are distinct. -/
-theorem exceptionalReceiverBookData_five_distinct
+theorem exceptional_receiver_book_data_five_distinct
     {H : Family α} {V q : Edge α}
     (d : ExceptionalReceiverBookData H V q) :
     d.z ≠ d.v ∧ d.z ≠ d.x ∧ d.z ≠ d.y ∧ d.z ≠ d.u ∧
     d.v ≠ d.x ∧ d.v ≠ d.y ∧ d.v ≠ d.u ∧
     d.x ≠ d.y ∧ d.x ≠ d.u ∧ d.y ≠ d.u := by
-  obtain ⟨hzv, hxy, hxu, hyu⟩ := exceptionalReceiverBookData_distinct d
+  obtain ⟨hzv, hxy, hxu, hyu⟩ := exceptional_receiver_book_data_distinct d
   have hxyLink : ({d.x, d.y} : Edge α) ∈ commonLink H V q := by
     rw [d.hbook]
     simp
@@ -282,7 +282,7 @@ theorem distinct_exceptional_pairs_in_bridge_triple
     intro he
     apply hneq
     simpa only [d₁.hq, d₂.hq] using he.symm
-  have hzv := (exceptionalReceiverBookData_distinct d₂).1
+  have hzv := (exceptional_receiver_book_data_distinct d₂).1
   exact pair_subset_triple_other_edge hzv hsub' hne
 
 /-- Oriented endpoint alternatives for the two distinct receiver pairs in a
@@ -297,7 +297,7 @@ theorem distinct_exceptional_pairs_oriented
     (d₂.z = d₁.y ∧ d₂.v = d₁.z) ∨
     (d₂.z = d₁.v ∧ d₂.v = d₁.y) ∨
     (d₂.z = d₁.y ∧ d₂.v = d₁.v) := by
-  have hzv := (exceptionalReceiverBookData_distinct d₂).1
+  have hzv := (exceptional_receiver_book_data_distinct d₂).1
   rcases distinct_exceptional_pairs_in_bridge_triple d₁ d₂ hneq hsub with hleft | hright
   · have hzy : d₁.z ≠ d₁.y := by
       intro heq
@@ -316,11 +316,11 @@ theorem distinct_exceptional_pairs_oriented
     · exact Or.inr (Or.inr (Or.inl h))
     · exact Or.inr (Or.inr (Or.inr h))
 
-theorem exceptionalReceiverBookData_cell_card
+theorem exceptional_receiver_book_data_cell_card
     {H : Family α} {V q : Edge α}
     (d : ExceptionalReceiverBookData H V q) :
     (commonLink H V q).card = 2 := by
-  obtain ⟨_, hxy, hxu, hyu⟩ := exceptionalReceiverBookData_distinct d
+  obtain ⟨_, hxy, hxu, hyu⟩ := exceptional_receiver_book_data_distinct d
   rw [d.hbook]
   apply Finset.card_pair
   intro he
@@ -332,7 +332,7 @@ theorem exceptionalReceiverBookData_cell_card
   · exact hxy hyx.symm
   · exact hyu hyu'
 
-theorem aligned_exceptional_data_gives_doubleBridgeBook
+theorem aligned_exceptional_data_gives_double_bridge_book
     {H : Family α} {V : Edge α} {a b c x u y v : α}
     (d₁ : ExceptionalReceiverBookData H V ({a, b} : Edge α))
     (d₂ : ExceptionalReceiverBookData H V ({a, c} : Edge α))
@@ -374,21 +374,21 @@ theorem aligned_exceptional_data_gives_doubleBridgeBook
     calc
       commonLink H V ({a, b} : Edge α) = commonLink H V ({b, a} : Edge α) := by
         simp [Finset.pair_comm]
-      _ = orientedCommonLink H V b a := commonLink_eq_oriented_of_ne H V hab.symm
+      _ = orientedCommonLink H V b a := common_link_eq_oriented_of_ne H V hab.symm
   have hcu' : commonLink H V ({c, u} : Edge α) =
-      orientedCommonLink H V c u := commonLink_eq_oriented_of_ne H V hcu
+      orientedCommonLink H V c u := common_link_eq_oriented_of_ne H V hcu
   have hac' : commonLink H V ({a, c} : Edge α) =
       orientedCommonLink H V c a := by
     calc
       commonLink H V ({a, c} : Edge α) = commonLink H V ({c, a} : Edge α) := by
         simp [Finset.pair_comm]
-      _ = orientedCommonLink H V c a := commonLink_eq_oriented_of_ne H V hac.symm
+      _ = orientedCommonLink H V c a := common_link_eq_oriented_of_ne H V hac.symm
   have hbv' : commonLink H V ({b, v} : Edge α) =
       orientedCommonLink H V b v := by
     have hne : b ≠ v := by
-      have h := (exceptionalReceiverBookData_distinct d₂).2.2.2
+      have h := (exceptional_receiver_book_data_distinct d₂).2.2.2
       simpa [hy₂, hu₂] using h
-    exact commonLink_eq_oriented_of_ne H V hne
+    exact common_link_eq_oriented_of_ne H V hne
   refine ⟨?_, ?_, ?_, ?_⟩
   · rw [← hab']
     exact h₁
@@ -401,7 +401,7 @@ theorem aligned_exceptional_data_gives_doubleBridgeBook
 
 /-- The aligned-book constructor derives endpoint inequalities directly from
 the two exceptional data records. -/
-theorem aligned_exceptional_data_gives_doubleBridgeBook_of_data
+theorem aligned_exceptional_data_gives_double_bridge_book_of_data
     {H : Family α} {V : Edge α} {a b c x u y v : α}
     (d₁ : ExceptionalReceiverBookData H V ({a, b} : Edge α))
     (d₂ : ExceptionalReceiverBookData H V ({a, c} : Edge α))
@@ -411,18 +411,18 @@ theorem aligned_exceptional_data_gives_doubleBridgeBook_of_data
     (hy₂ : d₂.y = b) (hu₂ : d₂.u = v) :
     DoubleBridgeBook H V a b c x u y v := by
   have hab : a ≠ b := by
-    simpa [hz₁, hv₁] using (exceptionalReceiverBookData_five_distinct d₁).1
+    simpa [hz₁, hv₁] using (exceptional_receiver_book_data_five_distinct d₁).1
   have hac : a ≠ c := by
-    simpa [hz₂, hv₂] using (exceptionalReceiverBookData_five_distinct d₂).1
+    simpa [hz₂, hv₂] using (exceptional_receiver_book_data_five_distinct d₂).1
   have hcu : c ≠ u := by
-    rcases exceptionalReceiverBookData_five_distinct d₁ with
+    rcases exceptional_receiver_book_data_five_distinct d₁ with
       ⟨_, _, _, _, _, _, _, _, _, hyu⟩
     simpa [hy₁, hu₁] using hyu
-  exact aligned_exceptional_data_gives_doubleBridgeBook d₁ d₂ hz₁ hv₁ hx₁
+  exact aligned_exceptional_data_gives_double_bridge_book d₁ d₂ hz₁ hv₁ hx₁
     hy₁ hu₁ hz₂ hv₂ hx₂ hy₂ hu₂ hab hac hcu
 
 /-- General-index form of the aligned-book constructor. -/
-theorem aligned_exceptional_data_gives_doubleBridgeBook_general
+theorem aligned_exceptional_data_gives_double_bridge_book_general
     {H : Family α} {V q₁ q₂ : Edge α} {a b c x u y v : α}
     (d₁ : ExceptionalReceiverBookData H V q₁)
     (d₂ : ExceptionalReceiverBookData H V q₂)
@@ -434,11 +434,11 @@ theorem aligned_exceptional_data_gives_doubleBridgeBook_general
     (hy₂ : d₂.y = b) (hu₂ : d₂.u = v) :
     DoubleBridgeBook H V a b c x u y v := by
   have hab : a ≠ b := by
-    simpa [hz₁, hv₁] using (exceptionalReceiverBookData_five_distinct d₁).1
+    simpa [hz₁, hv₁] using (exceptional_receiver_book_data_five_distinct d₁).1
   have hac : a ≠ c := by
-    simpa [hz₂, hv₂] using (exceptionalReceiverBookData_five_distinct d₂).1
+    simpa [hz₂, hv₂] using (exceptional_receiver_book_data_five_distinct d₂).1
   have hcu : c ≠ u := by
-    rcases exceptionalReceiverBookData_five_distinct d₁ with
+    rcases exceptional_receiver_book_data_five_distinct d₁ with
       ⟨_, _, _, _, _, _, _, _, _, hyu⟩
     simpa [hy₁, hu₁] using hyu
   have h₁ : commonLink H V ({a, b} : Edge α) =
@@ -476,22 +476,22 @@ theorem aligned_exceptional_data_gives_doubleBridgeBook_general
     calc
       commonLink H V ({a, b} : Edge α) = commonLink H V ({b, a} : Edge α) := by
         simp [Finset.pair_comm]
-      _ = orientedCommonLink H V b a := commonLink_eq_oriented_of_ne H V hab.symm
+      _ = orientedCommonLink H V b a := common_link_eq_oriented_of_ne H V hab.symm
   have hcu' : commonLink H V ({c, u} : Edge α) =
-      orientedCommonLink H V c u := commonLink_eq_oriented_of_ne H V hcu
+      orientedCommonLink H V c u := common_link_eq_oriented_of_ne H V hcu
   have hac' : commonLink H V ({a, c} : Edge α) =
       orientedCommonLink H V c a := by
     calc
       commonLink H V ({a, c} : Edge α) = commonLink H V ({c, a} : Edge α) := by
         simp [Finset.pair_comm]
-      _ = orientedCommonLink H V c a := commonLink_eq_oriented_of_ne H V hac.symm
+      _ = orientedCommonLink H V c a := common_link_eq_oriented_of_ne H V hac.symm
   have hbv' : commonLink H V ({b, v} : Edge α) =
     orientedCommonLink H V b v := by
     have hne : b ≠ v := by
-      rcases exceptionalReceiverBookData_five_distinct d₂ with
+      rcases exceptional_receiver_book_data_five_distinct d₂ with
         ⟨_, _, _, _, _, _, _, _, _, hne⟩
       simpa [hy₂, hu₂] using hne
-    exact commonLink_eq_oriented_of_ne H V hne
+    exact common_link_eq_oriented_of_ne H V hne
   refine ⟨?_, ?_, ?_, ?_⟩
   · rw [← hab']
     exact h₁
@@ -502,14 +502,14 @@ theorem aligned_exceptional_data_gives_doubleBridgeBook_general
   · rw [← hbv']
     exact h₄
 
-theorem exceptionalReceiverBookData_charge_total
+theorem exceptional_receiver_book_data_charge_total
     {H : Family α} {V q : Edge α}
     (d : ExceptionalReceiverBookData H V q) :
     actualCellChargeForPair H V q = actualCellChargeTotal H V d.z d.v := by
-  obtain ⟨hzv, _, _, _⟩ := exceptionalReceiverBookData_distinct d
-  simpa only [d.hq] using actualCellChargeForPair_eq_displayed H V hzv
+  obtain ⟨hzv, _, _, _⟩ := exceptional_receiver_book_data_distinct d
+  simpa only [d.hq] using actual_cell_charge_for_pair_eq_displayed H V hzv
 
-theorem exceptionalReceiverBookData_charge_two_cores
+theorem exceptional_receiver_book_data_charge_two_cores
     {H : Family α} {V q : Edge α}
     (d : ExceptionalReceiverBookData H V q) :
     actualCellChargeTotal H V d.z d.v =
@@ -517,7 +517,7 @@ theorem exceptionalReceiverBookData_charge_two_cores
         coreReceiverCharge H V d.v d.z ({d.x, d.y} : Edge α)) +
       (coreReceiverCharge H V d.z d.v ({d.x, d.u} : Edge α) +
         coreReceiverCharge H V d.v d.z ({d.x, d.u} : Edge α)) := by
-  obtain ⟨_, hxy, hxu, hyu⟩ := exceptionalReceiverBookData_distinct d
+  obtain ⟨_, hxy, hxu, hyu⟩ := exceptional_receiver_book_data_distinct d
   have hp₁ : ({d.x, d.y} : Edge α) ∈ commonLink H V q := by
     rw [d.hbook]
     simp
@@ -540,10 +540,10 @@ theorem exceptionalReceiverBookData_charge_two_cores
       commonLink H V ({d.z, d.v} : Edge α) := by
     simpa only [d.hq] using hp₂
   have hcard' : (commonLink H V ({d.z, d.v} : Edge α)).card = 2 := by
-    simpa only [d.hq] using exceptionalReceiverBookData_cell_card d
+    simpa only [d.hq] using exceptional_receiver_book_data_cell_card d
   exact actual_cell_charge_total_eq_two_cores H V hp₁' hp₂' hpNe hcard'
 
-theorem exceptionalReceiverBookData_charge_four_sources
+theorem exceptional_receiver_book_data_charge_four_sources
     {H : Family α} {V q : Edge α}
     (d : ExceptionalReceiverBookData H V q) :
     actualCellChargeForPair H V q =
@@ -551,22 +551,22 @@ theorem exceptionalReceiverBookData_charge_four_sources
         actualReceiverCharge H V d.v d.x d.y d.z) +
       (actualReceiverCharge H V d.z d.x d.u d.v +
         actualReceiverCharge H V d.v d.x d.u d.z) := by
-  rw [exceptionalReceiverBookData_charge_total,
-    exceptionalReceiverBookData_charge_two_cores]
-  obtain ⟨_, hxy, hxu, _⟩ := exceptionalReceiverBookData_distinct d
-  have h₁ := coreReceiverCharge_eq_displayed_pair H V
+  rw [exceptional_receiver_book_data_charge_total,
+    exceptional_receiver_book_data_charge_two_cores]
+  obtain ⟨_, hxy, hxu, _⟩ := exceptional_receiver_book_data_distinct d
+  have h₁ := core_receiver_charge_eq_displayed_pair H V
     ({d.x, d.y} : Edge α) d.z d.v d.x d.y (Finset.card_pair hxy) rfl
-  have h₂ := coreReceiverCharge_eq_displayed_pair H V
+  have h₂ := core_receiver_charge_eq_displayed_pair H V
     ({d.x, d.y} : Edge α) d.v d.z d.x d.y (Finset.card_pair hxy) rfl
-  have h₃ := coreReceiverCharge_eq_displayed_pair H V
+  have h₃ := core_receiver_charge_eq_displayed_pair H V
     ({d.x, d.u} : Edge α) d.z d.v d.x d.u (Finset.card_pair hxu) rfl
-  have h₄ := coreReceiverCharge_eq_displayed_pair H V
+  have h₄ := core_receiver_charge_eq_displayed_pair H V
     ({d.x, d.u} : Edge α) d.v d.z d.x d.u (Finset.card_pair hxu) rfl
   rw [h₁, h₂, h₃, h₄]
 
 /-- Positive bridge demand can only be indexed by one of the two triples
 in its selected exceptional book. -/
-theorem bridgeDemand_pos_cases
+theorem bridge_demand_pos_cases
     (H : Family α) (V : Edge α) (q E : Edge α)
     (hpos : 0 < bridgeDemand H V q E) :
     ∃ d : ExceptionalReceiverBookData H V q,
@@ -591,10 +591,10 @@ theorem bridgeDemand_pos_cases
 
 /-- A positive demand is indexed by a receiver pair contained in its bridge
 triple. -/
-theorem bridgeDemand_pos_pair_subset
+theorem bridge_demand_pos_pair_subset
     (H : Family α) (V : Edge α) (q E : Edge α)
     (hpos : 0 < bridgeDemand H V q E) : q ⊆ E := by
-  obtain ⟨d, hE | hE⟩ := bridgeDemand_pos_cases H V q E hpos
+  obtain ⟨d, hE | hE⟩ := bridge_demand_pos_cases H V q E hpos
   · rw [d.hq, hE]
     intro t ht
     simp only [Finset.mem_insert, Finset.mem_singleton] at ht ⊢
@@ -606,7 +606,7 @@ theorem bridgeDemand_pos_pair_subset
 
 /-- A positive bridge demand certifies positivity of both directed source
 charges that form its minimum. -/
-theorem bridgeDemand_pos_sources
+theorem bridge_demand_pos_sources
     (H : Family α) (V : Edge α) (q E : Edge α)
     (hpos : 0 < bridgeDemand H V q E) :
     ∃ d : ExceptionalReceiverBookData H V q,
@@ -640,7 +640,7 @@ theorem bridgeDemand_pos_sources
   · simp [bridgeDemand, hq] at hpos
 
 /-- A positive actual receiver charge comes from a positive rooted source. -/
-theorem actualReceiverCharge_pos_rootedWeight
+theorem actual_receiver_charge_pos_rooted_weight
     (H : Family α) (V : Edge α) (z x y v : α)
     (hpos : 0 < actualReceiverCharge H V z x y v) :
     0 < positiveRootedWeight H V z x y := by
@@ -667,16 +667,16 @@ theorem actualReceiverCharge_pos_rootedWeight
   exact hw
 
 /-- Positivity of the positive part forces positivity of the signed weight. -/
-theorem actualReceiverCharge_pos_signedWeight
+theorem actual_receiver_charge_pos_signed_weight
     (H : Family α) (V : Edge α) (z x y v : α)
     (hpos : 0 < actualReceiverCharge H V z x y v) :
     0 < rootedSignedWeight H V z x y := by
-  have hw := actualReceiverCharge_pos_rootedWeight H V z x y v hpos
+  have hw := actual_receiver_charge_pos_rooted_weight H V z x y v hpos
   simpa [positiveRootedWeight, max_eq_left (le_of_lt hw)] using hw
 
 /-- Positive bridge demand supplies the two positive signed rooted sources
 on its bridge edge. -/
-theorem bridgeDemand_pos_signed_sources
+theorem bridge_demand_pos_signed_sources
     (H : Family α) (V : Edge α) (q E : Edge α)
     (hpos : 0 < bridgeDemand H V q E) :
     ∃ d : ExceptionalReceiverBookData H V q,
@@ -686,24 +686,24 @@ theorem bridgeDemand_pos_signed_sources
       (E = ({d.z, d.v, d.u} : Edge α) ∧
         0 < rootedSignedWeight H V d.z d.x d.u ∧
         0 < rootedSignedWeight H V d.v d.x d.u) := by
-  obtain ⟨d, hcases⟩ := bridgeDemand_pos_sources H V q E hpos
+  obtain ⟨d, hcases⟩ := bridge_demand_pos_sources H V q E hpos
   rcases hcases with ⟨hE, hz, hv⟩ | ⟨hE, hz, hv⟩
   · exact ⟨d, Or.inl ⟨hE,
-      actualReceiverCharge_pos_signedWeight H V _ _ _ _ hz,
-      actualReceiverCharge_pos_signedWeight H V _ _ _ _ hv⟩⟩
+      actual_receiver_charge_pos_signed_weight H V _ _ _ _ hz,
+      actual_receiver_charge_pos_signed_weight H V _ _ _ _ hv⟩⟩
   · exact ⟨d, Or.inr ⟨hE,
-      actualReceiverCharge_pos_signedWeight H V _ _ _ _ hz,
-      actualReceiverCharge_pos_signedWeight H V _ _ _ _ hv⟩⟩
+      actual_receiver_charge_pos_signed_weight H V _ _ _ _ hz,
+      actual_receiver_charge_pos_signed_weight H V _ _ _ _ hv⟩⟩
 
 /-- Normalize a positive demand so that its bridge page is the `y` field. -/
-theorem bridgeDemand_pos_normalized_sources
+theorem bridge_demand_pos_normalized_sources
     (H : Family α) (V : Edge α) (q E : Edge α)
     (hpos : 0 < bridgeDemand H V q E) :
     ∃ d : ExceptionalReceiverBookData H V q,
       E = ({d.z, d.v, d.y} : Edge α) ∧
         0 < rootedSignedWeight H V d.z d.x d.y ∧
         0 < rootedSignedWeight H V d.v d.x d.y := by
-  obtain ⟨d, hcases⟩ := bridgeDemand_pos_signed_sources H V q E hpos
+  obtain ⟨d, hcases⟩ := bridge_demand_pos_signed_sources H V q E hpos
   rcases hcases with ⟨hE, hz, hv⟩ | ⟨hE, hz, hv⟩
   · exact ⟨d, hE, hz, hv⟩
   · refine ⟨swapExceptionalReceiverBookPages d, ?_, ?_, ?_⟩
@@ -731,9 +731,9 @@ theorem two_positive_bridge_demands_oriented
        (d₂.z = d₁.v ∧ d₂.v = d₁.y) ∨
        (d₂.z = d₁.y ∧ d₂.v = d₁.v)) := by
   obtain ⟨d₁, hE₁, h₁z, h₁v⟩ :=
-    bridgeDemand_pos_normalized_sources H V q₁ E hpos₁
+    bridge_demand_pos_normalized_sources H V q₁ E hpos₁
   obtain ⟨d₂, hE₂, h₂z, h₂v⟩ :=
-    bridgeDemand_pos_normalized_sources H V q₂ E hpos₂
+    bridge_demand_pos_normalized_sources H V q₂ E hpos₂
   have htriple : ({d₂.z, d₂.v, d₂.y} : Edge α) =
       {d₁.z, d₁.v, d₁.y} := hE₂.symm.trans hE₁
   have hsub' : ({d₂.z, d₂.v} : Edge α) ⊆
@@ -782,7 +782,7 @@ theorem two_positive_bridge_demands_aligned
   obtain ⟨d₁, d₂, hE₁, hE₂, h₁z, h₁v, h₂z, h₂v, hOrient⟩ :=
     two_positive_bridge_demands_oriented H V q₁ q₂ E hpos₁ hpos₂ hneq
   rcases hOrient with h₁ | h₂ | h₃ | h₄
-  · rcases exceptionalReceiverBookData_five_distinct d₁ with
+  · rcases exceptional_receiver_book_data_five_distinct d₁ with
       ⟨hab, _, _, _, _, hbc, _, _, _, _⟩
     have hmiss := missing_vertex_of_triple_eq hab hbc h₁.1 h₁.2
       (hE₁.symm.trans hE₂)
@@ -798,7 +798,7 @@ theorem two_positive_bridge_demands_aligned
       simpa [e₂, reverseExceptionalReceiverBookData] using h₂.2
     have hec : e₂.v = d₁.y := by
       simpa [e₂, reverseExceptionalReceiverBookData] using h₂.1
-    rcases exceptionalReceiverBookData_five_distinct d₁ with
+    rcases exceptional_receiver_book_data_five_distinct d₁ with
       ⟨hab, _, _, _, _, hbc, _, _, _, _⟩
     have hmiss := missing_vertex_of_triple_eq hab hbc hda hec
       (hE₁.symm.trans he₂)
@@ -814,7 +814,7 @@ theorem two_positive_bridge_demands_aligned
       simpa [e₁, reverseExceptionalReceiverBookData] using h₃.1
     have hec : d₂.v = e₁.y := by
       simpa [e₁, reverseExceptionalReceiverBookData] using h₃.2
-    rcases exceptionalReceiverBookData_five_distinct d₁ with
+    rcases exceptional_receiver_book_data_five_distinct d₁ with
       ⟨hab, _, hAc, _, _, _, _, _, _, _⟩
     have hmiss := missing_vertex_of_triple_eq hab.symm hAc hda hec
       (he₁.symm.trans hE₂)
@@ -836,7 +836,7 @@ theorem two_positive_bridge_demands_aligned
       simpa [e₁, e₂, reverseExceptionalReceiverBookData] using h₄.2
     have hec : e₂.v = e₁.y := by
       simpa [e₁, e₂, reverseExceptionalReceiverBookData] using h₄.1
-    rcases exceptionalReceiverBookData_five_distinct d₁ with
+    rcases exceptional_receiver_book_data_five_distinct d₁ with
       ⟨hab, _, hAc, _, _, _, _, _, _, _⟩
     have hmiss := missing_vertex_of_triple_eq hab.symm hAc hda hec
       (he₁.symm.trans he₂)
@@ -861,7 +861,7 @@ theorem two_positive_bridge_demands_give_book
     calc
       q₂ = ({d₂.z, d₂.v} : Edge α) := d₂.hq
       _ = ({d₁.z, d₁.y} : Edge α) := by simp [hza, hyc]
-  have hBook := aligned_exceptional_data_gives_doubleBridgeBook_general
+  have hBook := aligned_exceptional_data_gives_double_bridge_book_general
     d₁ d₂ d₁.hq hq₂ rfl rfl rfl rfl rfl hza.symm hyc.symm rfl hbc.symm rfl
   exact ⟨d₁, d₂, hBook, hza, hyc, hbc, h₁v, h₂v⟩
 
@@ -877,10 +877,10 @@ theorem positive_bridge_demands_no_overlap
     (hneq : q₁ ≠ q₂) : False := by
   obtain ⟨d₁, d₂, hBook, hza, hpage, hbcAlign, hposB, hposC⟩ :=
     two_positive_bridge_demands_give_book H V q₁ q₂ E hpos₁ hpos₂ hneq
-  rcases exceptionalReceiverBookData_five_distinct d₁ with
+  rcases exceptional_receiver_book_data_five_distinct d₁ with
     ⟨hab, hax, hac, hau, hbx, hbc, hbu, hcx', hxu, hcu⟩
   have hcx : d₁.y ≠ d₁.x := hcx'.symm
-  rcases exceptionalReceiverBookData_five_distinct d₂ with
+  rcases exceptional_receiver_book_data_five_distinct d₂ with
     ⟨_, hzx, _, hzu, hvx, _, hvu, hxy, hxu₂, hyu⟩
   have hya : d₂.x ≠ d₂.z := hzx.symm
   have hva : d₂.u ≠ d₂.z := hzu.symm
@@ -941,7 +941,7 @@ noncomputable def bridgeDemandTotal (H : Family α) (V : Edge α) : ℚ := by
   exact ∑ E ∈ H, bridgeDemandOnTriple H V E
 
 /-- Flattening the triple-indexed demand total. -/
-theorem bridgeDemandTotal_eq_double_sum (H : Family α) (V : Edge α) :
+theorem bridge_demand_total_eq_double_sum (H : Family α) (V : Edge α) :
     bridgeDemandTotal H V =
       ∑ E ∈ H, ∑ q ∈ usedCells H V, bridgeDemand H V q E := by
   rfl

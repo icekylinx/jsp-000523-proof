@@ -93,7 +93,7 @@ theorem shadow_bound_of_private_pairs
 def fourShadow (all : Family α) : Family α :=
   all.biUnion (fun E => E.powersetCard 4)
 
-theorem erase_mem_fourShadow
+theorem erase_mem_four_shadow
     {all : Family α} {E : Edge α} {a : α}
     (hE : E ∈ all) (hcard : E.card = 5) (ha : a ∈ E) :
     E.erase a ∈ fourShadow all := by
@@ -151,7 +151,7 @@ theorem actual_four_shadow_bound_of_rootless_coherence
   apply shadow_bound_of_rootless_coherence z hdecomp hsub
     hEcard hnoroot hshared
   intro E hE a ha
-  exact erase_mem_fourShadow (hsub hE) (hEcard E hE) ha
+  exact erase_mem_four_shadow (hsub hE) (hEcard E hE) ha
 
 end PrivateFacetAssembly
 

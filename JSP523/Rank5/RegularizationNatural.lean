@@ -45,7 +45,7 @@ def discreteRoundLayerBudget (n r R : ℕ) : ℕ :=
     ((discreteRoundRadius n r R + (r - 1)) * n.choose (r - 2)) / (r - 1) +
       (discreteRoundCoverSize n r R).choose 2 * (R * n ^ (r - 3))
 
-theorem discreteRoundRoot_le_target (R : ℕ) (hR : 1 ≤ R) :
+theorem discrete_round_root_le_target (R : ℕ) (hR : 1 ≤ R) :
     discreteRoundRoot R ≤ discreteRoundTarget R := by
   have hLo : (discreteRoundRoot R) ^ 8 ≤ R ^ 5 :=
     Nat.pow_nthRoot_le (Or.inl (by norm_num))
@@ -180,7 +180,7 @@ theorem natural_scale_finite_regularization
       have hSPow : S ∈ V.powersetCard j :=
         Finset.mem_powersetCard.mpr ⟨Finset.subset_univ _, hS⟩
       exact (hSmall j hj hjSmall S hSPow).trans
-        (Nat.mul_le_mul_right _ (discreteRoundRoot_le_target R hRpos))
+        (Nat.mul_le_mul_right _ (discrete_round_root_le_target R hRpos))
   · have he : r - 2 - 1 = r - 3 := by omega
     simpa only [V, Finset.card_univ, Fintype.card_fin, d, he,
       discreteRoundLayerBudget, b, L, h, T] using hLoss

@@ -30,11 +30,11 @@ theorem graph_common_multiplicity_at_pair_eq_support_card
       (Finset.univ.filter fun x => P ⊆ F.neighborFinset x).card := by
   classical
   let ab := pairRootRep P hP
-  have hSpec := pairRootRep_spec P hP
+  have hSpec := pair_root_rep_spec P hP
   unfold graphCommonMultiplicityAtPair
   rw [dite_eq_left hP]
   change graphCommonMultiplicity F ab.1 ab.2 = _
-  rw [graphCommonMultiplicity_eq_inter]
+  rw [graph_common_multiplicity_eq_inter]
   congr 1
   ext x
   simp only [Finset.mem_inter, SimpleGraph.mem_neighborFinset,

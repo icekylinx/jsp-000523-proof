@@ -28,7 +28,7 @@ def fixedDecompositionError
     (H : Family α) (V C : Edge α) : Family α :=
   H \ (fixedDecompositionCore H V ∪ fixedDecompositionStarEdges H V C)
 
-private theorem fixedStarEdges_subset
+private theorem fixed_star_edges_subset
     (H : Family α) (V C : Edge α) :
     fixedDecompositionStarEdges H V C ⊆ H := by
   intro E hE
@@ -37,7 +37,7 @@ private theorem fixedStarEdges_subset
   have hEdge := (Finset.mem_filter.mp hT).2
   simpa [hEq] using hEdge
 
-private theorem fixedCore_star_disjoint
+private theorem fixed_core_star_disjoint
     (H : Family α) (V C : Edge α)
     (hOutside : ∀ c ∈ C, c ∉ V) :
     Disjoint (fixedDecompositionCore H V)
@@ -63,12 +63,12 @@ theorem fixed_decomposition_card_bound
   let B := fixedDecompositionCore H V
   let S := fixedDecompositionStarEdges H V C
   let E := fixedDecompositionError H V C
-  have hBS : Disjoint B S := fixedCore_star_disjoint H V C hOutside
+  have hBS : Disjoint B S := fixed_core_star_disjoint H V C hOutside
   have hSub : B ∪ S ⊆ H := by
     intro F hF
     rcases Finset.mem_union.mp hF with hB | hS
     · exact (Finset.mem_filter.mp hB).1
-    · exact fixedStarEdges_subset H V C hS
+    · exact fixed_star_edges_subset H V C hS
   have hParts : H = (B ∪ S) ∪ E := by
     ext F
     simp only [E, fixedDecompositionError, Finset.mem_union,

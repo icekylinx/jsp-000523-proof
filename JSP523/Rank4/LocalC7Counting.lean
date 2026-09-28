@@ -86,7 +86,7 @@ theorem delete_ordinary_vertex_card_bound
 /-- Actual `B₂ ∪ B₃` injection in the near-star setting. The exceptional
 intersection has size at most three, so every edge has an ordinary vertex;
 deleting it gives a triple with at least two exceptional vertices. -/
-theorem near_star_B23_card_le_exceptional_triples
+theorem near_star_b23_card_le_exceptional_triples
     {H : Family α} {W : Edge α} {v : α} [Fintype α]
     (hH : Admissible H) (hUniform : Uniform 4 H) (hvW : v ∉ W) :
     (nearStarB23 H W v).card ≤
@@ -245,17 +245,17 @@ theorem near_star_exceptional_triples_card_le
   simpa only [Fintype.card_coe, hCardCode, hDpair] using hCardle
 
 /-- Combined actual B₂∪B₃ estimate by the manuscript's J term. -/
-theorem near_star_B23_card_le_J
+theorem near_star_b23_card_le_j
     {H : Family α} {W : Edge α} {v : α} [Fintype α]
     (hH : Admissible H) (hUniform : Uniform 4 H) (hvW : v ∉ W) :
     (nearStarB23 H W v).card ≤
       (badSingletonVertices H W v 4).card.choose 2 * (W.card - 2) := by
-  exact (near_star_B23_card_le_exceptional_triples hH hUniform hvW).trans
+  exact (near_star_b23_card_le_exceptional_triples hH hUniform hvW).trans
     near_star_exceptional_triples_card_le
 
 /-- Count pair/triple incidences involving exceptional vertices by encoding
 an incidence as the pair and the remaining singleton. -/
-theorem near_star_missing_pair_incidence_le_J
+theorem near_star_missing_pair_incidence_le_j
     {H : Family α} {W : Edge α} {v : α} [Fintype α] :
     (∑ T ∈ missingStarTriples H W v,
       ((T ∩ badSingletonVertices H W v 4).powersetCard 2).card) ≤
@@ -418,7 +418,7 @@ theorem near_star_bad_singleton_multiplicity_sum_le
     change (∑ T ∈ M, if 0 < (T ∩ D).card then 1 else 0) =
       (M.filter fun T => 0 < (T ∩ D).card).card
     rw [Finset.card_filter]
-  have hPairs := near_star_missing_pair_incidence_le_J (H := H) (W := W) (v := v)
+  have hPairs := near_star_missing_pair_incidence_le_j (H := H) (W := W) (v := v)
   have hResult :
       (∑ a ∈ D, setMultiplicity M ({a} : Edge α)) ≤
         (nearStarDMissingTriples H W v).card + J := by
@@ -434,7 +434,7 @@ theorem near_star_bad_singleton_multiplicity_sum_le
 
 /-- The exact singleton exceptional-set incidence estimate with the
 additional J allowance from triples containing multiple exceptional points. -/
-theorem near_star_bad_singleton_incidence_le_qD_add_J
+theorem near_star_bad_singleton_incidence_le_q_d_add_j
     {H : Family α} {W : Edge α} {v : α} [Fintype α] :
     let Λ := (W.card - 5).choose 2
     Λ * (badSingletonVertices H W v 4).card ≤
@@ -529,7 +529,7 @@ theorem near_star_missing_triples_partition
 /-- The B₁ incidence bound in (III.C.7): each edge contributes its three
 ordinary pairs, and a pair together with its exceptional vertex has at most
 one ordinary completion. -/
-theorem near_star_B1_three_incidence_bound
+theorem near_star_b1_three_incidence_bound
     {H : Family α} {W : Edge α} {v : α} [Fintype α]
     (hH : Admissible H) (hUniform : Uniform 4 H) (hvW : v ∉ W) :
     3 * (nearStarB1 H W v).card ≤
@@ -728,7 +728,7 @@ theorem near_star_B1_three_incidence_bound
 
 /-- The all-exceptional layer is controlled by the finite coarse theorem on
 the ground set D, giving the manuscript's 32 d^3 bound. -/
-theorem near_star_B4_coarse_bound
+theorem near_star_b4_coarse_bound
     {H : Family α} {W : Edge α} {v : α}
     (hUniform : Uniform 4 H) (hH : Admissible H) :
     (nearStarB4 H W v).card ≤
@@ -901,7 +901,7 @@ theorem near_star_outside_layer_card_split
 
 /-- Refined B₁ estimate (III.C.7) from its three-incidence injection and the
 actual exceptional-singleton multiplicity count. -/
-theorem near_star_B1_refined_bound
+theorem near_star_b1_refined_bound
     {H : Family α} {W : Edge α} {v : α} [Fintype α]
     (hH : Admissible H) (hUniform : Uniform 4 H) (hvW : v ∉ W) :
     3 * (nearStarB1 H W v).card ≤
@@ -916,7 +916,7 @@ theorem near_star_B1_refined_bound
   let qD := (nearStarDMissingTriples H W v).card
   let J := D.card.choose 2 * (W.card - 2)
   let Λ := (W.card - 5).choose 2
-  have hInc := near_star_bad_singleton_incidence_le_qD_add_J (H := H) (W := W) (v := v)
+  have hInc := near_star_bad_singleton_incidence_le_q_d_add_j (H := H) (W := W) (v := v)
   have hInc' : Λ * d ≤ 2 * (qD + J) := by
     simpa [Λ, d, qD, J, D, Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm] using hInc
   have hu : U.card ≤ W.card := by
@@ -931,7 +931,7 @@ theorem near_star_B1_refined_bound
   have hSplit : W.card.choose 2 = Λ + Δ := by
     dsimp [Δ]
     omega
-  have hB1 := near_star_B1_three_incidence_bound hH hUniform hvW
+  have hB1 := near_star_b1_three_incidence_bound hH hUniform hvW
   have hResult :
       3 * (nearStarB1 H W v).card ≤ 2 * qD + 2 * J + d * Δ := by
     have hmul := Nat.mul_le_mul_left d hChoose
@@ -950,7 +950,7 @@ theorem near_star_B1_refined_bound
 
 /-- Actual combination of (III.C.6) with the B₁, B₂∪B₃, and B₄ bounds,
 giving the finite C7 edge-count inequality. -/
-theorem near_star_C7_actual
+theorem near_star_c7_actual
     {H : Family α} {W : Edge α} {v : α} [Fintype α]
     (hH : Admissible H) (hUniform : Uniform 4 H) (hvW : v ∉ W) :
     ((outsideEdges H W).card : ℝ) ≤
@@ -978,23 +978,23 @@ theorem near_star_C7_actual
   let J := D.card.choose 2 * (W.card - 2)
   let Δ := W.card.choose 2 - (W.card - 5).choose 2
   have hSplit := near_star_outside_layer_card_split (H := H) (W := W) (v := v) hUniform
-  have hB0 := near_star_outside_B₀_bound hH hUniform hvW
+  have hB0 := near_star_outside_b_0_bound hH hUniform hvW
   have hB0' : (B0.card : ℝ) ≤
       ((U.card : ℝ) + (qU : ℝ)) / 4 +
         (5 * (h : ℝ)) / 4 + Real.sqrt ((h : ℝ) ^ 3) / 2 := by
     simpa [B0, U, qU, h, nearStarUMissingTriples] using hB0
   have hB1nat : 3 * B1.card ≤ 2 * qD + 2 * J + d * Δ := by
     simpa [B1, qD, J, d, Δ, D, Nat.mul_assoc] using
-      (near_star_B1_refined_bound hH hUniform hvW)
+      (near_star_b1_refined_bound hH hUniform hvW)
   have hB1real : (B1.card : ℝ) ≤
       2 * (qD : ℝ) / 3 + 2 * (J : ℝ) / 3 + (d : ℝ) * Δ / 3 := by
     have hc : (3 : ℝ) * B1.card ≤
         2 * qD + 2 * J + d * Δ := by exact_mod_cast hB1nat
     nlinarith
   have hB23nat : B23.card ≤ J := by
-    simpa [B23, J, D] using (near_star_B23_card_le_J hH hUniform hvW)
+    simpa [B23, J, D] using (near_star_b23_card_le_j hH hUniform hvW)
   have hB4nat : B4.card ≤ 32 * d ^ 3 := by
-    simpa [B4, d, D] using (near_star_B4_coarse_bound hUniform hH)
+    simpa [B4, d, D] using (near_star_b4_coarse_bound hUniform hH)
   have hSplitR : ((outsideEdges H W).card : ℝ) =
       (B0.card : ℝ) + B1.card + B23.card + B4.card := by
     exact_mod_cast hSplit

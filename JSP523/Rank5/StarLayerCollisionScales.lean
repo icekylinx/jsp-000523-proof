@@ -114,7 +114,7 @@ private theorem coarse_collision_bracket
 /-- At the ambient codegree scale, the actual number of deleted colored
 members is bounded in square by C_r h² n^(2r-3), the finite form of the
 manuscript's O_r(h n^(r-3/2)) estimate. -/
-theorem actualStarLayerDeletion_coarse_scale
+theorem actual_star_layer_deletion_coarse_scale
     [Inhabited α] {H : Family α} {U Centers : Edge α} {r n D₂ D₃ : ℕ}
     (hH : Admissible H)
     (hCenters : ∀ z ∈ Centers, z ∉ U)
@@ -131,7 +131,7 @@ theorem actualStarLayerDeletion_coarse_scale
           P ∈ U.powersetCard (r - 2) ∧ owner P ≠ zT.1).card ^ 2 ≤
         starCollisionConstant r * Centers.card ^ 2 * n ^ (2 * r - 3) := by
   obtain ⟨owner, hDeletion⟩ :=
-    actualStarLayerOwnershipDeletion_card_sq_le_exists_max
+    actual_star_layer_ownership_deletion_card_sq_le_exists_max
       hH hCenters hr hD₂ hD₃
   refine ⟨owner, ?_⟩
   have hP : (U.powersetCard (r - 2)).card ≤ n ^ (r - 2) := by
@@ -162,7 +162,7 @@ theorem actualStarLayerDeletion_coarse_scale
 /-- Under the regularized caps D_j ≤ R n^(r-j-1), the actual deletion
 cost is bounded in square by C_r h² R n^(2r-4), the finite form of
 O_r(h sqrt(R) n^(r-2)). -/
-theorem actualStarLayerDeletion_regularized_scale
+theorem actual_star_layer_deletion_regularized_scale
     [Inhabited α] {H : Family α} {U Centers : Edge α}
     {r n R D₂ D₃ : ℕ}
     (hH : Admissible H)
@@ -181,7 +181,7 @@ theorem actualStarLayerDeletion_regularized_scale
         starCollisionConstant r * Centers.card ^ 2 * R *
           n ^ (2 * r - 4) := by
   obtain ⟨owner, hDeletion⟩ :=
-    actualStarLayerOwnershipDeletion_card_sq_le_exists_max
+    actual_star_layer_ownership_deletion_card_sq_le_exists_max
       hH hCenters hr hD₂ hD₃
   refine ⟨owner, ?_⟩
   have hP : (U.powersetCard (r - 2)).card ≤ n ^ (r - 2) := by

@@ -112,7 +112,7 @@ theorem completion_pair_label_mem_facet
     · exact hxNot hzT
     · exact hyNot hzT
   have hCell : T ∈ commonTripleCell D.K D.ground x y := by
-    apply mem_commonTripleCell.mpr
+    apply mem_common_triple_cell.mpr
     exact ⟨hTsub, hTcard, hDisj, hx'.2, hy'.2⟩
   exact D.label_center x y hxy T hCell
 
@@ -212,48 +212,48 @@ def completionK4Ends {α : Type*} (v : Fin 4 → α) (i : Fin 6) : α × α :=
   let p := completionK4IndexPair i
   (v p.1, v p.2)
 
-theorem completionTriangleEnds_injective {α : Type*} (v : Fin 3 → α)
+theorem completion_triangle_ends_injective {α : Type*} (v : Fin 3 → α)
     (hv : Function.Injective v) : Function.Injective (completionTriangleEnds v) := by
   intro i j hij
-  apply completionTriangleIndexPair_injective
+  apply completion_triangle_index_pair_injective
   apply Prod.ext
   · apply hv
     exact congrArg Prod.fst hij
   · apply hv
     exact congrArg Prod.snd hij
 
-theorem completionK4Ends_injective {α : Type*} (v : Fin 4 → α)
+theorem completion_k4_ends_injective {α : Type*} (v : Fin 4 → α)
     (hv : Function.Injective v) : Function.Injective (completionK4Ends v) := by
   intro i j hij
-  apply completionK4IndexPair_injective
+  apply completion_k4_index_pair_injective
   apply Prod.ext
   · apply hv
     exact congrArg Prod.fst hij
   · apply hv
     exact congrArg Prod.snd hij
 
-theorem completionTriangleIndexPair_offdiag (i : Fin 3) :
+theorem completion_triangle_index_pair_offdiag (i : Fin 3) :
     (completionTriangleIndexPair i).1 ≠
       (completionTriangleIndexPair i).2 := by
   fin_cases i <;> norm_num [completionTriangleIndexPair]
 
-theorem completionK4IndexPair_offdiag (i : Fin 6) :
+theorem completion_k4_index_pair_offdiag (i : Fin 6) :
     (completionK4IndexPair i).1 ≠ (completionK4IndexPair i).2 := by
   fin_cases i <;> norm_num [completionK4IndexPair]
 
 omit [DecidableEq α] in
-theorem completionTriangleEnds_offdiag (v : Fin 3 → α)
+theorem completion_triangle_ends_offdiag (v : Fin 3 → α)
     (hv : Function.Injective v) (i : Fin 3) :
     (completionTriangleEnds v i).1 ≠ (completionTriangleEnds v i).2 := by
   intro h
-  exact completionTriangleIndexPair_offdiag i (hv h)
+  exact completion_triangle_index_pair_offdiag i (hv h)
 
 omit [DecidableEq α] in
-theorem completionK4Ends_offdiag (v : Fin 4 → α)
+theorem completion_k4_ends_offdiag (v : Fin 4 → α)
     (hv : Function.Injective v) (i : Fin 6) :
     (completionK4Ends v i).1 ≠ (completionK4Ends v i).2 := by
   intro h
-  exact completionK4IndexPair_offdiag i (hv h)
+  exact completion_k4_index_pair_offdiag i (hv h)
 
 theorem pair_finset_eq_oriented_eq
     {a b x y : α} (hxy : x ≠ y)
@@ -281,7 +281,7 @@ def completionTriangleActualIndex (D : FiniteCompletionCliqueData α)
   ⟨(T, completionTriangleEnds v i), hTcard, hTsub,
     hCompletion (completionTriangleIndexPair i).1,
     hCompletion (completionTriangleIndexPair i).2,
-    completionTriangleEnds_offdiag v hv i⟩
+    completion_triangle_ends_offdiag v hv i⟩
 
 /-- A proper-K4 edge occurrence is an actual completion-pair index under
 the corresponding four completion hypotheses. -/
@@ -293,7 +293,7 @@ def completionK4ActualIndex (D : FiniteCompletionCliqueData α)
   ⟨(T, completionK4Ends v i), hTcard, hTsub,
     hCompletion (completionK4IndexPair i).1,
     hCompletion (completionK4IndexPair i).2,
-    completionK4Ends_offdiag v hv i⟩
+    completion_k4_ends_offdiag v hv i⟩
 
 /-- Actual `(Q,ab)` record keys for the three edge occurrences of a
 completion triangle. -/
@@ -327,7 +327,7 @@ def completionK4RecordKeys (D : FiniteCompletionCliqueData α)
       completionK4RecordKeys D T v i := by
   rfl
 
-theorem completionTriangleRecordKeys_injective
+theorem completion_triangle_record_keys_injective
     (D : FiniteCompletionCliqueData α) (T : Edge α) (v : Fin 3 → α)
     (hv : Function.Injective v)
     (hLabelMem : ∀ i, D.label (completionTriangleEnds v i).1
@@ -337,9 +337,9 @@ theorem completionTriangleRecordKeys_injective
     (completionTriangleEnds v)
   · exact hLabelMem
   · intro i j _ hEnds
-    exact completionTriangleEnds_injective v hv hEnds
+    exact completion_triangle_ends_injective v hv hEnds
 
-theorem completionK4RecordKeys_injective
+theorem completion_k4_record_keys_injective
     (D : FiniteCompletionCliqueData α) (T : Edge α) (v : Fin 4 → α)
     (hv : Function.Injective v)
     (hLabelMem : ∀ i, D.label (completionK4Ends v i).1
@@ -349,7 +349,7 @@ theorem completionK4RecordKeys_injective
     (completionK4Ends v)
   · exact hLabelMem
   · intro i j _ hEnds
-    exact completionK4Ends_injective v hv hEnds
+    exact completion_k4_ends_injective v hv hEnds
 
 /-- The concrete `(Q,ab)` keys in one color class of an actual completion
 triangle. The colors are read from `D.label`; the key uses the actual label
@@ -374,7 +374,7 @@ theorem actual_triangle_color_slot_records_card
       (completionTriangleEnds v i).2 = mark (rainbowTriangleEdgeColor a b c i))
     (hRainbow : a ≠ b ∧ a ≠ c ∧ b ≠ c) :
     (actualTriangleColorSlotRecords D T v mark x).card = 1 := by
-  have hKeys := completionTriangleRecordKeys_injective D T v hv hLabelMem
+  have hKeys := completion_triangle_record_keys_injective D T v hv hLabelMem
   have hSlots :
       (Finset.univ.filter fun i : Fin 3 =>
         D.label (completionTriangleEnds v i).1 (completionTriangleEnds v i).2 = mark x) =
@@ -388,8 +388,8 @@ theorem actual_triangle_color_slot_records_card
     · intro hi
       rw [hColor i, hi]
   unfold actualTriangleColorSlotRecords
-  rw [coloredSlotRecordImage_card]
-  · rw [hSlots, rainbowTriangleColorRecords_card a b c hRainbow x]
+  rw [colored_slot_record_image_card]
+  · rw [hSlots, rainbow_triangle_color_records_card a b c hRainbow x]
   · exact hKeys
 
 theorem actual_triangle_color_slots_disjoint
@@ -400,8 +400,8 @@ theorem actual_triangle_color_slots_disjoint
       (completionTriangleEnds v i).2 ∈ T) :
     Disjoint (actualTriangleColorSlotRecords D T v mark x)
       (actualTriangleColorSlotRecords D T v mark y) := by
-  have hKeys := completionTriangleRecordKeys_injective D T v hv hLabelMem
-  apply coloredSlotRecordImage_disjoint _ _ _ hKeys
+  have hKeys := completion_triangle_record_keys_injective D T v hv hLabelMem
+  apply colored_slot_record_image_disjoint _ _ _ hKeys
   apply Finset.disjoint_left.mpr
   intro i hi hj
   have hix := (Finset.mem_filter.mp hi).2
@@ -430,7 +430,7 @@ theorem selected_actual_triangle_color_slot_records_card_lower_bound
     (hRainbow : a ≠ b ∧ a ≠ c ∧ b ≠ c) :
     1 - (if S.card < 3 then 1 else 0) ≤
       (selectedActualTriangleColorSlotRecords D T v mark x S).card := by
-  have hKeys := completionTriangleRecordKeys_injective D T v hv hLabelMem
+  have hKeys := completion_triangle_record_keys_injective D T v hv hLabelMem
   have hSlots :
       (Finset.univ.filter fun i : Fin 3 =>
         D.label (completionTriangleEnds v i).1 (completionTriangleEnds v i).2 = mark x ∧
@@ -446,7 +446,7 @@ theorem selected_actual_triangle_color_slot_records_card_lower_bound
     · rintro ⟨hi, hleft, hright⟩
       exact ⟨(hColor i).trans (congrArg mark hi), hleft, hright⟩
   unfold selectedActualTriangleColorSlotRecords
-  rw [coloredSlotRecordImage_card]
+  rw [colored_slot_record_image_card]
   · rw [hSlots]
     exact selected_rainbow_records_lower_bound a b c hRainbow S x
   · exact hKeys
@@ -463,7 +463,7 @@ def actualK4ColorSlotRecords (D : FiniteCompletionCliqueData α)
 
 /-- Each color in a proper completion K4 gives two distinct actual
 unique-pair records. -/
-theorem actual_K4_color_slot_records_card
+theorem actual_k4_color_slot_records_card
     (D : FiniteCompletionCliqueData α) (T : Edge α) (v : Fin 4 → α)
     (mark : CliqueColor → α) (a b c x : CliqueColor)
     (hv : Function.Injective v) (hmark : Function.Injective mark)
@@ -473,7 +473,7 @@ theorem actual_K4_color_slot_records_card
       (completionK4Ends v i).2 = mark (properK4EdgeColor a b c i))
     (hProper : a ≠ b ∧ a ≠ c ∧ b ≠ c) :
     (actualK4ColorSlotRecords D T v mark x).card = 2 := by
-  have hKeys := completionK4RecordKeys_injective D T v hv hLabelMem
+  have hKeys := completion_k4_record_keys_injective D T v hv hLabelMem
   have hSlots :
       (Finset.univ.filter fun i : Fin 6 =>
         D.label (completionK4Ends v i).1 (completionK4Ends v i).2 = mark x) =
@@ -487,11 +487,11 @@ theorem actual_K4_color_slot_records_card
     · intro hi
       rw [hColor i, hi]
   unfold actualK4ColorSlotRecords
-  rw [coloredSlotRecordImage_card]
-  · rw [hSlots, properK4ColorRecords_card a b c hProper x]
+  rw [colored_slot_record_image_card]
+  · rw [hSlots, proper_k4_color_records_card a b c hProper x]
   · exact hKeys
 
-theorem actual_K4_color_slots_disjoint
+theorem actual_k4_color_slots_disjoint
     (D : FiniteCompletionCliqueData α) (T : Edge α) (v : Fin 4 → α)
     (mark : CliqueColor → α) {x y : CliqueColor} (hxy : x ≠ y)
     (hv : Function.Injective v) (hmark : Function.Injective mark)
@@ -499,8 +499,8 @@ theorem actual_K4_color_slots_disjoint
       (completionK4Ends v i).2 ∈ T) :
     Disjoint (actualK4ColorSlotRecords D T v mark x)
       (actualK4ColorSlotRecords D T v mark y) := by
-  have hKeys := completionK4RecordKeys_injective D T v hv hLabelMem
-  apply coloredSlotRecordImage_disjoint _ _ _ hKeys
+  have hKeys := completion_k4_record_keys_injective D T v hv hLabelMem
+  apply colored_slot_record_image_disjoint _ _ _ hKeys
   apply Finset.disjoint_left.mpr
   intro i hi hj
   have hix := (Finset.mem_filter.mp hi).2
@@ -518,7 +518,7 @@ def selectedActualK4ColorSlotRecords (D : FiniteCompletionCliqueData α)
       (completionK4IndexPair i).1 ∈ S ∧ (completionK4IndexPair i).2 ∈ S)
     (completionK4RecordKeys D T v)
 
-theorem selected_actual_K4_color_slot_records_card_lower_bound
+theorem selected_actual_k4_color_slot_records_card_lower_bound
     (D : FiniteCompletionCliqueData α) (T : Edge α) (v : Fin 4 → α)
     (mark : CliqueColor → α) (a b c x : CliqueColor) (S : Finset (Fin 4))
     (hv : Function.Injective v) (hmark : Function.Injective mark)
@@ -529,7 +529,7 @@ theorem selected_actual_K4_color_slot_records_card_lower_bound
     (hProper : a ≠ b ∧ a ≠ c ∧ b ≠ c) :
     2 - min 2 (4 - S.card) ≤
       (selectedActualK4ColorSlotRecords D T v mark x S).card := by
-  have hKeys := completionK4RecordKeys_injective D T v hv hLabelMem
+  have hKeys := completion_k4_record_keys_injective D T v hv hLabelMem
   have hSlots :
       (Finset.univ.filter fun i : Fin 6 =>
         D.label (completionK4Ends v i).1 (completionK4Ends v i).2 = mark x ∧
@@ -545,7 +545,7 @@ theorem selected_actual_K4_color_slot_records_card_lower_bound
     · rintro ⟨hi, hleft, hright⟩
       exact ⟨(hColor i).trans (congrArg mark hi), hleft, hright⟩
   unfold selectedActualK4ColorSlotRecords
-  rw [coloredSlotRecordImage_card]
+  rw [colored_slot_record_image_card]
   · rw [hSlots]
     exact selected_proper_k4_records_lower_bound a b c hProper S x
   · exact hKeys
@@ -616,7 +616,7 @@ theorem completion_pair_link_unique_common_neighbor
           · exact haQ (h ▸ htQ)
           · exact hbQ (h ▸ htQ)
       have hCell : insert w Q ∈ commonTripleCell D.K D.ground a b := by
-        apply mem_commonTripleCell.mpr
+        apply mem_common_triple_cell.mpr
         refine ⟨hTailGround, hTailCard, hTailDisj, ?_, ?_⟩
         · exact hEdgeA
         · exact hEdgeB
@@ -894,7 +894,7 @@ theorem selected_actual_undirected_records_card_le_of_graph
     fun r => pairRootRep r.val.2 (selected_undirected_record_pair_card D S r)
   have hne : ∀ r, (ends r).1 ≠ (ends r).2 := by
     intro r
-    exact (pairRootRep_spec r.val.2
+    exact (pair_root_rep_spec r.val.2
       (selected_undirected_record_pair_card D S r)).1
   have hUnique : ∀ r,
       graphCommonMultiplicity (F (owner r)) (ends r).1 (ends r).2 = 1 := by
@@ -918,7 +918,7 @@ theorem selected_actual_undirected_records_card_le_of_graph
       calc
         ({q.2.1, q.2.2} : Edge α) = r.val.2 := congrArg Prod.snd hEq
         _ = ({(ends r).1, (ends r).2} : Edge α) :=
-          (pairRootRep_spec r.val.2
+          (pair_root_rep_spec r.val.2
             (selected_undirected_record_pair_card D S r)).2
     have hPairSource :
         ({i.val.val.2.1, i.val.val.2.2} : Edge α) =
@@ -951,7 +951,7 @@ theorem selected_actual_undirected_records_card_le_of_graph
               (selectedCompletionPairGraph D S
               (i.val.val.1.erase (D.label i.val.val.2.1 i.val.val.2.2)))
             i.val.val.2.1 i.val.val.2.2 :=
-              graphCommonMultiplicity_le_of_adj_mono
+              graph_common_multiplicity_le_of_adj_mono
                 (fun a b hab => hSub
                   (i.val.val.1.erase (D.label i.val.val.2.1 i.val.val.2.2))
                   a b hab) _ _
@@ -973,7 +973,7 @@ theorem selected_actual_undirected_records_card_le_of_graph
     · rw [← hSame.1, ← hSame.2, hOwner]
       exact hAtSource
     · rw [← hSwap.1, ← hSwap.2, hOwner]
-      rw [graphCommonMultiplicity_symm]
+      rw [graph_common_multiplicity_symm]
       exact hAtSource
   have hOrient : Function.Injective (fun ro :
       SelectedUndirectedCompletionRecordIndex D S × Bool =>
@@ -1007,10 +1007,10 @@ theorem selected_actual_undirected_records_card_le_of_graph
     have hPair : r.val.2 = s.val.2 := by
       calc
         r.val.2 = pairSet (ends r) :=
-          (pairRootRep_spec r.val.2
+          (pair_root_rep_spec r.val.2
             (selected_undirected_record_pair_card D S r)).2
         _ = pairSet (ends s) := hSetOrient
-        _ = s.val.2 := (pairRootRep_spec s.val.2
+        _ = s.val.2 := (pair_root_rep_spec s.val.2
           (selected_undirected_record_pair_card D S s)).2.symm
     have hrs : r = s := by
       apply Subtype.ext
@@ -1062,7 +1062,7 @@ theorem selected_actual_undirected_records_card_le
 
 /-- Every genuinely realized selected completion-triangle pair contributes
 its actual directed record key to the global selected record set. -/
-theorem completionTriangle_selected_record_mem
+theorem completion_triangle_selected_record_mem
     (D : FiniteCompletionCliqueData α) [Fintype α]
     (T : Edge α) (v : Fin 3 → α) (i : Fin 3) (S : Finset α)
     (hTcard : T.card = 3) (hTsub : T ⊆ D.ground)
@@ -1082,7 +1082,7 @@ theorem completionTriangle_selected_record_mem
   simpa [j] using hmem
 
 /-- The corresponding selected-key inclusion for an actual completion K4. -/
-theorem completionK4_selected_record_mem
+theorem completion_k4_selected_record_mem
     (D : FiniteCompletionCliqueData α) [Fintype α]
     (T : Edge α) (v : Fin 4 → α) (i : Fin 6) (S : Finset α)
     (hTcard : T.card = 3) (hTsub : T ⊆ D.ground)
@@ -1145,7 +1145,7 @@ theorem selected_actual_directed_records_card_le
   have hq : (Fintype.card (SelectedCompletionRecordIndex D S) : ℚ) ≤
       (Fintype.card (FamilyUniquePairRecord
         (selectedCompletionPairGraph D S)) : ℚ) := Nat.cast_le.mpr hcard
-  rw [familyUniquePairRecord_card_eq] at hq
+  rw [family_unique_pair_record_card_eq] at hq
   exact hq
 
 end JSP523.Rank4

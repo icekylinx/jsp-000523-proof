@@ -18,7 +18,7 @@ def rankFourPairDegree (F : Family α) (P : Edge α) : ℕ :=
 
 /-- A centered triple cell is bounded by the degree of the pair consisting
 of one endpoint and its common center. -/
-private theorem commonTripleCell_card_le_of_center_pair_degree
+private theorem common_triple_cell_card_le_of_center_pair_degree
     {H : Family α} {V : Edge α} {a b z : α} {M : ℕ}
     (hz : ∀ ⦃T : Edge α⦄,
       T ∈ commonTripleCell H V a b → z ∈ T)
@@ -31,7 +31,7 @@ private theorem commonTripleCell_card_le_of_center_pair_degree
     have hza : z ≠ a := by
       intro h
       have hzT := hz hT₀
-      have hDisj := (mem_commonTripleCell.mp hT₀).2.2.1
+      have hDisj := (mem_common_triple_cell.mp hT₀).2.2.1
       have haT : a ∉ T₀ := by
         intro haT
         exact (Finset.disjoint_left.mp hDisj) haT (by simp)
@@ -42,7 +42,7 @@ private theorem commonTripleCell_card_le_of_center_pair_degree
     have hMap : Set.MapsTo f (↑J : Set (Edge α))
         (↑(H.filter fun E => P ⊆ E) : Set (Edge α)) := by
       intro T hTJ
-      have hCell := mem_commonTripleCell.mp hTJ
+      have hCell := mem_common_triple_cell.mp hTJ
       apply Finset.mem_filter.mpr
       refine ⟨hCell.2.2.2.1, ?_⟩
       intro x hx
@@ -58,11 +58,11 @@ private theorem commonTripleCell_card_le_of_center_pair_degree
       change insert a T = insert a S at hEq
       have haT : a ∉ T := by
         intro haT
-        have hDisj := (mem_commonTripleCell.mp hT).2.2.1
+        have hDisj := (mem_common_triple_cell.mp hT).2.2.1
         exact (Finset.disjoint_left.mp hDisj) haT (by simp)
       have haS : a ∉ S := by
         intro haS
-        have hDisj := (mem_commonTripleCell.mp hS).2.2.1
+        have hDisj := (mem_common_triple_cell.mp hS).2.2.1
         exact (Finset.disjoint_left.mp hDisj) haS (by simp)
       apply Finset.Subset.antisymm
       · intro x hx
@@ -86,7 +86,7 @@ private theorem commonTripleCell_card_le_of_center_pair_degree
 
 /-- The actual common triple cell is bounded by the larger of the
 four-family pair-degree cap and nine times its facet-degree cap. -/
-theorem commonTripleCell_card_le_of_degree_caps
+theorem common_triple_cell_card_le_of_degree_caps
     {H : Family α} {V : Edge α} {a b : α} {M D : ℕ}
     (hH : Admissible H) (hab : a ≠ b)
     (hPair : ∀ P : Edge α, P.card = 2 → rankFourPairDegree H P ≤ M)
@@ -100,13 +100,13 @@ theorem commonTripleCell_card_le_of_degree_caps
     exact (Finset.mem_powersetCard.mp
       (Finset.mem_filter.mp hT).1).2
   have hIntersect : PairwiseIntersecting J :=
-    commonTripleCell_intersecting hH hab
+    common_triple_cell_intersecting hH hab
   have hPairDegree : ∀ P : Edge α, P.card = 2 →
       triplePairDegree J P ≤ D :=
-    commonTripleCell_pairDegree_le_of_facet_cap hFacet
+    common_triple_cell_pair_degree_le_of_facet_cap hFacet
   by_cases hCenter : ∃ z : α, ∀ ⦃T : Edge α⦄, T ∈ J → z ∈ T
   · obtain ⟨z, hz⟩ := hCenter
-    have hCap := commonTripleCell_card_le_of_center_pair_degree hz hPair
+    have hCap := common_triple_cell_card_le_of_center_pair_degree hz hPair
     exact hCap.trans (Nat.le_max_left M (9 * D))
   · have hNoCenter : NoGlobalCenter J := by
       intro z
@@ -115,13 +115,13 @@ theorem commonTripleCell_card_le_of_degree_caps
         intro T hT
         by_contra hzT
         exact hz ⟨T, hT, hzT⟩⟩
-    have hCover := intersecting_triples_card_le_nine_mul_pairDegree
+    have hCover := intersecting_triples_card_le_nine_mul_pair_degree
       hUniform hIntersect hNoCenter hPairDegree
     exact hCover.trans (Nat.le_max_right M (9 * D))
 
 /-- Summing the actual pair-root common cells costs at most their number
 times the uniform local cell cap. -/
-theorem commonRootCell_sum_le_of_degree_caps
+theorem common_root_cell_sum_le_of_degree_caps
     {H : Family α} {V : Edge α} {M D : ℕ}
     (hH : Admissible H)
     (hFacet : ∀ T : Edge α, T.card = 3 →
@@ -140,8 +140,8 @@ theorem commonRootCell_sum_le_of_degree_caps
           commonTripleCell H V ab.1 ab.2 := by
         simp [commonRootCell, hPcard, ab]
       rw [hEq]
-      have hab : ab.1 ≠ ab.2 := (pairRootRep_spec P hPcard).1
-      exact commonTripleCell_card_le_of_degree_caps hH hab hPair hFacet
+      have hab : ab.1 ≠ ab.2 := (pair_root_rep_spec P hPcard).1
+      exact common_triple_cell_card_le_of_degree_caps hH hab hPair hFacet
     _ = (V.powersetCard 2).card * max M (9 * D) := by simp
 
 end JSP523.Rank4

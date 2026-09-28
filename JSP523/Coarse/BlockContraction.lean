@@ -21,7 +21,7 @@ def expandBlock (B : ι → Edge β) (S : Edge (ι ⊕ β)) : Edge β :=
     | Sum.inl i => B i
     | Sum.inr v => {v}
 
-theorem expandBlock_union (B : ι → Edge β)
+theorem expand_block_union (B : ι → Edge β)
     (S T : Edge (ι ⊕ β)) :
     expandBlock B (S ∪ T) =
       expandBlock B S ∪ expandBlock B T := by
@@ -30,7 +30,7 @@ theorem expandBlock_union (B : ι → Edge β)
   aesop
 
 omit [DecidableEq ι] in
-theorem expandBlock_disjoint_of_atom_disjoint
+theorem expand_block_disjoint_of_atom_disjoint
     (B : ι → Edge β) {S T : Edge (ι ⊕ β)}
     (hAtom : ∀ a ∈ S, ∀ b ∈ T,
       Disjoint (expandBlock B {a}) (expandBlock B {b})) :
@@ -47,7 +47,7 @@ theorem expandBlock_disjoint_of_atom_disjoint
 /-- An admissible parent family remains admissible after a contraction
 whenever expansion is injective on the represented family and preserves
 disjoint edge pairs. -/
-theorem admissible_of_expandBlock
+theorem admissible_of_expand_block
     (B : ι → Edge β)
     (T : Family (ι ⊕ β)) (H : Family β)
     (hH : Admissible H)
@@ -70,7 +70,7 @@ theorem admissible_of_expandBlock
     · exact fun h => hq.distinct.cd (hinj D hD E hE h)
   have hUnion : expandBlock B A ∪ expandBlock B C =
       expandBlock B D ∪ expandBlock B E := by
-    rw [← expandBlock_union, ← expandBlock_union, hq.sameUnion]
+    rw [← expand_block_union, ← expand_block_union, hq.sameUnion]
   exact hH (hmem A hA) (hmem C hC) (hmem D hD) (hmem E hE)
     ⟨hDistinct, hdisj A hA C hC hq.disjAB,
       hdisj D hD E hE hq.disjCD, hUnion⟩

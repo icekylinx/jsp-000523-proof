@@ -19,21 +19,21 @@ variable {α : Type*} [DecidableEq α]
 
 /-- The bridge excess of a block-free admissible triple family is paid by
 its actual local signed defects. -/
-theorem actualXi_le_local_defects_of_blockFree
+theorem actual_xi_le_local_defects_of_block_free
     (H : Family α) (V : Edge α)
     (hU : Uniform 3 H) (hAdm : Admissible H)
     (hGround : ∀ E ∈ H, E ⊆ V)
     (hFree : ∀ A : Edge α, A ⊆ V → ¬ nearCompleteBlock H A) :
     actualXi H V ≤ ∑ E ∈ H, localSignedDefect H V E := by
-  have hNoBlock := noNineOrTenTripleBlock_of_ground_blockFree
+  have hNoBlock := no_nine_or_ten_triple_block_of_ground_block_free
     H V hU hGround hFree
-  apply actualXi_le_localSignedDefectSum_of_bridge_geometry
+  apply actual_xi_le_local_signed_defect_sum_of_bridge_geometry
     H V hAdm hU hGround
   · intro E hE q₁ hq₁ q₂ hq₂ hpos₁ hpos₂
     exact positive_bridge_demand_unique hAdm hU hNoBlock
       E hE q₁ q₂ hq₁ hq₂ hpos₁ hpos₂
   · intro E hE q hq hpos
-    exact bridgeDemand_le_localSignedDefect_of_positive
+    exact bridge_demand_le_local_signed_defect_of_positive
       H V q E hAdm hU hGround hE hpos
 
 /-- The first inequality of Theorem II.1 on the actual pair and cell
@@ -43,12 +43,12 @@ theorem rank_three_actual_support_bound
     (hU : Uniform 3 H) (hAdm : Admissible H)
     (hGround : ∀ E ∈ H, E ⊆ V) :
     2 * H.card ≤ (usedPairs H V).card + (usedCells H V).card := by
-  apply actual_support_of_blockFree_case H V hU hAdm hGround
+  apply actual_support_of_block_free_case H V hU hAdm hGround
   intro K hUK hAdmK hGroundK hFreeK
   have hIncoming := incoming_charge_le_actual_capacity K V hAdmK
   have hCapacity := positive_total_le_capacity_of_incoming_bound
     K V hUK hGroundK hIncoming
-  have hPaid := actualXi_le_local_defects_of_blockFree
+  have hPaid := actual_xi_le_local_defects_of_block_free
     K V hUK hAdmK hGroundK hFreeK
   exact actual_support_of_capacity_and_bridge_payment
     K V (actualXi K V) hUK hAdmK hGroundK hCapacity hPaid
@@ -59,8 +59,8 @@ theorem rank_three_actual_supports_le_two_choose
     (H : Family α) (V : Edge α) :
     (usedPairs H V).card + (usedCells H V).card ≤
       2 * V.card.choose 2 := by
-  have hPairs := Finset.card_le_card (usedPairs_subset H V)
-  have hCells := Finset.card_le_card (usedCells_subset H V)
+  have hPairs := Finset.card_le_card (used_pairs_subset H V)
+  have hCells := Finset.card_le_card (used_cells_subset H V)
   rw [Finset.card_powersetCard] at hPairs hCells
   omega
 

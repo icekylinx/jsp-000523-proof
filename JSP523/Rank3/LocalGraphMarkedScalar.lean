@@ -43,10 +43,10 @@ theorem marked_mixed_numeric_gain
       ((localPhi (r + 1) - localPhi r) +
         (localPhi (s + 1) - localPhi s)) := by
   have hs : 2 ≤ s := hr.trans hrs
-  rw [localGraphBudget_succ_sub_eq (by omega : 2 ≤ a),
-    localPhi_succ_sub_eq hr,
-    localPhi_succ_sub_eq hs,
-    localPhi_eq_formula (by omega : 2 ≤ r + 1)]
+  rw [local_graph_budget_succ_sub_eq (by omega : 2 ≤ a),
+    local_phi_succ_sub_eq hr,
+    local_phi_succ_sub_eq hs,
+    local_phi_eq_formula (by omega : 2 ≤ r + 1)]
   push_cast
   have hrq : (3 : ℚ) ≤ (r : ℚ) + 1 := by exact_mod_cast (by omega : 3 ≤ r + 1)
   have hsrq : (r : ℚ) ≤ s := by exact_mod_cast hrs
@@ -133,7 +133,7 @@ def TripartiteNoPositive {α : Type*} [DecidableEq α]
   bipartitePhiTotal G.bc B C ≤
       localGraphBudget B.card + localGraphBudget C.card
 
-theorem tripartiteLocalSurplus_eq_linear_of_no_positive
+theorem tripartite_local_surplus_eq_linear_of_no_positive
     {α : Type*} [DecidableEq α]
     (G : TripartitePairGraphs α) (A B C : Finset α)
     (h : TripartiteNoPositive G A B C) :
@@ -246,11 +246,11 @@ theorem marked_mixed_local_surplus_of_size_bound
     (hSize : r + s ≤ (A.erase x).card) :
     localPhi (r + 1) ≤ tripartiteLocalSurplus G A B C := by
   have hMixedOld : MixedNodeDegreeTwo G (A.erase x) B C :=
-    mixedNodeDegreeTwo_restrict_left G B C
+    mixed_node_degree_two_restrict_left G B C
       (Finset.erase_subset x A) hMixed
-  have hABDegree := bipRightDegree_erase_left_neighbor
+  have hABDegree := bip_right_degree_erase_left_neighbor
     G.ab A B x y hx hAB
-  have hACDegree := bipRightDegree_erase_left_neighbor
+  have hACDegree := bip_right_degree_erase_left_neighbor
     G.ac A C x z hx hAC
   have hCurrent : TripartiteNoPositive G A B C :=
     tripartite_no_positive_of_marked_degrees G A B C y z
@@ -264,10 +264,10 @@ theorem marked_mixed_local_surplus_of_size_bound
   have hOldNonneg : 0 ≤ tripartiteLocalSurplus G (A.erase x) B C := by
     unfold tripartiteLocalSurplus
     exact sub_nonneg.mpr hOldPay
-  have hABInc := bipartitePhiTotal_erase_left_degree_one
+  have hABInc := bipartite_phi_total_erase_left_degree_one
     G.ab A B x y hx hy hAB
   rw [hABDegree, hrDegree] at hABInc
-  have hACInc := bipartitePhiTotal_erase_left_degree_one
+  have hACInc := bipartite_phi_total_erase_left_degree_one
     G.ac A C x z hx hz hAC
   rw [hACDegree, hsDegree] at hACInc
   have hCard : A.card = (A.erase x).card + 1 := by
@@ -275,22 +275,22 @@ theorem marked_mixed_local_surplus_of_size_bound
     omega
   have hGain := marked_mixed_numeric_gain
     (A.erase x).card r s hr hrs hSize
-  have hCurrentLinear := tripartiteLocalSurplus_eq_linear_of_no_positive
+  have hCurrentLinear := tripartite_local_surplus_eq_linear_of_no_positive
     G A B C hCurrent
-  have hOldLinear := tripartiteLocalSurplus_eq_linear_of_no_positive
+  have hOldLinear := tripartite_local_surplus_eq_linear_of_no_positive
     G (A.erase x) B C hOld
   rw [hCard] at hCurrentLinear
   linarith only [hOldNonneg, hGain, hCurrentLinear,
     hOldLinear, hABInc, hACInc]
 
-theorem tripartiteLocalSurplus_swapPartsBC
+theorem tripartite_local_surplus_swap_parts_bc
     {α : Type*} [DecidableEq α]
     (G : TripartitePairGraphs α) (A B C : Finset α) :
     tripartiteLocalSurplus (swapPartsBC G) A C B =
       tripartiteLocalSurplus G A B C := by
   unfold tripartiteLocalSurplus
-  simp only [swapPartsBC, bipartitePhiTotal_transpose]
-  rw [localGraphPayment_swap_last_two]
+  simp only [swapPartsBC, bipartite_phi_total_transpose]
+  rw [local_graph_payment_swap_last_two]
   ring
 
 /-- The cardinal form of the marked-neighborhood condition: the two
@@ -346,17 +346,17 @@ theorem marked_mixed_local_surplus
     min (localPhi (r + 1)) (localPhi (s + 1)) ≤
       tripartiteLocalSurplus G A B C := by
   by_cases hrs : r ≤ s
-  · rw [min_eq_left (localPhi_mono (by omega : r + 1 ≤ s + 1))]
+  · rw [min_eq_left (local_phi_mono (by omega : r + 1 ≤ s + 1))]
     exact marked_mixed_local_surplus_of_disjoint_neighbors
       G A B C x y z r s hMixed hx hy hz hAB hAC
         hrDegree hsDegree hr hrs hDisj
   · have hsr : s ≤ r := by omega
-    have hMixedSwap := mixedNodeDegreeTwo_swapPartsBC G A B C hMixed
+    have hMixedSwap := mixed_node_degree_two_swap_parts_bc G A B C hMixed
     have hSwap := marked_mixed_local_surplus_of_disjoint_neighbors
       (swapPartsBC G) A C B x z y s r hMixedSwap hx hz hy
         hAC hAB hsDegree hrDegree hs hsr hDisj.symm
-    rw [tripartiteLocalSurplus_swapPartsBC] at hSwap
-    rw [min_eq_right (localPhi_mono (by omega : s + 1 ≤ r + 1))]
+    rw [tripartite_local_surplus_swap_parts_bc] at hSwap
+    rw [min_eq_right (local_phi_mono (by omega : s + 1 ≤ r + 1))]
     exact hSwap
 
 end JSP523.Rank3

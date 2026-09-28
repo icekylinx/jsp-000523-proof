@@ -163,7 +163,7 @@ theorem rainbow_common_link_center_of_two
     rw [hp2, Finset.card_pair huv]
   exact rainbow_common_link_no_triangle h hzu hzv (hpeq ▸ hp)
 
-theorem link_common_neighbor_to_commonLink
+theorem link_common_neighbor_to_common_link
     {T : Family α} (hU : Uniform 3 T)
     {x y z w : α} (hxy : x ≠ y)
     (hw : w ∈ (tripleLinkGraph T z).neighborFinset x ∩
@@ -201,7 +201,7 @@ theorem link_common_neighbor_to_commonLink
     simpa only [Finset.pair_comm w y] using hyw.2
   exact Finset.mem_filter.mpr ⟨hpV, hdisj, hxEdge, hyEdge⟩
 
-theorem link_diagonal_commonLink_two_edges
+theorem link_diagonal_common_link_two_edges
     {T : Family α} (hU : Uniform 3 T)
     {x y z : α} (hxy : x ≠ y)
     (hdiag : s(x, y) ∈ graphDiagonals (tripleLinkGraph T z)) :
@@ -210,7 +210,7 @@ theorem link_diagonal_commonLink_two_edges
         Rank3.orientedCommonLink T Finset.univ x y ∧
       ({z, v} : Edge α) ∈
         Rank3.orientedCommonLink T Finset.univ x y := by
-  have htwo := (mem_graphDiagonals_iff
+  have htwo := (mem_graph_diagonals_iff
     (tripleLinkGraph T z) hxy).mp hdiag
   have hone : 1 < ((tripleLinkGraph T z).neighborFinset x ∩
       (tripleLinkGraph T z).neighborFinset y).card := by
@@ -218,8 +218,8 @@ theorem link_diagonal_commonLink_two_edges
     omega
   obtain ⟨u, hu, v, hv, huv⟩ := Finset.one_lt_card.mp hone
   exact ⟨u, v, huv,
-    link_common_neighbor_to_commonLink hU hxy hu,
-    link_common_neighbor_to_commonLink hU hxy hv⟩
+    link_common_neighbor_to_common_link hU hxy hu,
+    link_common_neighbor_to_common_link hU hxy hv⟩
 
 /-- Equation (I.4)'s uniqueness assertion: a given unordered pair can
 be a diagonal in at most one original vertex link of a rainbow admissible
@@ -233,9 +233,9 @@ theorem rainbow_diagonal_unique_link
     z = w := by
   have hU := h.uniform
   obtain ⟨u, v, huv, hzu, hzv⟩ :=
-    link_diagonal_commonLink_two_edges hU hxy hz
+    link_diagonal_common_link_two_edges hU hxy hz
   obtain ⟨a, b, hab, hwa, hwb⟩ :=
-    link_diagonal_commonLink_two_edges hU hxy hw
+    link_diagonal_common_link_two_edges hU hxy hw
   have hcenter := rainbow_common_link_center_of_two
     hT h hxy huv hzu hzv
   have hza : z ∈ ({w, a} : Edge α) := hcenter _ hwa
@@ -290,7 +290,7 @@ theorem rainbow_link_diagonal_same_color
     (hdiag : s(x, y) ∈ graphDiagonals (tripleLinkGraph T z)) :
     color x = color y := by
   obtain ⟨u, v, huv, hzu, hzv⟩ :=
-    link_diagonal_commonLink_two_edges h.uniform hxy hdiag
+    link_diagonal_common_link_two_edges h.uniform hxy hdiag
   exact rainbow_common_link_same_completion_color h hzu
 
 /-- The unordered within-class vertex pairs for a three-coloring. -/
@@ -298,7 +298,7 @@ def sameColorPairs (color : α → Fin 3) : Finset (Sym2 α) :=
   Finset.univ.filter fun p =>
     ∃ x y : α, x ≠ y ∧ p = s(x, y) ∧ color x = color y
 
-theorem graphDiagonals_subset_sameColorPairs
+theorem graph_diagonals_subset_same_color_pairs
     {T : Family α} {color : α → Fin 3}
     (h : RainbowTripleSystem T color) (z : α) :
     graphDiagonals (tripleLinkGraph T z) ⊆
@@ -311,7 +311,7 @@ theorem graphDiagonals_subset_sameColorPairs
 
 /-- Equation (I.4), with `S` represented by the exact finite set of
 within-class unordered pairs. -/
-theorem sum_link_diagonals_le_sameColorPairs
+theorem sum_link_diagonals_le_same_color_pairs
     {T : Family α} {color : α → Fin 3}
     (hT : Admissible T) (h : RainbowTripleSystem T color) :
     (∑ z : α, (graphDiagonals (tripleLinkGraph T z)).card) ≤
@@ -329,7 +329,7 @@ theorem sum_link_diagonals_le_sameColorPairs
       sameColorPairs color := by
     intro p hp
     obtain ⟨z, _, hpz⟩ := Finset.mem_biUnion.mp hp
-    exact graphDiagonals_subset_sameColorPairs h z hpz
+    exact graph_diagonals_subset_same_color_pairs h z hpz
   calc
     (∑ z : α, (graphDiagonals (tripleLinkGraph T z)).card) =
         ((Finset.univ : Finset α).biUnion D).card := by
@@ -337,7 +337,7 @@ theorem sum_link_diagonals_le_sameColorPairs
     _ ≤ (sameColorPairs color).card := Finset.card_le_card hsub
 
 omit [Fintype α] in
-theorem sym2_toFinset_injective :
+theorem sym2_to_finset_injective :
     Function.Injective (Sym2.toFinset : Sym2 α → Finset α) := by
   intro p q
   refine Sym2.inductionOn₂ p q ?_
@@ -359,7 +359,7 @@ def crossColorSetPairs (color : α → Fin 3) : Family α :=
   (Finset.univ : Finset α).powersetCard 2 |>.filter fun p =>
     ∃ x y : α, x ≠ y ∧ p = {x, y} ∧ color x ≠ color y
 
-theorem sameColorPairs_card_le_sameColorSetPairs
+theorem same_color_pairs_card_le_same_color_set_pairs
     (color : α → Fin 3) :
     (sameColorPairs color).card ≤ (sameColorSetPairs color).card := by
   apply Finset.card_le_card_of_injOn Sym2.toFinset
@@ -371,15 +371,15 @@ theorem sameColorPairs_card_le_sameColorSetPairs
         simpa only [Sym2.toFinset_mk_eq] using Finset.card_pair hxy⟩
     · exact Sym2.toFinset_mk_eq
   · intro p _ q _ hpq
-    exact sym2_toFinset_injective hpq
+    exact sym2_to_finset_injective hpq
 
-theorem sum_link_diagonals_le_sameColorSetPairs
+theorem sum_link_diagonals_le_same_color_set_pairs
     {T : Family α} {color : α → Fin 3}
     (hT : Admissible T) (h : RainbowTripleSystem T color) :
     (∑ z : α, (graphDiagonals (tripleLinkGraph T z)).card) ≤
       (sameColorSetPairs color).card :=
-  (sum_link_diagonals_le_sameColorPairs hT h).trans
-    (sameColorPairs_card_le_sameColorSetPairs color)
+  (sum_link_diagonals_le_same_color_pairs hT h).trans
+    (same_color_pairs_card_le_same_color_set_pairs color)
 
 omit [Fintype α] [DecidableEq α] in
 theorem RainbowTripleSystem.mono
@@ -390,7 +390,7 @@ theorem RainbowTripleSystem.mono
   exact hT E (hST hE)
 
 /-- Used pairs of a rainbow triple system cross two different classes. -/
-theorem usedPairs_subset_crossColorSetPairs
+theorem used_pairs_subset_cross_color_set_pairs
     {T : Family α} {color : α → Fin 3}
     (h : RainbowTripleSystem T color) :
     Rank3.usedPairs T Finset.univ ⊆
@@ -408,7 +408,7 @@ theorem usedPairs_subset_crossColorSetPairs
 
 /-- Supported common-link cells of a rainbow triple system are
 within one color class. -/
-theorem usedCells_subset_sameColorSetPairs
+theorem used_cells_subset_same_color_set_pairs
     {T : Family α} {color : α → Fin 3}
     (h : RainbowTripleSystem T color) :
     Rank3.usedCells T Finset.univ ⊆
@@ -447,30 +447,30 @@ theorem rainbow_triple_count
   let T₀ := cleanTripleSystem T
   have hBudget : T.card ≤ T₀.card +
       ∑ z : α, (graphDiagonals (tripleLinkGraph T z)).card :=
-    cleanTripleSystem_card_budget T
+    clean_triple_system_card_budget T
   have hD : (∑ z : α,
       (graphDiagonals (tripleLinkGraph T z)).card) ≤
       (sameColorSetPairs color).card :=
-    sum_link_diagonals_le_sameColorSetPairs hT h
+    sum_link_diagonals_le_same_color_set_pairs hT h
   have hSupport : 3 * T₀.card ≤
       (Rank3.usedPairs T₀ Finset.univ).card +
         (Rank3.usedCells T₀ Finset.univ).card :=
-    cleanTripleSystem_support_bound T hT h.uniform
+    clean_triple_system_support_bound T hT h.uniform
   have hRainbowClean : RainbowTripleSystem T₀ color :=
     h.mono Finset.sdiff_subset
   have hPairs : (Rank3.usedPairs T₀ Finset.univ).card ≤
       (crossColorSetPairs color).card :=
-    Finset.card_le_card (usedPairs_subset_crossColorSetPairs hRainbowClean)
+    Finset.card_le_card (used_pairs_subset_cross_color_set_pairs hRainbowClean)
   have hCells : (Rank3.usedCells T₀ Finset.univ).card ≤
       (sameColorSetPairs color).card :=
-    Finset.card_le_card (usedCells_subset_sameColorSetPairs hRainbowClean)
+    Finset.card_le_card (used_cells_subset_same_color_set_pairs hRainbowClean)
   omega
 
 /-- A color class in the finite ambient vertex type. -/
 def colorClass (color : α → Fin 3) (i : Fin 3) : Finset α :=
   Finset.univ.filter fun x => color x = i
 
-theorem sameColorSetPairs_subset_class_pairs
+theorem same_color_set_pairs_subset_class_pairs
     (color : α → Fin 3) :
     sameColorSetPairs color ⊆
       (Finset.univ : Finset (Fin 3)).biUnion
@@ -487,7 +487,7 @@ theorem sameColorSetPairs_subset_class_pairs
     · simp [colorClass, hcol.symm]
   · exact (Finset.mem_powersetCard.mp hp2).2
 
-theorem sameColorSetPairs_card_le_three_choose_two
+theorem same_color_set_pairs_card_le_three_choose_two
     (color : α → Fin 3) (n : ℕ)
     (hclass : ∀ i : Fin 3, (colorClass color i).card ≤ n) :
     (sameColorSetPairs color).card ≤ 3 * n.choose 2 := by
@@ -495,7 +495,7 @@ theorem sameColorSetPairs_card_le_three_choose_two
     (sameColorSetPairs color).card ≤
         ((Finset.univ : Finset (Fin 3)).biUnion
           (fun i => (colorClass color i).powersetCard 2)).card :=
-      Finset.card_le_card (sameColorSetPairs_subset_class_pairs color)
+      Finset.card_le_card (same_color_set_pairs_subset_class_pairs color)
     _ ≤ ∑ i : Fin 3, ((colorClass color i).powersetCard 2).card :=
       Finset.card_biUnion_le
     _ = ∑ i : Fin 3, (colorClass color i).card.choose 2 := by
@@ -511,7 +511,7 @@ theorem sameColorSetPairs_card_le_three_choose_two
 private def orderedColorPairs : Finset (Fin 3 × Fin 3) :=
   Finset.univ.filter fun ij => ij.1 < ij.2
 
-private theorem orderedColorPairs_card : orderedColorPairs.card = 3 := by
+private theorem ordered_color_pairs_card : orderedColorPairs.card = 3 := by
   decide
 
 private def crossPairFamily (color : α → Fin 3)
@@ -519,7 +519,7 @@ private def crossPairFamily (color : α → Fin 3)
   ((colorClass color i).product (colorClass color j)).image
     (fun xy => ({xy.1, xy.2} : Edge α))
 
-theorem crossColorSetPairs_subset_class_products
+theorem cross_color_set_pairs_subset_class_products
     (color : α → Fin 3) :
     crossColorSetPairs color ⊆
       orderedColorPairs.biUnion
@@ -543,7 +543,7 @@ theorem crossColorSetPairs_subset_class_products
           ⟨by simp [colorClass], by simp [colorClass]⟩
       · exact Finset.pair_comm y x
 
-theorem crossColorSetPairs_card_le_three_square
+theorem cross_color_set_pairs_card_le_three_square
     (color : α → Fin 3) (n : ℕ)
     (hclass : ∀ i : Fin 3, (colorClass color i).card ≤ n) :
     (crossColorSetPairs color).card ≤ 3 * n ^ 2 := by
@@ -562,13 +562,13 @@ theorem crossColorSetPairs_card_le_three_square
     (crossColorSetPairs color).card ≤
         (orderedColorPairs.biUnion
           (fun ij => crossPairFamily color ij.1 ij.2)).card :=
-      Finset.card_le_card (crossColorSetPairs_subset_class_products color)
+      Finset.card_le_card (cross_color_set_pairs_subset_class_products color)
     _ ≤ ∑ ij ∈ orderedColorPairs,
           (crossPairFamily color ij.1 ij.2).card :=
       Finset.card_biUnion_le
     _ ≤ ∑ _ij ∈ orderedColorPairs, n ^ 2 :=
       Finset.sum_le_sum hEach
-    _ = 3 * n ^ 2 := by simp [orderedColorPairs_card]
+    _ = 3 * n ^ 2 := by simp [ordered_color_pairs_card]
 
 private theorem two_mul_choose_two_le_square (n : ℕ) :
     2 * n.choose 2 ≤ n ^ 2 := by
@@ -587,9 +587,9 @@ theorem rainbow_triple_card_le_three_square
     (hclass : ∀ i : Fin 3, (colorClass color i).card ≤ n) :
     T.card ≤ 3 * n ^ 2 := by
   have hMain := rainbow_triple_count hT h
-  have hCross := crossColorSetPairs_card_le_three_square
+  have hCross := cross_color_set_pairs_card_le_three_square
     color n hclass
-  have hSame := sameColorSetPairs_card_le_three_choose_two
+  have hSame := same_color_set_pairs_card_le_three_choose_two
     color n hclass
   have hChoose := two_mul_choose_two_le_square n
   omega

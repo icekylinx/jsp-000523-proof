@@ -85,7 +85,7 @@ noncomputable instance fixedCenterPairNodeGraphDecidableRel
 omit [Fintype α] in
 /-- A proper link coloring makes each color class a matching of actual pair
 roots: distinct same-color nodes are disjoint. -/
-theorem fixedCenter_color_class_matching
+theorem fixed_center_color_class_matching
     (Q : Family α) (V : Edge α) (x : α)
     (color : fixedCenterPairNodes Q V x → ℕ)
     (hProper : ∀ P R : fixedCenterPairNodes Q V x,
@@ -99,7 +99,7 @@ theorem fixedCenter_color_class_matching
 omit [Fintype α] in
 /-- A rectangle between two pair-node color classes is an actual forbidden
 two-versus-two trade. -/
-theorem fixedCenter_pairNode_rectangle_forbidden
+theorem fixed_center_pair_node_rectangle_forbidden
     (F Q : Family α) (V : Edge α) (x : α)
     (color : fixedCenterPairNodes Q V x → ℕ) (i j : ℕ)
     (hProper : ∀ P R : fixedCenterPairNodes Q V x,
@@ -119,17 +119,17 @@ theorem fixedCenter_pairNode_rectangle_forbidden
     have hcard := (Finset.mem_powersetCard.mp hmem).2
     exact Finset.card_pos.mp (by omega)
   have hPRdisj : Disjoint P.1.1 R.1.1 :=
-    fixedCenter_color_class_matching Q V x color hProper
+    fixed_center_color_class_matching Q V x color hProper
       (P := P.1) (R := R.1) P.2 R.2 hPR
   have hQSdisj : Disjoint Q'.1.1 S.1.1 :=
-    fixedCenter_color_class_matching Q V x color hProper
+    fixed_center_color_class_matching Q V x color hProper
       (P := Q'.1) (R := S.1) Q'.2 S.2 hQS
   exact disjoint_pair_cycle_forbidden hPNe hPR hQS hPRdisj hPQ hPS hRQ hRS hQSdisj
     hEPQ hERS hEPS hERQ hAdmissible
 
 omit [Fintype α] in
 /-- Every fixed pair of colors gives a C4-free pair-node graph. -/
-theorem fixedCenterPairNodeGraph_fourCycleFree
+theorem fixed_center_pair_node_graph_four_cycle_free
     (F Q : Family α) (V : Edge α) (x : α)
     (color : fixedCenterPairNodes Q V x → ℕ) (i j : ℕ)
     (hProper : ∀ P R : fixedCenterPairNodes Q V x,
@@ -178,7 +178,7 @@ theorem fixedCenterPairNodeGraph_fourCycleFree
           change Disjoint R.1.1 Q'.1.1 ∧ R.1.1 ∪ Q'.1.1 ∈ F at hBC
           change Disjoint P.1.1 S.1.1 ∧ P.1.1 ∪ S.1.1 ∈ F at hAD
           change Disjoint R.1.1 S.1.1 ∧ R.1.1 ∪ S.1.1 ∈ F at hBD
-          exact fixedCenter_pairNode_rectangle_forbidden F Q V x color i j
+          exact fixed_center_pair_node_rectangle_forbidden F Q V x color i j
             hProper hAdmissible P R Q' S hPR hQS
             hAC.1 hAD.1 hBC.1 hBD.1 hAC.2 hBD.2 hAD.2 hBC.2
     | inr Q' =>
@@ -216,14 +216,14 @@ theorem fixedCenterPairNodeGraph_fourCycleFree
           have hBD' : Disjoint R.1.1 S.1.1 ∧
               R.1.1 ∪ S.1.1 ∈ F := by
             exact ⟨hBD.1.symm, by simpa [Finset.union_comm] using hBD.2⟩
-          exact fixedCenter_pairNode_rectangle_forbidden F Q V x color i j
+          exact fixed_center_pair_node_rectangle_forbidden F Q V x color i j
             hProper hAdmissible P R Q' S hPR hQS
             hAC'.1 hBC'.1 hAD'.1 hBD'.1 hAC'.2 hBD'.2 hBC'.2 hAD'.2
 
 omit [Fintype α] in
 /-- The existing finite C4 bound applies directly to each actual fixed-x,
 fixed-color pair-node graph. -/
-theorem fixedCenterPairNodeGraph_edge_bound
+theorem fixed_center_pair_node_graph_edge_bound
     (F Q : Family α) (V : Edge α) (x : α)
     (color : fixedCenterPairNodes Q V x → ℕ) (i j : ℕ)
     (hProper : ∀ P R : fixedCenterPairNodes Q V x,
@@ -236,8 +236,8 @@ theorem fixedCenterPairNodeGraph_edge_bound
         (Fintype.card (Sum
           {P : fixedCenterPairNodes Q V x // color P = i}
           {P : fixedCenterPairNodes Q V x // color P = j}) : ℝ) / 2) / 2 := by
-  exact fourCycleFree_edge_sqrt_bound _
-    (fixedCenterPairNodeGraph_fourCycleFree F Q V x color i j
+  exact four_cycle_free_edge_sqrt_bound _
+    (fixed_center_pair_node_graph_four_cycle_free F Q V x color i j
       hProper hAdmissible)
 
 /-- Actual four-edges represented by a disjoint pair of Q-link pair nodes.
@@ -250,7 +250,7 @@ noncomputable def fixedCenterPairNodeDeletion
 
 omit [Fintype α] in
 /-- The fixed-center represented-edge deletion is an actual subfamily. -/
-theorem fixedCenterPairNodeDeletion_subset
+theorem fixed_center_pair_node_deletion_subset
     (F Q : Family α) (V : Edge α) (x : α) :
     fixedCenterPairNodeDeletion F Q V x ⊆ F := by
   intro E hE

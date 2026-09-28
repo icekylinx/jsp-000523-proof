@@ -117,10 +117,10 @@ theorem charge_lt_one_of_double_receiver
     have heq : commonLink H V ({z, v} : Edge α) =
         orientedCommonLink H V z v := by
       ext p
-      exact mem_commonLink_pair_iff_oriented H V hzv p
+      exact mem_common_link_pair_iff_oriented H V hzv p
     rw [← heq]
     exact hdouble
-  have hweight := rootedSignedWeight_lt_one_of_double_receiving_link
+  have hweight := rooted_signed_weight_lt_one_of_double_receiving_link
     hH hzV hvV hzv hxy hsourceLink hdoubleOrient
   have hpositive : positiveRootedWeight H V z x y < 1 := by
     by_cases hw : rootedSignedWeight H V z x y ≤ 0

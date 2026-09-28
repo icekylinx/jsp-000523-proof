@@ -105,7 +105,7 @@ theorem other_receiving_pairs_covered_by_weak_alternatives
   · have hxuLink : ({x, u} : Edge α) ∈ orientedCommonLink H V z v := by
       rw [← hpair]
       exact hpLink
-    have huWeak := second_book_pair_mem_weakRightAlternatives
+    have huWeak := second_book_pair_mem_weak_right_alternatives
       hH hzV hvV hzv hxy hxu hyu hsource hxuLink
     apply Finset.mem_union.mpr
     left
@@ -117,7 +117,7 @@ theorem other_receiving_pairs_covered_by_weak_alternatives
       rw [← hpair]
       exact hpLink
     have huWeak : u ∈ weakRightAlternatives H V z y x :=
-      second_book_pair_mem_weakRightAlternatives
+      second_book_pair_mem_weak_right_alternatives
         hH hzV hvV hzv (Ne.symm hxy) hyu hxu hyxSource hyuLink
     have huWeakLeft : u ∈ weakLeftAlternatives H V z x y := huWeak
     apply Finset.mem_union.mpr
@@ -155,7 +155,7 @@ theorem two_weak_alternatives_of_large_receiving_link
 
 /-- A receiving cell with at least three base pairs cannot receive a
     positive signed weight from any of its source edges. -/
-theorem rootedSignedWeight_nonpos_of_large_receiving_link
+theorem rooted_signed_weight_nonpos_of_large_receiving_link
     {H : Family α} {V : Edge α} {z v x y : α}
     (hH : Admissible H)
     (hzV : z ∈ V) (hvV : v ∈ V)
@@ -165,12 +165,12 @@ theorem rootedSignedWeight_nonpos_of_large_receiving_link
     rootedSignedWeight H V z x y ≤ 0 := by
   have htwo := two_weak_alternatives_of_large_receiving_link
     hH hzV hvV hzv hxy hsource hlarge
-  exact rootedSignedWeight_nonpos_of_two_weak_alternatives H V
-    (orientedCommonLink_pair_mem_rootLink H V hsource) hxy htwo
+  exact rooted_signed_weight_nonpos_of_two_weak_alternatives H V
+    (oriented_common_link_pair_mem_root_link H V hsource) hxy htwo
 
 /-- A two-base-pair receiving common link supplies one weak alternative,
     so each source weight aimed at that cell is strictly below one. -/
-theorem rootedSignedWeight_lt_one_of_double_receiving_link
+theorem rooted_signed_weight_lt_one_of_double_receiving_link
     {H : Family α} {V : Edge α} {z v x y : α}
     (hH : Admissible H)
     (hzV : z ∈ V) (hvV : v ∈ V)
@@ -195,8 +195,8 @@ theorem rootedSignedWeight_lt_one_of_double_receiving_link
     · obtain ⟨u, hu, _⟩ := Finset.mem_image.mp hleft
       have hpos := Finset.card_pos.mpr ⟨u, hu⟩
       omega
-  exact rootedSignedWeight_lt_one_of_weak_alternative H V
-    (orientedCommonLink_pair_mem_rootLink H V hsource) hxy hcount
+  exact rooted_signed_weight_lt_one_of_weak_alternative H V
+    (oriented_common_link_pair_mem_root_link H V hsource) hxy hcount
 
 /-- A second completion vertex of a rooted source pair makes that pair a
     base pair in the common link of the two completion vertices. -/
@@ -234,10 +234,10 @@ theorem positive_source_receiving_link_card_le_two
       (orientedCommonLink H V z v).card := by
     congr 1
     ext p
-    exact mem_commonLink_pair_iff_oriented H V hzv p
+    exact mem_common_link_pair_iff_oriented H V hzv p
   by_contra h
   have hlarge : 3 ≤ (orientedCommonLink H V z v).card := by omega
-  have hnonpos := rootedSignedWeight_nonpos_of_large_receiving_link
+  have hnonpos := rooted_signed_weight_nonpos_of_large_receiving_link
     hH hzV hvV hzv hxy hsourceLink hlarge
   linarith
 

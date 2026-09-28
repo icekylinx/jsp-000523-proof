@@ -70,7 +70,7 @@ noncomputable def chosenDirtyCode (B₀ Bad : Family α) [Fintype α]
 
 /-- The charging code is injective: graph codes determine the union edge,
 and root-only codes are unique by the nonbad-tail lemma. -/
-theorem chosenDirtyCode_injective
+theorem chosen_dirty_code_injective
     {B₀ Bad : Family α} [Fintype α]
     (hBadUniform : Uniform 2 Bad)
     (hRootUnique : ∀ ⦃P E F : Edge α⦄, P ∈ Bad → E ∈ B₀ → F ∈ B₀ →
@@ -161,7 +161,7 @@ theorem chosenDirtyCode_injective
 
 /-- The actual finite charging inequality of (III.C.6), before applying the
 C₄ extremal estimate. -/
-theorem badPairDirtyEdges_card_le
+theorem bad_pair_dirty_edges_card_le
     {B₀ Bad : Family α} [Fintype α]
     (hBadUniform : Uniform 2 Bad)
     (hRootUnique : ∀ ⦃P E F : Edge α⦄, P ∈ Bad → E ∈ B₀ → F ∈ B₀ →
@@ -178,7 +178,7 @@ theorem badPairDirtyEdges_card_le
           simp only [Fintype.card_coe]
     _ ≤ Fintype.card (Sum V ECode) :=
       Fintype.card_le_of_injective (chosenDirtyCode B₀ Bad hBadUniform)
-        (chosenDirtyCode_injective hBadUniform hRootUnique)
+        (chosen_dirty_code_injective hBadUniform hRootUnique)
     _ = Bad.card + G.edgeFinset.card := by
       have hV : Fintype.card V = Bad.card := by
         change Fintype.card {P : Edge α // P ∈ Bad} = Bad.card
@@ -217,7 +217,7 @@ theorem near_star_actual_dirty_edge_bound_of_root_unique
           (nearStarOrdinaryOutsideEdges H W v)).edgeFinset.card := by
   classical
   simpa [nearStarDirtyOutsideEdges, badPairDirtyEdges] using
-    (badPairDirtyEdges_card_le hBadUniform hRootUnique)
+    (bad_pair_dirty_edges_card_le hBadUniform hRootUnique)
 
 /-- At a fixed bad-pair root, there is at most one ordinary outside edge
 whose complementary pair is nonexceptional. -/
@@ -238,7 +238,7 @@ theorem near_star_bad_root_has_unique_nondirty_completion
       X ⊆ W \ badSingletonVertices H W v 4 := by
     intro X hX
     exact (Finset.mem_filter.mp hX).2
-  have hNoTriple := noTripleOverlap_of_ordinary_unique_completion
+  have hNoTriple := no_triple_overlap_of_ordinary_unique_completion
     hH hUniform hOrdH hOrdU Finset.Subset.rfl hvW
   have hPcard : P.card = 2 := by
     exact (Finset.mem_powersetCard.mp (Finset.mem_filter.mp hP).1).2
@@ -304,7 +304,7 @@ theorem near_star_actual_dirty_edge_bound
 /-- The complete III.C.6 count for `B₀`: charge single-root dirty edges to
 their root, the remaining dirty edges to `G`, and the clean family by
 opposite-facet incidence. -/
-theorem near_star_outside_B₀_bound
+theorem near_star_outside_b_0_bound
     {H : Family α} {W : Edge α} {v : α} [Fintype α]
     (hH : Admissible H) (hUniform : Uniform 4 H) (hvW : v ∉ W) :
     ((nearStarOrdinaryOutsideEdges H W v).card : ℝ) ≤
@@ -363,7 +363,7 @@ theorem near_star_outside_refined_244
   have hB₀eq : nearStarOrdinaryOutsideEdges H W v = outsideEdges H W := by
     ext E
     simp [nearStarOrdinaryOutsideEdges, outsideEdges, hDset]
-  have hbound := near_star_outside_B₀_bound hH hUniform hvW
+  have hbound := near_star_outside_b_0_bound hH hUniform hvW
   have hbound' : ((outsideEdges H W).card : ℝ) ≤
       ((W.card : ℝ) + (missingStarTriples H W v).card) / 4 +
         (5 * (nearStarBadPairs H W v).card : ℝ) / 4 +

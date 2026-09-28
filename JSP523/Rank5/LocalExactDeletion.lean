@@ -592,7 +592,7 @@ theorem higher_bad_set_stratum_deletion_bound
         (missingStarFacets H W v r).card / Λ) *
         (if k ≤ r - k then W.card.choose (r - k - k + 1) else 1) := by
   let Bad := badMissingSets H W v r k Λ
-  have hInc := badMissingSets_card_bound H W v r k Λ
+  have hInc := bad_missing_sets_card_bound H W v r k Λ
   have hBadCount : Bad.card ≤
       (2 * (r - 1).choose k *
         (missingStarFacets H W v r).card) / Λ := by
@@ -651,7 +651,7 @@ theorem all_higher_bad_set_strata_deletion_bound
     fun k => if k ≤ r - k then W.card.choose (r - k - k + 1) else 1
   have hBad : ∀ k ∈ K, (Bad k).card ≤ A k := by
     intro k hk
-    have hInc := badMissingSets_card_bound H W v r k (Λ k)
+    have hInc := bad_missing_sets_card_bound H W v r k (Λ k)
     change (badMissingSets H W v r k (Λ k)).card ≤ A k
     apply (Nat.le_div_iff_mul_le (hLambda k hk)).2
     calc

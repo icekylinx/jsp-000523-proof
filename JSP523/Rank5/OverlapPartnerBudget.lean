@@ -32,7 +32,7 @@ theorem parent_link_roots_containing_vertex_le_codegree
   apply Finset.card_le_card_of_injOn f
   · intro T hT
     obtain ⟨hLink, haT⟩ := Finset.mem_filter.mp hT
-    have hParts := mem_parentPairLink.mp hLink
+    have hParts := mem_parent_pair_link.mp hLink
     apply Finset.mem_filter.mpr
     refine ⟨hParts.2.2.2, ?_⟩
     intro x hx
@@ -42,9 +42,9 @@ theorem parent_link_roots_containing_vertex_le_codegree
       exact Finset.mem_union_right B (hxa ▸ haT)
   · intro T hT U hU hEq
     have hTdisj : Disjoint B T :=
-      (mem_parentPairLink.mp (Finset.mem_filter.mp hT).1).2.2.1.symm
+      (mem_parent_pair_link.mp (Finset.mem_filter.mp hT).1).2.2.1.symm
     have hUdisj : Disjoint B U :=
-      (mem_parentPairLink.mp (Finset.mem_filter.mp hU).1).2.2.1.symm
+      (mem_parent_pair_link.mp (Finset.mem_filter.mp hU).1).2.2.1.symm
     calc
       T = (B ∪ T) \ B := (Finset.union_sdiff_cancel_left hTdisj).symm
       _ = (B ∪ U) \ B := congrArg (· \ B) hEq
@@ -103,6 +103,48 @@ theorem bad_facet_parent_card_le_overlapping_partner_sum
     (fun _ R T => Disjoint R T) (by intros; assumption)
   simpa [overlappingParentPartners, badParentPartners] using h
 
+/-- Exact three-core incidence count for an ambient five-uniform parent. -/
+theorem total_three_core_parent_degrees_eq_ten_edges
+    (H : Family α) (V : Edge α)
+    (hUniform : Uniform 5 H)
+    (hAmbient : ∀ E ∈ H, E ⊆ V) :
+    (∑ B ∈ V.powersetCard 3,
+        (H.filter fun E => B ⊆ E).card) = 10 * H.card := by
+  classical
+  calc
+    (∑ B ∈ V.powersetCard 3,
+        (H.filter fun E => B ⊆ E).card) =
+        ∑ B ∈ V.powersetCard 3,
+          ∑ E ∈ H, if B ⊆ E then (1 : ℕ) else 0 := by
+      apply Finset.sum_congr rfl
+      intro B hB
+      exact Finset.card_filter (fun E : Edge α => B ⊆ E) H
+    _ = ∑ E ∈ H, ∑ B ∈ V.powersetCard 3,
+          if B ⊆ E then (1 : ℕ) else 0 := Finset.sum_comm
+    _ = ∑ E ∈ H, (E.powersetCard 3).card := by
+      apply Finset.sum_congr rfl
+      intro E hE
+      calc
+        (∑ B ∈ V.powersetCard 3,
+            if B ⊆ E then (1 : ℕ) else 0) =
+            ((V.powersetCard 3).filter fun B => B ⊆ E).card :=
+          (Finset.card_filter (fun B : Edge α => B ⊆ E) _).symm
+        _ = (E.powersetCard 3).card := by
+          congr 1
+          ext B
+          simp only [Finset.mem_filter, Finset.mem_powersetCard]
+          constructor
+          · rintro ⟨⟨_, hCard⟩, hBE⟩
+            exact ⟨hBE, hCard⟩
+          · rintro ⟨hBE, hCard⟩
+            exact ⟨⟨hBE.trans (hAmbient E hE), hCard⟩, hBE⟩
+    _ = ∑ _E ∈ H, 10 := by
+      apply Finset.sum_congr rfl
+      intro E hE
+      rw [Finset.card_powersetCard, hUniform hE]
+      decide
+    _ = 10 * H.card := by simp [mul_comm]
+
 /-- Each actual five-edge has ten three-cores.  Summing all parent pair-link
     sizes over occurring three-cores counts no more than these incidences. -/
 theorem total_three_core_parent_pair_links_le_ten_edges
@@ -112,42 +154,8 @@ theorem total_three_core_parent_pair_links_le_ten_edges
     (∑ B ∈ V.powersetCard 3, (parentPairLink H V B).card) ≤
       10 * H.card := by
   classical
-  have hCodegreeSum :
-      (∑ B ∈ V.powersetCard 3,
-        (H.filter fun E => B ⊆ E).card) = 10 * H.card := by
-    calc
-      (∑ B ∈ V.powersetCard 3,
-          (H.filter fun E => B ⊆ E).card) =
-          ∑ B ∈ V.powersetCard 3,
-            ∑ E ∈ H, if B ⊆ E then (1 : ℕ) else 0 := by
-        apply Finset.sum_congr rfl
-        intro B hB
-        exact Finset.card_filter (fun E : Edge α => B ⊆ E) H
-      _ = ∑ E ∈ H, ∑ B ∈ V.powersetCard 3,
-            if B ⊆ E then (1 : ℕ) else 0 := Finset.sum_comm
-      _ = ∑ E ∈ H, (E.powersetCard 3).card := by
-        apply Finset.sum_congr rfl
-        intro E hE
-        calc
-          (∑ B ∈ V.powersetCard 3,
-              if B ⊆ E then (1 : ℕ) else 0) =
-              ((V.powersetCard 3).filter fun B => B ⊆ E).card :=
-            (Finset.card_filter (fun B : Edge α => B ⊆ E) _).symm
-          _ = (E.powersetCard 3).card := by
-            congr 1
-            ext B
-            simp only [Finset.mem_filter, Finset.mem_powersetCard]
-            constructor
-            · rintro ⟨⟨_, hCard⟩, hBE⟩
-              exact ⟨hBE, hCard⟩
-            · rintro ⟨hBE, hCard⟩
-              exact ⟨⟨hBE.trans (hAmbient E hE), hCard⟩, hBE⟩
-      _ = ∑ _E ∈ H, 10 := by
-        apply Finset.sum_congr rfl
-        intro E hE
-        rw [Finset.card_powersetCard, hUniform hE]
-        decide
-      _ = 10 * H.card := by simp [mul_comm]
+  have hCodegreeSum := total_three_core_parent_degrees_eq_ten_edges
+    H V hUniform hAmbient
   calc
     (∑ B ∈ V.powersetCard 3, (parentPairLink H V B).card) ≤
         ∑ B ∈ V.powersetCard 3,
@@ -175,7 +183,7 @@ theorem overlapping_partner_incidence_sum_le_four_codegree_budget
         (overlappingParentPartners H V B R).card ≤ 2 * D₄ := by
     intro B hB R hR
     have hBcard := (Finset.mem_powersetCard.mp hB).2
-    have hParts := mem_parentPairLink.mp hR
+    have hParts := mem_parent_pair_link.mp hR
     have hCap : ∀ a ∈ R,
         (H.filter fun E => B ∪ {a} ⊆ E).card ≤ D₄ := by
       intro a haR

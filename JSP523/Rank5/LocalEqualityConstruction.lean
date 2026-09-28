@@ -56,7 +56,7 @@ theorem complete_star_plus_matching_admissible
     (hAvoid : ∀ E ∈ M, v ∉ E) :
     Admissible (starFamily v r ∪ M) := by
   simpa only [starPlusMatching] using
-    starPlusMatching_admissible hr hMU hMatch hAvoid
+    star_plus_matching_admissible hr hMU hMatch hAvoid
 
 
 /-- The complete rank-r star is parametrized without repetition by its
@@ -125,7 +125,7 @@ theorem complete_star_plus_matching_extremal
     · simp
   have hAdmissible : Admissible H := by
     change Admissible (starFamily v r ∪ M)
-    exact starPlusMatching_admissible hr hMU hMatch hAvoid
+    exact star_plus_matching_admissible hr hMU hMatch hAvoid
   have hDisj : Disjoint (starFamily v r) M := by
     apply Finset.disjoint_left.mpr
     intro E hStar hM

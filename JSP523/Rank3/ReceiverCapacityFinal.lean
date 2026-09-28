@@ -22,7 +22,7 @@ noncomputable def reciprocalNonregularDoubleCells
   exact (doubleLinkCells H V).filter
     (fun q => reciprocalCellMap H V q ∉ doubleLinkCells H V)
 
-theorem reciprocalNonregularDoubleCells_subset
+theorem reciprocal_nonregular_double_cells_subset
     (H : Family α) (V : Edge α) :
     reciprocalNonregularDoubleCells H V ⊆ doubleLinkCells H V := by
   intro q hq
@@ -64,8 +64,8 @@ theorem reciprocal_nonregular_card_ge_three
     3 ≤ (commonLink H V (reciprocalCellMap H V q)).card := by
   have hdouble := (Finset.mem_filter.mp hq).1
   have hnotDouble := (Finset.mem_filter.mp hq).2
-  have htwo := reciprocalCellMap_card_ge_two_of_double hH hdouble
-  have hused := reciprocalCellMap_mem_usedCells_of_double hH hdouble
+  have htwo := reciprocal_cell_map_card_ge_two_of_double hH hdouble
+  have hused := reciprocal_cell_map_mem_used_cells_of_double hH hdouble
   have hnotTwo : (commonLink H V (reciprocalCellMap H V q)).card ≠ 2 := by
     intro hcard
     exact hnotDouble (Finset.mem_filter.mpr ⟨hused, hcard⟩)
@@ -73,7 +73,7 @@ theorem reciprocal_nonregular_card_ge_three
 
 /-- The nonregular c=2 cells cost two each plus the exceptional excess
 already recorded in the actual Xi ledger. -/
-theorem nonregular_double_cell_sum_le_two_card_add_Xi
+theorem nonregular_double_cell_sum_le_two_card_add_xi
     (H : Family α) (V : Edge α) (hH : Admissible H)
     (hLarge : ∀ q ∈ reciprocalNonregularDoubleCells H V,
       3 ≤ (commonLink H V (reciprocalCellMap H V q)).card) :
@@ -88,7 +88,7 @@ theorem nonregular_double_cell_sum_le_two_card_add_Xi
         2 + actualTriangleExcess H V q := by
     apply actual_double_cell_charge_le_two_add_excess
     intro hordinary
-    have hdouble := reciprocalNonregularDoubleCells_subset H V hq
+    have hdouble := reciprocal_nonregular_double_cells_subset H V hq
     exact ordinary_double_cell_large_reciprocal_le_two
       hH hdouble (hLarge q hq) hordinary
   have hSum : (∑ q ∈ N, actualCellChargeForPair H V q) ≤
@@ -102,12 +102,12 @@ theorem nonregular_double_cell_sum_le_two_card_add_Xi
         simp [Finset.sum_add_distrib]
         ring
   have hSub : N ⊆ usedCells H V := by
-    exact (reciprocalNonregularDoubleCells_subset H V).trans
+    exact (reciprocal_nonregular_double_cells_subset H V).trans
       (Finset.filter_subset _ _)
   have hExcess : (∑ q ∈ N, actualTriangleExcess H V q) ≤ actualXi H V := by
-    rw [actualXi_eq_sum_triangle_excess]
+    rw [actual_xi_eq_sum_triangle_excess]
     exact Finset.sum_le_sum_of_subset_of_nonneg hSub
-      (fun q _ _ => actualTriangleExcess_nonneg H V q)
+      (fun q _ _ => actual_triangle_excess_nonneg H V q)
   linarith
 
 /-- The completed finite sum step from local reciprocal geometry to the
@@ -127,7 +127,7 @@ theorem incoming_charge_le_capacity_of_reciprocal_bounds
   have hIncoming := incoming_charge_eq_cell_charge_sum H V
   have hSingleton := actual_cell_singleton_sum_le H V
   have hZero := actual_cell_threeplus_sum_eq_zero H V hH
-  have hDouble := nonregular_double_cell_sum_le_two_card_add_Xi
+  have hDouble := nonregular_double_cell_sum_le_two_card_add_xi
     H V hH hLarge
   have hSplit := double_cell_charge_sum_regular_nonregular H V
   have hCard := double_cell_card_regular_nonregular H V

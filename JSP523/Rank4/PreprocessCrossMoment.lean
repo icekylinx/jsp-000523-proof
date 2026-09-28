@@ -44,7 +44,7 @@ def linkPairDegree (L : Family α) (P : Edge α) : ℕ :=
 
 /-- Pair degree is exactly the number of actual completion vertices.  The
 cardinality hypotheses make the representation `T = insert x P` unique. -/
-theorem starLinkPairDegree_eq_completion_card
+theorem star_link_pair_degree_eq_completion_card
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     (L : ι → Family α) (i : ι) (V P : Edge α)
     (hP : P ∈ V.powersetCard 2)
@@ -185,13 +185,13 @@ theorem link_cross_moment_reindex
         (linkCrossCompletionPairGraph L M V x y).card := hKcard
 
 /-- Convert the completion count back to the actual pair degree. -/
-theorem linkPairDegree_eq_completion_card
+theorem link_pair_degree_eq_completion_card
     (L : Family α) (V P : Edge α) (hP : P ∈ V.powersetCard 2)
     (hGround : ∀ T ∈ L, T ∈ V.powersetCard 3) :
     linkPairDegree L P = (starLinkCompletions L V P).card := by
   classical
   let L' : Unit → Family α := fun _ => L
-  have h := starLinkPairDegree_eq_completion_card L' () V P hP (by
+  have h := star_link_pair_degree_eq_completion_card L' () V P hP (by
     intro T hT
     exact hGround T hT)
   simpa [linkPairDegree, starLinkPairDegree, L'] using h
@@ -372,8 +372,8 @@ theorem link_cross_moment_exact
             (starLinkCompletions M V P).card := by
               apply Finset.sum_congr rfl
               intro P hP
-              rw [linkPairDegree_eq_completion_card L V P hP hL,
-                linkPairDegree_eq_completion_card M V P hP hM]
+              rw [link_pair_degree_eq_completion_card L V P hP hL,
+                link_pair_degree_eq_completion_card M V P hP hM]
       _ = _ := link_cross_moment_reindex L M V
   calc
     _ = ∑ x ∈ V, ∑ y ∈ V,
@@ -800,7 +800,7 @@ theorem rank_four_star_owner_cleaning_loss_sq_bound
   have hOwnerMax : ∀ P ∈ V.powersetCard 2, ∀ i,
       starLinkPairDegree L i P ≤ starLinkPairDegree L (maximumDegreePairOwner L P) P := by
     intro P hP i
-    exact maximumDegreePairOwner_spec L P i
+    exact maximum_degree_pair_owner_spec L P i
   have hMoment : ∀ i j, i ≠ j →
       (∑ P ∈ V.powersetCard 2,
         starLinkPairDegree L i P * starLinkPairDegree L j P) ≤

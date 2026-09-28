@@ -141,7 +141,7 @@ theorem parent_star_pair_label_in_pair
       · exact hcb h
     · exact (Finset.disjoint_left.mp hPdisj) hyP hyAB
   have hStar : insert c P ∈ commonTripleCell H V a b := by
-    apply mem_commonTripleCell.mpr
+    apply mem_common_triple_cell.mpr
     refine ⟨hCsub, hCcard, hCdisj, ?_, ?_⟩
     · simpa only [Finset.insert_comm] using hAP
     · simpa only [Finset.insert_comm] using hBP
@@ -318,7 +318,7 @@ theorem cleaned_star_link_common_multiplicity_le_one
 
 /-- The unrestricted pair shadow agrees with the ground-set version used by
 pair-owner cleaning when every layer triple lies in the ground set. -/
-theorem starLayerPairShadow_eq_starLinkPairShadow
+theorem star_layer_pair_shadow_eq_star_link_pair_shadow
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     (L : ι → Family α) (U : Edge α) (i : ι)
     (hGround : ∀ T ∈ L i, T ⊆ U) :
@@ -379,7 +379,7 @@ theorem pair_owner_cleaned_star_link_common_multiplicity_le_one
   have hShadow : ∀ c ∈ C,
       starLayerPairShadow (A c) = starLinkPairShadow A U c := by
     intro c hc
-    exact starLayerPairShadow_eq_starLinkPairShadow A U c
+    exact star_layer_pair_shadow_eq_star_link_pair_shadow A U c
       (fun Q hQ => (hCleanGround c hc Q hQ).1)
   have hDisjoint : ∀ ⦃c d : α⦄, c ∈ C → d ∈ C → c ≠ d →
       Disjoint (starLayerPairShadow (A c)) (starLayerPairShadow (A d)) := by

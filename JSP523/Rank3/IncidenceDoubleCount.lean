@@ -26,21 +26,21 @@ def completionVertices (H : Family α) (V p : Edge α) : Edge α := by
 def completionCells (H : Family α) (V p : Edge α) : Family α :=
   (completionVertices H V p).powersetCard 2
 
-theorem completionVertices_subset_ground (H : Family α) (V p : Edge α) :
+theorem completion_vertices_subset_ground (H : Family α) (V p : Edge α) :
     completionVertices H V p ⊆ V := by
   intro x hx
   exact (Finset.mem_filter.mp hx).1
 
-theorem completionCells_subset_ground (H : Family α) (V p : Edge α) :
+theorem completion_cells_subset_ground (H : Family α) (V p : Edge α) :
     completionCells H V p ⊆ V.powersetCard 2 := by
   intro q hq
   obtain ⟨hsub, hcard⟩ := Finset.mem_powersetCard.mp hq
   exact Finset.mem_powersetCard.mpr
-    ⟨hsub.trans (completionVertices_subset_ground H V p), hcard⟩
+    ⟨hsub.trans (completion_vertices_subset_ground H V p), hcard⟩
 
 /-- A cell and a base pair are incident exactly when the cell consists of
     two actual completion vertices for that base pair. -/
-theorem mem_commonLink_iff_mem_completionCells
+theorem mem_common_link_iff_mem_completion_cells
     (H : Family α) (V q p : Edge α)
     (hq : q ∈ V.powersetCard 2)
     (hp : p ∈ V.powersetCard 2) :
@@ -93,7 +93,7 @@ theorem mem_commonLink_iff_mem_completionCells
 
 /-- Every base pair in an actual common link belongs to the actual pair
     support, since at least one of its extensions is an edge. -/
-theorem commonLink_subset_usedPairs
+theorem common_link_subset_used_pairs
     (H : Family α) (V q : Edge α) :
     commonLink H V q ⊆ usedPairs H V := by
   intro p hp
@@ -106,15 +106,15 @@ theorem commonLink_subset_usedPairs
 
 /-- An actual completion cell has a nonempty common link and hence lies in
     the cell support used in the finite rank-three ledger. -/
-theorem completionCells_subset_usedCells
+theorem completion_cells_subset_used_cells
     (H : Family α) (V p : Edge α)
     (hp : p ∈ V.powersetCard 2) :
     completionCells H V p ⊆ usedCells H V := by
   intro q hq
-  have hqV := completionCells_subset_ground H V p hq
+  have hqV := completion_cells_subset_ground H V p hq
   have hpLink :=
-    (mem_commonLink_iff_mem_completionCells H V q p hqV hp).mpr hq
-  exact (mem_usedCells_iff_commonLink_nonempty H V q).mpr
+    (mem_common_link_iff_mem_completion_cells H V q p hqV hp).mpr hq
+  exact (mem_used_cells_iff_common_link_nonempty H V q).mpr
     ⟨hqV, ⟨p, hpLink⟩⟩
 
 /-- A common link indexed by any ambient cell is intersecting when `H` is
@@ -177,12 +177,12 @@ theorem actual_common_link_double_count
       apply Finset.sum_congr rfl
       intro q hq
       exact if_congr
-        (mem_commonLink_iff_mem_completionCells H V q p hq hp) rfl rfl
+        (mem_common_link_iff_mem_completion_cells H V q p hq hp) rfl rfl
     _ = ∑ p ∈ P, (completionCells H V p).card := by
       apply Finset.sum_congr rfl
       intro p _
       exact (card_subset_as_indicator_sum P (completionCells H V p)
-        (completionCells_subset_ground H V p)).symm
+        (completion_cells_subset_ground H V p)).symm
     _ = ∑ p ∈ P,
           (completionVertices H V p).card.choose 2 := by
       apply Finset.sum_congr rfl
@@ -191,7 +191,7 @@ theorem actual_common_link_double_count
 
 /-- The actual cell support is the union of completion-cell families over
     all ambient base pairs. -/
-theorem usedCells_eq_biUnion_completionCells
+theorem used_cells_eq_bi_union_completion_cells
     (H : Family α) (V : Edge α) :
     usedCells H V =
       (V.powersetCard 2).biUnion (fun p => completionCells H V p) := by
@@ -199,20 +199,20 @@ theorem usedCells_eq_biUnion_completionCells
   constructor
   · intro hq
     obtain ⟨hqV, ⟨p, hpLink⟩⟩ :=
-      (mem_usedCells_iff_commonLink_nonempty H V q).mp hq
+      (mem_used_cells_iff_common_link_nonempty H V q).mp hq
     have hpV : p ∈ V.powersetCard 2 :=
       (Finset.mem_filter.mp hpLink).1
     exact Finset.mem_biUnion.mpr
       ⟨p, hpV,
-        (mem_commonLink_iff_mem_completionCells H V q p hqV hpV).mp hpLink⟩
+        (mem_common_link_iff_mem_completion_cells H V q p hqV hpV).mp hpLink⟩
   · intro hq
     obtain ⟨p, hpV, hcell⟩ := Finset.mem_biUnion.mp hq
-    exact completionCells_subset_usedCells H V p hpV hcell
+    exact completion_cells_subset_used_cells H V p hpV hcell
 
 /-- The size of the actual cell support is bounded by the true total number
     of common-link incidences.  Cells with several base completions may be
     counted more than once on the right. -/
-theorem usedCells_card_le_common_link_incidence_count
+theorem used_cells_card_le_common_link_incidence_count
     (H : Family α) (V : Edge α) :
     (usedCells H V).card ≤
       ∑ q ∈ V.powersetCard 2, (commonLink H V q).card := by
@@ -220,7 +220,7 @@ theorem usedCells_card_le_common_link_incidence_count
     (usedCells H V).card =
         ((V.powersetCard 2).biUnion
           (fun p => completionCells H V p)).card := by
-      rw [usedCells_eq_biUnion_completionCells]
+      rw [used_cells_eq_bi_union_completion_cells]
     _ ≤ ∑ p ∈ V.powersetCard 2, (completionCells H V p).card :=
       Finset.card_biUnion_le
     _ = ∑ q ∈ V.powersetCard 2, (commonLink H V q).card := by
@@ -230,10 +230,10 @@ theorem usedCells_card_le_common_link_incidence_count
       exact Finset.card_powersetCard 2 (completionVertices H V p)
 
 /-- Each individual common link is contained in the actual pair support. -/
-theorem commonLink_card_le_usedPairs_card
+theorem common_link_card_le_used_pairs_card
     (H : Family α) (V q : Edge α) :
     (commonLink H V q).card ≤ (usedPairs H V).card :=
-  Finset.card_le_card (commonLink_subset_usedPairs H V q)
+  Finset.card_le_card (common_link_subset_used_pairs H V q)
 
 end Incidence
 

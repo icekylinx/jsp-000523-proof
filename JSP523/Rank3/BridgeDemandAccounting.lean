@@ -15,7 +15,7 @@ variable {α : Type*} [DecidableEq α]
 
 /-- When positive demands on one triple have a unique receiving cell, local
 payment of that demand bounds the entire actual demand on the triple. -/
-theorem bridgeDemandOnTriple_le_localSignedDefect
+theorem bridge_demand_on_triple_le_local_signed_defect
     (H : Family α) (V : Edge α)
     (hH : Admissible H) (hU : Uniform 3 H)
     (hGround : ∀ E ∈ H, E ⊆ V)
@@ -32,7 +32,7 @@ theorem bridgeDemandOnTriple_le_localSignedDefect
   · obtain ⟨q, hq, hpos⟩ := hSome
     have hOthers (q' : Edge α) (hq' : q' ∈ usedCells H V)
         (hneq : q' ≠ q) : bridgeDemand H V q' E = 0 := by
-      have hnon := bridgeDemand_nonneg H V q' E hH
+      have hnon := bridge_demand_nonneg H V q' E hH
       have hnot : ¬ 0 < bridgeDemand H V q' E := by
         intro hpos'
         exact hneq (hUnique E hE q' hq' q hq hpos' hpos)
@@ -46,7 +46,7 @@ theorem bridgeDemandOnTriple_le_localSignedDefect
     exact hPaid E hE q hq hpos
   · have hZero (q : Edge α) (hq : q ∈ usedCells H V) :
         bridgeDemand H V q E = 0 := by
-      have hnon := bridgeDemand_nonneg H V q E hH
+      have hnon := bridge_demand_nonneg H V q E hH
       have hnot : ¬ 0 < bridgeDemand H V q E := by
         intro hp
         exact hSome ⟨q, hq, hp⟩
@@ -55,11 +55,11 @@ theorem bridgeDemandOnTriple_le_localSignedDefect
       unfold bridgeDemandOnTriple
       exact Finset.sum_eq_zero (fun q hq => hZero q hq)
     rw [hDemandZero]
-    exact localSignedDefect_nonneg hH hU hGround hE
+    exact local_signed_defect_nonneg hH hU hGround hE
 
 /-- Once §§II.C–II.D give uniqueness and local payment, the actual Xi
 excess is paid by the actual local defects. -/
-theorem actualXi_le_localSignedDefectSum_of_bridge_geometry
+theorem actual_xi_le_local_signed_defect_sum_of_bridge_geometry
     (H : Family α) (V : Edge α)
     (hH : Admissible H) (hU : Uniform 3 H)
     (hGround : ∀ E ∈ H, E ⊆ V)
@@ -72,12 +72,12 @@ theorem actualXi_le_localSignedDefectSum_of_bridge_geometry
     actualXi H V ≤ ∑ E ∈ H, localSignedDefect H V E := by
   calc
     actualXi H V ≤ bridgeDemandTotal H V :=
-      actualXi_le_bridgeDemandTotal H V hH
+      actual_xi_le_bridge_demand_total H V hH
     _ ≤ ∑ E ∈ H, localSignedDefect H V E := by
       unfold bridgeDemandTotal
       apply Finset.sum_le_sum
       intro E hE
-      exact bridgeDemandOnTriple_le_localSignedDefect
+      exact bridge_demand_on_triple_le_local_signed_defect
         H V hH hU hGround hUnique hPaid hE
 
 end JSP523.Rank3

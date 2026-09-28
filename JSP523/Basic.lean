@@ -52,14 +52,14 @@ theorem admissible_mono {F G : Family α}
   exact hF (hGF hA) (hGF hB) (hGF hC) (hGF hD) hq
 
 /-- Reversing the two disjoint pairs preserves the forbidden configuration. -/
-theorem ForbiddenQuad.swapPairs {A B C D : Edge α}
+theorem ForbiddenQuad.swap_pairs {A B C D : Edge α}
     (h : ForbiddenQuad A B C D) : ForbiddenQuad C D A B := by
   refine ⟨?_, h.disjCD, h.disjAB, h.sameUnion.symm⟩
   exact ⟨h.distinct.cd, h.distinct.ac.symm, h.distinct.bc.symm,
     h.distinct.ad.symm, h.distinct.bd.symm, h.distinct.ab⟩
 
 /-- Swapping the two edges inside each disjoint pair preserves the configuration. -/
-theorem ForbiddenQuad.swapWithin {A B C D : Edge α}
+theorem ForbiddenQuad.swap_within {A B C D : Edge α}
     (h : ForbiddenQuad A B C D) : ForbiddenQuad B A D C := by
   refine ⟨?_, h.disjAB.symm, h.disjCD.symm, ?_⟩
   · exact ⟨h.distinct.ab.symm, h.distinct.bd, h.distinct.bc,

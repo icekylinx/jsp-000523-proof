@@ -21,7 +21,7 @@ def starLayerDistinctCompletionIncidence (H : Family α) (U : Edge α)
 
 /-- The distinct-completion part of the IV.3.2 collision count is at most
 `|U| (|U|-1) (r-2) D₃`. -/
-theorem starLayerDistinctCompletionIncidence_le
+theorem star_layer_distinct_completion_incidence_le
     {H : Family α} {U : Edge α} {z w : α} {r D₃ : ℕ}
     (hH : Admissible H) (hzw : z ≠ w)
     (hzU : z ∉ U) (hwU : w ∉ U) (hr : 4 ≤ r)
@@ -42,7 +42,7 @@ theorem starLayerDistinctCompletionIncidence_le
         have hxy : x ≠ y := (Finset.mem_erase.mp hy).1.symm
         have hxU : x ∈ U := hx
         have hyU : y ∈ U := (Finset.mem_erase.mp hy).2
-        exact starLayerCrossCell_card_le hH hzw hxy hzU hwU hxU hyU hr hD₃
+        exact star_layer_cross_cell_card_le hH hzw hxy hzU hwU hxU hyU hr hD₃
     _ = U.card * (U.card - 1) * ((r - 2) * D₃) := by
       calc
         (∑ x ∈ U, ∑ y ∈ U.erase x, (r - 2) * D₃) =
@@ -63,7 +63,7 @@ theorem starLayerDistinctCompletionIncidence_le
 /-- Combined equal and distinct completion budget. The first summand is the
 equal-completion common-prefix cell; the second is the reindexed sum over
 ordered distinct completion pairs. -/
-theorem starLayerCompletionCollisionBudget_le
+theorem star_layer_completion_collision_budget_le
     {H : Family α} {U : Edge α} {z w : α} {r D₂ D₃ : ℕ}
     (hH : Admissible H) (hzw : z ≠ w)
     (hzU : z ∉ U) (hwU : w ∉ U) (hr : 4 ≤ r)
@@ -76,9 +76,9 @@ theorem starLayerCompletionCollisionBudget_le
       (r - 1) * (r - 1) * D₂ +
         U.card * (U.card - 1) * (r - 2) * D₃ := by
   have hr2 : 2 ≤ r := by omega
-  have heq := starLayerEqualCompletionCell_card_le
+  have heq := star_layer_equal_completion_cell_card_le
     hH hzw hzU hwU hr2 hD₂
-  have hcross := starLayerDistinctCompletionIncidence_le
+  have hcross := star_layer_distinct_completion_incidence_le
     hH hzw hzU hwU hr hD₃
   have hrpos : 1 ≤ r - 1 := by omega
   calc

@@ -105,7 +105,7 @@ theorem positive_ab_controls_other_types
       cases hEq
     have hACBound := bipartite_star_score_le_phi_right
       G.ac A C haA hOnlyA
-    have hBCZero := bipartitePhiTotal_eq_zero_of_left_degrees_zero
+    have hBCZero := bipartite_phi_total_eq_zero_of_left_degrees_zero
       G.bc B C hBZero
     rw [hBCZero]
     simpa using hACBound
@@ -113,7 +113,7 @@ theorem positive_ab_controls_other_types
       intro a haA
       by_contra hNotZero
       exact hA ⟨a, haA, Nat.pos_of_ne_zero hNotZero⟩
-    have hACZero := bipartitePhiTotal_eq_zero_of_left_degrees_zero
+    have hACZero := bipartite_phi_total_eq_zero_of_left_degrees_zero
       G.ac A C hAZero
     rw [hACZero]
     by_cases hB : ∃ b ∈ B, 0 < bipLeftDegree G.bc C b
@@ -139,10 +139,10 @@ theorem positive_ab_controls_other_types
         intro b hbB
         by_contra hNotZero
         exact hB ⟨b, hbB, Nat.pos_of_ne_zero hNotZero⟩
-      have hBCZero := bipartitePhiTotal_eq_zero_of_left_degrees_zero
+      have hBCZero := bipartite_phi_total_eq_zero_of_left_degrees_zero
         G.bc B C hBZero
       rw [hBCZero]
-      simpa using localPhi_nonneg C.card
+      simpa using local_phi_nonneg C.card
 
 /-- A positive `AB` type satisfies the full local signed payment
     inequality (II.A.2). -/
@@ -160,11 +160,11 @@ theorem positive_ab_local_payment
         (bipartitePhiTotal G.bc B C) := by
   have hOther := positive_ab_controls_other_types
     G A B C hMixed hPositive
-  have hPhiBudget := localPhi_le_localGraphBudget C.card
-  have hACnonneg := bipartitePhiTotal_nonneg G.ac A C
-  have hBCnonneg := bipartitePhiTotal_nonneg G.bc B C
-  have hA := localGraphBudget_nonneg A.card
-  have hB := localGraphBudget_nonneg B.card
+  have hPhiBudget := local_phi_le_local_graph_budget C.card
+  have hACnonneg := bipartite_phi_total_nonneg G.ac A C
+  have hBCnonneg := bipartite_phi_total_nonneg G.bc B C
+  have hA := local_graph_budget_nonneg A.card
+  have hB := local_graph_budget_nonneg B.card
   have hAC : 0 ≤ localGraphBudget A.card + localGraphBudget C.card -
       bipartitePhiTotal G.ac A C := by linarith
   have hBC : 0 ≤ localGraphBudget B.card + localGraphBudget C.card -

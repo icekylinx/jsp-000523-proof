@@ -22,7 +22,7 @@ def commonLinkFiber (H : Family α) (V q : Edge α) (z : α) : Edge α :=
 
 /-- Intersectingness forces every such `t` into any fixed link pair avoiding
     `z`.  The pair `p` need not itself be a star center certificate. -/
-theorem commonLinkFiber_subset_pair
+theorem common_link_fiber_subset_pair
     {H : Family α} {V q p : Edge α} {z : α}
     (hH : Admissible H)
     (hq : q ∈ V.powersetCard 2)
@@ -44,14 +44,14 @@ theorem commonLinkFiber_subset_pair
 
 /-- The fiber has at most two vertices because its containing link edge is
     a genuine pair. -/
-theorem commonLinkFiber_card_le_two
+theorem common_link_fiber_card_le_two
     {H : Family α} {V q p : Edge α} {z : α}
     (hH : Admissible H)
     (hq : q ∈ V.powersetCard 2)
     (hp : p ∈ commonLink H V q)
     (hzp : z ∉ p) :
     (commonLinkFiber H V q z).card ≤ 2 := by
-  have hsub := commonLinkFiber_subset_pair hH hq hp hzp
+  have hsub := common_link_fiber_subset_pair hH hq hp hzp
   have hp2 : p.card = 2 :=
     (Finset.mem_powersetCard.mp (Finset.mem_filter.mp hp).1).2
   exact (Finset.card_le_card hsub).trans_eq hp2
@@ -60,7 +60,7 @@ theorem commonLinkFiber_card_le_two
     reciprocal base pair `{v,x}` in the cell `{y,u}`.  This is the concrete
     first half of the manuscript's reciprocal grouping, and requires no
     admissibility assumption. -/
-theorem reciprocal_pair_in_commonLink
+theorem reciprocal_pair_in_common_link
     (H : Family α) (V : Edge α)
     {z v x y u : α}
     (hvV : v ∈ V)
@@ -126,7 +126,7 @@ theorem reciprocal_pair_in_commonLink
     exact heq.symm ▸ hxuv
   have hpOrient : ({v, x} : Edge α) ∈ orientedCommonLink H V y u :=
     Finset.mem_filter.mpr ⟨hpV, hpOut, hpy, hpu⟩
-  exact (mem_commonLink_pair_iff_oriented H V hyu _).mpr hpOrient
+  exact (mem_common_link_pair_iff_oriented H V hyu _).mpr hpOrient
 
 /-- Common neighbors of `y,u` in the graph link at `z`, with all vertices
     required to be distinct where the three-uniform interpretation needs it. -/
@@ -138,7 +138,7 @@ def rootCommonNeighbors
 
 /-- Every rooted common neighbor gives a base pair `{z,t}` in the reciprocal
     common link of the cell `{y,u}`. -/
-theorem rootCommonNeighbors_subset_commonLinkFiber
+theorem root_common_neighbors_subset_common_link_fiber
     (H : Family α) (V : Edge α)
     {z y u : α}
     (hzV : z ∈ V) (hzy : z ≠ y) (hzu : z ≠ u) (hyu : y ≠ u) :
@@ -187,7 +187,7 @@ theorem rootCommonNeighbors_subset_commonLinkFiber
   have hOrient : ({z, t} : Edge α) ∈ orientedCommonLink H V y u :=
     Finset.mem_filter.mpr ⟨hztV, hdis, hzyEdge, hzuEdge⟩
   exact Finset.mem_filter.mpr
-    ⟨htV, (mem_commonLink_pair_iff_oriented H V hyu _).mpr hOrient⟩
+    ⟨htV, (mem_common_link_pair_iff_oriented H V hyu _).mpr hOrient⟩
 
 /-- The local weak-alternative obstruction from §4 of the rank-three
     manuscript: two common-link base pairs sharing `x` force the rooted
@@ -202,7 +202,7 @@ theorem root_common_neighbors_card_le_two_of_two_book_pairs
     (hxuLink : ({x, u} : Edge α) ∈ orientedCommonLink H V z v) :
     (rootCommonNeighbors H V z y u).card ≤ 2 := by
   have hrecip : ({v, x} : Edge α) ∈ commonLink H V ({y, u} : Edge α) :=
-    reciprocal_pair_in_commonLink H V hvV hxy hxu hyu hxyLink hxuLink
+    reciprocal_pair_in_common_link H V hvV hxy hxu hyu hxyLink hxuLink
   obtain ⟨_, hxyOut, _, _⟩ := Finset.mem_filter.mp hxyLink
   obtain ⟨_, hxuOut, _, _⟩ := Finset.mem_filter.mp hxuLink
   have hzNotXY : z ∉ ({x, y} : Edge α) := by
@@ -239,9 +239,9 @@ theorem root_common_neighbors_card_le_two_of_two_book_pairs
       · exact huV
     · exact Finset.card_pair hyu
   have hfiber : (commonLinkFiber H V ({y, u} : Edge α) z).card ≤ 2 :=
-    commonLinkFiber_card_le_two hH hcell hrecip hzNotVX
+    common_link_fiber_card_le_two hH hcell hrecip hzNotVX
   exact (Finset.card_le_card
-    (rootCommonNeighbors_subset_commonLinkFiber H V hzV hzy hzu hyu)).trans hfiber
+    (root_common_neighbors_subset_common_link_fiber H V hzV hzy hzu hyu)).trans hfiber
 
 end LinkFiberBound
 

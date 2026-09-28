@@ -25,11 +25,11 @@ def rainbowRecordLoss (k : ℕ) : ℕ := if k < 3 then 1 else 0
 colored slot. -/
 def properFourRecordLoss (k : ℕ) : ℕ := min 2 (4 - k)
 
-theorem slotSlack_three_nonneg (k : ℕ) (hk : k ≤ 3) :
+theorem slot_slack_three_nonneg (k : ℕ) (hk : k ≤ 3) :
     0 ≤ slotSlack 3 k := by
   interval_cases k <;> norm_num [slotSlack] at *
 
-theorem slotSlack_four_nonneg (k : ℕ) (hk : k ≤ 4) :
+theorem slot_slack_four_nonneg (k : ℕ) (hk : k ≤ 4) :
     0 ≤ slotSlack 4 k := by
   interval_cases k <;> norm_num [slotSlack] at *
 
@@ -52,18 +52,18 @@ substituted into §III.B.3's definition of `z_E`. -/
 def edgeSlack (h c l : ℕ) : ℤ :=
   6 - h - (h.choose 2 : ℤ) + c + l
 
-theorem edgeSlack_nonneg
+theorem edge_slack_nonneg
     (h c l : ℕ) (hh : h ≤ 4)
     (hFull : h = 4 → c + l = 4) :
     0 ≤ edgeSlack h c l := by
   interval_cases h <;> norm_num [edgeSlack, Nat.choose] at * <;> omega
 
-theorem edgeSlack_full (c l : ℕ) (hcl : c + l = 4) :
+theorem edge_slack_full (c l : ℕ) (hcl : c + l = 4) :
     edgeSlack 4 c l = 0 := by
   norm_num [edgeSlack, Nat.choose]
   omega
 
-theorem edgeSlack_all_private : edgeSlack 0 0 0 = 6 := by
+theorem edge_slack_all_private : edgeSlack 0 0 0 = 6 := by
   norm_num [edgeSlack, Nat.choose]
 
 /-- The manuscript's original `z_E` formula equals the simplified slack

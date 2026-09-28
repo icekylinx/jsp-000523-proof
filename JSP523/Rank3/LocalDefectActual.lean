@@ -30,7 +30,7 @@ private theorem triple_pair_sets_distinct
     have ha : a ∈ ({b, c} : Edge α) := by rw [← h]; simp
     simp [hab, hac] at ha
 
-private theorem triple_powersetCard_two
+private theorem triple_powerset_card_two
     (a b c : α) (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c) :
     ({a, b, c} : Edge α).powersetCard 2 =
       ({{a, b}, {a, c}, {b, c}} : Family α) := by
@@ -59,12 +59,12 @@ private theorem triple_powersetCard_two
   rw [hRight, Finset.card_powersetCard, hTriple]
   norm_num
 
-private theorem negativeRootedWeight_comm
+private theorem negative_rooted_weight_comm
     (H : Family α) (V : Edge α) (z x y : α) :
     negativeRootedWeight H V z x y =
       negativeRootedWeight H V z y x := by
   unfold negativeRootedWeight
-  rw [rootedSignedWeight_comm]
+  rw [rooted_signed_weight_comm]
 
 private theorem oriented_negative_payment_triple
     (H : Family α) (V : Edge α) (a b c : α)
@@ -85,10 +85,10 @@ private theorem oriented_negative_payment_triple
       subst x
       exact ⟨hac, hab, Or.inl rfl⟩
   simp [localOrientedNegativePayment, hab, hac, hbc,
-    Finset.sum_insert, hEraseBC, negativeRootedWeight_comm]
+    Finset.sum_insert, hEraseBC, negative_rooted_weight_comm]
   ring_nf
 
-private theorem completionBudget_eq_erasedGraphBudget
+private theorem completion_budget_eq_erased_graph_budget
     (H : Family α) (V p : Edge α) (x : α)
     (hx : x ∈ completionVertices H V p) :
     weightPairBudget (completionVertices H V p).card =
@@ -96,9 +96,9 @@ private theorem completionBudget_eq_erasedGraphBudget
   have hCard := Finset.card_erase_add_one hx
   rw [show (completionVertices H V p).card =
     ((completionVertices H V p).erase x).card + 1 by omega]
-  exact (localGraphBudget_eq_shifted_pairBudget _).symm
+  exact (local_graph_budget_eq_shifted_pair_budget _).symm
 
-private theorem completionBudget_triple_partA
+private theorem completion_budget_triple_part_a
     (H : Family α) (V : Edge α) (a b c : α)
     (hground : ∀ E ∈ H, E ⊆ V)
     (hab : a ≠ b) (hac : a ≠ c)
@@ -118,13 +118,13 @@ private theorem completionBudget_triple_partA
         tauto
       rw [hEq]
       exact hE
-  have h := completionBudget_eq_erasedGraphBudget
+  have h := completion_budget_eq_erased_graph_budget
     H V ({b, c} : Edge α) a haComp
-  rw [← actualLocalPartA_eq_completionVertices_erase H V a b c]
+  rw [← actual_local_part_a_eq_completion_vertices_erase H V a b c]
     at h
   exact h
 
-private theorem completionBudget_triple_partB
+private theorem completion_budget_triple_part_b
     (H : Family α) (V : Edge α) (a b c : α)
     (hground : ∀ E ∈ H, E ⊆ V)
     (hab : a ≠ b) (hbc : b ≠ c)
@@ -144,13 +144,13 @@ private theorem completionBudget_triple_partB
         tauto
       rw [hEq]
       exact hE
-  have h := completionBudget_eq_erasedGraphBudget
+  have h := completion_budget_eq_erased_graph_budget
     H V ({a, c} : Edge α) b hbComp
-  rw [← actualLocalPartB_eq_completionVertices_erase H V a b c]
+  rw [← actual_local_part_b_eq_completion_vertices_erase H V a b c]
     at h
   exact h
 
-private theorem completionBudget_triple_partC
+private theorem completion_budget_triple_part_c
     (H : Family α) (V : Edge α) (a b c : α)
     (hground : ∀ E ∈ H, E ⊆ V)
     (hac : a ≠ c) (hbc : b ≠ c)
@@ -170,9 +170,9 @@ private theorem completionBudget_triple_partC
         tauto
       rw [hEq]
       exact hE
-  have h := completionBudget_eq_erasedGraphBudget
+  have h := completion_budget_eq_erased_graph_budget
     H V ({a, b} : Edge α) c hcComp
-  rw [← actualLocalPartC_eq_completionVertices_erase H V a b c]
+  rw [← actual_local_part_c_eq_completion_vertices_erase H V a b c]
     at h
   exact h
 
@@ -186,24 +186,24 @@ private theorem local_pair_budget_triple_eq_graph_budgets
       localGraphBudget (actualLocalPartA H V a b c).card +
         localGraphBudget (actualLocalPartB H V a b c).card +
         localGraphBudget (actualLocalPartC H V a b c).card := by
-  rw [triple_powersetCard_two a b c hab hac hbc]
+  rw [triple_powerset_card_two a b c hab hac hbc]
   obtain ⟨hABAC, hABBC, hACBC⟩ :=
     triple_pair_sets_distinct a b c hab hac hbc
   have hAB :
       weightPairBudget
           (completionVertices H V ({a, b} : Edge α)).card =
         localGraphBudget (actualLocalPartC H V a b c).card :=
-    completionBudget_triple_partC H V a b c hground hac hbc hE
+    completion_budget_triple_part_c H V a b c hground hac hbc hE
   have hAC :
       weightPairBudget
           (completionVertices H V ({a, c} : Edge α)).card =
         localGraphBudget (actualLocalPartB H V a b c).card :=
-    completionBudget_triple_partB H V a b c hground hab hbc hE
+    completion_budget_triple_part_b H V a b c hground hab hbc hE
   have hBC :
       weightPairBudget
           (completionVertices H V ({b, c} : Edge α)).card =
         localGraphBudget (actualLocalPartA H V a b c).card :=
-    completionBudget_triple_partA H V a b c hground hab hac hE
+    completion_budget_triple_part_a H V a b c hground hab hac hE
   simp [hABAC, hABBC, hACBC, hAB, hAC, hBC]
   ring
 
@@ -225,11 +225,11 @@ theorem actual_local_defect_eq_graph_surplus
     H V a b c hab hac hbc
   have hBudget := local_pair_budget_triple_eq_graph_budgets
     H V a b c hground hab hac hbc hE
-  have hAB := actual_AB_signed_weight_eq_graph_score
+  have hAB := actual_ab_signed_weight_eq_graph_score
     hUniform hground hab hac hbc hE
-  have hAC := actual_AC_signed_weight_eq_graph_score
+  have hAC := actual_ac_signed_weight_eq_graph_score
     hUniform hground hab hac hbc hE
-  have hBC := actual_BC_signed_weight_eq_graph_score
+  have hBC := actual_bc_signed_weight_eq_graph_score
     hUniform hground hab hac hbc hE
   unfold localSignedDefect tripartiteLocalSurplus
   rw [hOrient, hBudget]
@@ -275,14 +275,14 @@ theorem actual_local_defect_ge_marked_graph_gain
     (actualLocalPartB H V a b c)
     (actualLocalPartC H V a b c)
     x y z r s
-    (actualLocalTripartite_mixed_degree_two
+    (actual_local_tripartite_mixed_degree_two
       hH hUniform hab hac hbc)
     hx hy hz hAB hAC hrDegree hsDegree hr hs hDisj
 
 /-- Equation (II.5)'s local signed defect is nonnegative for every actual
 triple in an admissible rank-three family.  This is the full §II.A
 input to the global support ledger. -/
-theorem localSignedDefect_nonneg_of_admissible_triple
+theorem local_signed_defect_nonneg_of_admissible_triple
     {H : Family α} {V : Edge α} {a b c : α}
     (hH : Admissible H) (hUniform : Uniform 3 H)
     (hground : ∀ E ∈ H, E ⊆ V)
@@ -301,7 +301,7 @@ theorem localSignedDefect_nonneg_of_admissible_triple
 
 /-- The local defect is nonnegative for every member of the family, with
 no chosen ordering of its three vertices. -/
-theorem localSignedDefect_nonneg
+theorem local_signed_defect_nonneg
     {H : Family α} {V : Edge α}
     (hH : Admissible H) (hUniform : Uniform 3 H)
     (hground : ∀ E ∈ H, E ⊆ V)
@@ -310,7 +310,7 @@ theorem localSignedDefect_nonneg
   obtain ⟨a, b, c, hab, hac, hbc, hEq⟩ :=
     Finset.card_eq_three.mp (hUniform hE)
   rw [hEq]
-  exact localSignedDefect_nonneg_of_admissible_triple
+  exact local_signed_defect_nonneg_of_admissible_triple
     hH hUniform hground hab hac hbc (hEq ▸ hE)
 
 /-- §II.A removes the local-defect subtraction from equation (II.6)
@@ -327,7 +327,7 @@ theorem signed_payment_upper_of_admissible
   have hNonneg : 0 ≤ ∑ E ∈ H, localSignedDefect H V E := by
     apply Finset.sum_nonneg
     intro E hE
-    exact localSignedDefect_nonneg hH hUniform hground hE
+    exact local_signed_defect_nonneg hH hUniform hground hE
   linarith
 
 end JSP523.Rank3

@@ -24,13 +24,13 @@ def missingBlockTriples (H : Family α) (A : Edge α) : Family α :=
 def nearCompleteBlock (H : Family α) (A : Edge α) : Prop :=
   A.card = 5 ∧ 9 ≤ (blockTriples H A).card
 
-theorem blockTriples_mono {H K : Family α} (hHK : H ⊆ K)
+theorem block_triples_mono {H K : Family α} (hHK : H ⊆ K)
     (A : Edge α) : blockTriples H A ⊆ blockTriples K A := by
   intro E hE
   exact Finset.mem_filter.mpr
     ⟨hHK (Finset.mem_filter.mp hE).1, (Finset.mem_filter.mp hE).2⟩
 
-theorem blockTriples_eq_inter_powerset
+theorem block_triples_eq_inter_powerset
     (H : Family α) (A : Edge α) (hU : Uniform 3 H) :
     blockTriples H A = A.powersetCard 3 ∩ H := by
   ext E
@@ -42,7 +42,7 @@ theorem blockTriples_eq_inter_powerset
   · rintro ⟨⟨hEA, _⟩, hEH⟩
     exact ⟨hEH, hEA⟩
 
-theorem missingBlockTriples_card_le_one
+theorem missing_block_triples_card_le_one
     (H : Family α) (A : Edge α) (hU : Uniform 3 H)
     (hA : nearCompleteBlock H A) :
     (missingBlockTriples H A).card ≤ 1 := by
@@ -52,23 +52,23 @@ theorem missingBlockTriples_card_le_one
     decide
   have hPart := Finset.card_sdiff_add_card_inter
     (A.powersetCard 3) H
-  rw [← blockTriples_eq_inter_powerset H A hU] at hPart
+  rw [← block_triples_eq_inter_powerset H A hU] at hPart
   change (missingBlockTriples H A).card +
     (blockTriples H A).card = (A.powersetCard 3).card at hPart
   omega
 
-theorem missingBlockTriples_unique
+theorem missing_block_triples_unique
     (H : Family α) (A : Edge α) (hU : Uniform 3 H)
     (hA : nearCompleteBlock H A)
     {S T : Edge α}
     (hS : S ∈ missingBlockTriples H A)
     (hT : T ∈ missingBlockTriples H A) : S = T := by
   exact (Finset.card_le_one.mp
-    (missingBlockTriples_card_le_one H A hU hA)) S hS T hT
+    (missing_block_triples_card_le_one H A hU hA)) S hS T hT
 
 /-- Distinct candidate triples of a near-complete block cannot both be
 missing from the parent family. -/
-theorem nearComplete_one_of_two
+theorem near_complete_one_of_two
     (H : Family α) (A : Edge α) (hU : Uniform 3 H)
     (hA : nearCompleteBlock H A)
     {S T : Edge α}
@@ -80,7 +80,7 @@ theorem nearComplete_one_of_two
     Finset.mem_sdiff.mpr ⟨hS, fun hSH => h (Or.inl hSH)⟩
   have ht : T ∈ missingBlockTriples H A :=
     Finset.mem_sdiff.mpr ⟨hT, fun hTH => h (Or.inr hTH)⟩
-  exact hST (missingBlockTriples_unique H A hU hA hs ht)
+  exact hST (missing_block_triples_unique H A hU hA hs ht)
 
 
 /-- Pair traces from one outside vertex into a five-point block. -/
@@ -111,7 +111,7 @@ private theorem internal_completion_injective
   · exact False.elim (hy hP)
   · simpa using hZ
 
-theorem blockInternalCompleters_card_ge_two
+theorem block_internal_completers_card_ge_two
     (H : Family α) (A p : Edge α)
     (hU : Uniform 3 H)
     (hA : nearCompleteBlock H A)
@@ -136,7 +136,7 @@ theorem blockInternalCompleters_card_ge_two
     have hzMissing : p ∪ {z} ∈ missingBlockTriples H A :=
       Finset.mem_sdiff.mpr
         ⟨internal_completion_candidate A p hp hzC, hzNot⟩
-    have hEq := missingBlockTriples_unique H A hU hA hyMissing hzMissing
+    have hEq := missing_block_triples_unique H A hU hA hyMissing hzMissing
     exact internal_completion_injective p
       (Finset.mem_sdiff.mp hyC).2
       (Finset.mem_sdiff.mp hzC).2 hEq
@@ -239,7 +239,7 @@ private theorem block_complement_candidate
 
 /-- At a fixed outside vertex, there are at most two pairs of the
 near-complete block whose extensions occur in the family. -/
-theorem blockTrace_card_le_two
+theorem block_trace_card_le_two
     (H : Family α) (A : Edge α) (x : α)
     (hU : Uniform 3 H) (hAdm : Admissible H)
     (hA : nearCompleteBlock H A) (hxA : x ∉ A) :
@@ -275,7 +275,7 @@ theorem blockTrace_card_le_two
     exact complement_pair_injective A p q
       (Finset.mem_powersetCard.mp hpCand).1
       (Finset.mem_powersetCard.mp hqCand).1
-      (missingBlockTriples_unique H A hU hA hpMissing hqMissing)
+      (missing_block_triples_unique H A hU hA hpMissing hqMissing)
   have hPart := Finset.card_filter_add_card_filter_not
     (s := T) (p := fun p => A \ p ∈ H)
   change Good.card + Bad.card = T.card at hPart
@@ -286,7 +286,7 @@ theorem blockTrace_card_le_two
 
 /-- If the complementary triple of an internal pair is the one missing
 triple, all three completions of the pair are present. -/
-theorem blockInternalCompleters_eq_complement
+theorem block_internal_completers_eq_complement
     (H : Family α) (A p : Edge α)
     (hU : Uniform 3 H) (hA : nearCompleteBlock H A)
     (hp : p ∈ A.powersetCard 2)
@@ -311,7 +311,7 @@ theorem blockInternalCompleters_eq_complement
       have htComp : t ∈ A \ p := heq ▸
         (Finset.mem_union_left {y} ht)
       exact (Finset.mem_sdiff.mp htComp).2 ht
-    exact (nearComplete_one_of_two H A hU hA hCandidate
+    exact (near_complete_one_of_two H A hU hA hCandidate
       hCompCand hneq).resolve_right hMissing
 
 /-- Two distinct pair traces have at least four different internal
@@ -345,11 +345,11 @@ theorem block_two_trace_completers_union_ge_four
     have hyComp : y ∈ A \ p := heq ▸ (by simp : y ∈ q ∪ {y})
     exact (Finset.mem_sdiff.mp hyComp).2 hyP
   have hqy : q ∪ {y} ∈ H :=
-    (nearComplete_one_of_two H A hU hA hqCandidate
+    (near_complete_one_of_two H A hU hA hqCandidate
       hpCompCandidate hneq).resolve_right hMissing
   have hyNq : y ∈ blockInternalCompleters H A q :=
     Finset.mem_filter.mpr ⟨hyC, hqy⟩
-  have hNp := blockInternalCompleters_eq_complement H A p
+  have hNp := block_internal_completers_eq_complement H A p
     hU hA hp hMissing
   have hyNotNp : y ∉ A \ p :=
     fun h => (Finset.mem_sdiff.mp h).2 hyP
@@ -377,7 +377,7 @@ theorem block_trace_certificate_count
       ((blockTrace H A x).biUnion
         (blockInternalCompleters H A)).card := by
   let T := blockTrace H A x
-  have hTle := blockTrace_card_le_two H A x hU hAdm hA hxA
+  have hTle := block_trace_card_le_two H A x hU hAdm hA hxA
   have hCases : T.card = 0 ∨ T.card = 1 ∨ T.card = 2 := by
     change T.card ≤ 2 at hTle
     omega
@@ -389,7 +389,7 @@ theorem block_trace_certificate_count
       change p ∈ T
       simp [hp]
     have hpCand := (Finset.mem_filter.mp hpTrace).1
-    have hN := blockInternalCompleters_card_ge_two H A p hU hA hpCand
+    have hN := block_internal_completers_card_ge_two H A p hU hA hpCand
     change 2 * T.card ≤
       (T.biUnion (blockInternalCompleters H A)).card
     simp [hp]
@@ -430,30 +430,30 @@ reduction used in Part II. -/
 def cleanOneBlock (H : Family α) (A : Edge α) : Family α :=
   H.filter fun E => (E ∩ A).card ≤ 1
 
-theorem cleanOneBlock_subset (H : Family α) (A : Edge α) :
+theorem clean_one_block_subset (H : Family α) (A : Edge α) :
     cleanOneBlock H A ⊆ H := by
   intro E hE
   exact (Finset.mem_filter.mp hE).1
 
-theorem cleanOneBlock_admissible
+theorem clean_one_block_admissible
     (H : Family α) (A : Edge α) (hAdm : Admissible H) :
     Admissible (cleanOneBlock H A) :=
-  admissible_mono (cleanOneBlock_subset H A) hAdm
+  admissible_mono (clean_one_block_subset H A) hAdm
 
-theorem cleanOneBlock_uniform
+theorem clean_one_block_uniform
     (H : Family α) (A : Edge α) (hU : Uniform 3 H) :
     Uniform 3 (cleanOneBlock H A) := by
   intro E hE
-  exact hU (cleanOneBlock_subset H A hE)
+  exact hU (clean_one_block_subset H A hE)
 
-theorem usedPairs_mono
+theorem used_pairs_mono
     (H K : Family α) (V : Edge α) (hHK : H ⊆ K) :
     usedPairs H V ⊆ usedPairs K V := by
   intro p hp
   obtain ⟨hpV, E, hEH, hpE⟩ := Finset.mem_filter.mp hp
   exact Finset.mem_filter.mpr ⟨hpV, ⟨E, hHK hEH, hpE⟩⟩
 
-theorem usedCells_mono
+theorem used_cells_mono
     (H K : Family α) (V : Edge α) (hHK : H ⊆ K) :
     usedCells H V ⊆ usedCells K V := by
   intro q hq
@@ -473,23 +473,23 @@ def blockCertificateCells
   (V \ A).biUnion fun x =>
     (blockCertificateVertices H A x).image fun y => ({x, y} : Edge α)
 
-theorem mem_blockCertificateVertices_iff
+theorem mem_block_certificate_vertices_iff
     (H : Family α) (A : Edge α) (x y : α) :
     y ∈ blockCertificateVertices H A x ↔
       ∃ p ∈ blockTrace H A x,
         y ∈ blockInternalCompleters H A p := by
   simp [blockCertificateVertices]
 
-theorem blockCertificateVertices_subset
+theorem block_certificate_vertices_subset
     (H : Family α) (A : Edge α) (x : α) :
     blockCertificateVertices H A x ⊆ A := by
   intro y hy
-  obtain ⟨p, _, hyp⟩ := (mem_blockCertificateVertices_iff H A x y).mp hy
+  obtain ⟨p, _, hyp⟩ := (mem_block_certificate_vertices_iff H A x y).mp hy
   exact (Finset.mem_sdiff.mp (Finset.mem_filter.mp hyp).1).1
 
 
 
-theorem certificate_cell_mem_usedCells
+theorem certificate_cell_mem_used_cells
     (H : Family α) (V A : Edge α)
     (hAV : A ⊆ V)
     {x y : α}
@@ -498,7 +498,7 @@ theorem certificate_cell_mem_usedCells
     ({x, y} : Edge α) ∈ usedCells H V := by
   obtain ⟨hxV, hxA⟩ := Finset.mem_sdiff.mp hx
   obtain ⟨p, hpTrace, hyN⟩ :=
-    (mem_blockCertificateVertices_iff H A x y).mp hy
+    (mem_block_certificate_vertices_iff H A x y).mp hy
   obtain ⟨hpCand, hpx⟩ := Finset.mem_filter.mp hpTrace
   obtain ⟨hpA, hp2⟩ := Finset.mem_powersetCard.mp hpCand
   obtain ⟨hyC, hpy⟩ := Finset.mem_filter.mp hyN
@@ -525,13 +525,13 @@ theorem certificate_cell_mem_usedCells
     ⟨hCell, ⟨p, hpV, x, by simp, y, by simp, hxy,
       hDisj, hpx, hpy⟩⟩
 
-theorem blockCertificateCells_subset_usedCells
+theorem block_certificate_cells_subset_used_cells
     (H : Family α) (V A : Edge α) (hAV : A ⊆ V) :
     blockCertificateCells H V A ⊆ usedCells H V := by
   intro q hq
   obtain ⟨x, hx, hqX⟩ := Finset.mem_biUnion.mp hq
   obtain ⟨y, hy, rfl⟩ := Finset.mem_image.mp hqX
-  exact certificate_cell_mem_usedCells H V A hAV hx hy
+  exact certificate_cell_mem_used_cells H V A hAV hx hy
 
 
 
@@ -561,7 +561,7 @@ private theorem certificate_core_mem_oriented
 /-- Each certificate cell vanishes from the common-link support after
 cleaning the block.  Any surviving witness would meet the original
 internal core and thus create an edge with two block vertices. -/
-theorem certificate_cell_not_mem_clean_usedCells
+theorem certificate_cell_not_mem_clean_used_cells
     (H : Family α) (V A : Edge α)
     (hAdm : Admissible H) (hAV : A ⊆ V)
     {x y : α}
@@ -570,7 +570,7 @@ theorem certificate_cell_not_mem_clean_usedCells
     ({x, y} : Edge α) ∉ usedCells (cleanOneBlock H A) V := by
   obtain ⟨_, hxA⟩ := Finset.mem_sdiff.mp hx
   obtain ⟨p, hpTrace, hyN⟩ :=
-    (mem_blockCertificateVertices_iff H A x y).mp hy
+    (mem_block_certificate_vertices_iff H A x y).mp hy
   obtain ⟨hpCand, _⟩ := Finset.mem_filter.mp hpTrace
   have hpA := (Finset.mem_powersetCard.mp hpCand).1
   have hyA : y ∈ A :=
@@ -582,17 +582,17 @@ theorem certificate_cell_not_mem_clean_usedCells
     hAV hx hpTrace hyN
   intro hCell
   obtain ⟨_, ⟨r, hrClean⟩⟩ :=
-    (mem_usedCells_iff_commonLink_nonempty
+    (mem_used_cells_iff_common_link_nonempty
       (cleanOneBlock H A) V ({x, y} : Edge α)).mp hCell
-  have hrClean' := (mem_commonLink_pair_iff_oriented
+  have hrClean' := (mem_common_link_pair_iff_oriented
     (cleanOneBlock H A) V hxy r).mp hrClean
   obtain ⟨hrV, hrDisj, hrxClean, hryClean⟩ :=
     Finset.mem_filter.mp hrClean'
   have hrOrig : r ∈ orientedCommonLink H V x y :=
     Finset.mem_filter.mpr
       ⟨hrV, hrDisj,
-        cleanOneBlock_subset H A hrxClean,
-        cleanOneBlock_subset H A hryClean⟩
+        clean_one_block_subset H A hrxClean,
+        clean_one_block_subset H A hryClean⟩
   have hMeet : ¬ Disjoint p r :=
     oriented_common_link_intersecting hAdm hxy hpOrig hrOrig
   have hInter : (p ∩ r).Nonempty := by
@@ -641,7 +641,7 @@ private theorem cross_extension_ne
 
 /-- Every pair of a near-complete five-block is a common-link cell
 using an internal pair as witness. -/
-theorem nearComplete_internal_common_link
+theorem near_complete_internal_common_link
     (H : Family α) (V A : Edge α)
     (hU : Uniform 3 H) (hA : nearCompleteBlock H A)
     (hAV : A ⊆ V)
@@ -727,15 +727,15 @@ theorem nearComplete_internal_common_link
     · exact ⟨p, hpB, Finset.mem_filter.mpr
         ⟨hpV, hDisjP, hPX, hPY⟩⟩
     · have hRX : r ∪ {x} ∈ H :=
-        (nearComplete_one_of_two H A hU hA hrxC hpyC hrxNePY).resolve_right hPY
+        (near_complete_one_of_two H A hU hA hrxC hpyC hrxNePY).resolve_right hPY
       have hRY : r ∪ {y} ∈ H :=
-        (nearComplete_one_of_two H A hU hA hryC hpyC hryNeP).resolve_right hPY
+        (near_complete_one_of_two H A hU hA hryC hpyC hryNeP).resolve_right hPY
       exact ⟨r, hrB, Finset.mem_filter.mpr
         ⟨hrV, hDisjR, hRX, hRY⟩⟩
   · have hRX : r ∪ {x} ∈ H :=
-      (nearComplete_one_of_two H A hU hA hrxC hpxC hrxNeP).resolve_right hPX
+      (near_complete_one_of_two H A hU hA hrxC hpxC hrxNeP).resolve_right hPX
     have hRY : r ∪ {y} ∈ H :=
-      (nearComplete_one_of_two H A hU hA hryC hpxC hryNePX).resolve_right hPX
+      (near_complete_one_of_two H A hU hA hryC hpxC hryNePX).resolve_right hPX
     exact ⟨r, hrB, Finset.mem_filter.mpr
       ⟨hrV, hDisjR, hRX, hRY⟩⟩
 
@@ -743,7 +743,7 @@ theorem nearComplete_internal_common_link
 
 /-- An internal common-link witness prevents its cell from surviving the
 deletion of all triples meeting the block twice. -/
-theorem internal_core_cell_not_mem_clean_usedCells
+theorem internal_core_cell_not_mem_clean_used_cells
     (H : Family α) (V A p : Edge α)
     (hAdm : Admissible H)
     {x y : α} (hxy : x ≠ y)
@@ -752,17 +752,17 @@ theorem internal_core_cell_not_mem_clean_usedCells
     ({x, y} : Edge α) ∉ usedCells (cleanOneBlock H A) V := by
   intro hCell
   obtain ⟨_, ⟨r, hrClean⟩⟩ :=
-    (mem_usedCells_iff_commonLink_nonempty
+    (mem_used_cells_iff_common_link_nonempty
       (cleanOneBlock H A) V ({x, y} : Edge α)).mp hCell
-  have hrClean' := (mem_commonLink_pair_iff_oriented
+  have hrClean' := (mem_common_link_pair_iff_oriented
     (cleanOneBlock H A) V hxy r).mp hrClean
   obtain ⟨hrV, hrDisj, hrxClean, hryClean⟩ :=
     Finset.mem_filter.mp hrClean'
   have hrOrig : r ∈ orientedCommonLink H V x y :=
     Finset.mem_filter.mpr
       ⟨hrV, hrDisj,
-        cleanOneBlock_subset H A hrxClean,
-        cleanOneBlock_subset H A hryClean⟩
+        clean_one_block_subset H A hrxClean,
+        clean_one_block_subset H A hryClean⟩
   have hMeet : ¬ Disjoint p r :=
     oriented_common_link_intersecting hAdm hxy hpOrig hrOrig
   have hInter : (p ∩ r).Nonempty := by
@@ -789,7 +789,7 @@ theorem internal_core_cell_not_mem_clean_usedCells
   have hOne := (Finset.mem_filter.mp hryClean).2
   omega
 
-theorem nearComplete_pair_not_mem_clean_usedCells
+theorem near_complete_pair_not_mem_clean_used_cells
     (H : Family α) (V A : Edge α)
     (hU : Uniform 3 H) (hAdm : Admissible H)
     (hA : nearCompleteBlock H A) (hAV : A ⊆ V)
@@ -797,17 +797,17 @@ theorem nearComplete_pair_not_mem_clean_usedCells
     (hq : ({x, y} : Edge α) ∈ A.powersetCard 2) :
     ({x, y} : Edge α) ∉ usedCells (cleanOneBlock H A) V := by
   obtain ⟨p, hpB, hpLink⟩ :=
-    nearComplete_internal_common_link H V A hU hA hAV hxy hq
+    near_complete_internal_common_link H V A hU hA hAV hxy hq
   have hqA := (Finset.mem_powersetCard.mp hq).1
   have hyA : y ∈ A := hqA (by simp)
   have hpA : p ⊆ A := hpB.trans Finset.sdiff_subset
   have hyNotP : y ∉ p := by
     intro hy
     exact (Finset.mem_sdiff.mp (hpB hy)).2 (by simp)
-  exact internal_core_cell_not_mem_clean_usedCells H V A p
+  exact internal_core_cell_not_mem_clean_used_cells H V A p
     hAdm hxy hyA hpA hyNotP hpLink
 
-theorem nearComplete_pair_mem_usedCells
+theorem near_complete_pair_mem_used_cells
     (H : Family α) (V A : Edge α)
     (hU : Uniform 3 H) (hA : nearCompleteBlock H A)
     (hAV : A ⊆ V)
@@ -815,15 +815,15 @@ theorem nearComplete_pair_mem_usedCells
     (hq : ({x, y} : Edge α) ∈ A.powersetCard 2) :
     ({x, y} : Edge α) ∈ usedCells H V := by
   obtain ⟨p, _, hpLink⟩ :=
-    nearComplete_internal_common_link H V A hU hA hAV hxy hq
-  exact (mem_usedCells_iff_commonLink_nonempty H V ({x, y} : Edge α)).mpr
+    near_complete_internal_common_link H V A hU hA hAV hxy hq
+  exact (mem_used_cells_iff_common_link_nonempty H V ({x, y} : Edge α)).mpr
     ⟨Finset.mem_powersetCard.mpr
       ⟨(Finset.mem_powersetCard.mp hq).1.trans hAV,
         (Finset.mem_powersetCard.mp hq).2⟩,
-      ⟨p, (mem_commonLink_pair_iff_oriented H V hxy p).mpr hpLink⟩⟩
+      ⟨p, (mem_common_link_pair_iff_oriented H V hxy p).mpr hpLink⟩⟩
 
 
-theorem nearComplete_blockPairs_subset_usedCells
+theorem near_complete_block_pairs_subset_used_cells
     (H : Family α) (V A : Edge α)
     (hU : Uniform 3 H) (hA : nearCompleteBlock H A)
     (hAV : A ⊆ V) :
@@ -831,9 +831,9 @@ theorem nearComplete_blockPairs_subset_usedCells
   intro q hq
   obtain ⟨x, y, hxy, rfl⟩ :=
     Finset.card_eq_two.mp (Finset.mem_powersetCard.mp hq).2
-  exact nearComplete_pair_mem_usedCells H V A hU hA hAV hxy hq
+  exact near_complete_pair_mem_used_cells H V A hU hA hAV hxy hq
 
-theorem nearComplete_blockPairs_not_mem_clean_usedCells
+theorem near_complete_block_pairs_not_mem_clean_used_cells
     (H : Family α) (V A : Edge α)
     (hU : Uniform 3 H) (hAdm : Admissible H)
     (hA : nearCompleteBlock H A) (hAV : A ⊆ V)
@@ -841,16 +841,16 @@ theorem nearComplete_blockPairs_not_mem_clean_usedCells
     q ∉ usedCells (cleanOneBlock H A) V := by
   obtain ⟨x, y, hxy, rfl⟩ :=
     Finset.card_eq_two.mp (Finset.mem_powersetCard.mp hq).2
-  exact nearComplete_pair_not_mem_clean_usedCells H V A
+  exact near_complete_pair_not_mem_clean_used_cells H V A
     hU hAdm hA hAV hxy hq
 
-theorem nearComplete_blockPairs_subset_usedPairs
+theorem near_complete_block_pairs_subset_used_pairs
     (H : Family α) (V A : Edge α)
     (hU : Uniform 3 H) (hA : nearCompleteBlock H A)
     (hAV : A ⊆ V) :
     A.powersetCard 2 ⊆ usedPairs H V := by
   intro q hq
-  have hN := blockInternalCompleters_card_ge_two H A q hU hA hq
+  have hN := block_internal_completers_card_ge_two H A q hU hA hq
   obtain ⟨z, hz⟩ : (blockInternalCompleters H A q).Nonempty := by
     apply Finset.card_pos.mp
     omega
@@ -861,7 +861,7 @@ theorem nearComplete_blockPairs_subset_usedPairs
         (Finset.mem_powersetCard.mp hq).2⟩,
       ⟨q ∪ {z}, hzH, Finset.subset_union_left⟩⟩
 
-theorem nearComplete_blockPairs_not_mem_clean_usedPairs
+theorem near_complete_block_pairs_not_mem_clean_used_pairs
     (H : Family α) (V A : Edge α)
     {q : Edge α} (hq : q ∈ A.powersetCard 2) :
     q ∉ usedPairs (cleanOneBlock H A) V := by
@@ -877,7 +877,7 @@ theorem nearComplete_blockPairs_not_mem_clean_usedPairs
   omega
 
 
-private theorem outside_pair_injOn
+private theorem outside_pair_inj_on
     (A : Edge α) {x : α} (hxA : x ∉ A) :
     Set.InjOn (fun y : α => ({x, y} : Edge α)) A := by
   intro y hy z hz h
@@ -904,7 +904,7 @@ private theorem outside_pair_images_disjoint
   · have hxz : x = z := Finset.mem_singleton.mp e
     exact hx (hxz.symm ▸ hZA hz)
 
-theorem blockCertificateCells_card_eq_sum
+theorem block_certificate_cells_card_eq_sum
     (H : Family α) (V A : Edge α) :
     (blockCertificateCells H V A).card =
       ∑ x ∈ V \ A, (blockCertificateVertices H A x).card := by
@@ -914,31 +914,31 @@ theorem blockCertificateCells_card_eq_sum
     intro x hx
     apply Finset.card_image_of_injOn
     intro y hy z hz heq
-    exact outside_pair_injOn A (Finset.mem_sdiff.mp hx).2
-      (blockCertificateVertices_subset H A x hy)
-      (blockCertificateVertices_subset H A x hz) heq
+    exact outside_pair_inj_on A (Finset.mem_sdiff.mp hx).2
+      (block_certificate_vertices_subset H A x hy)
+      (block_certificate_vertices_subset H A x hz) heq
   · intro x hx x' hx' hxx'
     exact outside_pair_images_disjoint A
       (Finset.mem_sdiff.mp hx).2 hxx'
       (blockCertificateVertices H A x)
       (blockCertificateVertices H A x')
-      (blockCertificateVertices_subset H A x')
+      (block_certificate_vertices_subset H A x')
 
 
-theorem blockCertificateCells_card_ge_two_trace_sum
+theorem block_certificate_cells_card_ge_two_trace_sum
     (H : Family α) (V A : Edge α)
     (hU : Uniform 3 H) (hAdm : Admissible H)
     (hA : nearCompleteBlock H A) :
     2 * (∑ x ∈ V \ A, (blockTrace H A x).card) ≤
       (blockCertificateCells H V A).card := by
-  rw [blockCertificateCells_card_eq_sum]
+  rw [block_certificate_cells_card_eq_sum]
   rw [Finset.mul_sum]
   apply Finset.sum_le_sum
   intro x hx
   exact block_trace_certificate_count H A x hU hAdm hA
     (Finset.mem_sdiff.mp hx).2
 
-theorem blockCertificateCells_disjoint_blockPairs
+theorem block_certificate_cells_disjoint_block_pairs
     (H : Family α) (V A : Edge α) :
     Disjoint (blockCertificateCells H V A) (A.powersetCard 2) := by
   apply Finset.disjoint_left.mpr
@@ -956,7 +956,7 @@ private theorem cardinal_support_loss
   rw [← Finset.card_union_of_disjoint hDisj]
   exact Finset.card_le_card (Finset.union_subset hB hT)
 
-theorem nearComplete_block_pair_support_loss
+theorem near_complete_block_pair_support_loss
     (H : Family α) (V A : Edge α)
     (hU : Uniform 3 H) (hA : nearCompleteBlock H A)
     (hAV : A ⊆ V) :
@@ -967,13 +967,13 @@ theorem nearComplete_block_pair_support_loss
     decide
   rw [← hCount]
   apply cardinal_support_loss
-  · exact usedPairs_mono _ _ V (cleanOneBlock_subset H A)
-  · exact nearComplete_blockPairs_subset_usedPairs H V A hU hA hAV
+  · exact used_pairs_mono _ _ V (clean_one_block_subset H A)
+  · exact near_complete_block_pairs_subset_used_pairs H V A hU hA hAV
   · apply Finset.disjoint_left.mpr
     intro q hq
-    exact nearComplete_blockPairs_not_mem_clean_usedPairs H V A hq
+    exact near_complete_block_pairs_not_mem_clean_used_pairs H V A hq
 
-theorem nearComplete_block_cell_support_loss
+theorem near_complete_block_cell_support_loss
     (H : Family α) (V A : Edge α)
     (hU : Uniform 3 H) (hAdm : Admissible H)
     (hA : nearCompleteBlock H A) (hAV : A ⊆ V) :
@@ -984,25 +984,25 @@ theorem nearComplete_block_cell_support_loss
     rw [Finset.card_powersetCard, hA.1]
     decide
   have hDisj :=
-    blockCertificateCells_disjoint_blockPairs H V A
+    block_certificate_cells_disjoint_block_pairs H V A
   have hUnionCard :
       (A.powersetCard 2 ∪ blockCertificateCells H V A).card =
         10 + (blockCertificateCells H V A).card := by
     rw [Finset.card_union_of_disjoint hDisj.symm, hCount]
   rw [← hUnionCard]
   apply cardinal_support_loss
-  · exact usedCells_mono _ _ V (cleanOneBlock_subset H A)
+  · exact used_cells_mono _ _ V (clean_one_block_subset H A)
   · exact Finset.union_subset
-      (nearComplete_blockPairs_subset_usedCells H V A hU hA hAV)
-      (blockCertificateCells_subset_usedCells H V A hAV)
+      (near_complete_block_pairs_subset_used_cells H V A hU hA hAV)
+      (block_certificate_cells_subset_used_cells H V A hAV)
   · apply Finset.disjoint_left.mpr
     intro q hq
     rcases Finset.mem_union.mp hq with hqA | hqCert
-    · exact nearComplete_blockPairs_not_mem_clean_usedCells
+    · exact near_complete_block_pairs_not_mem_clean_used_cells
         H V A hU hAdm hA hAV hqA
     · obtain ⟨x, hx, hqX⟩ := Finset.mem_biUnion.mp hqCert
       obtain ⟨y, hy, rfl⟩ := Finset.mem_image.mp hqX
-      exact certificate_cell_not_mem_clean_usedCells
+      exact certificate_cell_not_mem_clean_used_cells
         H V A hAdm hAV hx hy
 
 
@@ -1011,7 +1011,7 @@ def blockExternalEdges
   (V \ A).biUnion fun x =>
     (blockTrace H A x).image fun p => p ∪ {x}
 
-theorem removedBlockEdges_cover
+theorem removed_block_edges_cover
     (H : Family α) (V A : Edge α)
     (hU : Uniform 3 H)
     (hGround : ∀ E ∈ H, E ⊆ V) :
@@ -1058,7 +1058,7 @@ theorem removedBlockEdges_cover
           ⟨E ∩ A, hTrace, hEdgeEq.symm⟩⟩)
 
 
-theorem blockTriples_card_le_ten
+theorem block_triples_card_le_ten
     (H : Family α) (A : Edge α)
     (hU : Uniform 3 H) (hA : A.card = 5) :
     (blockTriples H A).card ≤ 10 := by
@@ -1069,7 +1069,7 @@ theorem blockTriples_card_le_ten
   have hCard := Finset.card_le_card hSub
   rwa [Finset.card_powersetCard, hA] at hCard
 
-theorem blockExternalEdges_card_le_trace_sum
+theorem block_external_edges_card_le_trace_sum
     (H : Family α) (V A : Edge α) :
     (blockExternalEdges H V A).card ≤
       ∑ x ∈ V \ A, (blockTrace H A x).card := by
@@ -1085,16 +1085,16 @@ theorem blockExternalEdges_card_le_trace_sum
       intro x hx
       exact Finset.card_image_le
 
-theorem removedBlockEdges_card_le
+theorem removed_block_edges_card_le
     (H : Family α) (V A : Edge α)
     (hU : Uniform 3 H)
     (hGround : ∀ E ∈ H, E ⊆ V)
     (hA : A.card = 5) :
     (H \ cleanOneBlock H A).card ≤
       10 + ∑ x ∈ V \ A, (blockTrace H A x).card := by
-  have hCover := removedBlockEdges_cover H V A hU hGround
-  have hInternal := blockTriples_card_le_ten H A hU hA
-  have hExternal := blockExternalEdges_card_le_trace_sum H V A
+  have hCover := removed_block_edges_cover H V A hU hGround
+  have hInternal := block_triples_card_le_ten H A hU hA
+  have hExternal := block_external_edges_card_le_trace_sum H V A
   calc
     (H \ cleanOneBlock H A).card
       ≤ (blockTriples H A ∪ blockExternalEdges H V A).card :=
@@ -1103,22 +1103,22 @@ theorem removedBlockEdges_card_le
         (blockExternalEdges H V A).card := Finset.card_union_le _ _
     _ ≤ 10 + ∑ x ∈ V \ A, (blockTrace H A x).card := by omega
 
-theorem nearComplete_block_deletion_card_bound
+theorem near_complete_block_deletion_card_bound
     (H : Family α) (V A : Edge α)
     (hU : Uniform 3 H)
     (hGround : ∀ E ∈ H, E ⊆ V)
     (hA : A.card = 5) :
     H.card ≤ (cleanOneBlock H A).card +
       10 + ∑ x ∈ V \ A, (blockTrace H A x).card := by
-  have hRemoved := removedBlockEdges_card_le H V A hU hGround hA
+  have hRemoved := removed_block_edges_card_le H V A hU hGround hA
   have hPartition := Finset.card_sdiff_add_card_eq_card
-    (cleanOneBlock_subset H A)
+    (clean_one_block_subset H A)
   omega
 
 /-- Sequential one-block deletion does not decrease the exact support
 defect. This is the local alternative to the manuscript's simultaneous
 removal of all dense blocks. -/
-theorem nearComplete_block_deletion_support_balance
+theorem near_complete_block_deletion_support_balance
     (H : Family α) (V A : Edge α)
     (hU : Uniform 3 H) (hAdm : Admissible H)
     (hGround : ∀ E ∈ H, E ⊆ V)
@@ -1128,18 +1128,18 @@ theorem nearComplete_block_deletion_support_balance
         (usedCells (cleanOneBlock H A) V).card ≤
       2 * (cleanOneBlock H A).card +
         (usedPairs H V).card + (usedCells H V).card := by
-  have hEdges := nearComplete_block_deletion_card_bound H V A
+  have hEdges := near_complete_block_deletion_card_bound H V A
     hU hGround hA.1
-  have hPairs := nearComplete_block_pair_support_loss H V A
+  have hPairs := near_complete_block_pair_support_loss H V A
     hU hA hAV
-  have hCells := nearComplete_block_cell_support_loss H V A
+  have hCells := near_complete_block_cell_support_loss H V A
     hU hAdm hA hAV
-  have hCert := blockCertificateCells_card_ge_two_trace_sum
+  have hCert := block_certificate_cells_card_ge_two_trace_sum
     H V A hU hAdm hA
   omega
 
 
-theorem cleanOneBlock_card_lt
+theorem clean_one_block_card_lt
     (H : Family α) (A : Edge α)
     (hU : Uniform 3 H)
     (hA : nearCompleteBlock H A) :
@@ -1157,12 +1157,12 @@ theorem cleanOneBlock_card_lt
     omega
   apply Finset.card_lt_card
   apply (Finset.ssubset_iff_of_subset
-    (cleanOneBlock_subset H A)).mpr
+    (clean_one_block_subset H A)).mpr
   exact ⟨E, hEH, hNotClean⟩
 
 /-- A finite iteration of one-block deletions yields a block-free
 subfamily while preserving the exact support balance. -/
-private theorem blockFree_reduction_aux
+private theorem block_free_reduction_aux
     (V : Edge α) (n : ℕ) :
     ∀ H : Family α, H.card = n →
       Uniform 3 H → Admissible H →
@@ -1180,21 +1180,21 @@ private theorem blockFree_reduction_aux
     by_cases hExists : ∃ A : Edge α, A ⊆ V ∧ nearCompleteBlock H A
     · obtain ⟨A, hAV, hA⟩ := hExists
       let H₁ := cleanOneBlock H A
-      have hH₁sub : H₁ ⊆ H := cleanOneBlock_subset H A
+      have hH₁sub : H₁ ⊆ H := clean_one_block_subset H A
       have hH₁lt : H₁.card < n := by
         change (cleanOneBlock H A).card < n
         rw [← hCard]
-        exact cleanOneBlock_card_lt H A hU hA
+        exact clean_one_block_card_lt H A hU hA
       have hH₁ground : ∀ E ∈ H₁, E ⊆ V := by
         intro E hEH₁
         exact hGround E (hH₁sub hEH₁)
       obtain ⟨H₀, hH₀sub, hFree, hBal₁⟩ :=
         ih H₁.card hH₁lt H₁ rfl
-          (cleanOneBlock_uniform H A hU)
-          (cleanOneBlock_admissible H A hAdm)
+          (clean_one_block_uniform H A hU)
+          (clean_one_block_admissible H A hAdm)
           hH₁ground
       have hBal₀ :=
-        nearComplete_block_deletion_support_balance
+        near_complete_block_deletion_support_balance
           H V A hU hAdm hGround hA hAV
       change 2 * H.card + (usedPairs H₁ V).card +
           (usedCells H₁ V).card ≤
@@ -1207,7 +1207,7 @@ private theorem blockFree_reduction_aux
         exact hExists ⟨A, hAV, hNear⟩
       · omega
 
-theorem exists_blockFree_reduction
+theorem exists_block_free_reduction
     (H : Family α) (V : Edge α)
     (hU : Uniform 3 H) (hAdm : Admissible H)
     (hGround : ∀ E ∈ H, E ⊆ V) :
@@ -1218,13 +1218,13 @@ theorem exists_blockFree_reduction
           (usedCells H₀ V).card ≤
         2 * H₀.card + (usedPairs H V).card +
           (usedCells H V).card :=
-  blockFree_reduction_aux V H.card H rfl hU hAdm hGround
+  block_free_reduction_aux V H.card H rfl hU hAdm hGround
 
 
 /-- It suffices to establish the actual rank-three support inequality
 for admissible systems without near-complete five-blocks in the ambient
 vertex set. -/
-theorem actual_support_of_blockFree_case
+theorem actual_support_of_block_free_case
     (H : Family α) (V : Edge α)
     (hU : Uniform 3 H) (hAdm : Admissible H)
     (hGround : ∀ E ∈ H, E ⊆ V)
@@ -1235,7 +1235,7 @@ theorem actual_support_of_blockFree_case
       2 * K.card ≤ (usedPairs K V).card + (usedCells K V).card) :
     2 * H.card ≤ (usedPairs H V).card + (usedCells H V).card := by
   obtain ⟨H₀, hSub, hFree, hBalance⟩ :=
-    exists_blockFree_reduction H V hU hAdm hGround
+    exists_block_free_reduction H V hU hAdm hGround
   have hBase₀ := hBase H₀
     (fun E hE => hU (hSub hE))
     (admissible_mono hSub hAdm)
@@ -1243,7 +1243,7 @@ theorem actual_support_of_blockFree_case
     hFree
   omega
 
-theorem triple_family_card_le_choose_two_of_blockFree_case
+theorem triple_family_card_le_choose_two_of_block_free_case
     (H : Family α) (V : Edge α)
     (hU : Uniform 3 H) (hAdm : Admissible H)
     (hGround : ∀ E ∈ H, E ⊆ V)
@@ -1254,6 +1254,6 @@ theorem triple_family_card_le_choose_two_of_blockFree_case
       2 * K.card ≤ (usedPairs K V).card + (usedCells K V).card) :
     H.card ≤ V.card.choose 2 := by
   apply triple_family_card_le_choose_two_of_actual_supports H V
-  exact actual_support_of_blockFree_case H V hU hAdm hGround hBase
+  exact actual_support_of_block_free_case H V hU hAdm hGround hBase
 
 end JSP523.Rank3

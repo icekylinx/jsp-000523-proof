@@ -39,7 +39,7 @@ theorem actual_unordered_excess_eq_used_pair_sum
     have hPcard : P.card = 2 :=
       (Finset.mem_powersetCard.mp hAll).2
     let ab := pairRootRep P hPcard
-    have hSpec := pairRootRep_spec P hPcard
+    have hSpec := pair_root_rep_spec P hPcard
     have hUnusedAB : ({ab.1, ab.2} : Edge α) ∉ Used := by
       rw [← hSpec.2]
       exact hUnused

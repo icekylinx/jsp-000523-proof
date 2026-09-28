@@ -22,7 +22,7 @@ def containingEdges (H : Family α) (p : Edge α) : Family α :=
   H.filter (fun E => p ⊆ E)
 
 /-- Completing vertices and containing triples are in bijection. -/
-theorem completionVertices_card_eq_containingEdges
+theorem completion_vertices_card_eq_containing_edges
     (H : Family α) (V p : Edge α)
     (hUniform : Uniform 3 H)
     (hground : ∀ E ∈ H, E ⊆ V)
@@ -54,7 +54,7 @@ theorem completionVertices_card_eq_containingEdges
     exact heq.symm ▸ hEH
 
 /-- Every triple contributes exactly three incidences with ambient pairs. -/
-theorem containingEdges_first_moment
+theorem containing_edges_first_moment
     (H : Family α) (V : Edge α)
     (hUniform : Uniform 3 H)
     (hground : ∀ E ∈ H, E ⊆ V) :
@@ -99,7 +99,7 @@ theorem containingEdges_first_moment
     _ = 3 * H.card := by simp [mul_comm]
 
 /-- The genuine completion degrees, summed over all ambient pairs. -/
-theorem completionVertices_first_moment
+theorem completion_vertices_first_moment
     (H : Family α) (V : Edge α)
     (hUniform : Uniform 3 H)
     (hground : ∀ E ∈ H, E ⊆ V) :
@@ -111,12 +111,12 @@ theorem completionVertices_first_moment
       ∑ p ∈ V.powersetCard 2, (containingEdges H p).card := by
         apply Finset.sum_congr rfl
         intro p hp
-        exact completionVertices_card_eq_containingEdges
+        exact completion_vertices_card_eq_containing_edges
           H V p hUniform hground hp
-    _ = 3 * H.card := containingEdges_first_moment H V hUniform hground
+    _ = 3 * H.card := containing_edges_first_moment H V hUniform hground
 
 /-- Unused pairs contribute zero to the first moment. -/
-theorem usedPairs_completion_first_moment
+theorem used_pairs_completion_first_moment
     (H : Family α) (V : Edge α)
     (hUniform : Uniform 3 H)
     (hground : ∀ E ∈ H, E ⊆ V) :
@@ -127,7 +127,7 @@ theorem usedPairs_completion_first_moment
         (completionVertices H V p).card) =
       ∑ p ∈ V.powersetCard 2,
         (completionVertices H V p).card := by
-        apply Finset.sum_subset (usedPairs_subset H V)
+        apply Finset.sum_subset (used_pairs_subset H V)
         intro p hp hnot
         by_cases hz : (completionVertices H V p).card = 0
         · exact hz
@@ -136,9 +136,9 @@ theorem usedPairs_completion_first_moment
           have hnon : (completionVertices H V p).Nonempty :=
             Finset.card_pos.mp hpos
           exact False.elim (hnot
-            ((mem_usedPairs_iff_completion_nonempty H V p
+            ((mem_used_pairs_iff_completion_nonempty H V p
               hUniform hground hp).mpr hnon))
-    _ = 3 * H.card := completionVertices_first_moment H V hUniform hground
+    _ = 3 * H.card := completion_vertices_first_moment H V hUniform hground
 
 /-- The number of completions beyond the first, summed over actual used
     ambient pairs. -/
@@ -147,7 +147,7 @@ def pairDegreeExcess (H : Family α) (V : Edge α) : ℕ :=
 
 /-- The exact first-moment surplus: each used pair accounts for its first
     triple, and the remaining triple incidences form `pairDegreeExcess`. -/
-theorem usedPairs_completion_excess_ledger
+theorem used_pairs_completion_excess_ledger
     (H : Family α) (V : Edge α)
     (hUniform : Uniform 3 H)
     (hground : ∀ E ∈ H, E ⊆ V) :
@@ -159,13 +159,13 @@ theorem usedPairs_completion_excess_ledger
     intro p hp
     have hpos : 0 < (completionVertices H V p).card :=
       Finset.card_pos.mpr
-        (usedPair_has_completion H V p hUniform hground hp)
+        (used_pair_has_completion H V p hUniform hground hp)
     omega
   calc
     3 * H.card =
         ∑ p ∈ usedPairs H V,
           (completionVertices H V p).card :=
-      (usedPairs_completion_first_moment H V hUniform hground).symm
+      (used_pairs_completion_first_moment H V hUniform hground).symm
     _ = ∑ p ∈ usedPairs H V,
           (1 + ((completionVertices H V p).card - 1)) := by
       apply Finset.sum_congr rfl
@@ -176,16 +176,16 @@ theorem usedPairs_completion_excess_ledger
 
 /-- Every used pair receives at least one of the three incidences
     contributed by each triple. -/
-theorem usedPairs_card_le_three_edges
+theorem used_pairs_card_le_three_edges
     (H : Family α) (V : Edge α)
     (hUniform : Uniform 3 H)
     (hground : ∀ E ∈ H, E ⊆ V) :
     (usedPairs H V).card ≤ 3 * H.card := by
-  have hledger := usedPairs_completion_excess_ledger H V hUniform hground
+  have hledger := used_pairs_completion_excess_ledger H V hUniform hground
   omega
 
 /-- The second moment is likewise supported on the actual used cells. -/
-theorem usedCells_common_link_double_count
+theorem used_cells_common_link_double_count
     (H : Family α) (V : Edge α) :
     (∑ q ∈ usedCells H V, (commonLink H V q).card) =
       ∑ p ∈ V.powersetCard 2,
@@ -193,7 +193,7 @@ theorem usedCells_common_link_double_count
   calc
     (∑ q ∈ usedCells H V, (commonLink H V q).card) =
       ∑ q ∈ V.powersetCard 2, (commonLink H V q).card := by
-        apply Finset.sum_subset (usedCells_subset H V)
+        apply Finset.sum_subset (used_cells_subset H V)
         intro q hq hnot
         by_cases hz : (commonLink H V q).card = 0
         · exact hz
@@ -202,7 +202,7 @@ theorem usedCells_common_link_double_count
           have hnon : (commonLink H V q).Nonempty :=
             Finset.card_pos.mp hpos
           exact False.elim (hnot
-            ((mem_usedCells_iff_commonLink_nonempty H V q).mpr ⟨hq, hnon⟩))
+            ((mem_used_cells_iff_common_link_nonempty H V q).mpr ⟨hq, hnon⟩))
     _ = ∑ p ∈ V.powersetCard 2,
           (completionVertices H V p).card.choose 2 :=
       actual_common_link_double_count H V

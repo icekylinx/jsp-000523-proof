@@ -6,7 +6,7 @@ section ReciprocalUsedCell
 
 variable {α : Type*} [DecidableEq α]
 
-theorem reciprocalCellMap_mem_usedCells_of_double
+theorem reciprocal_cell_map_mem_used_cells_of_double
     {H : Family α} {V q : Edge α} (hH : Admissible H)
     (hq : q ∈ doubleLinkCells H V) :
     reciprocalCellMap H V q ∈ usedCells H V := by
@@ -14,14 +14,14 @@ theorem reciprocalCellMap_mem_usedCells_of_double
   have hqUsed := (Finset.mem_filter.mp hq).1
   have hqCard := (Finset.mem_filter.mp hq).2
   have hq2 : q.card = 2 :=
-    (Finset.mem_powersetCard.mp (usedCells_subset H V hqUsed)).2
+    (Finset.mem_powersetCard.mp (used_cells_subset H V hqUsed)).2
   let e := corePairRep q hq2
-  have he := corePairRep_spec q hq2
+  have he := core_pair_rep_spec q hq2
   have hqCardRep :
       (commonLink H V ({e.1, e.2} : Edge α)).card = 2 := by
     rw [← he.2]
     exact hqCard
-  have hsub := (Finset.mem_powersetCard.mp (usedCells_subset H V hqUsed)).1
+  have hsub := (Finset.mem_powersetCard.mp (used_cells_subset H V hqUsed)).1
   have hsub' : ({e.1, e.2} : Edge α) ⊆ V := by rw [← he.2]; exact hsub
   have heV : e.1 ∈ V ∧ e.2 ∈ V :=
     ⟨hsub' (by simp), hsub' (by simp)⟩
@@ -42,28 +42,28 @@ theorem reciprocalCellMap_mem_usedCells_of_double
         rcases Finset.mem_insert.mp hyMem with hyx | hyu'
         · exact hxy hyx.symm
         · exact hyu (Finset.mem_singleton.mp hyu')
-      have hmap := reciprocalCellMap_eq_pair_symmDiff H V
+      have hmap := reciprocal_cell_map_eq_pair_symm_diff H V
         ({e.1, e.2} : Edge α) hqCardRep h₁ h₂ hne
       left
       rw [he.2, hmap]
       simpa only [Finset.pair_comm] using
-        (pair_symmDiff_shared_right hyu (Ne.symm hxy) (Ne.symm hxu))
+        (pair_symm_diff_shared_right hyu (Ne.symm hxy) (Ne.symm hxu))
     · have hne : ({x, y} : Edge α) ≠ ({y, u} : Edge α) := by
         intro hh
         have hxMem : x ∈ ({y, u} : Edge α) := by rw [← hh]; simp
         rcases Finset.mem_insert.mp hxMem with hxy' | hxu'
         · exact hxy hxy'
         · exact hxu (Finset.mem_singleton.mp hxu')
-      have hmap := reciprocalCellMap_eq_pair_symmDiff H V
+      have hmap := reciprocal_cell_map_eq_pair_symm_diff H V
         ({e.1, e.2} : Edge α) hqCardRep h₁ h₂ hne
       right
       rw [he.2, hmap]
       simpa only [Finset.pair_comm] using
-        (pair_symmDiff_shared_right hxu hxy (Ne.symm hyu))
-  have hcard := reciprocalCellMap_card_ge_two_of_double hH hq
+        (pair_symm_diff_shared_right hxu hxy (Ne.symm hyu))
+  have hcard := reciprocal_cell_map_card_ge_two_of_double hH hq
   have hcommon : (commonLink H V (reciprocalCellMap H V q)).Nonempty := by
     exact Finset.card_pos.mp (lt_of_lt_of_le (by decide : 0 < 2) hcard)
-  apply (mem_usedCells_iff_commonLink_nonempty H V _).mpr
+  apply (mem_used_cells_iff_common_link_nonempty H V _).mpr
   refine ⟨?_, hcommon⟩
   rcases htarget with htarget | htarget
   · rw [htarget]

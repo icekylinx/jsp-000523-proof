@@ -46,7 +46,7 @@ theorem selected_on_label_pair_excess_eq_native_degree_excess
   have hPcard : P.card = 2 :=
     (Finset.mem_powersetCard.mp hP'.1).2
   let ab := pairRootRep P hPcard
-  have hSpec := pairRootRep_spec P hPcard
+  have hSpec := pair_root_rep_spec P hPcard
   have haP : ab.1 ∈ P := by
     rw [hSpec.2]
     simp [ab]

@@ -23,7 +23,7 @@ def facetParents (all : Family α) (A : Edge α) : Family α :=
   all.filter (fun E => A ⊆ E)
 
 /-- Membership in the actual four-shadow supplies an actual parent. -/
-theorem mem_fourShadow_iff_parent
+theorem mem_four_shadow_iff_parent
     (all : Family α) (A : Edge α) :
     A ∈ fourShadow all ↔
       ∃ E ∈ all, A ⊆ E ∧ A.card = 4 := by
@@ -37,12 +37,12 @@ theorem mem_fourShadow_iff_parent
       ⟨E, hE, Finset.mem_powersetCard.mpr ⟨hsub, hcard⟩⟩
 
 /-- A four-face in the shadow has at least one parent edge. -/
-theorem facetParents_nonempty_of_shadow
+theorem facet_parents_nonempty_of_shadow
     (all : Family α) (A : Edge α)
     (hA : A ∈ fourShadow all) :
     (facetParents all A).Nonempty := by
   obtain ⟨E, hE, hsub, _⟩ :=
-    (mem_fourShadow_iff_parent all A).mp hA
+    (mem_four_shadow_iff_parent all A).mp hA
   exact ⟨E, Finset.mem_filter.mpr ⟨hE, hsub⟩⟩
 
 /-- Filtering the actual shadow by containment in one member recovers
@@ -56,12 +56,12 @@ theorem shadow_faces_inside_edge
   · intro hA
     obtain ⟨hshadow, hsub⟩ := Finset.mem_filter.mp hA
     obtain ⟨_, _, _, hcard⟩ :=
-      (mem_fourShadow_iff_parent all A).mp hshadow
+      (mem_four_shadow_iff_parent all A).mp hshadow
     exact Finset.mem_powersetCard.mpr ⟨hsub, hcard⟩
   · intro hA
     obtain ⟨hsub, hcard⟩ := Finset.mem_powersetCard.mp hA
     exact Finset.mem_filter.mpr
-      ⟨(mem_fourShadow_iff_parent all A).mpr
+      ⟨(mem_four_shadow_iff_parent all A).mpr
         ⟨E, hE, hsub, hcard⟩, hsub⟩
 
 /-- Count all shadow-parent incidences in a five-uniform family. -/
@@ -113,7 +113,7 @@ theorem four_shadow_overlap_ledger
         1 + ((facetParents all A).card - 1) := by
     intro A hA
     have hpos : 0 < (facetParents all A).card :=
-      Finset.card_pos.mpr (facetParents_nonempty_of_shadow all A hA)
+      Finset.card_pos.mpr (facet_parents_nonempty_of_shadow all A hA)
     omega
   calc
     5 * all.card =
@@ -129,7 +129,7 @@ theorem four_shadow_overlap_ledger
 
 /-- The ordinary shadow bound is the nonnegative part of the exact
     overlap identity. -/
-theorem fourShadow_card_le_five_edges
+theorem four_shadow_card_le_five_edges
     (all : Family α) (hUniform : Uniform 5 all) :
     (fourShadow all).card ≤ 5 * all.card := by
   have hledger := four_shadow_overlap_ledger all hUniform
@@ -163,14 +163,14 @@ def privateFourShadow (all : Family α) : Family α :=
 def sharedFourShadow (all : Family α) : Family α :=
   (fourShadow all).filter (fun A => 2 ≤ (facetParents all A).card)
 
-theorem privateFourShadow_subset_fourShadow (all : Family α) :
+theorem private_four_shadow_subset_four_shadow (all : Family α) :
     privateFourShadow all ⊆ fourShadow all := by
   intro A hA
   exact (Finset.mem_filter.mp hA).1
 
 /-- Every actual four-face has a parent, so it has either exactly one
     parent or at least two. -/
-theorem fourShadow_private_shared_union (all : Family α) :
+theorem four_shadow_private_shared_union (all : Family α) :
     privateFourShadow all ∪ sharedFourShadow all = fourShadow all := by
   ext A
   constructor
@@ -180,7 +180,7 @@ theorem fourShadow_private_shared_union (all : Family α) :
     · exact (Finset.mem_filter.mp hs).1
   · intro hA
     have hpos : 0 < (facetParents all A).card :=
-      Finset.card_pos.mpr (facetParents_nonempty_of_shadow all A hA)
+      Finset.card_pos.mpr (facet_parents_nonempty_of_shadow all A hA)
     by_cases hsingle : (facetParents all A).card = 1
     · exact Finset.mem_union.mpr (Or.inl
         (Finset.mem_filter.mpr ⟨hA, hsingle⟩))
@@ -188,7 +188,7 @@ theorem fourShadow_private_shared_union (all : Family α) :
       exact Finset.mem_union.mpr (Or.inr
         (Finset.mem_filter.mpr ⟨hA, hlarge⟩))
 
-theorem private_shared_fourShadow_disjoint (all : Family α) :
+theorem private_shared_four_shadow_disjoint (all : Family α) :
     Disjoint (privateFourShadow all) (sharedFourShadow all) := by
   apply Finset.disjoint_left.mpr
   intro A hp hs
@@ -197,12 +197,12 @@ theorem private_shared_fourShadow_disjoint (all : Family α) :
   omega
 
 /-- Exact partition of the four-shadow by parent multiplicity. -/
-theorem fourShadow_private_shared_card_partition (all : Family α) :
+theorem four_shadow_private_shared_card_partition (all : Family α) :
     (fourShadow all).card =
       (privateFourShadow all).card + (sharedFourShadow all).card := by
   have hcard := Finset.card_union_of_disjoint
-    (private_shared_fourShadow_disjoint all)
-  rw [fourShadow_private_shared_union all] at hcard
+    (private_shared_four_shadow_disjoint all)
+  rw [four_shadow_private_shared_union all] at hcard
   exact hcard
 
 /-- Every unrooted five-edge contributes two distinct faces of unique
@@ -221,9 +221,9 @@ theorem private_four_shadow_bound_of_shared_coherence
         2 * (rootedEdges all z).card := by
     apply shadow_bound_of_private_pairs
       (rooted_unrooted_card_partition all z)
-      (unrootedEdges_subset all z)
+      (unrooted_edges_subset all z)
     intro E hE
-    have hAll : E ∈ all := unrootedEdges_subset all z hE
+    have hAll : E ∈ all := unrooted_edges_subset all z hE
     obtain ⟨a, ha, b, hb, _, hne, _, _, hprivA, hprivB⟩ :=
       two_private_facets_of_rootless_edge (hUniform hAll)
         (unrooted_has_no_triple_root all z hE)
@@ -232,10 +232,10 @@ theorem private_four_shadow_bound_of_shared_coherence
     refine ⟨?_, ?_, Finset.erase_subset a E,
       Finset.erase_subset b E, hne, hprivA, hprivB⟩
     · exact Finset.mem_filter.mpr
-        ⟨erase_mem_fourShadow hAll (hUniform hAll) ha,
+        ⟨erase_mem_four_shadow hAll (hUniform hAll) ha,
           private_deleted_face_one_parent all E a hAll hprivA⟩
     · exact Finset.mem_filter.mpr
-        ⟨erase_mem_fourShadow hAll (hUniform hAll) hb,
+        ⟨erase_mem_four_shadow hAll (hUniform hAll) hb,
           private_deleted_face_one_parent all E b hAll hprivB⟩
   have hpartition := rooted_unrooted_card_partition all z
   omega
@@ -253,7 +253,7 @@ theorem four_shadow_bound_with_shared_slack
   have hprivate :=
     private_four_shadow_bound_of_shared_coherence all z hUniform hshared
   have hpartition := rooted_unrooted_card_partition all z
-  have hshadow := fourShadow_private_shared_card_partition all
+  have hshadow := four_shadow_private_shared_card_partition all
   omega
 
 end FacetIncidence

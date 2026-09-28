@@ -24,16 +24,16 @@ def assignedCommonTriples (K : Family α) (V : Edge α) (p : ℕ)
     Y ∈ chosenPrefixesAt K V p chosenPrefix P ∧ Z ∈ chosenPrefixesAt K V p chosenPrefix P)
 
 /-- Assigned common tails are actual common tails, but need not exhaust them. -/
-theorem assignedCommonTriples_subset
+theorem assigned_common_triples_subset
     (K : Family α) (V : Edge α) (p : ℕ)
     (chosenPrefix : Edge α → Edge α) (Y Z : Edge α) :
     assignedCommonTriples K V p chosenPrefix Y Z ⊆ commonPrefixTriples K V Y Z := by
   intro P hP
   obtain ⟨hPV, hPY, hPZ⟩ := Finset.mem_filter.mp hP
-  have hy := mem_chosenPrefixesAt.mp hPY
-  have hz := mem_chosenPrefixesAt.mp hPZ
+  have hy := mem_chosen_prefixes_at.mp hPY
+  have hz := mem_chosen_prefixes_at.mp hPZ
   have hp := Finset.mem_powersetCard.mp hPV
-  exact mem_commonPrefixTriples.mpr ⟨hp.1, hp.2,
+  exact mem_common_prefix_triples.mpr ⟨hp.1, hp.2,
     Finset.disjoint_union_right.mpr ⟨hy.2.1.symm, hz.2.1.symm⟩,
     hy.2.2.1, hz.2.2.1⟩
 
@@ -57,16 +57,16 @@ theorem assigned_common_triples_linear
   obtain ⟨S, x, y, hSc, hxy, hPeq, hQeq⟩ :=
     triple_shared_pair_completions hp.2 hq.2 hNe (by omega)
   have hYP : Y ∪ P ∈ K.filter (fun E => chosenPrefix E = Y) := by
-    have hd := mem_chosenPrefixesAt.mp hPY
+    have hd := mem_chosen_prefixes_at.mp hPY
     exact Finset.mem_filter.mpr ⟨hd.2.2.1, hd.2.2.2⟩
   have hYQ : Y ∪ Q ∈ K.filter (fun E => chosenPrefix E = Y) := by
-    have hd := mem_chosenPrefixesAt.mp hQY
+    have hd := mem_chosen_prefixes_at.mp hQY
     exact Finset.mem_filter.mpr ⟨hd.2.2.1, hd.2.2.2⟩
   have hZP : Z ∪ P ∈ K.filter (fun E => chosenPrefix E = Z) := by
-    have hd := mem_chosenPrefixesAt.mp hPZ
+    have hd := mem_chosen_prefixes_at.mp hPZ
     exact Finset.mem_filter.mpr ⟨hd.2.2.1, hd.2.2.2⟩
   have hZQ : Z ∪ Q ∈ K.filter (fun E => chosenPrefix E = Z) := by
-    have hd := mem_chosenPrefixesAt.mp hQZ
+    have hd := mem_chosen_prefixes_at.mp hQZ
     exact Finset.mem_filter.mpr ⟨hd.2.2.1, hd.2.2.2⟩
   rw [hPeq] at hYP hZP
   rw [hQeq] at hYQ hZQ
@@ -110,11 +110,11 @@ theorem parent_pair_link_card_le_codegree (H : Family α) (V A : Edge α) :
   classical
   apply Finset.card_le_card_of_injOn (fun P => A ∪ P)
   · intro P hP
-    have hp := mem_parentPairLink.mp hP
+    have hp := mem_parent_pair_link.mp hP
     exact Finset.mem_filter.mpr ⟨hp.2.2.2, Finset.subset_union_left⟩
   · intro P hP Q hQ hEq
-    have hp := (mem_parentPairLink.mp hP).2.2.1
-    have hq := (mem_parentPairLink.mp hQ).2.2.1
+    have hp := (mem_parent_pair_link.mp hP).2.2.1
+    have hq := (mem_parent_pair_link.mp hQ).2.2.1
     have h := congrArg (fun E : Edge α => E \ A) hEq
     simpa only [Finset.union_sdiff_cancel_left hp.symm,
       Finset.union_sdiff_cancel_left hq.symm] using h
@@ -151,7 +151,7 @@ theorem assigned_prefix_common_system_bound
   classical
   let C := assignedCommonTriples K V (r - 3) chosenPrefix Y Z
   have hC : C ⊆ commonPrefixTriples K V Y Z :=
-    assignedCommonTriples_subset K V (r - 3) chosenPrefix Y Z
+    assigned_common_triples_subset K V (r - 3) chosenPrefix Y Z
   have hYpos : Y.Nonempty := by
     have hyc := (Finset.mem_powersetCard.mp hY).2
     exact Finset.card_pos.mp (by omega)
@@ -178,7 +178,7 @@ theorem assigned_prefix_common_system_bound
         good label hGoodCenter hLabel
       have hBad₀ := hBad P₀ hP₀ x hxP₀
       have hxY : x ∉ Y := by
-        have hp := mem_commonPrefixTriples.mp (hC hP₀)
+        have hp := mem_common_prefix_triples.mp (hC hP₀)
         exact (Finset.disjoint_left.mp
           (Finset.disjoint_union_right.mp hp.2.2.1).1) hxP₀
       have hAc : (Y ∪ {x}).card = r - 2 := by

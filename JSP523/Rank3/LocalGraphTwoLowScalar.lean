@@ -18,7 +18,7 @@ def samePartTwoLowUpper (a b : ℕ) : ℚ :=
       6 / ((a : ℚ) * ((a : ℚ) - 1))
 
 /-- The exact rational surplus in the same-part case of §II.A.2. -/
-theorem samePartTwoLow_surplus_eq
+theorem same_part_two_low_surplus_eq
     {a b : ℕ} (ha : 4 ≤ a) (hb : 2 ≤ b) :
     localGraphBudget a + localGraphBudget b -
         samePartTwoLowUpper a b =
@@ -29,14 +29,14 @@ theorem samePartTwoLow_surplus_eq
         6 / ((a : ℚ) * ((a : ℚ) - 1)) := by
   have haTwo : 2 ≤ a := by omega
   have haMinusTwo : 2 ≤ a - 2 := by omega
-  rw [localGraphBudget_eq_formula haTwo,
-    localGraphBudget_eq_formula hb]
+  rw [local_graph_budget_eq_formula haTwo,
+    local_graph_budget_eq_formula hb]
   have hCast : ((a - 2 : ℕ) : ℚ) = (a : ℚ) - 2 := by
     rw [Nat.cast_sub (by omega : 2 ≤ a)]
     norm_num
   unfold samePartTwoLowUpper
-  rw [localPhi_eq_formula hb,
-    localPhi_eq_formula haMinusTwo, hCast]
+  rw [local_phi_eq_formula hb,
+    local_phi_eq_formula haMinusTwo, hCast]
   rw [show (a : ℚ) - 2 + 1 = (a : ℚ) - 1 by ring]
   have haq : (4 : ℚ) ≤ a := by exact_mod_cast ha
   have hbq : (2 : ℚ) ≤ b := by exact_mod_cast hb
@@ -66,12 +66,12 @@ private theorem consecutive_difference_product_nonneg
     exact mul_nonneg_of_nonpos_of_nonpos hLeft hRight
 
 /-- The same-part upper bound is within the combined part budgets. -/
-theorem samePartTwoLowUpper_le_budgets
+theorem same_part_two_low_upper_le_budgets
     {a b : ℕ} (ha : 4 ≤ a) (hb : 2 ≤ b) :
     samePartTwoLowUpper a b ≤
       localGraphBudget a + localGraphBudget b := by
   rw [← sub_nonneg]
-  rw [samePartTwoLow_surplus_eq ha hb]
+  rw [same_part_two_low_surplus_eq ha hb]
   have haq : (4 : ℚ) ≤ a := by exact_mod_cast ha
   have hbq : (2 : ℚ) ≤ b := by exact_mod_cast hb
   have hProd := consecutive_difference_product_nonneg a b
@@ -99,7 +99,7 @@ def oppositePartsTwoLowUpper (a b : ℕ) : ℚ :=
         3 / ((b : ℚ) * ((b : ℚ) + 1))
 
 /-- The exact rational surplus in the opposite-parts case. -/
-theorem oppositePartsTwoLow_surplus_eq
+theorem opposite_parts_two_low_surplus_eq
     {a b : ℕ} (ha : 3 ≤ a) (hb : 3 ≤ b) :
     localGraphBudget a + localGraphBudget b -
         oppositePartsTwoLowUpper a b =
@@ -111,11 +111,11 @@ theorem oppositePartsTwoLow_surplus_eq
   have hbTwo : 2 ≤ b := by omega
   have haMinusOne : 2 ≤ a - 1 := by omega
   have hbMinusOne : 2 ≤ b - 1 := by omega
-  rw [localGraphBudget_eq_formula haTwo,
-    localGraphBudget_eq_formula hbTwo]
+  rw [local_graph_budget_eq_formula haTwo,
+    local_graph_budget_eq_formula hbTwo]
   unfold oppositePartsTwoLowUpper
-  rw [localPhi_eq_formula hbMinusOne,
-    localPhi_eq_formula haMinusOne]
+  rw [local_phi_eq_formula hbMinusOne,
+    local_phi_eq_formula haMinusOne]
   have hCastA : ((a - 1 : ℕ) : ℚ) = (a : ℚ) - 1 := by
     rw [Nat.cast_sub (by omega : 1 ≤ a)]
     norm_num
@@ -133,12 +133,12 @@ theorem oppositePartsTwoLow_surplus_eq
   ring
 
 /-- The opposite-parts upper bound is within the combined part budgets. -/
-theorem oppositePartsTwoLowUpper_le_budgets
+theorem opposite_parts_two_low_upper_le_budgets
     {a b : ℕ} (ha : 3 ≤ a) (hb : 3 ≤ b) :
     oppositePartsTwoLowUpper a b ≤
       localGraphBudget a + localGraphBudget b := by
   rw [← sub_nonneg]
-  rw [oppositePartsTwoLow_surplus_eq ha hb]
+  rw [opposite_parts_two_low_surplus_eq ha hb]
   have haq : (3 : ℚ) ≤ a := by exact_mod_cast ha
   have hbq : (3 : ℚ) ≤ b := by exact_mod_cast hb
   have hAB : 0 < (a : ℚ) * (b : ℚ) := by

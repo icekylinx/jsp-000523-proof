@@ -144,7 +144,7 @@ theorem removed_layer_bound_from_codegrees_on_ground
     omega
   have hOne := (one_hit_edges_le_actual_star_objects H V X r hUniform hGround).trans
     hObjects
-  have hLayer := avoidX_layer_le_one_hit_plus_pair_budget H X D₂
+  have hLayer := avoid_x_layer_le_one_hit_plus_pair_budget H X D₂
     (by intro Q hQ; exact hD₂ Q (Finset.mem_powersetCard.mp hQ).2)
   have hPairs : X.card.choose 2 * D₂ ≤ h.choose 2 * D₂ :=
     Nat.mul_le_mul_right _ (Nat.choose_le_choose 2 hX)

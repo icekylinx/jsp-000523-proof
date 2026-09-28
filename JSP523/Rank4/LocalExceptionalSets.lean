@@ -22,7 +22,7 @@ theorem near_star_exceptional_vertices_incidence
     (H : Family α) (W : Edge α) (v : α) :
     (W.card - 5).choose 2 * (badSingletonVertices H W v 4).card ≤
       6 * (missingStarFacets H W v 4).card := by
-  have h := badSingletonVertices_card_bound H W v 4
+  have h := bad_singleton_vertices_card_bound H W v 4
   simpa only [Nat.sub_sub] using h
 
 /-- Incidence bound (III.C.5) for exceptional pairs. -/
@@ -31,7 +31,7 @@ theorem near_star_bad_pairs_incidence
     (W.card - 6) * (nearStarBadPairs H W v).card ≤
       6 * (missingStarFacets H W v 4).card := by
   unfold nearStarBadPairs
-  have h := badMissingSets_card_bound H W v 4 2 (W.card - 6)
+  have h := bad_missing_sets_card_bound H W v 4 2 (W.card - 6)
   norm_num at h ⊢
   exact h
 

@@ -107,7 +107,7 @@ theorem graph_family_colored_payment
       (∑ i : β, graphDeficit (F i)) +
       (∑ t ∈ C, ∑ z : Fin 3, slotSlack (d t) (k t z)) / 2 := by
   have hGraph := Finset.sum_le_sum (s := (Finset.univ : Finset β))
-    (fun i _ => graphDeficit_marked (F i) (M3 i) (M4 i)
+    (fun i _ => graph_deficit_marked (F i) (M3 i) (M4 i)
       (hDisj i) (h3 i) (h4 i))
   have hColor := colored_family_payment C d k
     (∑ i : β, orderedUniquePairCount (F i) / 2)

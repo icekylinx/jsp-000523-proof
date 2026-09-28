@@ -20,7 +20,7 @@ def graphCommonNeighborGraph (F : SimpleGraph α)
   symm := ⟨by
     intro a b h
     exact ⟨h.1.symm, by
-      rw [graphCommonMultiplicity_symm]
+      rw [graph_common_multiplicity_symm]
       exact h.2⟩⟩
   loopless := ⟨by
     intro a h
@@ -42,7 +42,7 @@ theorem graph_common_multiplicity_at_pair_of_distinct
   classical
   have hPcard : ({a, b} : Edge α).card = 2 := Finset.card_pair hab
   let r := pairRootRep ({a, b} : Edge α) hPcard
-  have hSpec := pairRootRep_spec ({a, b} : Edge α) hPcard
+  have hSpec := pair_root_rep_spec ({a, b} : Edge α) hPcard
   have hOrient := pair_finset_eq_oriented_eq hSpec.1 hSpec.2
   unfold graphCommonMultiplicityAtPair
   rw [dite_eq_left hPcard]
@@ -53,12 +53,12 @@ theorem graph_common_multiplicity_at_pair_of_distinct
   rcases hOrient with hSame | hSwap
   · rw [hSame.1, hSame.2]
   · rw [hSwap.1, hSwap.2]
-    exact graphCommonMultiplicity_symm F b a
+    exact graph_common_multiplicity_symm F b a
 
 omit [Fintype α] in
 /-- Mapping an unordered pair to its underlying finite vertex set is
 injective. -/
-theorem sym2_toFinset_injective :
+theorem sym2_to_finset_injective :
     Function.Injective (Sym2.toFinset : Sym2 α → Finset α) := by
   intro e f hef
   apply Sym2.ext
@@ -81,7 +81,7 @@ theorem common_pair_finset_eq_common_neighbor_edge_image
     have hPcard : P.card = 2 :=
       (Finset.mem_powersetCard.mp hP'.1).2
     let r := pairRootRep P hPcard
-    have hSpec := pairRootRep_spec P hPcard
+    have hSpec := pair_root_rep_spec P hPcard
     have hPos : 0 < graphCommonMultiplicity F r.1 r.2 := by
       unfold graphCommonMultiplicityAtPair at hP'
       rw [dite_eq_left hPcard] at hP'
@@ -120,7 +120,7 @@ theorem graph_common_pair_count_eq_common_neighbor_edges
   classical
   unfold graphCommonPairCount
   rw [common_pair_finset_eq_common_neighbor_edge_image]
-  exact Finset.card_image_of_injective _ sym2_toFinset_injective
+  exact Finset.card_image_of_injective _ sym2_to_finset_injective
 
 /-- At each vertex, the ordered common-pair indicator count is the
 degree in the common-neighbor graph. -/

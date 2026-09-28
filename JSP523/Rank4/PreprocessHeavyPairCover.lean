@@ -25,7 +25,7 @@ noncomputable def pairRootMatchingCandidates (S : Family α) : Finset (Family α
   exact S.powerset.filter pairRootMatching
 
 omit [DecidableEq α] in
-theorem pairRootMatchingCandidates_nonempty (S : Family α) :
+theorem pair_root_matching_candidates_nonempty (S : Family α) :
     (pairRootMatchingCandidates S).Nonempty := by
   classical
   refine ⟨∅, ?_⟩
@@ -34,20 +34,20 @@ theorem pairRootMatchingCandidates_nonempty (S : Family α) :
 /-- A maximum-cardinality matching of the finite pair-root family. -/
 noncomputable def maximalDisjointPairRoots (S : Family α) : Family α :=
   Classical.choose (Finset.exists_max_image (pairRootMatchingCandidates S)
-    Finset.card (pairRootMatchingCandidates_nonempty S))
+    Finset.card (pair_root_matching_candidates_nonempty S))
 
 omit [DecidableEq α] in
-theorem maximalDisjointPairRoots_spec (S : Family α) :
+theorem maximal_disjoint_pair_roots_spec (S : Family α) :
     maximalDisjointPairRoots S ∈ pairRootMatchingCandidates S ∧
       ∀ M ∈ pairRootMatchingCandidates S,
         M.card ≤ (maximalDisjointPairRoots S).card := by
   exact Classical.choose_spec (Finset.exists_max_image
     (pairRootMatchingCandidates S) Finset.card
-    (pairRootMatchingCandidates_nonempty S))
+    (pair_root_matching_candidates_nonempty S))
 
 /-- Any heavy root disjoint from every selected root could be added to the
 matching, contradicting maximum cardinality. -/
-theorem maximalDisjointPairRoots_maximal
+theorem maximal_disjoint_pair_roots_maximal
     (S : Family α) (P : Edge α) (hP : P ∈ S)
     (hNotM : P ∉ maximalDisjointPairRoots S) :
     ∃ Q ∈ maximalDisjointPairRoots S, ¬ Disjoint P Q := by
@@ -55,7 +55,7 @@ theorem maximalDisjointPairRoots_maximal
   by_contra h
   push Not at h
   let M := maximalDisjointPairRoots S
-  have hSpec := maximalDisjointPairRoots_spec S
+  have hSpec := maximal_disjoint_pair_roots_spec S
   have hSpecMem : M ∈ S.powerset.filter pairRootMatching := by
     simpa [M, pairRootMatchingCandidates] using hSpec.1
   have hM : pairRootMatching M := by
@@ -80,7 +80,7 @@ theorem maximalDisjointPairRoots_maximal
       · exact hM A hAM B hBM hAB
   have hInsMem : insert P M ∈ pairRootMatchingCandidates S :=
     Finset.mem_filter.mpr ⟨Finset.mem_powerset.mpr hInsSub, hInsMatch⟩
-  have hMax := (maximalDisjointPairRoots_spec S).2 (insert P M) hInsMem
+  have hMax := (maximal_disjoint_pair_roots_spec S).2 (insert P M) hInsMem
   have hCard : (insert P M).card = M.card + 1 :=
     Finset.card_insert_of_notMem hNotM
   rw [hCard] at hMax
@@ -88,7 +88,7 @@ theorem maximalDisjointPairRoots_maximal
   omega
 
 /-- The selected roots cover the entire heavy pair-root family by endpoints. -/
-theorem maximalDisjointPairRoots_endpoint_cover
+theorem maximal_disjoint_pair_roots_endpoint_cover
     (S : Family α)
     (hPair : ∀ P ∈ S, P.card = 2) :
     ∀ P ∈ S, ∃ a ∈ P, a ∈ (maximalDisjointPairRoots S).biUnion fun Q => Q := by
@@ -100,7 +100,7 @@ theorem maximalDisjointPairRoots_endpoint_cover
     obtain ⟨a, ha⟩ := Finset.card_pos.mp (by omega : 0 < P.card)
     refine ⟨a, ha, Finset.mem_biUnion.mpr ⟨P, hPM, ha⟩⟩
   · obtain ⟨Q, hQM, hNotDisj⟩ :=
-      maximalDisjointPairRoots_maximal S P hP hPM
+      maximal_disjoint_pair_roots_maximal S P hP hPM
     obtain ⟨a, ha⟩ := Finset.not_disjoint_iff_nonempty_inter.mp hNotDisj
     exact ⟨a, (Finset.mem_inter.mp ha).1,
       Finset.mem_biUnion.mpr ⟨Q, hQM, (Finset.mem_inter.mp ha).2⟩⟩
@@ -111,7 +111,7 @@ def actualHeavyPairRoots (F : Family α) (U : Edge α) (T : ℕ) : Family α :=
 
 /-- The maximum matching cover applies directly to the actual high-codegree
 pairs in the fixed ground set. -/
-theorem actualHeavyPairRoots_maximal_matching_cover
+theorem actual_heavy_pair_roots_maximal_matching_cover
     (F : Family α) (U : Edge α) (T : ℕ) :
     ∃ M : Family α,
       M ⊆ actualHeavyPairRoots F U T ∧
@@ -122,7 +122,7 @@ theorem actualHeavyPairRoots_maximal_matching_cover
   classical
   let S := actualHeavyPairRoots F U T
   let M := maximalDisjointPairRoots S
-  have hSpec := maximalDisjointPairRoots_spec S
+  have hSpec := maximal_disjoint_pair_roots_spec S
   have hMmem : M ∈ pairRootMatchingCandidates S := by
     simpa [M] using hSpec.1
   have hMsub : M ⊆ S := Finset.mem_powerset.mp
@@ -130,7 +130,7 @@ theorem actualHeavyPairRoots_maximal_matching_cover
   have hMmatch : pairRootMatching M := (Finset.mem_filter.mp hMmem).2
   refine ⟨M, hMsub, hMmatch, ?_, ?_⟩
   · intro P hP
-    exact maximalDisjointPairRoots_endpoint_cover S
+    exact maximal_disjoint_pair_roots_endpoint_cover S
       (fun P hP => (Finset.mem_powersetCard.mp
         (Finset.mem_filter.mp hP).1).2) P hP
   · calc

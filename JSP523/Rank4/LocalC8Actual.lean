@@ -24,7 +24,7 @@ def RankFourNearStarEqualityFamily {α : Type*} [DecidableEq α]
       (outsideEdges H W).card = W.card / 4 + 1)
 
 /-- The cubic-root substitution used in the actual C7-to-C8 estimate. -/
-theorem near_star_C8_bad_pair_sqrt
+theorem near_star_c8_bad_pair_sqrt
     {w q h : ℝ} (hw : 0 < w) (hq : 0 ≤ q) (hh0 : 0 ≤ h)
     (hh : h ≤ 9 * q / w) :
     Real.sqrt (h ^ 3) ≤ 27 * q * Real.sqrt (q / w ^ 3) := by
@@ -61,7 +61,7 @@ theorem near_star_C8_bad_pair_sqrt
 
 /-- Scalar substitution proving the displayed C8 coefficient from the real
 versions of the actual C7 incidence bounds. -/
-theorem near_star_C8_numeric
+theorem near_star_c8_numeric
     {w q b qU qD u d h J Δ : ℝ}
     (hw : 1000 ≤ w) (hwpos : 0 < w) (hq : 0 ≤ q)
     (hqSplit : qU + qD = q) (hqU : 0 ≤ qU)
@@ -99,7 +99,7 @@ theorem near_star_C8_numeric
   have hB4 : 32 * d ^ 3 ≤ 442368 * q ^ 3 / w ^ 6 := by
     rw [le_div_iff₀ (by positivity : (0 : ℝ) < w ^ 6)]
     nlinarith [hDpoly, hDcube]
-  have hRoot := near_star_C8_bad_pair_sqrt hwpos hq hh hPairs
+  have hRoot := near_star_c8_bad_pair_sqrt hwpos hq hh hPairs
   have hQlin : qU / 4 + 2 * qD / 3 ≤ 2 * q / 3 := by nlinarith [hqSplit]
   have hRootTerm : 27 * q * Real.sqrt (q / w ^ 3) / 2 =
       q * (27 / 2 * Real.sqrt (q / w ^ 3)) := by ring
@@ -125,7 +125,7 @@ theorem near_star_C8_numeric
 
 /-- The actual near-star C7 estimate and exceptional-set incidences imply the
 displayed C8 inequality. -/
-theorem near_star_C8_actual
+theorem near_star_c8_actual
     {H : Family α} {W : Edge α} {v : α} [Fintype α] [DecidableEq α]
     (hH : Admissible H) (hUniform : Uniform 4 H) (hvW : v ∉ W)
     (hw : 1000 ≤ W.card) :
@@ -162,7 +162,7 @@ theorem near_star_C8_actual
       (W.card.choose 2 : ℝ) - ((W.card - 5).choose 2 : ℝ) := by
     dsimp [Δ]
     rw [Nat.cast_sub (Nat.choose_le_choose 2 (Nat.sub_le W.card 5))]
-  have hC7 := near_star_C7_actual hH hUniform hvW
+  have hC7 := near_star_c7_actual hH hUniform hvW
   have hC7r : br ≤ qUr / 4 + 2 * qDr / 3 + ur / 4 +
       5 * hr / 4 + Real.sqrt (hr ^ 3) / 2 + 5 * Jr / 3 +
       dr * Δr / 3 + 32 * dr ^ 3 := by
@@ -227,13 +227,13 @@ theorem near_star_C8_actual
   have hwReal : 1000 ≤ wr := by
     dsimp [wr]
     exact_mod_cast hw
-  have hC8 := near_star_C8_numeric hwReal hwpos hqnonneg hqUreal hqUpos
+  have hC8 := near_star_c8_numeric hwReal hwpos hqnonneg hqUreal hqUpos
     huReal (by positivity) hhpos hDreal hpairReal hJReal hDeltaReal hC7r
   simpa [br, wr, qr, q, u, ur] using hC8
 
 /-- The C8 range contracts its coefficient to the coarse interface used in
 the final numerical close. -/
-theorem near_star_C8_actual_coarse
+theorem near_star_c8_actual_coarse
     {H : Family α} {W : Edge α} {v : α} [Fintype α] [DecidableEq α]
     (hH : Admissible H) (hUniform : Uniform 4 H) (hvW : v ∉ W)
     (hw : 1000 ≤ W.card)
@@ -241,11 +241,11 @@ theorem near_star_C8_actual_coarse
     12 * (outsideEdges H W).card ≤
       3 * W.card + 11 * (missingStarTriples H W v).card := by
   exact c8_implies_coarse_interface hw hq
-    (near_star_C8_actual hH hUniform hvW hw)
+    (near_star_c8_actual hH hUniform hvW hw)
 
 /-- The actual near-star estimates close the rank-four local upper bound in
 the C8 range. -/
-theorem rank_four_local_upper_of_near_star_C8
+theorem rank_four_local_upper_of_near_star_c8
     {H : Family α} {W : Edge α} {v : α} [Fintype α] [DecidableEq α]
     (hH : Admissible H) (hUniform : Uniform 4 H)
     (hSupport : ∀ E ∈ H, E ⊆ insert v W) (hvW : v ∉ W)
@@ -254,7 +254,7 @@ theorem rank_four_local_upper_of_near_star_C8
     H.card ≤ W.card.choose 3 + W.card / 4 := by
   apply rank_four_local_upper_of_edge_count_interfaces
     hH hUniform hSupport hvW hw
-  · exact near_star_C8_actual_coarse hH hUniform hvW hw hq
+  · exact near_star_c8_actual_coarse hH hUniform hvW hw hq
   · intro hD hBad
     exact near_star_outside_refined_244 hH hUniform hvW hD hBad
 
@@ -272,11 +272,11 @@ theorem rank_four_near_star_exactness
         LinearFamily (outsideEdges H W) ∧
         4 * (outsideEdges H W).card ≤
           (missingStarTriples H W v).card + W.card) := by
-  have hUpper := rank_four_local_upper_of_near_star_C8
+  have hUpper := rank_four_local_upper_of_near_star_c8
     hH hUniform hSupport hvW hw hq
   refine ⟨hUpper, ?_⟩
   intro hThreshold
-  have hCoarse := near_star_C8_actual_coarse hH hUniform hvW hw hq
+  have hCoarse := near_star_c8_actual_coarse hH hUniform hvW hw hq
   have hVertex := near_star_exceptional_vertices_quadratic H W v (by omega)
   have hPair := near_star_bad_pairs_incidence H W v
   let B := outsideEdges H W
@@ -404,7 +404,7 @@ theorem rank_four_near_star_equality_iff
     · omega
 
 /-- Combined Lean interface for all conclusions of Theorem III.2. -/
-theorem rank_four_near_star_theorem_III2
+theorem rank_four_near_star_theorem_iii2
     {H : Family α} {W : Edge α} {v : α} [Fintype α] [DecidableEq α]
     (hH : Admissible H) (hUniform : Uniform 4 H)
     (hSupport : ∀ E ∈ H, E ⊆ insert v W) (hvW : v ∉ W)

@@ -29,7 +29,7 @@ def sharedStarLayerFacets (U T S : Edge α) (k : ℕ) : Family α :=
 
 /-- Distinct uniform link members share at most one facet of codimension
 one. -/
-theorem sharedStarLayerFacets_card_le_one
+theorem shared_star_layer_facets_card_le_one
     (U T S : Edge α) (k : ℕ)
     (hT : T.card = k) (hS : S.card = k) (hTS : T ≠ S) :
     (sharedStarLayerFacets U T S k).card ≤ 1 := by
@@ -60,7 +60,7 @@ theorem sharedStarLayerFacets_card_le_one
 
 /-- If the two link members agree, they contribute exactly k common
 `(k-1)`-facets, provided they lie in the link ground set. -/
-theorem sharedStarLayerFacets_card_eq_of_eq
+theorem shared_star_layer_facets_card_eq_of_eq
     (U T : Edge α) (k : ℕ) (hTU : T ⊆ U) (hT : T.card = k)
     (hk : 1 ≤ k) :
     (sharedStarLayerFacets U T T k).card = k := by
@@ -80,7 +80,7 @@ theorem sharedStarLayerFacets_card_eq_of_eq
 
 /-- Exact collision double count: the second moment over shadow prefixes is
 the sum, over ordered link-member pairs, of their common shadow facets. -/
-theorem starLayerPairwiseCollision_identity
+theorem star_layer_pairwise_collision_identity
     (U : Edge α) (k : ℕ) (A B : Family α) :
     (∑ P ∈ U.powersetCard (k - 1),
       starLayerPrefixDegree A P * starLayerPrefixDegree B P) =
@@ -132,7 +132,7 @@ theorem starLayerPairwiseCollision_identity
 
 /-- The IV.1.2 star-fiber argument when codegree control is known only away
 from the fixed prefix. Prefix vertices have empty tail fibers by definition. -/
-theorem commonPrefixTails_card_le_vertex_degree_off_prefix
+theorem common_prefix_tails_card_le_vertex_degree_off_prefix
     {H : Family α} {W Y Z A : Edge α} {t D : ℕ}
     (hH : Admissible H) (hY : Y.Nonempty) (hZ : Z.Nonempty)
     (hYZ : Disjoint Y Z) (ht : 1 ≤ t)
@@ -142,9 +142,9 @@ theorem commonPrefixTails_card_le_vertex_degree_off_prefix
     (commonPrefixTails H W Y Z t).card ≤ t * D := by
   have hU : Uniform t (commonPrefixTails H W Y Z t) := by
     intro P hP
-    exact (mem_commonPrefixTails.mp hP).2.1
+    exact (mem_common_prefix_tails.mp hP).2.1
   apply intersecting_card_le_vertex_cap hU
-    (commonPrefixTails_intersecting hH hY hZ hYZ ht) hA ht
+    (common_prefix_tails_intersecting hH hY hZ hYZ ht) hA ht
   intro x
   by_cases hxY : x ∈ Y
   · have hEmpty :
@@ -154,19 +154,19 @@ theorem commonPrefixTails_card_le_vertex_degree_off_prefix
       · intro h
         obtain ⟨hP, hxP⟩ := Finset.mem_filter.mp h
         exact False.elim ((Finset.disjoint_left.mp
-          (mem_commonPrefixTails.mp hP).2.2.1) hxP
+          (mem_common_prefix_tails.mp hP).2.2.1) hxP
           (Finset.mem_union_left Z hxY))
       · intro h
         simp at h
     simp [hEmpty]
   · simpa only [Finset.singleton_subset_iff] using
-      (commonPrefixTails_fiber_le_parent_degree
+      (common_prefix_tails_fiber_le_parent_degree
         (H := H) (W := W) (Y := Y) (Z := Z) (S := ({x} : Edge α))
         (t := t)).trans (hCap x hxY)
 
 /-- The equal-completion cell of two star layers has size at most
 `(r-1)D₂`, by the IV.1.2 intersecting-cell bound. -/
-theorem starLayerEqualCompletionCell_card_le
+theorem star_layer_equal_completion_cell_card_le
     {H : Family α} {U : Edge α} {z w : α} {r D₂ : ℕ}
     (hH : Admissible H) (hzw : z ≠ w)
     (_hzU : z ∉ U) (_hwU : w ∉ U) (hr : 2 ≤ r)
@@ -196,7 +196,7 @@ theorem starLayerEqualCompletionCell_card_le
         · exact Finset.disjoint_singleton_right.mpr haY
       exact hD₂ (Y ∪ {a}) hCard
     simpa [C, Y, Z] using
-      (commonPrefixTails_card_le_vertex_degree_off_prefix
+      (common_prefix_tails_card_le_vertex_degree_off_prefix
         hH hY hZ hYZ ht hA hCap)
 
 /-- The common `(r-2)`-tail cell for two star edges with distinct
@@ -207,7 +207,7 @@ def starLayerCrossCell (H : Family α) (U : Edge α)
 
 /-- Concrete IV.1.2 bound for a cross-completion cell of two star layers.
 The three-codegree bound is required only on three-sets, matching D₃(H). -/
-theorem starLayerCrossCell_card_le
+theorem star_layer_cross_cell_card_le
     {H : Family α} {U : Edge α} {z w x y : α} {r D₃ : ℕ}
     (hH : Admissible H)
     (hzw : z ≠ w) (hxy : x ≠ y)
@@ -253,7 +253,7 @@ theorem starLayerCrossCell_card_le
         · simp [hYcard]
         · exact Finset.disjoint_singleton_right.mpr haY
       exact hD₃ (Y ∪ {a}) hCard
-    exact commonPrefixTails_card_le_vertex_degree_off_prefix
+    exact common_prefix_tails_card_le_vertex_degree_off_prefix
       hH hY hZ hYZ ht hA hCap
 
 /-- Two distinct actual star-link members sharing an `(r-2)`-facet have
@@ -316,7 +316,7 @@ theorem distinct_star_link_members_land_in_cross_cell
   have hwNotP : w ∉ P := fun hwP => hwU (hPdata.1 hwP)
   have hcell : P ∈ commonPrefixTails H U
       ({z, x} : Edge α) ({w, y} : Edge α) (r - 2) := by
-    apply mem_commonPrefixTails.mpr
+    apply mem_common_prefix_tails.mpr
     refine ⟨hPdata.1, hPcard, ?_, ?_, ?_⟩
     · apply Finset.disjoint_left.mpr
       intro a haP haRoot

@@ -22,7 +22,7 @@ private theorem two_mul_choose_two_eq (n : ℕ) :
 
 omit [Fintype α] in
 /-- The ordered collision moment is twice the actual common-cell sum. -/
-theorem completion_collisionMoment_eq_two_commonRootCell_sum
+theorem completion_collision_moment_eq_two_common_root_cell_sum
     (K : Family α) (U : Edge α) (hUniform : Uniform 4 K) :
     (∑ T ∈ U.powersetCard 3,
       (facetCompletions K U T).card *
@@ -46,7 +46,7 @@ theorem completion_collisionMoment_eq_two_commonRootCell_sum
 omit [Fintype α] in
 /-- With actual pair and facet degree caps, deleting high-codegree triples
 regularizes the four-family at explicit cost. -/
-theorem highCodegreeDeletion_regularizes_of_degree_caps
+theorem high_codegree_deletion_regularizes_of_degree_caps
     (F : Family α) (U : Edge α) (R M D : ℕ)
     (hUniform : Uniform 4 F)
     (hAdmissible : Admissible F)
@@ -60,16 +60,16 @@ theorem highCodegreeDeletion_regularizes_of_degree_caps
       (∀ T ∈ U.powersetCard 3,
         (tripleCompletionVertices K U T).card ≤ R) := by
   classical
-  have hCell := commonRootCell_sum_le_of_degree_caps hAdmissible hFacet hPair
+  have hCell := common_root_cell_sum_le_of_degree_caps hAdmissible hFacet hPair
   have hMoment :
       (∑ T ∈ U.powersetCard 3,
         (facetCompletions F U T).card *
           ((facetCompletions F U T).card - 1)) ≤
         2 * (U.powersetCard 2).card * max M (9 * D) := by
-    rw [completion_collisionMoment_eq_two_commonRootCell_sum F U hUniform]
+    rw [completion_collision_moment_eq_two_common_root_cell_sum F U hUniform]
     simpa [Nat.mul_assoc] using Nat.mul_le_mul_left 2 hCell
   obtain ⟨K, hKF, hLoss, hRegular⟩ :=
-    highCodegreeDeletion_regularizes F U R
+    high_codegree_deletion_regularizes F U R
       (2 * (U.powersetCard 2).card * max M (9 * D)) hMoment
   exact ⟨K, hKF, hLoss, hRegular⟩
 

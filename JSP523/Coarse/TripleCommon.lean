@@ -50,7 +50,7 @@ private theorem link_edges_from_common_pair
 /-- Once all ordinary vertex links are four-cycle-free, every actual
 common link contains at most one pair.  This is the step immediately
 before equation (I.5) in the manuscript. -/
-theorem commonLink_card_le_one_of_link_free
+theorem common_link_card_le_one_of_link_free
     (T : Family α) (hT : Admissible T)
     (hfree : ∀ z : α, FourCycleFree (tripleLinkGraph T z))
     (q : Edge α) (hq : q ∈ (Finset.univ : Finset α).powersetCard 2) :
@@ -68,9 +68,9 @@ theorem commonLink_card_le_one_of_link_free
     exact hpNotDisj (Finset.disjoint_iff_inter_eq_empty.mpr
       (Finset.not_nonempty_iff_eq_empty.mp hEmpty))
   obtain ⟨z, hz⟩ := hmeet
-  have hpOr := (Rank3.mem_commonLink_pair_iff_oriented
+  have hpOr := (Rank3.mem_common_link_pair_iff_oriented
     T Finset.univ hxy p).mp hp
-  have hrOr := (Rank3.mem_commonLink_pair_iff_oriented
+  have hrOr := (Rank3.mem_common_link_pair_iff_oriented
     T Finset.univ hxy r).mp hr
   obtain ⟨hpV, hpDisj, hpX, hpY⟩ := Finset.mem_filter.mp hpOr
   obtain ⟨hrV, hrDisj, hrX, hrY⟩ := Finset.mem_filter.mp hrOr
@@ -102,18 +102,18 @@ theorem commonLink_card_le_one_of_link_free
   have hrAdj := link_edges_from_common_pair T hxt hyt
     (hrEq ▸ hrX) (hrEq ▸ hrY)
   have htwo : 2 ≤ graphCodegree (tripleLinkGraph T z) x y :=
-    two_le_graphCodegree_of_common (tripleLinkGraph T z)
+    two_le_graph_codegree_of_common (tripleLinkGraph T z)
       hwt hpAdj.1 hpAdj.2 hrAdj.1 hrAdj.2
   have hone := hfree z x y hxy
   omega
 
-theorem cleanTripleSystem_commonLink_card_le_one
+theorem clean_triple_system_common_link_card_le_one
     (T : Family α) (hT : Admissible T)
     (q : Edge α) (hq : q ∈ (Finset.univ : Finset α).powersetCard 2) :
     (Rank3.commonLink (cleanTripleSystem T) Finset.univ q).card ≤ 1 := by
-  apply commonLink_card_le_one_of_link_free
+  apply common_link_card_le_one_of_link_free
   · exact admissible_mono (Finset.sdiff_subset) hT
-  · exact cleanTripleSystem_link_fourCycleFree T
+  · exact clean_triple_system_link_four_cycle_free T
   · exact hq
 
 private theorem sub_one_le_choose_two (d : ℕ) :
@@ -150,8 +150,8 @@ theorem triple_card_le_pairs_plus_common_incidence
         exact sub_one_le_choose_two _
       _ ≤ ∑ p ∈ V.powersetCard 2,
             (Rank3.completionVertices T V p).card.choose 2 :=
-        Finset.sum_le_sum_of_subset (Rank3.usedPairs_subset T V)
-  have hfirst := Rank3.usedPairs_completion_excess_ledger T V hU hV
+        Finset.sum_le_sum_of_subset (Rank3.used_pairs_subset T V)
+  have hfirst := Rank3.used_pairs_completion_excess_ledger T V hU hV
   have hsecond := Rank3.actual_common_link_double_count T V
   omega
 
@@ -166,7 +166,7 @@ theorem common_link_incidence_le_used_cells
       (Rank3.commonLink T V q).card) ≤
         (Rank3.usedCells T V).card := by
   classical
-  have hsupport := Rank3.usedCells_common_link_double_count T V
+  have hsupport := Rank3.used_cells_common_link_double_count T V
   have hdouble := Rank3.actual_common_link_double_count T V
   have heq : (∑ q ∈ V.powersetCard 2,
       (Rank3.commonLink T V q).card) =
@@ -180,12 +180,12 @@ theorem common_link_incidence_le_used_cells
         ∑ _q ∈ Rank3.usedCells T V, (1 : ℕ) := by
       apply Finset.sum_le_sum
       intro q hq
-      exact hJ q ((Rank3.usedCells_subset T V) hq)
+      exact hJ q ((Rank3.used_cells_subset T V) hq)
     _ = (Rank3.usedCells T V).card := by simp
 
 /-- The cleaned admissible triple system satisfies the support inequality
 `3|T₀| ≤ |P(T₀)|+|C(T₀)|` without any rank-three signed payment theorem. -/
-theorem cleanTripleSystem_support_bound
+theorem clean_triple_system_support_bound
     (T : Family α) (hT : Admissible T)
     (hU : Uniform 3 T) :
     3 * (cleanTripleSystem T).card ≤
@@ -200,7 +200,7 @@ theorem cleanTripleSystem_support_bound
     (cleanTripleSystem T) Finset.univ hUclean hground
   have hsecond := common_link_incidence_le_used_cells
     (cleanTripleSystem T) Finset.univ
-    (cleanTripleSystem_commonLink_card_le_one T hT)
+    (clean_triple_system_common_link_card_le_one T hT)
   omega
 
 end JSP523.Coarse

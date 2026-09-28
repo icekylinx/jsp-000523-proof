@@ -97,7 +97,7 @@ theorem on_label_pair_bases_eq_tail_image
 omit [Fintype α] in
 /-- The map from an admissible tail vertex to its on-label base pair is
 injective on the finite tail set. -/
-theorem on_label_tail_pair_map_injOn
+theorem on_label_tail_pair_map_inj_on
     (D : FiniteCompletionCliqueData α) (fallback : α)
     (hCenters : UniqueCommonRootCenters D.K D.ground)
     (P : Edge α) :

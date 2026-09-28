@@ -26,7 +26,7 @@ def outsideSeveralBadWithOrdinary
 
 /-- The exact finite `J` bound for outside edges meeting the exceptional
 set at least twice but not lying wholly inside it. -/
-theorem outside_several_bad_with_ordinary_card_le_J
+theorem outside_several_bad_with_ordinary_card_le_j
     (H : Family α) (W : Edge α) (v : α) (r : ℕ)
     (hAdm : Admissible H) (hUniform : Uniform r H)
     (hr : 3 ≤ r) (hvW : v ∉ W) :

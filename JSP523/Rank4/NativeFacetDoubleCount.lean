@@ -29,14 +29,14 @@ theorem common_root_cell_iff_pair_of_facet_completions
   let a := (pairRootRep P hP'.2).1
   let b := (pairRootRep P hP'.2).2
   have hPspec : P = ({a, b} : Edge α) :=
-    (pairRootRep_spec P hP'.2).2
+    (pair_root_rep_spec P hP'.2).2
   have haU : a ∈ U := hP'.1 (hPspec.symm ▸ (by simp))
   have hbU : b ∈ U := hP'.1 (hPspec.symm ▸ (by simp))
   constructor
   · intro hCell
     have hCell' : T ∈ commonTripleCell K U a b := by
       simpa only [commonRootCell, dite_eq_left hP'.2] using hCell
-    have hData := mem_commonTripleCell.mp hCell'
+    have hData := mem_common_triple_cell.mp hCell'
     rw [hPspec]
     intro x hx
     simp only [Finset.mem_insert, Finset.mem_singleton] at hx
@@ -53,7 +53,7 @@ theorem common_root_cell_iff_pair_of_facet_completions
         ⟨hT, (Finset.mem_filter.mp haC).2,
           (Finset.mem_filter.mp hbC).2⟩
     have hCell : T ∈ commonTripleCell K U a b := by
-      rw [rawCommonTripleCell_eq_commonTripleCell hUniform] at hRaw
+      rw [raw_common_triple_cell_eq_common_triple_cell hUniform] at hRaw
       exact hRaw
     simpa only [commonRootCell, dite_eq_left hP'.2] using hCell
 
@@ -77,7 +77,7 @@ theorem common_root_facet_completion_double_count
     have hT' : T ∈ commonTripleCell K U
         (pairRootRep P hPcard).1 (pairRootRep P hPcard).2 := by
       simpa only [commonRootCell, dite_eq_left hPcard] using hT
-    have hData := mem_commonTripleCell.mp hT'
+    have hData := mem_common_triple_cell.mp hT'
     exact Finset.mem_powersetCard.mpr ⟨hData.1, hData.2.1⟩
   have hCompletionSub (T : Edge α) :
       facetCompletions K U T ⊆ U := by

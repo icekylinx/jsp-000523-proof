@@ -38,7 +38,7 @@ instance (T : Family α) (z : α) : DecidableRel (tripleLinkGraph T z).Adj :=
     u ≠ v ∧ ({z, u, v} : Edge α) ∈ T))
 
 omit [Fintype α] in
-theorem tripleLinkGraph_mono {S T : Family α}
+theorem triple_link_graph_mono {S T : Family α}
     (hST : S ⊆ T) (z : α) :
     tripleLinkGraph S z ≤ tripleLinkGraph T z := by
   intro u v h
@@ -51,7 +51,7 @@ def linkDeletedTriples (z : α) (R : Finset (Sym2 α)) : Family α :=
   R.image (fun e => insert z e.toFinset)
 
 omit [Fintype α] in
-theorem linkDeletedTriples_card_le (z : α) (R : Finset (Sym2 α)) :
+theorem link_deleted_triples_card_le (z : α) (R : Finset (Sym2 α)) :
     (linkDeletedTriples z R).card ≤ R.card := by
   exact Finset.card_image_le
 
@@ -64,7 +64,7 @@ theorem triple_of_link_edge_mem_deleted (z u v : α)
   simp [Sym2.toFinset_mk_eq]
 
 omit [Fintype α] in
-theorem linkGraph_after_delete_le (T : Family α) (z : α)
+theorem link_graph_after_delete_le (T : Family α) (z : α)
     (R : Finset (Sym2 α)) :
     tripleLinkGraph (T \ linkDeletedTriples z R) z ≤
       (tripleLinkGraph T z).deleteEdges R := by
@@ -83,12 +83,12 @@ noncomputable def linkRemovalEdges (T : Family α) (z : α) :
     Finset (Sym2 α) :=
   (graph_delete_four_cycles (tripleLinkGraph T z)).choose
 
-theorem linkRemovalEdges_card_le (T : Family α) (z : α) :
+theorem link_removal_edges_card_le (T : Family α) (z : α) :
     (linkRemovalEdges T z).card ≤
       (graphDiagonals (tripleLinkGraph T z)).card := by
   exact (graph_delete_four_cycles (tripleLinkGraph T z)).choose_spec.2.1
 
-theorem linkRemovalEdges_fourCycleFree (T : Family α) (z : α) :
+theorem link_removal_edges_four_cycle_free (T : Family α) (z : α) :
     FourCycleFree
       ((tripleLinkGraph T z).deleteEdges (linkRemovalEdges T z)) := by
   exact (graph_delete_four_cycles (tripleLinkGraph T z)).choose_spec.2.2
@@ -104,7 +104,7 @@ triples. -/
 noncomputable def cleanTripleSystem (T : Family α) : Family α :=
   T \ allLinkDeletedTriples T
 
-theorem allLinkDeletedTriples_card_le (T : Family α) :
+theorem all_link_deleted_triples_card_le (T : Family α) :
     (allLinkDeletedTriples T).card ≤
       ∑ z : α, (graphDiagonals (tripleLinkGraph T z)).card := by
   classical
@@ -115,22 +115,22 @@ theorem allLinkDeletedTriples_card_le (T : Family α) :
     _ ≤ ∑ z : α, (linkRemovalEdges T z).card := by
       apply Finset.sum_le_sum
       intro z _
-      exact linkDeletedTriples_card_le z (linkRemovalEdges T z)
+      exact link_deleted_triples_card_le z (linkRemovalEdges T z)
     _ ≤ ∑ z : α,
           (graphDiagonals (tripleLinkGraph T z)).card := by
       apply Finset.sum_le_sum
       intro z _
-      exact linkRemovalEdges_card_le T z
+      exact link_removal_edges_card_le T z
 
-theorem cleanTripleSystem_card_budget (T : Family α) :
+theorem clean_triple_system_card_budget (T : Family α) :
     T.card ≤ (cleanTripleSystem T).card +
       ∑ z : α, (graphDiagonals (tripleLinkGraph T z)).card := by
   have hcard := Finset.card_le_card_sdiff_add_card
     (s := T) (t := allLinkDeletedTriples T)
   exact hcard.trans (Nat.add_le_add_left
-    (allLinkDeletedTriples_card_le T) _)
+    (all_link_deleted_triples_card_le T) _)
 
-theorem cleanTripleSystem_link_fourCycleFree (T : Family α) (z : α) :
+theorem clean_triple_system_link_four_cycle_free (T : Family α) (z : α) :
     FourCycleFree (tripleLinkGraph (cleanTripleSystem T) z) := by
   classical
   have hlocal : linkDeletedTriples z (linkRemovalEdges T z) ⊆
@@ -146,8 +146,8 @@ theorem cleanTripleSystem_link_fourCycleFree (T : Family α) (z : α) :
     exact Finset.mem_sdiff.mpr ⟨hET, fun hElocal => hEoutside (hlocal hElocal)⟩
   have hgraph : tripleLinkGraph (cleanTripleSystem T) z ≤
       (tripleLinkGraph T z).deleteEdges (linkRemovalEdges T z) :=
-    (tripleLinkGraph_mono hsub z).trans
-      (linkGraph_after_delete_le T z (linkRemovalEdges T z))
-  exact FourCycleFree.mono hgraph (linkRemovalEdges_fourCycleFree T z)
+    (triple_link_graph_mono hsub z).trans
+      (link_graph_after_delete_le T z (linkRemovalEdges T z))
+  exact FourCycleFree.mono hgraph (link_removal_edges_four_cycle_free T z)
 
 end JSP523.Coarse

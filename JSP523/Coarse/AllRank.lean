@@ -45,12 +45,12 @@ theorem coarse_bound_offset
     let F := crossingSubfamily H (s + 3) κ
     have hFU : Uniform (s + 3) F := by
       intro A hA
-      exact hU (crossingSubfamily_subset H (s + 3) κ hA)
+      exact hU (crossing_subfamily_subset H (s + 3) κ hA)
     have hFC : ∀ A ∈ F, CrossingOn (s + 3) κ A := by
       intro A hA
-      exact ((mem_crossingSubfamily_iff H (s + 3) κ A).mp hA).2
+      exact ((mem_crossing_subfamily_iff H (s + 3) κ A).mp hA).2
     have hFAdm : Admissible F :=
-      admissible_mono (crossingSubfamily_subset H (s + 3) κ) hAdm
+      admissible_mono (crossing_subfamily_subset H (s + 3) κ) hAdm
     have hFbound :=
       crossing_family_card_le_three_power F s κ hFU hFC hFAdm e
     calc

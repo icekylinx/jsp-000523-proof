@@ -23,7 +23,7 @@ def commonPrefixTriples (K : Family α) (V Y Z : Edge α) : Family α :=
   (V.powersetCard 3).filter fun P =>
     Disjoint P (Y ∪ Z) ∧ Y ∪ P ∈ K ∧ Z ∪ P ∈ K
 
-theorem mem_commonPrefixTriples {K : Family α} {V Y Z P : Edge α} :
+theorem mem_common_prefix_triples {K : Family α} {V Y Z P : Edge α} :
     P ∈ commonPrefixTriples K V Y Z ↔
       P ⊆ V ∧ P.card = 3 ∧ Disjoint P (Y ∪ Z) ∧
         Y ∪ P ∈ K ∧ Z ∪ P ∈ K := by
@@ -103,9 +103,9 @@ theorem common_prefix_triples_intersecting
   have hPQ : Disjoint P Q := Finset.disjoint_iff_inter_eq_empty.mpr
     (Finset.not_nonempty_iff_eq_empty.mp hEmpty)
   obtain ⟨_, hPcard, hPdisj, hYP, hZP⟩ :=
-    mem_commonPrefixTriples.mp hP
+    mem_common_prefix_triples.mp hP
   obtain ⟨_, hQcard, hQdisj, hYQ, hZQ⟩ :=
-    mem_commonPrefixTriples.mp hQ
+    mem_common_prefix_triples.mp hQ
   have hPnon : P.Nonempty := Finset.card_pos.mp (by omega)
   have hQnon : Q.Nonempty := Finset.card_pos.mp (by omega)
   obtain ⟨hPY, hPZ⟩ := Finset.disjoint_union_right.mp hPdisj
@@ -186,9 +186,9 @@ theorem common_prefix_triples_linear
   by_contra hNotLe
   have hTwo : 2 ≤ (P ∩ Q).card := by omega
   obtain ⟨_, hPcard, _, hYP, hZP⟩ :=
-    mem_commonPrefixTriples.mp hP
+    mem_common_prefix_triples.mp hP
   obtain ⟨_, hQcard, _, hYQ, hZQ⟩ :=
-    mem_commonPrefixTriples.mp hQ
+    mem_common_prefix_triples.mp hQ
   obtain ⟨S, x, y, hScard, hxy, hPeq, hQeq⟩ :=
     triple_shared_pair_completions hPcard hQcard hNe hTwo
   rw [hPeq] at hYP hZP
@@ -214,7 +214,7 @@ theorem common_prefix_triples_star_or_small
       (commonPrefixTriples K V Y Z).card ≤ 7 := by
   have hU : Uniform 3 (commonPrefixTriples K V Y Z) := by
     intro P hP
-    exact (mem_commonPrefixTriples.mp hP).2.1
+    exact (mem_common_prefix_triples.mp hP).2.1
   exact linear_intersecting_triples_star_or_small hU
     (common_prefix_triples_intersecting hK hY hZ hYZ)
     (common_prefix_triples_linear label hYlabel hZlabel hYZ)
@@ -223,7 +223,7 @@ theorem common_prefix_triples_star_or_small
 def parentPairLink (H : Family α) (V A : Edge α) : Family α :=
   (V.powersetCard 2).filter fun S => Disjoint S A ∧ A ∪ S ∈ H
 
-theorem mem_parentPairLink {H : Family α} {V A S : Edge α} :
+theorem mem_parent_pair_link {H : Family α} {V A S : Edge α} :
     S ∈ parentPairLink H V A ↔
       S ⊆ V ∧ S.card = 2 ∧ Disjoint S A ∧ A ∪ S ∈ H := by
   simp only [parentPairLink, Finset.mem_filter, Finset.mem_powersetCard]
@@ -239,7 +239,7 @@ theorem common_tail_erase_mem_parent_link
     P.erase x ∈ parentPairLink H V (Y ∪ {x}) ∧
       P.erase x ∈ parentPairLink H V (Z ∪ {x}) := by
   obtain ⟨hPV, hPcard, hPdisj, hYP, hZP⟩ :=
-    mem_commonPrefixTriples.mp hP
+    mem_common_prefix_triples.mp hP
   have hEraseCard : (P.erase x).card = 2 := by
     have h := Finset.card_erase_add_one hx
     omega
@@ -280,8 +280,8 @@ theorem common_tail_erase_mem_parent_link
   have hZedge : (Z ∪ {x}) ∪ P.erase x ∈ H := by
     rw [Finset.union_assoc, hReconstruct]
     exact hKH hZP
-  exact ⟨mem_parentPairLink.mpr ⟨hEraseV, hEraseCard, hDisjY, hYedge⟩,
-    mem_parentPairLink.mpr ⟨hEraseV, hEraseCard, hDisjZ, hZedge⟩⟩
+  exact ⟨mem_parent_pair_link.mpr ⟨hEraseV, hEraseCard, hDisjY, hYedge⟩,
+    mem_parent_pair_link.mpr ⟨hEraseV, hEraseCard, hDisjZ, hZedge⟩⟩
 
 /-- Different members of a linear star have disjoint pairs after removing
     their common vertex. -/
@@ -353,7 +353,7 @@ theorem common_star_other_tail_is_bad
       hGood hLinkZ₀ hLinkZ
   rw [hGoodCenter _ _ _ hGood] at hLabelZ
   have hxOut : x ∉ Y := by
-    have hP₀disj := (mem_commonPrefixTriples.mp hP₀).2.2.1
+    have hP₀disj := (mem_common_prefix_triples.mp hP₀).2.2.1
     exact (Finset.disjoint_left.mp
       (Finset.disjoint_union_right.mp hP₀disj).1) hx₀
   rcases Finset.mem_union.mp hLabelZ with hZ | hX

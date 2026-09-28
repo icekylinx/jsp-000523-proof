@@ -61,7 +61,7 @@ theorem outside_finite_contraction_predecessor
   have hOne := outside_one_bad_singleton_budget_numerator H W v r
     hAdm hUniform (by omega : 3 ≤ r) hvW
   change (r - 1) * B₁.card ≤ 2 * qD + 2 * J + D.card * Δ at hOne
-  have hMulti := outside_several_bad_with_ordinary_card_le_J H W v r
+  have hMulti := outside_several_bad_with_ordinary_card_le_j H W v r
     hAdm hUniform (by omega : 3 ≤ r) hvW
   change B₂.card ≤ J at hMulti
   have hOrdScaled : R * O.card ≤

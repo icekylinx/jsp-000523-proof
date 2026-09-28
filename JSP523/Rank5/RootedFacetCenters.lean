@@ -106,7 +106,7 @@ theorem rooted_edge_unique_triple_root
     {E : Edge α} (hE : E ∈ rootedEdges all z) :
     ∃ v : α, TripleRoot E z v ∧
       ∀ w : α, TripleRoot E z w → w = v := by
-  obtain ⟨hAll, v, hv⟩ := (mem_rootedEdges_iff all z E).mp hE
+  obtain ⟨hAll, v, hv⟩ := (mem_rooted_edges_iff all z E).mp hE
   refine ⟨v, hv, ?_⟩
   intro w hw
   exact (five_edge_triple_root_unique (hUniform hAll) hv hw).symm

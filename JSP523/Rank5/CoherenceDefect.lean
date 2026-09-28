@@ -45,7 +45,7 @@ theorem second_parent_deleted_face_shared
     (hface : E.erase a ⊆ F) :
     E.erase a ∈ sharedFourShadow all := by
   have hshadow : E.erase a ∈ fourShadow all :=
-    erase_mem_fourShadow hE (hUniform hE) ha
+    erase_mem_four_shadow hE (hUniform hE) ha
   have hpair : ({E, F} : Family α) ⊆ facetParents all (E.erase a) := by
     intro G hG
     rcases Finset.mem_insert.mp hG with hGE | hGF
@@ -70,7 +70,7 @@ theorem shared_facet_inheritance_implies_coherence
     ∀ E ∈ unrootedEdges all z, SharedFacesCoherent all z E := by
   intro E hE a ha hsecond
   obtain ⟨F, hF, hFE, hface⟩ := hsecond
-  have hAll : E ∈ all := unrootedEdges_subset all z hE
+  have hAll : E ∈ all := unrooted_edges_subset all z hE
   have hshared : E.erase a ∈ sharedFourShadow all :=
     second_parent_deleted_face_shared hUniform hAll ha hF hFE hface
   obtain ⟨hw, htriples⟩ := hcenter (E.erase a) hshared
@@ -156,7 +156,7 @@ theorem private_four_shadow_bound_of_good_unrooted
   let good := goodUnrootedEdges all z
   have hsub : good ⊆ all := by
     intro E hE
-    exact unrootedEdges_subset all z
+    exact unrooted_edges_subset all z
       (good_unrooted_edges_subset_unrooted all z hE)
   have hbound :
       2 * good.card ≤ (privateFourShadow all).card := by
@@ -177,10 +177,10 @@ theorem private_four_shadow_bound_of_good_unrooted
         refine ⟨?_, ?_, Finset.erase_subset a E,
           Finset.erase_subset b E, hne, ?_, ?_⟩
         · exact Finset.mem_filter.mpr
-            ⟨erase_mem_fourShadow (hsub hE) (hUniform (hsub hE)) ha,
+            ⟨erase_mem_four_shadow (hsub hE) (hUniform (hsub hE)) ha,
               private_deleted_face_one_parent all E a (hsub hE) hprivA⟩
         · exact Finset.mem_filter.mpr
-            ⟨erase_mem_fourShadow (hsub hE) (hUniform (hsub hE)) hb,
+            ⟨erase_mem_four_shadow (hsub hE) (hUniform (hsub hE)) hb,
               private_deleted_face_one_parent all E b (hsub hE) hprivB⟩
         · intro F hF hface
           exact hprivA F (hsub hF) hface
@@ -201,7 +201,7 @@ theorem four_shadow_bound_with_coherence_defect
   have hgood := private_four_shadow_bound_of_good_unrooted all z hUniform
   have hroot := rooted_unrooted_card_partition all z
   have hsplit := unrooted_good_bad_card_partition all z
-  have hshadow := fourShadow_private_shared_card_partition all
+  have hshadow := four_shadow_private_shared_card_partition all
   omega
 
 /-- The original conditional shadow bound follows directly from one

@@ -16,7 +16,7 @@ namespace JSP523.Rank4
 variable {α : Type*} [Fintype α]
 
 /-- Swapping the two ends of every directed edge preserves a finite sum. -/
-theorem sum_neighborFinset_swap
+theorem sum_neighbor_finset_swap
     (F : SimpleGraph α) [DecidableRel F.Adj]
     (f : α → α → ℚ) :
     (∑ x : α, ∑ y ∈ F.neighborFinset x, f x y) =
@@ -62,13 +62,13 @@ def leafCreditAt (F : SimpleGraph α) [DecidableRel F.Adj] (x : α) : ℚ :=
 def activeVertexCount (F : SimpleGraph α) [DecidableRel F.Adj] : ℚ :=
   ∑ x : α, if 0 < F.degree x then (1 : ℚ) else 0
 
-theorem leafCreditAt_eq_capped
+theorem leaf_credit_at_eq_capped
     (F : SimpleGraph α) [DecidableEq α] [DecidableRel F.Adj]
     (x : α) :
     leafCreditAt F x =
       if F.degree x = 1 then graphOffDiagonalCappedSum F x else 0 := by
   by_cases hx : F.degree x = 1
-  · obtain ⟨z, hAdj, hS⟩ := graphOffDiagonalCappedSum_leaf F x hx
+  · obtain ⟨z, hAdj, hS⟩ := graph_off_diagonal_capped_sum_leaf F x hx
     have hNcard : (F.neighborFinset x).card = 1 := hx
     obtain ⟨z', hN⟩ := Finset.card_eq_one.mp hNcard
     have hzMem : z ∈ F.neighborFinset x := by
@@ -116,8 +116,8 @@ theorem directed_ratio_pays_leaf_credit
     apply Finset.sum_le_sum
     intro y hy
     exact hPoint x y hy
-  have hSwapC := sum_neighborFinset_swap F c
-  have hSwapR := sum_neighborFinset_swap F r
+  have hSwapC := sum_neighbor_finset_swap F c
+  have hSwapR := sum_neighbor_finset_swap F r
   have hLeft :
       (∑ x : α, ∑ y ∈ F.neighborFinset x,
         (c x y + c y x)) = 2 * directedLeafCredit F := by
@@ -145,7 +145,7 @@ theorem directed_ratio_pays_leaf_credit
 
 /-- The oriented ratio sum is the difference between the neighbor-degree
 sum divided by vertex degree and twice the number of graph edges. -/
-theorem directedRatioExcess_eq_degree_sum
+theorem directed_ratio_excess_eq_degree_sum
     (F : SimpleGraph α) [DecidableRel F.Adj] :
     directedRatioExcess F =
       (∑ x : α,
@@ -182,14 +182,14 @@ theorem vertex_capped_plus_leaf_bound
       2 * (if 0 < F.degree x then (1 : ℚ) else 0) +
       leafCreditAt F x := by
   by_cases hx0 : F.degree x = 0
-  · have hA := graphNeighborDegreeSum_isolated F x hx0
-    have hS := graphOffDiagonalCappedSum_isolated F x hx0
+  · have hA := graph_neighbor_degree_sum_isolated F x hx0
+    have hS := graph_off_diagonal_capped_sum_isolated F x hx0
     have hC : leafCreditAt F x = 0 := by
-      rw [leafCreditAt_eq_capped]
+      rw [leaf_credit_at_eq_capped]
       simp [hx0]
     simp [hx0, hA, hS, hC]
   by_cases hx1 : F.degree x = 1
-  · obtain ⟨z, hAdj, hS⟩ := graphOffDiagonalCappedSum_leaf F x hx1
+  · obtain ⟨z, hAdj, hS⟩ := graph_off_diagonal_capped_sum_leaf F x hx1
     have hNcard : (F.neighborFinset x).card = 1 := hx1
     obtain ⟨z', hN⟩ := Finset.card_eq_one.mp hNcard
     have hzMem : z ∈ F.neighborFinset x := by
@@ -200,16 +200,16 @@ theorem vertex_capped_plus_leaf_bound
     have hA : graphNeighborDegreeSum F x = F.degree z := by
       simp [graphNeighborDegreeSum, hN]
     have hC : leafCreditAt F x = graphOffDiagonalCappedSum F x := by
-      rw [leafCreditAt_eq_capped]
+      rw [leaf_credit_at_eq_capped]
       simp [hx1]
     rw [hA, hC, hS, hx1]
     norm_num
     linarith
   · have hx2 : 2 ≤ F.degree x := by omega
-    have hDef := graphVertexDeficit_nonneg F x hx2
-    rw [graphVertexDeficit_eq_manuscript F x hx2] at hDef
+    have hDef := graph_vertex_deficit_nonneg F x hx2
+    rw [graph_vertex_deficit_eq_manuscript F x hx2] at hDef
     have hC : leafCreditAt F x = 0 := by
-      rw [leafCreditAt_eq_capped]
+      rw [leaf_credit_at_eq_capped]
       simp [hx1]
     rw [hC]
     have hxPos : 0 < F.degree x := by omega
@@ -250,7 +250,7 @@ theorem capped_total_ge_edges
   have hC : (∑ x : α, leafCreditAt F x) =
       directedLeafCredit F := rfl
   rw [hA, hV, hC] at hPoint
-  have hRatio := directedRatioExcess_eq_degree_sum F
+  have hRatio := directed_ratio_excess_eq_degree_sum F
   have hLeaf := directed_ratio_pays_leaf_credit F
   linarith
 
@@ -263,7 +263,7 @@ def graphDeficit (F : SimpleGraph α) [DecidableRel F.Adj]
 
 /-- Rank-four graph lemma, unmarked form of equation (III.B.5).  The stronger
 unique-pair credit is retained for the later colored-slot payment. -/
-theorem graphDeficit_ge_unique_pair_half
+theorem graph_deficit_ge_unique_pair_half
     (F : SimpleGraph α) [DecidableEq α] [DecidableRel F.Adj] :
     orderedUniquePairCount F / 4 ≤ graphDeficit F := by
   have hPairs := capped_common_pair_accounting F
@@ -271,7 +271,7 @@ theorem graphDeficit_ge_unique_pair_half
   unfold graphDeficit
   linarith
 
-theorem orderedUniquePairCount_nonneg
+theorem ordered_unique_pair_count_nonneg
     (F : SimpleGraph α) [DecidableEq α] [DecidableRel F.Adj] :
     0 ≤ orderedUniquePairCount F := by
   unfold orderedUniquePairCount
@@ -281,11 +281,11 @@ theorem orderedUniquePairCount_nonneg
   intro y _
   split_ifs <;> norm_num
 
-theorem graphDeficit_nonneg
+theorem graph_deficit_nonneg
     (F : SimpleGraph α) [DecidableEq α] [DecidableRel F.Adj] :
     0 ≤ graphDeficit F := by
-  have hCredit := graphDeficit_ge_unique_pair_half F
-  have hNonneg := orderedUniquePairCount_nonneg F
+  have hCredit := graph_deficit_ge_unique_pair_half F
+  have hNonneg := ordered_unique_pair_count_nonneg F
   linarith
 
 /-- The nonnegative local deficit is used only at vertices of degree at
@@ -303,14 +303,14 @@ theorem vertex_capped_exact_accounting
     2 * (graphNeighborDegreeSum F x : ℚ) / (F.degree x : ℚ) +
       nonleafVertexDeficit F x := by
   by_cases hx0 : F.degree x = 0
-  · have hA := graphNeighborDegreeSum_isolated F x hx0
-    have hS := graphOffDiagonalCappedSum_isolated F x hx0
+  · have hA := graph_neighbor_degree_sum_isolated F x hx0
+    have hS := graph_off_diagonal_capped_sum_isolated F x hx0
     have hC : leafCreditAt F x = 0 := by
-      rw [leafCreditAt_eq_capped]
+      rw [leaf_credit_at_eq_capped]
       simp [hx0]
     simp [nonleafVertexDeficit, hx0, hA, hS, hC]
   by_cases hx1 : F.degree x = 1
-  · obtain ⟨z, hAdj, hS⟩ := graphOffDiagonalCappedSum_leaf F x hx1
+  · obtain ⟨z, hAdj, hS⟩ := graph_off_diagonal_capped_sum_leaf F x hx1
     have hNcard : (F.neighborFinset x).card = 1 := hx1
     obtain ⟨z', hN⟩ := Finset.card_eq_one.mp hNcard
     have hzMem : z ∈ F.neighborFinset x := by
@@ -321,7 +321,7 @@ theorem vertex_capped_exact_accounting
     have hA : graphNeighborDegreeSum F x = F.degree z := by
       simp [graphNeighborDegreeSum, hN]
     have hC : leafCreditAt F x = graphOffDiagonalCappedSum F x := by
-      rw [leafCreditAt_eq_capped]
+      rw [leaf_credit_at_eq_capped]
       simp [hx1]
     have hD : nonleafVertexDeficit F x = 0 := by
       simp [nonleafVertexDeficit, hx1]
@@ -329,9 +329,9 @@ theorem vertex_capped_exact_accounting
     norm_num
     ring
   · have hx2 : 2 ≤ F.degree x := by omega
-    have hD := graphVertexDeficit_eq_manuscript F x hx2
+    have hD := graph_vertex_deficit_eq_manuscript F x hx2
     have hC : leafCreditAt F x = 0 := by
-      rw [leafCreditAt_eq_capped]
+      rw [leaf_credit_at_eq_capped]
       simp [hx1]
     have hIndicator : (if 0 < F.degree x then (1 : ℚ) else 0) = 1 := by
       simp [show 0 < F.degree x by omega]
@@ -342,7 +342,7 @@ theorem vertex_capped_exact_accounting
 /-- Exact ordered-pair version of the manuscript's equation (III.B.6).  The
 three right-hand terms are respectively the nonleaf `D_x` sum, the degree
 ratio term, and the leaf subtraction. -/
-theorem graphDeficit_exact_local_identity
+theorem graph_deficit_exact_local_identity
     (F : SimpleGraph α) [DecidableEq α] [DecidableRel F.Adj] :
     4 * graphDeficit F - orderedUniquePairCount F =
       (∑ x : α, nonleafVertexDeficit F x) +
@@ -351,7 +351,7 @@ theorem graphDeficit_exact_local_identity
     (fun x (_ : x ∈ (Finset.univ : Finset α)) =>
       vertex_capped_exact_accounting F x)
   have hPairs := capped_common_pair_accounting F
-  have hRatio := directedRatioExcess_eq_degree_sum F
+  have hRatio := directed_ratio_excess_eq_degree_sum F
   unfold graphDeficit
   simp_rw [Finset.sum_add_distrib] at hPoint
   have hC : (∑ x : α, leafCreditAt F x) =

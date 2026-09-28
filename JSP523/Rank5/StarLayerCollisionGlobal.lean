@@ -15,7 +15,7 @@ variable {α : Type*} [DecidableEq α]
 
 /-- Change the order of summation between shadow points and ordered
 distinct center pairs. -/
-theorem sum_orderedDegreePairs_eq_center_first
+theorem sum_ordered_degree_pairs_eq_center_first
     {τ ι : Type*} [DecidableEq τ] [DecidableEq ι]
     (P : Finset τ) (I : Finset ι) (d : τ → ι → ℕ) :
     (∑ p ∈ P, orderedDegreePairs I (d p)) =
@@ -42,7 +42,7 @@ def actualStarLayerOrderedCollisionBudget
 
 /-- Summing (IV.3.3) over every ordered pair of distinct actual star
 centers gives the total collision budget with the exact center-pair factor. -/
-theorem actualStarLayerOrderedCollisionBudget_le
+theorem actual_star_layer_ordered_collision_budget_le
     [Inhabited α] {H : Family α} {U Centers : Edge α} {r D₂ D₃ : ℕ}
     (hH : Admissible H)
     (hCenters : ∀ z ∈ Centers, z ∉ U)
@@ -70,7 +70,7 @@ theorem actualStarLayerOrderedCollisionBudget_le
         apply Finset.sum_le_sum
         intro w hw
         have hzw : z ≠ w := (Finset.mem_erase.mp hw).1.symm
-        exact starLayerActualCollision_moment_le
+        exact star_layer_actual_collision_moment_le
           hH hzw (hCenters z hz) (hCenters w (Finset.mem_erase.mp hw).2)
           hr hD₂ hD₃
     _ = Centers.card * (Centers.card - 1) *
@@ -94,7 +94,7 @@ theorem actualStarLayerOrderedCollisionBudget_le
 /-- The actual star-layer non-owner degrees satisfy the same square bound
 as the abstract ownership lemma, with its collision sum discharged by
 (IV.3.3). -/
-theorem actualStarLayerNonownerDegree_sq_le
+theorem actual_star_layer_nonowner_degree_sq_le
     [Inhabited α] {H : Family α} {U Centers : Edge α} {r D₂ D₃ : ℕ}
     (hH : Admissible H)
     (hCenters : ∀ z ∈ Centers, z ∉ U)
@@ -127,8 +127,8 @@ theorem actualStarLayerNonownerDegree_sq_le
       (∑ Q ∈ P, orderedDegreePairs Centers (d Q)) =
         actualStarLayerOrderedCollisionBudget H U Centers r := by
     unfold actualStarLayerOrderedCollisionBudget
-    rw [sum_orderedDegreePairs_eq_center_first]
-  have hCollision := actualStarLayerOrderedCollisionBudget_le
+    rw [sum_ordered_degree_pairs_eq_center_first]
+  have hCollision := actual_star_layer_ordered_collision_budget_le
     hH hCenters hr hD₂ hD₃
   calc
     (∑ Q ∈ P, ∑ z ∈ Centers.erase (owner Q), d Q z) ^ 2 ≤
@@ -142,7 +142,7 @@ theorem actualStarLayerNonownerDegree_sq_le
 
 /-- The ownership module's bad-incidence count is exactly the sum of the
 non-owner link degrees, after reindexing by the center. -/
-theorem actualStarLayer_badShadowDegree_eq_nonowner_sum
+theorem actual_star_layer_bad_shadow_degree_eq_nonowner_sum
     {H : Family α} {U Centers : Edge α} {r : ℕ}
     (owner : Edge α → α) (P : Edge α)
     (hP : P ∈ U.powersetCard (r - 2)) :
@@ -192,7 +192,7 @@ theorem actualStarLayer_badShadowDegree_eq_nonowner_sum
 /-- Finite actual deletion bound for separating all star shadows. The square
 root scale follows from the true parent-family codegree caps, via the actual
 collision moment and the owner-degree Cauchy inequality. -/
-theorem actualStarLayerOwnershipDeletion_card_sq_le
+theorem actual_star_layer_ownership_deletion_card_sq_le
     [Inhabited α] {H : Family α} {U Centers : Edge α} {r D₂ D₃ : ℕ}
     (hH : Admissible H)
     (hCenters : ∀ z ∈ Centers, z ∉ U)
@@ -227,8 +227,8 @@ theorem actualStarLayerOwnershipDeletion_card_sq_le
           starLayerPrefixDegree (actualStarLink H U z r) Q := by
     apply Finset.sum_congr rfl
     intro Q hQ
-    exact actualStarLayer_badShadowDegree_eq_nonowner_sum owner Q hQ
-  have hSquare := actualStarLayerNonownerDegree_sq_le
+    exact actual_star_layer_bad_shadow_degree_eq_nonowner_sum owner Q hQ
+  have hSquare := actual_star_layer_nonowner_degree_sq_le
     hH hCenters hr hD₂ hD₃ owner hOwner hMax
   have hCard :
       ((actualStarLayerObjects H U Centers r).filter fun zT : α × Edge α =>
@@ -256,7 +256,7 @@ theorem actualStarLayerOwnershipDeletion_card_sq_le
 
 /-- The finite separation bound with the maximizing owner chosen
 internally. Empty center sets have no colored members to delete. -/
-theorem actualStarLayerOwnershipDeletion_card_sq_le_exists_max
+theorem actual_star_layer_ownership_deletion_card_sq_le_exists_max
     [Inhabited α] {H : Family α} {U Centers : Edge α} {r D₂ D₃ : ℕ}
     (hH : Admissible H)
     (hCenters : ∀ z ∈ Centers, z ∉ U)
@@ -294,7 +294,7 @@ theorem actualStarLayerOwnershipDeletion_card_sq_le_exists_max
         (Finset.exists_max_image Centers
           (fun z => starLayerPrefixDegree (actualStarLink H U z r) P)
           hNonempty)).2 z hz
-    exact ⟨owner, actualStarLayerOwnershipDeletion_card_sq_le
+    exact ⟨owner, actual_star_layer_ownership_deletion_card_sq_le
       hH hCenters hr hD₂ hD₃ owner hOwner hMax⟩
   · have hEmpty : Centers = ∅ :=
       Finset.not_nonempty_iff_eq_empty.mp hNonempty

@@ -23,7 +23,7 @@ def RootMatching (M : Family α) : Prop :=
 def rootCompletionTails (H : Family α) (W P : Edge α) (t : ℕ) : Family α :=
   (W.powersetCard t).filter fun T => Disjoint T P ∧ P ∪ T ∈ H
 
-theorem mem_rootCompletionTails {H : Family α} {W P T : Edge α} {t : ℕ} :
+theorem mem_root_completion_tails {H : Family α} {W P T : Edge α} {t : ℕ} :
     T ∈ rootCompletionTails H W P t ↔
       T ⊆ W ∧ T.card = t ∧ Disjoint T P ∧ P ∪ T ∈ H := by
   simp only [rootCompletionTails, Finset.mem_filter, Finset.mem_powersetCard]
@@ -33,7 +33,7 @@ theorem mem_rootCompletionTails {H : Family α} {W P T : Edge α} {t : ℕ} :
 fixed prefix have empty tail fibers; all other fibers inject into parent
 codegree fibers. This duplicates the local argument used in
 `StarLayerCollision` so this module does not depend on that unrelated file. -/
-theorem commonPrefixTails_card_le_vertex_degree_off_prefix_actual
+theorem common_prefix_tails_card_le_vertex_degree_off_prefix_actual
     {H : Family α} {W Y Z A : Edge α} {t D : ℕ}
     (hH : Admissible H) (hY : Y.Nonempty) (hZ : Z.Nonempty)
     (hYZ : Disjoint Y Z) (ht : 1 ≤ t)
@@ -43,9 +43,9 @@ theorem commonPrefixTails_card_le_vertex_degree_off_prefix_actual
     (commonPrefixTails H W Y Z t).card ≤ t * D := by
   have hUniform : Uniform t (commonPrefixTails H W Y Z t) := by
     intro P hP
-    exact (mem_commonPrefixTails.mp hP).2.1
+    exact (mem_common_prefix_tails.mp hP).2.1
   apply intersecting_card_le_vertex_cap hUniform
-    (commonPrefixTails_intersecting hH hY hZ hYZ ht) hA ht
+    (common_prefix_tails_intersecting hH hY hZ hYZ ht) hA ht
   intro x
   by_cases hxY : x ∈ Y
   · have hEmpty :
@@ -55,33 +55,33 @@ theorem commonPrefixTails_card_le_vertex_degree_off_prefix_actual
       · intro h
         obtain ⟨hP, hxP⟩ := Finset.mem_filter.mp h
         exact False.elim ((Finset.disjoint_left.mp
-          (mem_commonPrefixTails.mp hP).2.2.1) hxP
+          (mem_common_prefix_tails.mp hP).2.2.1) hxP
           (Finset.mem_union_left Z hxY))
       · intro h
         simp at h
     simp [hEmpty]
   · simpa only [Finset.singleton_subset_iff] using
-      (commonPrefixTails_fiber_le_parent_degree
+      (common_prefix_tails_fiber_le_parent_degree
         (H := H) (W := W) (Y := Y) (Z := Z) (S := ({x} : Edge α))
         (t := t)).trans (hCap x hxY)
 
 /-- The completion tails common to two disjoint roots lie in the actual
 common-prefix cell. -/
-theorem rootCompletionTails_inter_subset_commonPrefixTails
+theorem root_completion_tails_inter_subset_common_prefix_tails
     {H : Family α} {W P Q : Edge α} {t : ℕ} :
     rootCompletionTails H W P t ∩ rootCompletionTails H W Q t ⊆
       commonPrefixTails H W P Q t := by
   intro T hT
   rcases Finset.mem_inter.mp hT with ⟨hP, hQ⟩
-  obtain ⟨hTW, hTcard, hTP, hPE⟩ := mem_rootCompletionTails.mp hP
-  obtain ⟨_, _, hTQ, hQE⟩ := mem_rootCompletionTails.mp hQ
-  rw [mem_commonPrefixTails]
+  obtain ⟨hTW, hTcard, hTP, hPE⟩ := mem_root_completion_tails.mp hP
+  obtain ⟨_, _, hTQ, hQE⟩ := mem_root_completion_tails.mp hQ
+  rw [mem_common_prefix_tails]
   refine ⟨hTW, hTcard, ?_, hPE, hQE⟩
   exact Finset.disjoint_union_right.mpr ⟨hTP, hTQ⟩
 
 /-- Actual common-prefix cells obey the all-rank codegree cap outside the
 fixed prefix; vertices inside the prefix have empty completion fibers. -/
-theorem commonPrefixTails_card_le_actual_codegree
+theorem common_prefix_tails_card_le_actual_codegree
     {H : Family α} {W P Q : Edge α} {t D : ℕ}
     (hH : Admissible H) (hP : P.Nonempty) (hQ : Q.Nonempty)
     (hPQ : Disjoint P Q) (ht : 1 ≤ t)
@@ -93,12 +93,12 @@ theorem commonPrefixTails_card_le_actual_codegree
   · have hA : (commonPrefixTails H W P Q t).Nonempty :=
       Finset.nonempty_iff_ne_empty.mpr hEmpty
     obtain ⟨A, hA⟩ := hA
-    exact commonPrefixTails_card_le_vertex_degree_off_prefix_actual
+    exact common_prefix_tails_card_le_vertex_degree_off_prefix_actual
       hH hP hQ hPQ ht hA hCap
 
 /-- The actual intersection of two disjoint-root completion links is bounded
 by the common-prefix theorem, hence by the natural vertex codegree cap. -/
-theorem rootCompletionTails_inter_card_le_codegree
+theorem root_completion_tails_inter_card_le_codegree
     {H : Family α} {W P Q : Edge α} {t D : ℕ}
     (hH : Admissible H) (hP : P.Nonempty) (hQ : Q.Nonempty)
     (hPQ : Disjoint P Q) (ht : 1 ≤ t)
@@ -107,13 +107,13 @@ theorem rootCompletionTails_inter_card_le_codegree
     (rootCompletionTails H W P t ∩ rootCompletionTails H W Q t).card ≤ t * D := by
   calc
     _ ≤ (commonPrefixTails H W P Q t).card :=
-      Finset.card_le_card (rootCompletionTails_inter_subset_commonPrefixTails)
-    _ ≤ t * D := commonPrefixTails_card_le_actual_codegree
+      Finset.card_le_card (root_completion_tails_inter_subset_common_prefix_tails)
+    _ ≤ t * D := common_prefix_tails_card_le_actual_codegree
       hH hP hQ hPQ ht hCap
 
 /-- Link tails have exactly the actual root codegree when the parent edges
 are uniform and lie in the ambient vertex set. -/
-theorem rootCompletionTails_card_eq_degree
+theorem root_completion_tails_card_eq_degree
     {H : Family α} {V P : Edge α} {r s t : ℕ}
     (hUniform : Uniform r H) (hGround : ∀ E ∈ H, E ⊆ V)
     (hPcard : P.card = s) (hst : s + t = r) :
@@ -125,12 +125,12 @@ theorem rootCompletionTails_card_eq_degree
   let f : Edge α → Edge α := fun A => P ∪ A
   have hf : ∀ A ∈ T, f A ∈ C := by
     intro A hA
-    have hA' := mem_rootCompletionTails.mp hA
+    have hA' := mem_root_completion_tails.mp hA
     exact Finset.mem_filter.mpr ⟨hA'.2.2.2, Finset.subset_union_left⟩
   have hfinj : Set.InjOn f (↑T : Set (Edge α)) := by
     intro A hA B hB hEq
-    have hDisjA := (mem_rootCompletionTails.mp hA).2.2.1
-    have hDisjB := (mem_rootCompletionTails.mp hB).2.2.1
+    have hDisjA := (mem_root_completion_tails.mp hA).2.2.1
+    have hDisjB := (mem_root_completion_tails.mp hB).2.2.1
     have hAeq : (P ∪ A) \ P = A := Finset.union_sdiff_cancel_left hDisjA.symm
     have hBeq : (P ∪ B) \ P = B := Finset.union_sdiff_cancel_left hDisjB.symm
     calc
@@ -349,7 +349,7 @@ theorem exists_actual_common_prefix_heavy_root_cover
     hMR hMatch hCover
     (by
       intro P hP T hT
-      obtain ⟨hTW, hTc, _, _⟩ := mem_rootCompletionTails.mp hT
+      obtain ⟨hTW, hTc, _, _⟩ := mem_root_completion_tails.mp hT
       exact Finset.mem_powersetCard.mpr ⟨hTW, hTc⟩)
     (fun P hP => hTailLarge P (hMR hP))
     (by
@@ -358,7 +358,7 @@ theorem exists_actual_common_prefix_heavy_root_cover
       have hPn : P.Nonempty := Finset.card_pos.mp (by rw [hRootSize P (hMR hP)]; omega)
       have hQn : Q.Nonempty := Finset.card_pos.mp
         (by rw [hRootSize Q (hMR (Finset.mem_erase.mp hQ).2)]; omega)
-      exact rootCompletionTails_inter_card_le_codegree hAdm hPn hQn hPQ ht
+      exact root_completion_tails_inter_card_le_codegree hAdm hPn hQn hPQ ht
         (hDegreeCap P (hMR hP)))
     hGap
 
@@ -389,7 +389,7 @@ theorem actual_common_prefix_cover_degree_cap
       hAdm hs ht hRootsInside hRootSize
       (by
         intro P hP
-        rw [rootCompletionTails_card_eq_degree hUniform hGround
+        rw [root_completion_tails_card_eq_degree hUniform hGround
           (hRootSize P hP) hst]
         exact Nat.le_of_lt (hRootHeavy P hP))
       hDegreeCap hGap

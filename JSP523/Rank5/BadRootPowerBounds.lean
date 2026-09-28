@@ -33,7 +33,7 @@ theorem actual_bad_root_power_bound
   have hThreshold := Counting.fixed_rank_choose_lower_bound
     r k W.card hr hk₁ hk₂ hw
   change W.card ^ (r - 1 - k) ≤ C * Λ at hThreshold
-  have hIncidence := badMissingSets_card_bound H W v r k Λ
+  have hIncidence := bad_missing_sets_card_bound H W v r k Λ
   change Λ * Bad.card ≤ 2 * (r - 1).choose k * q at hIncidence
   change Bad.card * W.card ^ (r - 1 - k) ≤
     2 * C * (r - 1).choose k * q
@@ -59,7 +59,7 @@ theorem actual_bad_singleton_power_bound
   let q := (missingStarFacets H W v r).card
   have hThreshold := Counting.fixed_rank_choose_lower_bound
     r 1 W.card hr (by omega) (by omega) hw
-  have hIncidence := badSingletonVertices_card_bound H W v r
+  have hIncidence := bad_singleton_vertices_card_bound H W v r
   change Λ * D.card ≤ 2 * (r - 1) * q at hIncidence
   have hThreshold' : W.card ^ (r - 2) ≤ C * Λ := by
     simpa [C, Λ, Nat.sub_sub] using hThreshold

@@ -12,7 +12,7 @@ integer size difference and a monotone `φ` difference.
 
 namespace JSP523.Rank3
 
-theorem localPhi_eq_zero_of_le_one
+theorem local_phi_eq_zero_of_le_one
     {d : ℕ} (hd : d ≤ 1) : localPhi d = 0 := by
   rcases (by omega : d = 0 ∨ d = 1) with h | h
   · subst d; norm_num [localPhi, weightFraction]
@@ -34,11 +34,11 @@ theorem two_low_same_part_coarse
   by_cases h : b + 1 ≤ a
   · have hCast : (b : ℚ) + 1 ≤ a := by exact_mod_cast h
     have hPhi : localPhi b ≤ localPhi a :=
-      localPhi_mono (by omega : b ≤ a)
+      local_phi_mono (by omega : b ≤ a)
     exact mul_nonneg (by linarith) (by linarith)
   · have hNat : a ≤ b := by omega
     have hCast : (a : ℚ) ≤ b := by exact_mod_cast hNat
-    have hPhi : localPhi a ≤ localPhi b := localPhi_mono hNat
+    have hPhi : localPhi a ≤ localPhi b := local_phi_mono hNat
     exact mul_nonneg_of_nonpos_of_nonpos (by linarith) (by linarith)
 
 /-- The coarse bound needed when the two low vertices lie in opposite
@@ -57,10 +57,10 @@ theorem two_low_opposite_parts_coarse
   rw [← sub_nonneg, hGap]
   rcases le_total a b with hab | hba
   · have hCast : (a : ℚ) ≤ b := by exact_mod_cast hab
-    have hPhi : localPhi a ≤ localPhi b := localPhi_mono hab
+    have hPhi : localPhi a ≤ localPhi b := local_phi_mono hab
     exact mul_nonneg_of_nonpos_of_nonpos (by linarith) (by linarith)
   · have hCast : (b : ℚ) ≤ a := by exact_mod_cast hba
-    have hPhi : localPhi b ≤ localPhi a := localPhi_mono hba
+    have hPhi : localPhi b ≤ localPhi a := local_phi_mono hba
     exact mul_nonneg (by linarith) (by linarith)
 
 section BipartiteGraph
@@ -86,27 +86,27 @@ def bipTranspose {α β : Type*} [DecidableEq α] [DecidableEq β]
     (G : Finset (α × β)) : Finset (β × α) :=
   G.image Prod.swap
 
-theorem mem_bipTranspose {α β : Type*}
+theorem mem_bip_transpose {α β : Type*}
     [DecidableEq α] [DecidableEq β]
     (G : Finset (α × β)) (y : β) (x : α) :
     (y, x) ∈ bipTranspose G ↔ (x, y) ∈ G := by
   simp [bipTranspose, Finset.mem_image]
 
-theorem bipLeftDegree_transpose {α β : Type*}
+theorem bip_left_degree_transpose {α β : Type*}
     [DecidableEq α] [DecidableEq β]
     (G : Finset (α × β)) (A : Finset α) (y : β) :
     bipLeftDegree (bipTranspose G) A y =
       bipRightDegree G A y := by
-  simp [bipLeftDegree, bipRightDegree, mem_bipTranspose]
+  simp [bipLeftDegree, bipRightDegree, mem_bip_transpose]
 
-theorem bipRightDegree_transpose {α β : Type*}
+theorem bip_right_degree_transpose {α β : Type*}
     [DecidableEq α] [DecidableEq β]
     (G : Finset (α × β)) (B : Finset β) (x : α) :
     bipRightDegree (bipTranspose G) B x =
       bipLeftDegree G B x := by
-  simp [bipLeftDegree, bipRightDegree, mem_bipTranspose]
+  simp [bipLeftDegree, bipRightDegree, mem_bip_transpose]
 
-theorem bipartitePhiTotal_transpose {α β : Type*}
+theorem bipartite_phi_total_transpose {α β : Type*}
     [DecidableEq α] [DecidableEq β]
     (G : Finset (α × β)) (A : Finset α) (B : Finset β) :
     bipartitePhiTotal (bipTranspose G) B A =
@@ -114,22 +114,22 @@ theorem bipartitePhiTotal_transpose {α β : Type*}
   have hLeft (y : β) :
       bipLeftDegree (bipTranspose G) A y =
         bipRightDegree G A y := by
-    exact bipLeftDegree_transpose G A y
+    exact bip_left_degree_transpose G A y
   have hRight (x : α) :
       bipRightDegree (bipTranspose G) B x =
         bipLeftDegree G B x := by
-    exact bipRightDegree_transpose G B x
+    exact bip_right_degree_transpose G B x
   simp only [bipartitePhiTotal, hLeft, hRight]
   ac_rfl
 
-theorem bipartitePhiTotal_empty
+theorem bipartite_phi_total_empty
     (A : Finset α) (B : Finset β) :
     bipartitePhiTotal (∅ : Finset (α × β)) A B = 0 := by
   simp [bipartitePhiTotal, bipLeftDegree, bipRightDegree,
     localPhi, weightFraction]
 
 /-- Edges outside the chosen two parts are irrelevant to the score. -/
-theorem bipartitePhiTotal_eq_zero_of_no_relevant_edge
+theorem bipartite_phi_total_eq_zero_of_no_relevant_edge
     (G : Finset (α × β)) (A : Finset α) (B : Finset β)
     (hNo : ∀ x ∈ A, ∀ y ∈ B, (x, y) ∉ G) :
     bipartitePhiTotal G A B = 0 := by
@@ -152,31 +152,31 @@ theorem bipartitePhiTotal_eq_zero_of_no_relevant_edge
     apply Finset.sum_eq_zero
     intro x hx
     rw [hLeft x hx]
-    exact localPhi_eq_zero_of_le_one (by omega)
+    exact local_phi_eq_zero_of_le_one (by omega)
   have hR : (∑ y ∈ B, localPhi (bipRightDegree G A y)) = 0 := by
     apply Finset.sum_eq_zero
     intro y hy
     rw [hRight y hy]
-    exact localPhi_eq_zero_of_le_one (by omega)
+    exact local_phi_eq_zero_of_le_one (by omega)
   rw [hL, hR]
   ring
 
-theorem bipartitePhiTotal_nonneg
+theorem bipartite_phi_total_nonneg
     (G : Finset (α × β)) (A : Finset α) (B : Finset β) :
     0 ≤ bipartitePhiTotal G A B := by
   unfold bipartitePhiTotal
   apply add_nonneg <;> apply Finset.sum_nonneg
   · intro x hx
-    exact localPhi_nonneg _
+    exact local_phi_nonneg _
   · intro y hy
-    exact localPhi_nonneg _
+    exact local_phi_nonneg _
 
-theorem bipLeftDegree_le_card
+theorem bip_left_degree_le_card
     (G : Finset (α × β)) (B : Finset β) (x : α) :
     bipLeftDegree G B x ≤ B.card :=
   Finset.card_filter_le _ _
 
-theorem bipRightDegree_le_card
+theorem bip_right_degree_le_card
     (G : Finset (α × β)) (A : Finset α) (y : β) :
     bipRightDegree G A y ≤ A.card :=
   Finset.card_filter_le _ _
@@ -184,7 +184,7 @@ theorem bipRightDegree_le_card
 /-- Completing a bipartite pair type can only increase its `φ` score.
 This is the graph-to-complete-pair comparison used in the pure base case
 of §II.A.4, with both tagged sides counted separately. -/
-theorem bipartitePhiTotal_le_completePairScore
+theorem bipartite_phi_total_le_complete_pair_score
     (G : Finset (α × β)) (A : Finset α) (B : Finset β) :
     bipartitePhiTotal G A B ≤ completePairScore A.card B.card := by
   have hLeft :
@@ -195,7 +195,7 @@ theorem bipartitePhiTotal_le_completePairScore
           ∑ _x ∈ A, localPhi B.card := by
             apply Finset.sum_le_sum
             intro x _
-            exact localPhi_mono (bipLeftDegree_le_card G B x)
+            exact local_phi_mono (bip_left_degree_le_card G B x)
       _ = (A.card : ℚ) * localPhi B.card := by
             simp [Finset.sum_const, nsmul_eq_mul]
   have hRight :
@@ -206,7 +206,7 @@ theorem bipartitePhiTotal_le_completePairScore
           ∑ _y ∈ B, localPhi A.card := by
             apply Finset.sum_le_sum
             intro y _
-            exact localPhi_mono (bipRightDegree_le_card G A y)
+            exact local_phi_mono (bip_right_degree_le_card G A y)
       _ = (B.card : ℚ) * localPhi A.card := by
             simp [Finset.sum_const, nsmul_eq_mul]
   unfold bipartitePhiTotal completePairScore
@@ -215,7 +215,7 @@ theorem bipartitePhiTotal_le_completePairScore
 /-- A pair-type score is bounded by the complete graph on any two
 subsets that contain all of its relevant edges.  Vertices outside those
 subsets contribute zero, even if they are present in the ambient parts. -/
-theorem bipartitePhiTotal_le_completePairScore_of_support
+theorem bipartite_phi_total_le_complete_pair_score_of_support
     (G : Finset (α × β)) (A : Finset α) (B : Finset β)
     (A' : Finset α) (B' : Finset β)
     (hA' : A' ⊆ A) (hB' : B' ⊆ B)
@@ -247,7 +247,7 @@ theorem bipartitePhiTotal_le_completePairScore_of_support
       exact hxNot ((hEdges x hx y (Finset.mem_filter.mp hy).1
         (Finset.mem_filter.mp hy).2).1)
     rw [hDeg]
-    exact localPhi_eq_zero_of_le_one (by omega)
+    exact local_phi_eq_zero_of_le_one (by omega)
   have hRightZero (y : β) (hy : y ∈ B) (hyNot : y ∉ B') :
       localPhi (bipRightDegree G A y) = 0 := by
     have hDeg : bipRightDegree G A y = 0 := by
@@ -258,7 +258,7 @@ theorem bipartitePhiTotal_le_completePairScore_of_support
       exact hyNot ((hEdges x (Finset.mem_filter.mp hx).1 y hy
         (Finset.mem_filter.mp hx).2).2)
     rw [hDeg]
-    exact localPhi_eq_zero_of_le_one (by omega)
+    exact local_phi_eq_zero_of_le_one (by omega)
   have hLeftSplit :
       (∑ x ∈ A, localPhi (bipLeftDegree G B x)) =
       ∑ x ∈ A', localPhi (bipLeftDegree G B x) := by
@@ -281,7 +281,7 @@ theorem bipartitePhiTotal_le_completePairScore_of_support
           ∑ _x ∈ A', localPhi B'.card := by
             apply Finset.sum_le_sum
             intro x hx
-            exact localPhi_mono (hLeftDeg x (hA' hx))
+            exact local_phi_mono (hLeftDeg x (hA' hx))
       _ = (A'.card : ℚ) * localPhi B'.card := by
             simp [Finset.sum_const, nsmul_eq_mul]
   have hRightBound :
@@ -292,7 +292,7 @@ theorem bipartitePhiTotal_le_completePairScore_of_support
           ∑ _y ∈ B', localPhi A'.card := by
             apply Finset.sum_le_sum
             intro y hy
-            exact localPhi_mono (hRightDeg y (hB' hy))
+            exact local_phi_mono (hRightDeg y (hB' hy))
       _ = (B'.card : ℚ) * localPhi A'.card := by
             simp [Finset.sum_const, nsmul_eq_mul]
   unfold bipartitePhiTotal completePairScore
@@ -311,8 +311,8 @@ theorem bipartite_two_low_same_part
       localGraphBudget A.card + localGraphBudget B.card := by
   let f : α → ℚ := fun z => localPhi (bipLeftDegree G B z)
   let g : β → ℚ := fun z => localPhi (bipRightDegree G A z)
-  have hfx : f x = 0 := localPhi_eq_zero_of_le_one hdx
-  have hfy : f y = 0 := localPhi_eq_zero_of_le_one hdy
+  have hfx : f x = 0 := local_phi_eq_zero_of_le_one hdx
+  have hfy : f y = 0 := local_phi_eq_zero_of_le_one hdy
   have hyErase : y ∈ A.erase x := Finset.mem_erase.mpr ⟨hxy.symm, hy⟩
   have hLeftSplit : (∑ z ∈ A, f z) =
       ∑ z ∈ (A.erase x).erase y, f z := by
@@ -329,7 +329,7 @@ theorem bipartite_two_low_same_part
           ∑ _z ∈ (A.erase x).erase y, localPhi B.card := by
             apply Finset.sum_le_sum
             intro z hz
-            exact localPhi_mono (bipLeftDegree_le_card G B z)
+            exact local_phi_mono (bip_left_degree_le_card G B z)
       _ = (((A.erase x).erase y).card : ℚ) * localPhi B.card := by
         simp [Finset.sum_const, nsmul_eq_mul]
   have hRightBound : (∑ z ∈ B, g z) ≤
@@ -338,7 +338,7 @@ theorem bipartite_two_low_same_part
       (∑ z ∈ B, g z) ≤ ∑ _z ∈ B, localPhi A.card := by
         apply Finset.sum_le_sum
         intro z hz
-        exact localPhi_mono (bipRightDegree_le_card G A z)
+        exact local_phi_mono (bip_right_degree_le_card G A z)
       _ = (B.card : ℚ) * localPhi A.card := by
         simp [Finset.sum_const, nsmul_eq_mul]
   have hCardX := Finset.card_erase_add_one hx
@@ -367,8 +367,8 @@ theorem bipartite_two_low_opposite_parts
       localGraphBudget A.card + localGraphBudget B.card := by
   let f : α → ℚ := fun z => localPhi (bipLeftDegree G B z)
   let g : β → ℚ := fun z => localPhi (bipRightDegree G A z)
-  have hfx : f x = 0 := localPhi_eq_zero_of_le_one hdx
-  have hgy : g y = 0 := localPhi_eq_zero_of_le_one hdy
+  have hfx : f x = 0 := local_phi_eq_zero_of_le_one hdx
+  have hgy : g y = 0 := local_phi_eq_zero_of_le_one hdy
   have hLeftSplit : (∑ z ∈ A, f z) = ∑ z ∈ A.erase x, f z := by
     calc
       (∑ z ∈ A, f z) = (∑ z ∈ A.erase x, f z) + f x :=
@@ -386,7 +386,7 @@ theorem bipartite_two_low_opposite_parts
           ∑ _z ∈ A.erase x, localPhi B.card := by
             apply Finset.sum_le_sum
             intro z hz
-            exact localPhi_mono (bipLeftDegree_le_card G B z)
+            exact local_phi_mono (bip_left_degree_le_card G B z)
       _ = ((A.erase x).card : ℚ) * localPhi B.card := by
         simp [Finset.sum_const, nsmul_eq_mul]
   have hRightBound : (∑ z ∈ B.erase y, g z) ≤
@@ -396,7 +396,7 @@ theorem bipartite_two_low_opposite_parts
           ∑ _z ∈ B.erase y, localPhi A.card := by
             apply Finset.sum_le_sum
             intro z hz
-            exact localPhi_mono (bipRightDegree_le_card G A z)
+            exact local_phi_mono (bip_right_degree_le_card G A z)
       _ = ((B.erase y).card : ℚ) * localPhi A.card := by
         simp [Finset.sum_const, nsmul_eq_mul]
   have hCardX := Finset.card_erase_add_one hx
@@ -421,7 +421,7 @@ theorem bipartite_two_low_opposite_parts
 def flipBipartiteGraph (G : Finset (α × β)) : Finset (β × α) :=
   G.image fun e => (e.2, e.1)
 
-theorem mem_flipBipartiteGraph
+theorem mem_flip_bipartite_graph
     (G : Finset (α × β)) (x : α) (y : β) :
     (y, x) ∈ flipBipartiteGraph G ↔ (x, y) ∈ G := by
   classical
@@ -437,7 +437,7 @@ theorem mem_flipBipartiteGraph
   · intro h
     exact Finset.mem_image.mpr ⟨(x, y), h, rfl⟩
 
-theorem flip_bipLeftDegree
+theorem flip_bip_left_degree
     (G : Finset (α × β)) (A : Finset α)
     (y : β) :
     bipLeftDegree (flipBipartiteGraph G) A y =
@@ -445,24 +445,24 @@ theorem flip_bipLeftDegree
   unfold bipLeftDegree bipRightDegree
   congr 1
   ext x
-  simp [mem_flipBipartiteGraph]
+  simp [mem_flip_bipartite_graph]
 
-theorem flip_bipRightDegree
+theorem flip_bip_right_degree
     (G : Finset (α × β)) (B : Finset β) (x : α) :
     bipRightDegree (flipBipartiteGraph G) B x =
       bipLeftDegree G B x := by
   unfold bipLeftDegree bipRightDegree
   congr 1
   ext y
-  simp [mem_flipBipartiteGraph]
+  simp [mem_flip_bipartite_graph]
 
-theorem flip_bipartitePhiTotal
+theorem flip_bipartite_phi_total
     (G : Finset (α × β)) (A : Finset α)
     (B : Finset β) :
     bipartitePhiTotal (flipBipartiteGraph G) B A =
       bipartitePhiTotal G A B := by
   unfold bipartitePhiTotal
-  simp_rw [flip_bipLeftDegree, flip_bipRightDegree]
+  simp_rw [flip_bip_left_degree, flip_bip_right_degree]
   ring
 
 /-- Lemma II.A.1 (in §II.A.2), same-part case in the second part. -/
@@ -476,9 +476,9 @@ theorem bipartite_two_low_same_right_part
       localGraphBudget A.card + localGraphBudget B.card := by
   have hFlip := bipartite_two_low_same_part
     (flipBipartiteGraph G) B A hx hy hxy
-    (by rw [flip_bipLeftDegree]; exact hdx)
-    (by rw [flip_bipLeftDegree]; exact hdy)
-  rw [flip_bipartitePhiTotal] at hFlip
+    (by rw [flip_bip_left_degree]; exact hdx)
+    (by rw [flip_bip_left_degree]; exact hdy)
+  rw [flip_bipartite_phi_total] at hFlip
   linarith
 
 /-- The tagged vertex set lets equal physical labels in different parts
@@ -545,7 +545,7 @@ theorem positive_pair_type_at_most_one_low
 
 /-- If no left node has an edge into the displayed right part, its graph
     score is zero. -/
-theorem bipartitePhiTotal_eq_zero_of_left_degrees_zero
+theorem bipartite_phi_total_eq_zero_of_left_degrees_zero
     (G : Finset (α × β)) (A : Finset α) (B : Finset β)
     (hZero : ∀ x ∈ A, bipLeftDegree G B x = 0) :
     bipartitePhiTotal G A B = 0 := by
@@ -566,12 +566,12 @@ theorem bipartitePhiTotal_eq_zero_of_left_degrees_zero
     apply Finset.sum_eq_zero
     intro x hx
     rw [hZero x hx]
-    exact localPhi_eq_zero_of_le_one (by omega)
+    exact local_phi_eq_zero_of_le_one (by omega)
   have hRightSum : (∑ y ∈ B, localPhi (bipRightDegree G A y)) = 0 := by
     apply Finset.sum_eq_zero
     intro y hy
     rw [hRightZero y hy]
-    exact localPhi_eq_zero_of_le_one (by omega)
+    exact local_phi_eq_zero_of_le_one (by omega)
   rw [hLeftSum, hRightSum]
   ring
 
@@ -603,14 +603,14 @@ theorem bipartite_star_score_le_phi_right
     apply Finset.sum_eq_single_of_mem c hc
     intro x hx hxc
     rw [hStar x hx hxc]
-    exact localPhi_eq_zero_of_le_one (by omega)
+    exact local_phi_eq_zero_of_le_one (by omega)
   have hRightSum :
       (∑ y ∈ B, localPhi (bipRightDegree G A y)) = 0 := by
     apply Finset.sum_eq_zero
     intro y hy
-    exact localPhi_eq_zero_of_le_one (hRightOne y hy)
+    exact local_phi_eq_zero_of_le_one (hRightOne y hy)
   have hCenterBound : localPhi (bipLeftDegree G B c) ≤
-      localPhi B.card := localPhi_mono (bipLeftDegree_le_card G B c)
+      localPhi B.card := local_phi_mono (bip_left_degree_le_card G B c)
   unfold bipartitePhiTotal
   rw [hLeftSum, hRightSum]
   simpa using hCenterBound

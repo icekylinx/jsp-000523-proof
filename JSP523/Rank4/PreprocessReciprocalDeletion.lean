@@ -71,7 +71,7 @@ noncomputable def reciprocalDifferentWitnessTupleEdges
 omit [Fintype α] in
 /-- The nested witness count: label fibers contribute `K_*²` choices and
 the disjoint-root common-tail fiber contributes `C_D` choices. -/
-theorem reciprocalDifferentWitnessTuples_card_le
+theorem reciprocal_different_witness_tuples_card_le
     (D : FiniteCompletionCliqueData α) (Kstar C_D : ℕ)
     (hLabelFiber : ∀ a b : α,
       (reciprocalLabelFiber D a b).card ≤ Kstar)
@@ -110,7 +110,7 @@ theorem reciprocalDifferentWitnessTuples_card_le
 
 /-- Every deleted edge is represented by at least one distinct-witness
 tuple. -/
-theorem reciprocalDifferentWitnessDeletionSetAll_subset_tupleEdges
+theorem reciprocal_different_witness_deletion_set_all_subset_tuple_edges
     (D : FiniteCompletionCliqueData α) :
     reciprocalDifferentWitnessDeletionSetAll D ⊆
       reciprocalDifferentWitnessTupleEdges D := by
@@ -155,7 +155,7 @@ theorem reciprocalDifferentWitnessDeletionSetAll_subset_tupleEdges
 /-- Quantitative deletion bound from the two actual finite fiber inputs.
 With `Kstar = K_*` and `C_D = max(D,3)`, this is the stated
 `n² K_*² C_D` estimate. -/
-theorem reciprocalDifferentWitnessDeletionSetAll_card_le
+theorem reciprocal_different_witness_deletion_set_all_card_le
     (D : FiniteCompletionCliqueData α) (Kstar C_D : ℕ)
     (hLabelFiber : ∀ a b : α,
       (reciprocalLabelFiber D a b).card ≤ Kstar)
@@ -166,10 +166,10 @@ theorem reciprocalDifferentWitnessDeletionSetAll_card_le
   calc
     _ ≤ (reciprocalDifferentWitnessTupleEdges D).card :=
       Finset.card_le_card
-        (reciprocalDifferentWitnessDeletionSetAll_subset_tupleEdges D)
+        (reciprocal_different_witness_deletion_set_all_subset_tuple_edges D)
     _ ≤ (reciprocalDifferentWitnessTuples D).card := Finset.card_image_le
     _ ≤ D.ground.card * D.ground.card * Kstar * Kstar * C_D :=
-      reciprocalDifferentWitnessTuples_card_le D Kstar C_D
+      reciprocal_different_witness_tuples_card_le D Kstar C_D
         hLabelFiber hTailFiber
 
 /-- The concrete finite cleanup: remove the union of all distinct-witness
@@ -184,8 +184,8 @@ noncomputable def clearReciprocalDifferentWitnesses
     exact D.uniform_four (hSub hE)
   · exact admissible_mono hSub D.admissible
   · intro x y hxy P hP
-    have hCell := mem_commonTripleCell.mp hP
-    exact D.label_center x y hxy P (mem_commonTripleCell.mpr
+    have hCell := mem_common_triple_cell.mp hP
+    exact D.label_center x y hxy P (mem_common_triple_cell.mpr
       ⟨hCell.1, hCell.2.1, hCell.2.2.1,
         hSub hCell.2.2.2.1, hSub hCell.2.2.2.2⟩)
   · intro T x hx y hy z hz hxy hxz hyz
@@ -203,14 +203,14 @@ noncomputable def clearReciprocalDifferentWitnesses
         hSub (Finset.mem_filter.mp hz).2⟩
     exact D.no_bicolored_triangle T x hx' y hy' z hz' hxy hxz hyz
 
-theorem clearReciprocalDifferentWitnesses_sub
+theorem clear_reciprocal_different_witnesses_sub
     (D : FiniteCompletionCliqueData α) :
     (clearReciprocalDifferentWitnesses D).K ⊆ D.K := by
   classical
   change (D.K \ reciprocalDifferentWitnessDeletionSetAll D) ⊆ D.K
   exact Finset.sdiff_subset
 
-theorem clearReciprocalDifferentWitnesses_avoids_all
+theorem clear_reciprocal_different_witnesses_avoids_all
     (D : FiniteCompletionCliqueData α) :
     ∀ E ∈ reciprocalDifferentWitnessDeletionSetAll D,
       E ∉ (clearReciprocalDifferentWitnesses D).K := by
@@ -220,7 +220,7 @@ theorem clearReciprocalDifferentWitnesses_avoids_all
   have hDiff := Finset.mem_sdiff.mp hClean
   exact hDiff.2 hE
 
-theorem clearReciprocalDifferentWitnesses_avoids_root
+theorem clear_reciprocal_different_witnesses_avoids_root
     (D : FiniteCompletionCliqueData α) (P : Edge α)
     (hPcard : P.card = 2) (hPground : P ⊆ D.ground) :
     ∀ E ∈ reciprocalDifferentWitnessDeletionSet D P,
@@ -230,9 +230,9 @@ theorem clearReciprocalDifferentWitnesses_avoids_root
   have hUnion : E ∈ reciprocalDifferentWitnessDeletionSetAll D :=
     Finset.mem_biUnion.mpr ⟨P,
       Finset.mem_powersetCard.mpr ⟨hPground, hPcard⟩, hE⟩
-  exact clearReciprocalDifferentWitnesses_avoids_all D E hUnion hClean
+  exact clear_reciprocal_different_witnesses_avoids_all D E hUnion hClean
 
-theorem mem_reciprocalDifferentWitnessDeletionSet
+theorem mem_reciprocal_different_witness_deletion_set
     (D : FiniteCompletionCliqueData α) (P E : Edge α)
     (hE : E ∈ D.K)
     (hBad : ∃ a b r s : α,
@@ -248,7 +248,7 @@ theorem mem_reciprocalDifferentWitnessDeletionSet
 
 omit [Fintype α] in
 /-- Pair-link edges are monotone under deleting four-edges. -/
-theorem completionPairLinkGraph_adj_mono
+theorem completion_pair_link_graph_adj_mono
     (D₀ D : FiniteCompletionCliqueData α) (P : Edge α)
     (hGround : D.ground = D₀.ground) (hSub : D.K ⊆ D₀.K)
     {a b : α}
@@ -281,9 +281,9 @@ theorem no_second_reciprocal_witness_of_deletion
   classical
   intro a b r s hAB hBR hAS hNeAR hNeBS hLabAR hLabBS
   by_contra hrs
-  have hAB₀ := completionPairLinkGraph_adj_mono D₀ D P hGround hSub hAB
-  have hBR₀ := completionPairLinkGraph_adj_mono D₀ D P hGround hSub hBR
-  have hAS₀ := completionPairLinkGraph_adj_mono D₀ D P hGround hSub hAS
+  have hAB₀ := completion_pair_link_graph_adj_mono D₀ D P hGround hSub hAB
+  have hBR₀ := completion_pair_link_graph_adj_mono D₀ D P hGround hSub hBR
+  have hAS₀ := completion_pair_link_graph_adj_mono D₀ D P hGround hSub hAS
   have hLabAR₀ : D₀.label a r = b := by simpa [hLabel] using hLabAR
   have hLabBS₀ : D₀.label b s = a := by simpa [hLabel] using hLabBS
   have hTarget : insert a (insert b P) ∈ D.K := by
@@ -292,7 +292,7 @@ theorem no_second_reciprocal_witness_of_deletion
     exact hAB.2.2.2.2.2
   have hBad : insert a (insert b P) ∈
       reciprocalDifferentWitnessDeletionSet D₀ P := by
-    exact mem_reciprocalDifferentWitnessDeletionSet
+    exact mem_reciprocal_different_witness_deletion_set
       D₀ P (insert a (insert b P)) (hSub hTarget)
       ⟨a, b, r, s, rfl, hAB₀, hBR₀, hAS₀,
         hLabAR₀, hLabBS₀, hNeAR, hNeBS, hrs⟩
@@ -300,7 +300,7 @@ theorem no_second_reciprocal_witness_of_deletion
 
 /-- The explicit deletion constructor yields the uniqueness condition used
 by the reciprocal-triangle isolation argument. -/
-theorem clearReciprocalDifferentWitnesses_no_second
+theorem clear_reciprocal_different_witnesses_no_second
     (D : FiniteCompletionCliqueData α) (P : Edge α)
     (hPcard : P.card = 2) (hPground : P ⊆ D.ground) :
     ∀ a b r s : α,
@@ -311,8 +311,8 @@ theorem clearReciprocalDifferentWitnesses_no_second
       (clearReciprocalDifferentWitnesses D).label a r = b →
       (clearReciprocalDifferentWitnesses D).label b s = a → r = s := by
   classical
-  have hAvoid := clearReciprocalDifferentWitnesses_avoids_root D P hPcard hPground
-  have hSub := clearReciprocalDifferentWitnesses_sub D
+  have hAvoid := clear_reciprocal_different_witnesses_avoids_root D P hPcard hPground
+  have hSub := clear_reciprocal_different_witnesses_sub D
   have hLabel : (clearReciprocalDifferentWitnesses D).label = D.label := by
     rfl
   intro a b r s hAB hBR hAS _hab hAR _haS _hbR hBS _hrs hLabAR hLabBS
@@ -322,7 +322,7 @@ theorem clearReciprocalDifferentWitnesses_no_second
 
 /-- The actual loss in the deletion constructor is bounded by the bad-edge
 union. -/
-theorem clearReciprocalDifferentWitnesses_loss_card_le
+theorem clear_reciprocal_different_witnesses_loss_card_le
     (D : FiniteCompletionCliqueData α) :
     (D.K \ (clearReciprocalDifferentWitnesses D).K).card ≤
       (reciprocalDifferentWitnessDeletionSetAll D).card := by
@@ -339,7 +339,7 @@ theorem clearReciprocalDifferentWitnesses_loss_card_le
 
 /-- The deletion budget obtained from the label and common-tail fiber
 bounds. -/
-theorem clearReciprocalDifferentWitnesses_loss_card_le_of_fibers
+theorem clear_reciprocal_different_witnesses_loss_card_le_of_fibers
     (D : FiniteCompletionCliqueData α) (Kstar C_D : ℕ)
     (hLabelFiber : ∀ a b : α,
       (reciprocalLabelFiber D a b).card ≤ Kstar)
@@ -347,8 +347,8 @@ theorem clearReciprocalDifferentWitnesses_loss_card_le_of_fibers
       (reciprocalWitnessTailFiber D a b r s).card ≤ C_D) :
     (D.K \ (clearReciprocalDifferentWitnesses D).K).card ≤
       D.ground.card * D.ground.card * Kstar * Kstar * C_D := by
-  exact clearReciprocalDifferentWitnesses_loss_card_le D |>.trans
-    (reciprocalDifferentWitnessDeletionSetAll_card_le D Kstar C_D
+  exact clear_reciprocal_different_witnesses_loss_card_le D |>.trans
+    (reciprocal_different_witness_deletion_set_all_card_le D Kstar C_D
       hLabelFiber hTailFiber)
 
 end JSP523.Rank4

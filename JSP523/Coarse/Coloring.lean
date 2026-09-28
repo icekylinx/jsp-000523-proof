@@ -115,7 +115,7 @@ noncomputable def crossingSubfamily
   exact H.filter (fun E => CrossingOn r κ E)
 
 omit [Fintype α] [DecidableEq α] in
-theorem crossingSubfamily_subset
+theorem crossing_subfamily_subset
     (H : Family α) (r : ℕ) (κ : α → Fin r) :
     crossingSubfamily H r κ ⊆ H := by
   classical
@@ -123,14 +123,14 @@ theorem crossingSubfamily_subset
   exact (Finset.mem_filter.mp hE).1
 
 omit [Fintype α] [DecidableEq α] in
-theorem mem_crossingSubfamily_iff
+theorem mem_crossing_subfamily_iff
     (H : Family α) (r : ℕ) (κ : α → Fin r) (E : Edge α) :
     E ∈ crossingSubfamily H r κ ↔ E ∈ H ∧ CrossingOn r κ E := by
   classical
   exact Finset.mem_filter
 
 /-- Exact double count of a coloring and one of its crossing edges. -/
-theorem sum_crossingSubfamily_card
+theorem sum_crossing_subfamily_card
     (H : Family α) (r : ℕ) :
     (∑ κ : α → Fin r, (crossingSubfamily H r κ).card) =
       ∑ E ∈ H, (crossingColorings E r).card := by
@@ -151,11 +151,11 @@ theorem sum_crossingSubfamily_card
       exact (Finset.card_filter
         (fun κ : α → Fin r => CrossingOn r κ E) Finset.univ).symm
 
-theorem sum_crossingSubfamily_card_uniform
+theorem sum_crossing_subfamily_card_uniform
     (H : Family α) (r : ℕ) (hU : Uniform r H) :
     (∑ κ : α → Fin r, (crossingSubfamily H r κ).card) =
       H.card * (r.factorial * r ^ (Fintype.card α - r)) := by
-  rw [sum_crossingSubfamily_card]
+  rw [sum_crossing_subfamily_card]
   calc
     (∑ E ∈ H, (crossingColorings E r).card) =
         ∑ _E ∈ H,
@@ -181,7 +181,7 @@ theorem exists_crossing_subfamily
   have hPow : r ^ (Fintype.card α - r) * r ^ r =
       r ^ Fintype.card α := by
     rw [← pow_add, Nat.sub_add_cancel hrN]
-  have hDouble := sum_crossingSubfamily_card_uniform H r hU
+  have hDouble := sum_crossing_subfamily_card_uniform H r hU
   have hScaled :
       (∑ κ ∈ C, r ^ r * (crossingSubfamily H r κ).card) =
         ∑ _κ ∈ C, r.factorial * H.card := by
@@ -249,7 +249,7 @@ noncomputable def vertexAtColor
   (edgeColorEquiv E r κ hcard hcross).symm i
 
 omit [Fintype α] [DecidableEq α] in
-theorem vertexAtColor_mem
+theorem vertex_at_color_mem
     (E : Edge α) (r : ℕ) (κ : α → Fin r)
     (hcard : E.card = r) (hcross : CrossingOn r κ E)
     (i : Fin r) :
@@ -257,7 +257,7 @@ theorem vertexAtColor_mem
   (edgeColorEquiv E r κ hcard hcross).symm i |>.property
 
 omit [Fintype α] [DecidableEq α] in
-theorem color_vertexAtColor
+theorem color_vertex_at_color
     (E : Edge α) (r : ℕ) (κ : α → Fin r)
     (hcard : E.card = r) (hcross : CrossingOn r κ E)
     (i : Fin r) :
@@ -265,16 +265,16 @@ theorem color_vertexAtColor
   exact (edgeColorEquiv E r κ hcard hcross).apply_symm_apply i
 
 omit [Fintype α] [DecidableEq α] in
-theorem vertexAtColor_injective
+theorem vertex_at_color_injective
     (E : Edge α) (r : ℕ) (κ : α → Fin r)
     (hcard : E.card = r) (hcross : CrossingOn r κ E) :
     Function.Injective (vertexAtColor E r κ hcard hcross) := by
   intro i j hij
   have hcolor := congrArg κ hij
-  simpa only [color_vertexAtColor] using hcolor
+  simpa only [color_vertex_at_color] using hcolor
 
 omit [Fintype α] [DecidableEq α] in
-theorem mem_edge_iff_exists_vertexAtColor
+theorem mem_edge_iff_exists_vertex_at_color
     (E : Edge α) (r : ℕ) (κ : α → Fin r)
     (hcard : E.card = r) (hcross : CrossingOn r κ E)
     (x : α) :
@@ -285,6 +285,6 @@ theorem mem_edge_iff_exists_vertexAtColor
     exact congrArg Subtype.val
       ((edgeColorEquiv E r κ hcard hcross).symm_apply_apply ⟨x, hx⟩)
   · rintro ⟨i, rfl⟩
-    exact vertexAtColor_mem E r κ hcard hcross i
+    exact vertex_at_color_mem E r κ hcard hcross i
 
 end JSP523.Coarse

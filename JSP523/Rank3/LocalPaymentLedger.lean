@@ -18,7 +18,7 @@ variable {α : Type*} [DecidableEq α]
 
 /-- Each triple contributes the normalized budget of each of its three
     pairs.  Summing over actual triples gives exactly the global budget. -/
-theorem local_pair_budget_sum_eq_actualPairBudget
+theorem local_pair_budget_sum_eq_actual_pair_budget
     (H : Family α) (V : Edge α)
     (hUniform : Uniform 3 H)
     (hground : ∀ E ∈ H, E ⊆ V) :
@@ -54,12 +54,12 @@ theorem local_pair_budget_sum_eq_actualPairBudget
       apply Finset.sum_congr rfl
       intro p hp
       rw [Finset.sum_const, nsmul_eq_mul]
-      have hcard := completionVertices_card_eq_containingEdges
+      have hcard := completion_vertices_card_eq_containing_edges
         H V p hUniform hground hp
       rw [← hcard]
-      exact card_mul_weightPairBudget_eq_pairBudget _
+      exact card_mul_weight_pair_budget_eq_pair_budget _
     _ = actualPairBudget H V :=
-      all_pair_budget_eq_actualPairBudget H V
+      all_pair_budget_eq_actual_pair_budget H V
 
 /-- A weighted version of the completion-vertex bijection: for a fixed
     grounded pair `{z,x}`, the unique vertex of each containing triple
@@ -240,7 +240,7 @@ theorem sum_local_oriented_negative_eq_global
 /-- Equation (II.5)'s exact global ledger: local defects sum to absolute
     negative weight minus the actual pair budget, under the orientation
     normalization used throughout this formalization. -/
-theorem sum_localSignedDefect_eq_negative_sub_budget
+theorem sum_local_signed_defect_eq_negative_sub_budget
     (H : Family α) (V : Edge α)
     (hUniform : Uniform 3 H)
     (hground : ∀ E ∈ H, E ⊆ V) :
@@ -249,7 +249,7 @@ theorem sum_localSignedDefect_eq_negative_sub_budget
         actualPairBudget H V := by
   have hNegative := sum_local_oriented_negative_eq_global
     H V hUniform hground
-  have hBudget := local_pair_budget_sum_eq_actualPairBudget
+  have hBudget := local_pair_budget_sum_eq_actual_pair_budget
     H V hUniform hground
   have hHalf :
       (∑ E ∈ H, localOrientedNegativePayment H V E / 2) =
@@ -306,7 +306,7 @@ theorem signed_payment_identity_on_actual_supports
         ∑ E ∈ H, localSignedDefect H V E := by
   have hSigned := all_roots_oriented_weight_sum_eq_actual_ledgers V hH
   have hSplit := oriented_signed_eq_positive_sub_negative H V
-  have hDefect := sum_localSignedDefect_eq_negative_sub_budget
+  have hDefect := sum_local_signed_defect_eq_negative_sub_budget
     H V hUniform hground
   linarith
 

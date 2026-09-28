@@ -35,7 +35,7 @@ noncomputable def chooseActualPairTailSelection
   exact fun P => if hP : P ∈ M then
     Classical.choose (Finset.exists_subset_card_eq (h P hP)) else ∅
 
-theorem chooseActualPairTailSelection_spec
+theorem choose_actual_pair_tail_selection_spec
     (F M : Family α) (U : Edge α) (d : ℕ)
     (h : ∀ P ∈ M, d ≤ (actualPairRootTails F U P).card) :
     uniformActualPairTailSelection F M U d
@@ -48,14 +48,14 @@ theorem chooseActualPairTailSelection_spec
       (Finset.exists_subset_card_eq (h P hP))
   · simp_all
 
-theorem mem_actualPairRootTails_iff
+theorem mem_actual_pair_root_tails_iff
     (F : Family α) (U P Q : Edge α) :
     Q ∈ actualPairRootTails F U P ↔
       Q ∈ U.powersetCard 2 ∧ Disjoint P Q ∧ P ∪ Q ∈ F := by
   simp [actualPairRootTails]
 
 /-- Exact first incidence count for a finite selected-tail system. -/
-theorem selectedTail_first_moment
+theorem selected_tail_first_moment
     {ι β : Type*} [DecidableEq ι] [DecidableEq β]
     (I : Finset ι) (Ω : Finset β) (A : ι → Finset β) :
     (∑ x ∈ Ω, (I.filter fun i => x ∈ A i).card) =
@@ -72,13 +72,13 @@ theorem selectedTail_first_moment
 
 /-- If each selected tail family has exactly `d` points inside the
 finite universe, its total incidence count is `|I| d`. -/
-theorem selectedTail_first_moment_eq
+theorem selected_tail_first_moment_eq
     {ι β : Type*} [DecidableEq ι] [DecidableEq β]
     (I : Finset ι) (Ω : Finset β) (A : ι → Finset β) (d : ℕ)
     (hSubset : ∀ i ∈ I, A i ⊆ Ω)
     (hSize : ∀ i ∈ I, (A i).card = d) :
     (∑ x ∈ Ω, (I.filter fun i => x ∈ A i).card) = I.card * d := by
-  rw [selectedTail_first_moment]
+  rw [selected_tail_first_moment]
   calc
     (∑ i ∈ I, (A i ∩ Ω).card) = ∑ i ∈ I, d := by
       apply Finset.sum_congr rfl
@@ -88,7 +88,7 @@ theorem selectedTail_first_moment_eq
 
 /-- Exact second incidence count: each point contributes the ordered
 pairs of selected roots whose tails contain it. -/
-theorem selectedTail_second_moment_rearrange
+theorem selected_tail_second_moment_rearrange
     {ι β : Type*} [DecidableEq ι] [DecidableEq β]
     (I : Finset ι) (Ω : Finset β) (A : ι → Finset β) :
     (∑ x ∈ Ω, (I.filter fun i => x ∈ A i).card ^ 2) =
@@ -133,7 +133,7 @@ theorem selectedTail_second_moment_rearrange
 
 /-- Pairwise tail intersections give the diagonal/off-diagonal second-moment
 bound for an actual finite selected family. -/
-theorem selectedTail_second_moment_le
+theorem selected_tail_second_moment_le
     {ι β : Type*} [DecidableEq ι] [DecidableEq β]
     (I : Finset ι) (Ω : Finset β) (A : ι → Finset β) (d R : ℕ)
     (hSize : ∀ i ∈ I, (A i).card = d)
@@ -142,7 +142,7 @@ theorem selectedTail_second_moment_le
     (∑ x ∈ Ω, (I.filter fun i => x ∈ A i).card ^ 2) ≤
       I.card * d + I.card * (I.card - 1) * R := by
   classical
-  rw [selectedTail_second_moment_rearrange]
+  rw [selected_tail_second_moment_rearrange]
   calc
     (∑ ij ∈ I ×ˢ I, ((A ij.1 ∩ A ij.2) ∩ Ω).card) ≤
         ∑ ij ∈ I ×ˢ I, if ij.1 = ij.2 then d else R := by
@@ -190,7 +190,7 @@ theorem selectedTail_second_moment_le
 
 /-- Finite Cauchy--Schwarz for the point multiplicities of the selected
 tails. -/
-theorem selectedTail_cauchy
+theorem selected_tail_cauchy
     {ι β : Type*} [DecidableEq ι] [DecidableEq β]
     (I : Finset ι) (Ω : Finset β) (A : ι → Finset β) :
     (∑ x ∈ Ω, (I.filter fun i => x ∈ A i).card) ^ 2 ≤
@@ -217,7 +217,7 @@ theorem selectedTail_cauchy
 
 /-- The actual square-moment inequality for a finite family of selected
 tails, with the diagonal and cross intersections charged separately. -/
-theorem selectedTail_square_moment_bound
+theorem selected_tail_square_moment_bound
     {ι β : Type*} [DecidableEq ι] [DecidableEq β]
     (I : Finset ι) (Ω : Finset β) (A : ι → Finset β) (d R : ℕ)
     (hSubset : ∀ i ∈ I, A i ⊆ Ω)
@@ -226,15 +226,15 @@ theorem selectedTail_square_moment_bound
       ((A i ∩ A j) ∩ Ω).card ≤ R) :
     (I.card * d) ^ 2 ≤
       Ω.card * (I.card * d + I.card * (I.card - 1) * R) := by
-  have hFirst := selectedTail_first_moment_eq I Ω A d hSubset hSize
+  have hFirst := selected_tail_first_moment_eq I Ω A d hSubset hSize
   calc
     (I.card * d) ^ 2 =
         (∑ x ∈ Ω, (I.filter fun i => x ∈ A i).card) ^ 2 := by rw [hFirst]
     _ ≤ Ω.card * (∑ x ∈ Ω,
-        (I.filter fun i => x ∈ A i).card ^ 2) := selectedTail_cauchy I Ω A
+        (I.filter fun i => x ∈ A i).card ^ 2) := selected_tail_cauchy I Ω A
     _ ≤ Ω.card * (I.card * d + I.card * (I.card - 1) * R) :=
           Nat.mul_le_mul_left _
-            (selectedTail_second_moment_le I Ω A d R hSize hCross)
+            (selected_tail_second_moment_le I Ω A d R hSize hCross)
 
 /-- The actual selected tails common to two pair roots. -/
 def actualCommonPairRootTails
@@ -258,10 +258,10 @@ theorem actual_common_pair_tails_intersect
   have hSQ : S ∈ aQ := (Finset.mem_inter.mp hS).2
   have hTP : T ∈ aP := (Finset.mem_inter.mp hT).1
   have hTQ : T ∈ aQ := (Finset.mem_inter.mp hT).2
-  have hSpropP := (mem_actualPairRootTails_iff F U P S).mp hSP
-  have hSpropQ := (mem_actualPairRootTails_iff F U Q S).mp hSQ
-  have hTpropP := (mem_actualPairRootTails_iff F U P T).mp hTP
-  have hTpropQ := (mem_actualPairRootTails_iff F U Q T).mp hTQ
+  have hSpropP := (mem_actual_pair_root_tails_iff F U P S).mp hSP
+  have hSpropQ := (mem_actual_pair_root_tails_iff F U Q S).mp hSQ
+  have hTpropP := (mem_actual_pair_root_tails_iff F U P T).mp hTP
+  have hTpropQ := (mem_actual_pair_root_tails_iff F U Q T).mp hTQ
   have hScard : S.card = 2 :=
     (Finset.mem_powersetCard.mp hSpropP.1).2
   have hTcard : T.card = 2 :=
@@ -334,7 +334,7 @@ theorem actual_common_pair_tails_intersect
 
 /-- Actual pair-root tails are in bijection with four-edges containing the
 root: take the residual pair after removing the root. -/
-theorem actualPairRootTails_card_eq_rankFourPairDegree
+theorem actual_pair_root_tails_card_eq_rank_four_pair_degree
     (F : Family α) (U P : Edge α)
     (hSupport : F ⊆ U.powersetCard 4)
     (hP : P ∈ U.powersetCard 2) :
@@ -362,7 +362,7 @@ theorem actualPairRootTails_card_eq_rankFourPairDegree
         · simp [hx, hPE hx]
         · simp [hx]
       have hTail : E \ P ∈ actualPairRootTails F U P := by
-        apply (mem_actualPairRootTails_iff F U P (E \ P)).mpr
+        apply (mem_actual_pair_root_tails_iff F U P (E \ P)).mpr
         refine ⟨Finset.mem_powersetCard.mpr ⟨hQsub, hQcard⟩, ?_, ?_⟩
         · apply Finset.disjoint_left.mpr
           intro x hxP hxQ
@@ -370,7 +370,7 @@ theorem actualPairRootTails_card_eq_rankFourPairDegree
         · simpa [hUnion] using hEF
       exact hTail
     · intro hQ
-      have hTail := (mem_actualPairRootTails_iff F U P Q).mp hQ
+      have hTail := (mem_actual_pair_root_tails_iff F U P Q).mp hQ
       refine Finset.mem_image.mpr ⟨P ∪ Q, ?_, ?_⟩
       · apply Finset.mem_filter.mpr
         refine ⟨hTail.2.2, ?_⟩
@@ -447,7 +447,7 @@ theorem actual_common_pair_tail_vertex_degree_le
       (S ∈ U.powersetCard 2 ∧ Disjoint P S ∧ P ∪ S ∈ F) ∧ x ∈ S := by
     have hG : S ∈ G := (Finset.mem_filter.mp hS).1
     have hxS : x ∈ S := (Finset.mem_filter.mp hS).2
-    have hTail := (mem_actualPairRootTails_iff F U P S).mp
+    have hTail := (mem_actual_pair_root_tails_iff F U P S).mp
       ((Finset.mem_inter.mp hG).1)
     exact ⟨hTail, hxS⟩
   let f : Edge α → α := fun S => if hS : S ∈ J then
@@ -606,7 +606,7 @@ theorem actual_selected_pair_tail_vertex_degree_le
         apply Finset.eq_empty_iff_forall_notMem.mpr
         intro S hS
         have hFull : S ∈ Jfull := hSub (Finset.mem_filter.mp hS).1
-        have hTail := (mem_actualPairRootTails_iff F U P S).mp
+        have hTail := (mem_actual_pair_root_tails_iff F U P S).mp
           ((Finset.mem_inter.mp hFull).1)
         exact ((Finset.disjoint_left.mp hTail.2.1) hxP
           (Finset.mem_filter.mp hS).2).elim
@@ -619,7 +619,7 @@ theorem actual_selected_pair_tail_vertex_degree_le
       apply Finset.eq_empty_iff_forall_notMem.mpr
       intro S hS
       have hFull : S ∈ Jfull := hSub (Finset.mem_filter.mp hS).1
-      have hTail := (mem_actualPairRootTails_iff F U P S).mp
+      have hTail := (mem_actual_pair_root_tails_iff F U P S).mp
         ((Finset.mem_inter.mp hFull).1)
       have hxU' : x ∈ U :=
         (Finset.mem_powersetCard.mp hTail.1).1 (Finset.mem_filter.mp hS).2
@@ -629,7 +629,7 @@ theorem actual_selected_pair_tail_vertex_degree_le
 
 /-- Instantiation of the double-counting inequality to actual pair roots and
 their selected actual four-edge completion tails. -/
-theorem actualPairTailSelection_square_moment
+theorem actual_pair_tail_selection_square_moment
     (F M : Family α) (U : Edge α) (A : Edge α → Family α) (d R : ℕ)
     (hSelection : uniformActualPairTailSelection F M U d A)
     (hCross : ∀ P ∈ M, ∀ Q ∈ M, P ≠ Q →
@@ -637,11 +637,11 @@ theorem actualPairTailSelection_square_moment
     (M.card * d) ^ 2 ≤
       (U.powersetCard 2).card *
         (M.card * d + M.card * (M.card - 1) * R) := by
-  apply selectedTail_square_moment_bound M (U.powersetCard 2) A d R
+  apply selected_tail_square_moment_bound M (U.powersetCard 2) A d R
   · intro P hP Q hQ
     have hA := (hSelection P hP).1
     have hQ' : Q ∈ actualPairRootTails F U P := hA hQ
-    exact (mem_actualPairRootTails_iff F U P Q).mp hQ' |>.1
+    exact (mem_actual_pair_root_tails_iff F U P Q).mp hQ' |>.1
   · intro P hP
     exact (hSelection P hP).2
   · exact hCross
@@ -649,7 +649,7 @@ theorem actualPairTailSelection_square_moment
 /-- Actual selected matching-tail second moment under admissibility and a
 triple completion cap. This is the finite A.4 input before the numerical
 heavy-pair estimate. -/
-theorem actualPairTailSelection_square_moment_of_caps
+theorem actual_pair_tail_selection_square_moment_of_caps
     (F M : Family α) (U : Edge α) (A : Edge α → Family α) (d R : ℕ)
     (hSelection : uniformActualPairTailSelection F M U d A)
     (hMpair : ∀ P ∈ M, P ∈ U.powersetCard 2)
@@ -661,7 +661,7 @@ theorem actualPairTailSelection_square_moment_of_caps
     (M.card * d) ^ 2 ≤
       (U.powersetCard 2).card *
         (M.card * d + M.card * (M.card - 1) * R) := by
-  apply actualPairTailSelection_square_moment F M U A d R hSelection
+  apply actual_pair_tail_selection_square_moment F M U A d R hSelection
   intro P hP Q hQ hne
   have hPQ := hMatching P hP Q hQ hne
   exact actual_pair_root_matching_cross_intersection_bound
@@ -675,7 +675,7 @@ theorem actualPairTailSelection_square_moment_of_caps
 bound. The moment hypothesis is the finite incidence estimate
 `(kd)^2 ≤ u (kd + k(k−1)R)`; in applications `u` is the number of pair
 nodes and `R` bounds the intersection of two distinct selected tail sets. -/
-theorem heavy_matching_card_le_four_mul_n_div_T
+theorem heavy_matching_card_le_four_mul_n_div_t
     {k d u R n T : ℕ}
     (hMoment : (k * d) ^ 2 ≤ u * (k * d + k * (k - 1) * R))
     (hkd : 0 < k)
@@ -727,9 +727,9 @@ theorem actual_heavy_pair_matching_card_bound
     exact (Finset.mem_filter.mp (hHeavy hP)).1
   let A := chooseActualPairTailSelection F M U (T * U.card) hTailLower
   have hSelection : uniformActualPairTailSelection F M U (T * U.card) A :=
-    chooseActualPairTailSelection_spec F M U (T * U.card) hTailLower
-  have hMoment := actualPairTailSelection_square_moment_of_caps
+    choose_actual_pair_tail_selection_spec F M U (T * U.card) hTailLower
+  have hMoment := actual_pair_tail_selection_square_moment_of_caps
     F M U A (T * U.card) R hSelection hMpair hMatching hAdm hTripleCap hR
-  exact heavy_matching_card_le_four_mul_n_div_T hMoment hM (Nat.le_refl _) hTn hPairs (by simpa [pow_two] using hDenom)
+  exact heavy_matching_card_le_four_mul_n_div_t hMoment hM (Nat.le_refl _) hTn hPairs (by simpa [pow_two] using hDenom)
 
 end JSP523.Rank4

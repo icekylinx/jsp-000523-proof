@@ -81,8 +81,8 @@ theorem chosen_common_root_label_valid
   have hT' : T ∈ commonTripleCell K U
       (pairRootRep P hPcard).1 (pairRootRep P hPcard).2 := by
     simpa only [commonRootCell, dite_eq_left hPcard] using hT
-  have hData := mem_commonTripleCell.mp hT'
-  have hPairSpec := pairRootRep_spec P hPcard
+  have hData := mem_common_triple_cell.mp hT'
+  have hPairSpec := pair_root_rep_spec P hPcard
   have hDisj : Disjoint T P := by
     rw [hPairSpec.2]
     exact hData.2.2.1

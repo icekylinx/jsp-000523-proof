@@ -24,7 +24,7 @@ def qPairDegree (Q : Family α) (P : Edge α) : ℕ :=
 
 /-- The internal-triple exception has at most `D` times the number of Q
 triples edges. -/
-theorem internalQTripleEdges_card_le
+theorem internal_q_triple_edges_card_le
     (F Q : Family α) (D : ℕ)
     (hFacet : ∀ T ∈ Q,
       (F.filter fun E => T ⊆ E).card ≤ D) :
@@ -49,14 +49,14 @@ theorem internalQTripleEdges_card_le
 
 /-- A pair-degree cap bounds the number of triples in `Q` by the number
 of ambient pairs times the cap. -/
-theorem q_card_le_pairCount_mul_pairDegree
+theorem q_card_le_pair_count_mul_pair_degree
     (Q : Family α) (U : Edge α) (κ : ℕ)
     (hUniform : Uniform 3 Q)
     (hGround : ∀ T ∈ Q, T ⊆ U)
     (hPair : ∀ P ∈ U.powersetCard 2, qPairDegree Q P ≤ κ) :
     Q.card ≤ (U.powersetCard 2).card * κ := by
   classical
-  have hMoment := JSP523.Rank3.containingEdges_first_moment Q U
+  have hMoment := JSP523.Rank3.containing_edges_first_moment Q U
     hUniform hGround
   have hBound :
       (∑ P ∈ U.powersetCard 2,
@@ -73,7 +73,7 @@ theorem q_card_le_pairCount_mul_pairDegree
 
 /-- The first bounded-label exception bound: removing all four-edges that
 contain an internal Q-triple costs at most `D κ binom(|U|,2)`. -/
-theorem internalQTripleEdges_card_le_degree_caps
+theorem internal_q_triple_edges_card_le_degree_caps
     (F Q : Family α) (U : Edge α) (D κ : ℕ)
     (hUniform : Uniform 3 Q)
     (hGround : ∀ T ∈ Q, T ⊆ U)
@@ -83,9 +83,9 @@ theorem internalQTripleEdges_card_le_degree_caps
     (internalQTripleEdges F Q).card ≤
       D * κ * (U.powersetCard 2).card := by
   calc
-    _ ≤ D * Q.card := internalQTripleEdges_card_le F Q D hFacet
+    _ ≤ D * Q.card := internal_q_triple_edges_card_le F Q D hFacet
     _ ≤ D * ((U.powersetCard 2).card * κ) :=
-      Nat.mul_le_mul_left D (q_card_le_pairCount_mul_pairDegree
+      Nat.mul_le_mul_left D (q_card_le_pair_count_mul_pair_degree
         Q U κ hUniform hGround hPair)
     _ = D * κ * (U.powersetCard 2).card := by ring
 
@@ -101,7 +101,7 @@ def qLinkWedgeCore (w : Σ _x : α, Σ _a : α, α × α) : Edge α :=
   insert w.2.2.2 ({w.2.1, w.2.2.1} : Edge α)
 
 /-- A genuine wedge produces a three-element common core. -/
-theorem qLinkWedgeCore_card
+theorem q_link_wedge_core_card
     (Q : Family α) (U : Edge α) (w : Σ _x : α, Σ _a : α, α × α)
     (hw : w ∈ qLinkWedgeIndices Q U) : (qLinkWedgeCore w).card = 3 := by
   classical
@@ -134,18 +134,18 @@ theorem qLinkWedgeCore_card
     Finset.card_pair hba]
 
 /-- The actual completion set of any ambient pair has size at most κ. -/
-theorem completionVertices_card_le_qPairDegree
+theorem completion_vertices_card_le_q_pair_degree
     (Q : Family α) (U P : Edge α) (κ : ℕ)
     (hUniform : Uniform 3 Q) (hGround : ∀ T ∈ Q, T ⊆ U)
     (hP : P ∈ U.powersetCard 2)
     (hPair : qPairDegree Q P ≤ κ) :
     (JSP523.Rank3.completionVertices Q U P).card ≤ κ := by
-  rw [JSP523.Rank3.completionVertices_card_eq_containingEdges
+  rw [JSP523.Rank3.completion_vertices_card_eq_containing_edges
     Q U P hUniform hGround hP]
   exact hPair
 
 /-- There are at most `|U|² κ²` ordered shared-endpoint wedges. -/
-theorem qLinkWedgeIndices_card_le
+theorem q_link_wedge_indices_card_le
     (Q : Family α) (U : Edge α) (κ : ℕ)
     (hUniform : Uniform 3 Q)
     (hGround : ∀ T ∈ Q, T ⊆ U)
@@ -164,7 +164,7 @@ theorem qLinkWedgeIndices_card_le
       rcases hz with rfl | rfl
       · exact hx
       · exact (Finset.mem_erase.mp ha).2
-    exact completionVertices_card_le_qPairDegree Q U {x, a} κ
+    exact completion_vertices_card_le_q_pair_degree Q U {x, a} κ
       hUniform hGround hP (hPair {x, a} hP)
   have hFiber (x : α) (hx : x ∈ U) :
       (∑ a ∈ U.erase x,
@@ -211,7 +211,7 @@ def sharedEndpointCoreEdges (F Q : Family α) (U : Edge α) : Family α :=
 
 /-- Charge each edge containing a wedge core to an actual wedge and then
 to one of at most D completions of its fixed triple. -/
-theorem sharedEndpointCoreEdges_card_le
+theorem shared_endpoint_core_edges_card_le
     (F Q : Family α) (U : Edge α) (D : ℕ)
     (hFacet : ∀ T : Edge α, T.card = 3 →
       (F.filter fun E => T ⊆ E).card ≤ D) :
@@ -233,11 +233,11 @@ theorem sharedEndpointCoreEdges_card_le
     _ ≤ ∑ _w ∈ W, D := by
       apply Finset.sum_le_sum
       intro w hw
-      exact hFacet (qLinkWedgeCore w) (qLinkWedgeCore_card Q U w hw)
+      exact hFacet (qLinkWedgeCore w) (q_link_wedge_core_card Q U w hw)
     _ = D * W.card := by simp [mul_comm]
 
 /-- The actual finite budget for shared-endpoint pair-core exceptions. -/
-theorem sharedEndpointCoreEdges_card_le_degree_caps
+theorem shared_endpoint_core_edges_card_le_degree_caps
     (F Q : Family α) (U : Edge α) (D κ : ℕ)
     (hUniform : Uniform 3 Q)
     (hGround : ∀ T ∈ Q, T ⊆ U)
@@ -247,9 +247,9 @@ theorem sharedEndpointCoreEdges_card_le_degree_caps
     (sharedEndpointCoreEdges F Q U).card ≤ D * U.card ^ 2 * κ ^ 2 := by
   calc
     _ ≤ D * (qLinkWedgeIndices Q U).card :=
-      sharedEndpointCoreEdges_card_le F Q U D hFacet
+      shared_endpoint_core_edges_card_le F Q U D hFacet
     _ ≤ D * (U.card ^ 2 * κ ^ 2) :=
-      Nat.mul_le_mul_left D (qLinkWedgeIndices_card_le Q U κ
+      Nat.mul_le_mul_left D (q_link_wedge_indices_card_le Q U κ
         hUniform hGround hPair)
     _ = D * U.card ^ 2 * κ ^ 2 := by ring
 

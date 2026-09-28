@@ -12,7 +12,7 @@ namespace JSP523.Rank3
 
 variable {α β : Type*} [DecidableEq α] [DecidableEq β]
 
-theorem bipRightDegree_mono_left
+theorem bip_right_degree_mono_left
     (G : Finset (α × β)) {A' A : Finset α}
     (hSub : A' ⊆ A) (y : β) :
     bipRightDegree G A' y ≤ bipRightDegree G A y := by
@@ -24,7 +24,7 @@ theorem bipRightDegree_mono_left
 
 /-- The mixed-node degree-two property survives restriction of the first
 part.  A node still mixed after restriction was already mixed before it. -/
-theorem mixedNodeDegreeTwo_restrict_left
+theorem mixed_node_degree_two_restrict_left
     (G : TripartitePairGraphs α)
     {A' A : Finset α} (B C : Finset α)
     (hSub : A' ⊆ A)
@@ -34,19 +34,19 @@ theorem mixedNodeDegreeTwo_restrict_left
   · intro a ha hAB hAC
     exact hMixed.1 a (hSub ha) hAB hAC
   · intro b hb hAB hBC
-    have hMono := bipRightDegree_mono_left G.ab hSub b
+    have hMono := bip_right_degree_mono_left G.ab hSub b
     have hABFull : 0 < bipRightDegree G.ab A b := by omega
     have hFull := hMixed.2.1 b hb hABFull hBC
     exact ⟨by omega, hFull.2⟩
   · intro c hc hAC hBC
-    have hMono := bipRightDegree_mono_left G.ac hSub c
+    have hMono := bip_right_degree_mono_left G.ac hSub c
     have hACFull : 0 < bipRightDegree G.ac A c := by omega
     have hFull := hMixed.2.2 c hc hACFull hBC
     exact ⟨by omega, hFull.2⟩
 
 /-- Removing a left vertex with exactly one neighbor changes only the
 opposite neighbor's `φ` contribution. -/
-theorem bipartitePhiTotal_erase_left_degree_one
+theorem bipartite_phi_total_erase_left_degree_one
     (G : Finset (α × β)) (A : Finset α) (B : Finset β)
     (v : α) (y : β)
     (hv : v ∈ A) (hy : y ∈ B)
@@ -59,7 +59,7 @@ theorem bipartitePhiTotal_erase_left_degree_one
     simp [bipLeftDegree, hNbr]
   have hLeftPhi : localPhi (bipLeftDegree G B v) = 0 := by
     rw [hLeftOne]
-    exact localPhi_eq_zero_of_le_one (by omega)
+    exact local_phi_eq_zero_of_le_one (by omega)
   have hLeft :
       (∑ x ∈ A, localPhi (bipLeftDegree G B x)) =
         ∑ x ∈ A.erase v, localPhi (bipLeftDegree G B x) := by
@@ -107,7 +107,7 @@ theorem bipartitePhiTotal_erase_left_degree_one
   rw [hLeft, hRight]
   ring
 
-theorem bipRightDegree_erase_left_neighbor
+theorem bip_right_degree_erase_left_neighbor
     (G : Finset (α × β)) (A : Finset α) (B : Finset β)
     (v : α) (y : β)
     (hv : v ∈ A)
@@ -127,29 +127,29 @@ theorem bipRightDegree_erase_left_neighbor
 
 /-- One added neighbor raises the actual bipartite score by at most a
 quarter, the numerical input used twice in §II.A.5. -/
-theorem bipartitePhiTotal_erase_left_degree_one_le_quarter
+theorem bipartite_phi_total_erase_left_degree_one_le_quarter
     (G : Finset (α × β)) (A : Finset α) (B : Finset β)
     (v : α) (y : β)
     (hv : v ∈ A) (hy : y ∈ B)
     (hNbr : B.filter (fun z => (v, z) ∈ G) = {y}) :
     bipartitePhiTotal G A B ≤
       bipartitePhiTotal G (A.erase v) B + (1 : ℚ) / 4 := by
-  rw [bipartitePhiTotal_erase_left_degree_one G A B v y hv hy hNbr,
-    bipRightDegree_erase_left_neighbor G A B v y hv hNbr]
-  have hBound := localPhi_succ_sub_le_quarter
+  rw [bipartite_phi_total_erase_left_degree_one G A B v y hv hy hNbr,
+    bip_right_degree_erase_left_neighbor G A B v y hv hNbr]
+  have hBound := local_phi_succ_sub_le_quarter
     (bipRightDegree G (A.erase v) y)
   linarith
 
-theorem bipartitePhiTotal_erase_left_degree_one_mono
+theorem bipartite_phi_total_erase_left_degree_one_mono
     (G : Finset (α × β)) (A : Finset α) (B : Finset β)
     (v : α) (y : β)
     (hv : v ∈ A) (hy : y ∈ B)
     (hNbr : B.filter (fun z => (v, z) ∈ G) = {y}) :
     bipartitePhiTotal G (A.erase v) B ≤
       bipartitePhiTotal G A B := by
-  rw [bipartitePhiTotal_erase_left_degree_one G A B v y hv hy hNbr,
-    bipRightDegree_erase_left_neighbor G A B v y hv hNbr]
-  have hMono := localPhi_mono
+  rw [bipartite_phi_total_erase_left_degree_one G A B v y hv hy hNbr,
+    bip_right_degree_erase_left_neighbor G A B v y hv hNbr]
+  have hMono := local_phi_mono
     (Nat.le_succ (bipRightDegree G (A.erase v) y))
   linarith
 
@@ -181,12 +181,12 @@ theorem mixed_left_two_pair_score_increment_le_budget
   have hCard : A.card = a + 1 := by
     have h := Finset.card_erase_add_one hv
     omega
-  have hAB := bipartitePhiTotal_erase_left_degree_one
+  have hAB := bipartite_phi_total_erase_left_degree_one
     GAB A B v y hv hy hNbrAB
-  have hAC := bipartitePhiTotal_erase_left_degree_one
+  have hAC := bipartite_phi_total_erase_left_degree_one
     GAC A C v z hv hz hNbrAC
-  rw [bipRightDegree_erase_left_neighbor GAB A B v y hv hNbrAB] at hAB
-  rw [bipRightDegree_erase_left_neighbor GAC A C v z hv hNbrAC] at hAC
+  rw [bip_right_degree_erase_left_neighbor GAB A B v y hv hNbrAB] at hAB
+  rw [bip_right_degree_erase_left_neighbor GAC A C v z hv hNbrAC] at hAC
   rw [hAB, hAC, hCard]
   dsimp [d₁, d₂, a] at hNum ⊢
   linarith
@@ -209,9 +209,9 @@ theorem mixed_left_pair_excess_nonincreasing
           localGraphBudget (A.erase v).card := by
   have hSum := mixed_left_two_pair_score_increment_le_budget
     GAB GAC A B C v y z hv hy hz hNbrAB hNbrAC
-  have hABmono := bipartitePhiTotal_erase_left_degree_one_mono
+  have hABmono := bipartite_phi_total_erase_left_degree_one_mono
     GAB A B v y hv hy hNbrAB
-  have hACmono := bipartitePhiTotal_erase_left_degree_one_mono
+  have hACmono := bipartite_phi_total_erase_left_degree_one_mono
     GAC A C v z hv hz hNbrAC
   constructor <;> linarith
 
@@ -266,11 +266,11 @@ theorem positive_ab_old_ac_score_unchanged
     exact mixed_a_touching_c_has_low_ab hMixed hxA hACpos
   have hDegLe := positive_left_pair_limits_other_neighbor_degree
     G.ab G.ac A B v z hPositiveOld hLow
-  have hScore := bipartitePhiTotal_erase_left_degree_one
+  have hScore := bipartite_phi_total_erase_left_degree_one
     G.ac A C v z hv hz hNbrAC
-  rw [bipRightDegree_erase_left_neighbor G.ac A C v z hv hNbrAC]
+  rw [bip_right_degree_erase_left_neighbor G.ac A C v z hv hNbrAC]
     at hScore
-  have hZero := localPhi_succ_sub_eq_zero_of_le_one hDegLe
+  have hZero := local_phi_succ_sub_eq_zero_of_le_one hDegLe
   rw [hZero, add_zero] at hScore
   exact hScore
 
@@ -302,11 +302,11 @@ theorem positive_ac_old_ab_score_unchanged
       exact (hMixed.1 x hxA hABpos hACpos).2.le
   have hDegLe := positive_left_pair_limits_other_neighbor_degree
     G.ac G.ab A C v y hPositiveOld hLow
-  have hScore := bipartitePhiTotal_erase_left_degree_one
+  have hScore := bipartite_phi_total_erase_left_degree_one
     G.ab A B v y hv hy hNbrAB
-  rw [bipRightDegree_erase_left_neighbor G.ab A B v y hv hNbrAB]
+  rw [bip_right_degree_erase_left_neighbor G.ab A B v y hv hNbrAB]
     at hScore
-  have hZero := localPhi_succ_sub_eq_zero_of_le_one hDegLe
+  have hZero := local_phi_succ_sub_eq_zero_of_le_one hDegLe
   rw [hZero, add_zero] at hScore
   exact hScore
 
@@ -343,7 +343,7 @@ theorem mixed_left_local_payment_step
   let pAB₀ := bipartitePhiTotal G.ab (A.erase v) B
   let pAC₀ := bipartitePhiTotal G.ac (A.erase v) C
   have hMixedOld : MixedNodeDegreeTwo G (A.erase v) B C :=
-    mixedNodeDegreeTwo_restrict_left G B C
+    mixed_node_degree_two_restrict_left G B C
       (Finset.erase_subset v A) hMixed
   have hInc : pAB + pAC ≤ pAB₀ + pAC₀ + (hA - hA₀) :=
     mixed_left_two_pair_score_increment_le_budget
@@ -367,7 +367,7 @@ theorem mixed_left_local_payment_step
       have hACeq : pAC = pAC₀ :=
         positive_ab_old_ac_score_unchanged G A B C v z
           hv hz hMixed hNbrAC hOldPAB
-      have hPhi := localPhi_le_localGraphBudget C.card
+      have hPhi := local_phi_le_local_graph_budget C.card
       linarith
     by_cases hOldPAC : hA₀ + hC < pAC₀
     · have hOther : pAB₀ + pBC ≤ localPhi B.card :=
@@ -376,21 +376,21 @@ theorem mixed_left_local_payment_step
       have hABeq : pAB = pAB₀ :=
         positive_ac_old_ab_score_unchanged G A B C v y
           hv hy hMixed hNbrAB hOldPAC
-      have hPhi := localPhi_le_localGraphBudget B.card
+      have hPhi := local_phi_le_local_graph_budget B.card
       linarith
     · have hOldABBound : pAB₀ ≤ hA₀ + hB :=
         le_of_not_gt hOldPAB
       have hOldACBound : pAC₀ ≤ hA₀ + hC :=
         le_of_not_gt hOldPAC
       have hOldTotal : pAB₀ + pAC₀ + pBC ≤ hA₀ + hB + hC := by
-        have h := (localGraphPayment_ge_iff_capped_scores
+        have h := (local_graph_payment_ge_iff_capped_scores
           (A.erase v).card B.card C.card pAB₀ pAC₀ pBC).mp hOld
         rw [min_eq_left hOldABBound,
           min_eq_left hOldACBound,
           min_eq_left hBCBound] at h
         exact h
       linarith
-  apply (localGraphPayment_ge_iff_capped_scores
+  apply (local_graph_payment_ge_iff_capped_scores
     A.card B.card C.card pAB pAC pBC).mpr
   rw [min_eq_left hABBound,
     min_eq_left hACBound,

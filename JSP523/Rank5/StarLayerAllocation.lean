@@ -45,31 +45,31 @@ noncomputable def survivingStarObjects (H : Family α) (U Centers : Edge α)
   exact (actualStarLayerObjects H U Centers r).filter
     (fun zT : α × Edge α => ¬ starMemberLost U r owner zT.1 zT.2)
 
-theorem ownedStarLink_subset (H : Family α) (U : Edge α)
+theorem owned_star_link_subset (H : Family α) (U : Edge α)
     (r : ℕ) (owner : Edge α → α) (z : α) :
     ownedStarLink H U r owner z ⊆ actualStarLink H U z r := by
   classical
   exact Finset.filter_subset _ _
 
-theorem actualStarLink_uniform (H : Family α) (U : Edge α)
+theorem actual_star_link_uniform (H : Family α) (U : Edge α)
     (r : ℕ) (z : α) : Uniform (r - 1) (actualStarLink H U z r) := by
   intro T hT
   exact (Finset.mem_powersetCard.mp (Finset.mem_filter.mp hT).1).2
 
-theorem ownedStarLink_uniform (H : Family α) (U : Edge α)
+theorem owned_star_link_uniform (H : Family α) (U : Edge α)
     (r : ℕ) (owner : Edge α → α) (z : α) :
     Uniform (r - 1) (ownedStarLink H U r owner z) := by
   intro T hT
-  exact actualStarLink_uniform H U r z (ownedStarLink_subset H U r owner z hT)
+  exact actual_star_link_uniform H U r z (owned_star_link_subset H U r owner z hT)
 
 /-- Each surviving shadow point has the center of its own link as owner. -/
-theorem ownedStarLink_shadow_owner (H : Family α) (U : Edge α)
+theorem owned_star_link_shadow_owner (H : Family α) (U : Edge α)
     (r : ℕ) (owner : Edge α → α) (z : α)
     {P : Edge α} (hP : P ∈ Finset.shadow (ownedStarLink H U r owner z)) :
     owner P = z := by
   classical
   obtain ⟨T, hT, x, hx, hErase⟩ := Finset.mem_shadow_iff.mp hP
-  have hTlink := ownedStarLink_subset H U r owner z hT
+  have hTlink := owned_star_link_subset H U r owner z hT
   have hTpow := Finset.mem_powersetCard.mp (Finset.mem_filter.mp hTlink).1
   have hEraseCard := Finset.card_erase_add_one hx
   have hPT : P ⊆ T := by rw [← hErase]; exact Finset.erase_subset _ _
@@ -82,15 +82,15 @@ theorem ownedStarLink_shadow_owner (H : Family α) (U : Edge α)
   exact (Finset.mem_filter.mp hT).2 ⟨P, hPfacet, hPpow, hne⟩
 
 /-- Ownership, not an extra hypothesis, separates the actual shadows. -/
-theorem ownedStarLink_shadows_disjoint (H : Family α) (U : Edge α)
+theorem owned_star_link_shadows_disjoint (H : Family α) (U : Edge α)
     (r : ℕ) (owner : Edge α → α) {z w : α} (hzw : z ≠ w) :
     Disjoint (Finset.shadow (ownedStarLink H U r owner z))
       (Finset.shadow (ownedStarLink H U r owner w)) := by
   classical
   apply Finset.disjoint_left.mpr
   intro P hP hQ
-  exact hzw ((ownedStarLink_shadow_owner H U r owner z hP).symm.trans
-    (ownedStarLink_shadow_owner H U r owner w hQ))
+  exact hzw ((owned_star_link_shadow_owner H U r owner z hP).symm.trans
+    (owned_star_link_shadow_owner H U r owner w hQ))
 
 /-- Reindex the retained colored objects by their centers. -/
 theorem surviving_star_objects_card
@@ -167,26 +167,26 @@ theorem actual_star_layer_radius_bound_on_ground
         (r - 1) * (lostStarObjects H U Centers r owner).card +
           (L + (r - 1)) * U.card.choose (r - 2) := by
   classical
-  obtain ⟨owner, hLoss⟩ := actualStarLayerOwnershipDeletion_card_sq_le_exists_max
+  obtain ⟨owner, hLoss⟩ := actual_star_layer_ownership_deletion_card_sq_le_exists_max
     hH hCenters hr hD₂ hD₃
   refine ⟨owner, ?_, ?_, ?_⟩
   · simpa [lostStarObjects, starMemberLost] using hLoss
   · intro z hz w hw hzw
-    exact ownedStarLink_shadows_disjoint H U r owner hzw
+    exact owned_star_link_shadows_disjoint H U r owner hzw
   · have hAlloc := disjoint_shadow_radius_allocation_on_ground U Centers
       (ownedStarLink H U r owner) (by omega : 2 ≤ r - 1)
-      (by intro z hz; exact ownedStarLink_uniform H U r owner z)
+      (by intro z hz; exact owned_star_link_uniform H U r owner z)
       (by
         intro z hz T hT
-        have hActual := ownedStarLink_subset H U r owner z hT
+        have hActual := owned_star_link_subset H U r owner z hT
         exact (Finset.mem_filter.mp hActual).1)
       (by
         intro z hz
         exact (Nat.mul_le_mul_left _ (Finset.card_le_card
-          (ownedStarLink_subset H U r owner z))).trans (hSize z hz))
+          (owned_star_link_subset H U r owner z))).trans (hSize z hz))
       (by
         intro z hz w hw hzw
-        exact ownedStarLink_shadows_disjoint H U r owner hzw)
+        exact owned_star_link_shadows_disjoint H U r owner hzw)
     have hIndex : r - 1 - 1 = r - 2 := by omega
     rw [hIndex] at hAlloc
     rw [← star_layer_ownership_card_partition H U Centers r owner, Nat.mul_add]

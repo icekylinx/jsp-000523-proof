@@ -59,7 +59,7 @@ theorem pair_subset_triple_has_extra
   omega
 
 /-- A positive completion degree always produces an actually used pair. -/
-theorem completion_nonempty_implies_usedPair
+theorem completion_nonempty_implies_used_pair
     (H : Family α) (V p : Edge α)
     (hp : p ∈ V.powersetCard 2)
     (hnon : (completionVertices H V p).Nonempty) :
@@ -74,7 +74,7 @@ theorem completion_nonempty_implies_usedPair
 /-- In a three-uniform family on `V`, every actually used ambient pair
     has a completing vertex: its containing triple has one point beyond
     the two vertices of the pair. -/
-theorem usedPair_has_completion
+theorem used_pair_has_completion
     (H : Family α) (V p : Edge α)
     (hUniform : Uniform 3 H)
     (hground : ∀ E ∈ H, E ⊆ V)
@@ -93,22 +93,22 @@ theorem usedPair_has_completion
 
 /-- A used ambient pair is exactly an ambient pair of positive completion
     degree when the family is three-uniform and supported on `V`. -/
-theorem mem_usedPairs_iff_completion_nonempty
+theorem mem_used_pairs_iff_completion_nonempty
     (H : Family α) (V p : Edge α)
     (hUniform : Uniform 3 H)
     (hground : ∀ E ∈ H, E ⊆ V)
     (hp : p ∈ V.powersetCard 2) :
     p ∈ usedPairs H V ↔ (completionVertices H V p).Nonempty := by
   constructor
-  · exact usedPair_has_completion H V p hUniform hground
-  · exact completion_nonempty_implies_usedPair H V p hp
+  · exact used_pair_has_completion H V p hUniform hground
+  · exact completion_nonempty_implies_used_pair H V p hp
 
 /-- Actual ambient pairs with strictly positive completion degree. -/
 def positiveCompletionPairs (H : Family α) (V : Edge α) : Family α :=
   (V.powersetCard 2).filter (fun p => 0 < (completionVertices H V p).card)
 
 /-- The edge-witness pair support agrees with the positive-degree support. -/
-theorem usedPairs_eq_positiveCompletionPairs
+theorem used_pairs_eq_positive_completion_pairs
     (H : Family α) (V : Edge α)
     (hUniform : Uniform 3 H)
     (hground : ∀ E ∈ H, E ⊆ V) :
@@ -118,11 +118,11 @@ theorem usedPairs_eq_positiveCompletionPairs
   · intro hp
     have hpV : p ∈ V.powersetCard 2 := (Finset.mem_filter.mp hp).1
     have hnon : (completionVertices H V p).Nonempty :=
-      (mem_usedPairs_iff_completion_nonempty H V p hUniform hground hpV).mp hp
+      (mem_used_pairs_iff_completion_nonempty H V p hUniform hground hpV).mp hp
     exact Finset.mem_filter.mpr ⟨hpV, Finset.card_pos.mpr hnon⟩
   · intro hp
     obtain ⟨hpV, hpos⟩ := Finset.mem_filter.mp hp
-    exact (mem_usedPairs_iff_completion_nonempty H V p
+    exact (mem_used_pairs_iff_completion_nonempty H V p
       hUniform hground hpV).mpr (Finset.card_pos.mp hpos)
 
 /-- Actual cells with a strictly positive common-link size. -/
@@ -131,18 +131,18 @@ def positiveCommonLinkCells (H : Family α) (V : Edge α) : Family α :=
 
 /-- The common-link witness definition of used cells equals positive
     common-link size, with no uniformity hypothesis. -/
-theorem usedCells_eq_positiveCommonLinkCells
+theorem used_cells_eq_positive_common_link_cells
     (H : Family α) (V : Edge α) :
     usedCells H V = positiveCommonLinkCells H V := by
   ext q
   constructor
   · intro hq
     obtain ⟨hqV, hnon⟩ :=
-      (mem_usedCells_iff_commonLink_nonempty H V q).mp hq
+      (mem_used_cells_iff_common_link_nonempty H V q).mp hq
     exact Finset.mem_filter.mpr ⟨hqV, Finset.card_pos.mpr hnon⟩
   · intro hq
     obtain ⟨hqV, hpos⟩ := Finset.mem_filter.mp hq
-    exact (mem_usedCells_iff_commonLink_nonempty H V q).mpr
+    exact (mem_used_cells_iff_common_link_nonempty H V q).mpr
       ⟨hqV, Finset.card_pos.mp hpos⟩
 
 end PositiveSupports

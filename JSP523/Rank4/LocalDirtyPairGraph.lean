@@ -54,7 +54,7 @@ def NoTripleOverlap (B₀ : Family α) : Prop :=
 
 /-- The unique-completion lemma for ordinary vertices implies that no two
 outside edges contained in `U` share a triple. -/
-theorem noTripleOverlap_of_ordinary_unique_completion
+theorem no_triple_overlap_of_ordinary_unique_completion
     {H B₀ : Family α} {W U : Edge α} {v : α}
     (hH : Admissible H) (hUniform : Uniform 4 H)
     (hB₀H : B₀ ⊆ H)
@@ -152,7 +152,7 @@ theorem near_star_clean_outside_linear
     exact (Finset.mem_filter.mp hE).1
   have hEcard : E.card = 4 := hUniform (hOrdH hEdata.1)
   have hFcard : F.card = 4 := hUniform (hOrdH hFdata.1)
-  have hNoTriple := noTripleOverlap_of_ordinary_unique_completion
+  have hNoTriple := no_triple_overlap_of_ordinary_unique_completion
     hH hUniform hOrdH
     (fun E hE => (Finset.mem_filter.mp hE).2)
     Finset.Subset.rfl hvW
@@ -336,7 +336,7 @@ theorem disjoint_pair_cycle_forbidden
 /-- The actual bad-pair union graph has no four-cycle: overlapping opposite
 pair roots would create a repeated triple, while disjoint roots give a
 forbidden two-versus-two trade. -/
-theorem badPairUnionGraph_fourCycleFree
+theorem bad_pair_union_graph_four_cycle_free
     {Bad B₀ : Family α} [Fintype {P : Edge α // P ∈ Bad}]
     [DecidableEq {P : Edge α // P ∈ Bad}]
     (hBadUniform : Uniform 2 Bad)
@@ -393,7 +393,7 @@ theorem badPairUnionGraph_fourCycleFree
 /-- Actual near-star instance: unique ordinary triple completion supplies
 the no-triple-overlap property, and admissibility supplies the cycle trade
 obstruction. -/
-theorem near_star_bad_pair_graph_fourCycleFree
+theorem near_star_bad_pair_graph_four_cycle_free
     {H B₀ Bad : Family α} {W U : Edge α} {v : α}
     [Fintype {P : Edge α // P ∈ Bad}]
     [DecidableEq {P : Edge α // P ∈ Bad}]
@@ -404,9 +404,9 @@ theorem near_star_bad_pair_graph_fourCycleFree
     (hUordinary : U ⊆ W \ badSingletonVertices H W v 4)
     (hvW : v ∉ W) :
     JSP523.Coarse.FourCycleFree (badPairUnionGraph Bad B₀) := by
-  have hNoTriple := noTripleOverlap_of_ordinary_unique_completion
+  have hNoTriple := no_triple_overlap_of_ordinary_unique_completion
     hH hUniform hB₀H hB₀U hUordinary hvW
-  exact badPairUnionGraph_fourCycleFree
+  exact bad_pair_union_graph_four_cycle_free
     hBadUniform (admissible_mono hB₀H hH) hNoTriple
 
 /-- The edge bound for the actual near-star bad-pair graph. -/
@@ -423,8 +423,8 @@ theorem near_star_bad_pair_graph_edge_bound
     ((badPairUnionGraph Bad B₀).edgeFinset.card : ℝ) ≤
       (Real.sqrt ((Fintype.card {P : Edge α // P ∈ Bad} : ℝ) ^ 3) +
         (Fintype.card {P : Edge α // P ∈ Bad} : ℝ) / 2) / 2 := by
-  exact fourCycleFree_edge_sqrt_bound (badPairUnionGraph Bad B₀)
-    (near_star_bad_pair_graph_fourCycleFree hH hUniform hBadUniform
+  exact four_cycle_free_edge_sqrt_bound (badPairUnionGraph Bad B₀)
+    (near_star_bad_pair_graph_four_cycle_free hH hUniform hBadUniform
       hB₀H hB₀U hUordinary hvW)
 
 /-- Fully instantiated edge estimate for the manuscript's graph on the
@@ -459,7 +459,7 @@ theorem near_star_actual_bad_pair_graph_edge_bound
 
 /-- Once the dirty-pair graph is shown four-cycle-free, its edge count has
 the C₄ extremal bound from `LocalC4Bound`. -/
-theorem badPairUnionGraph_edge_bound
+theorem bad_pair_union_graph_edge_bound
     (Bad B₀ : Family α)
     [Fintype {P : Edge α // P ∈ Bad}]
     [DecidableEq {P : Edge α // P ∈ Bad}]
@@ -467,6 +467,6 @@ theorem badPairUnionGraph_edge_bound
     ((badPairUnionGraph Bad B₀).edgeFinset.card : ℝ) ≤
       (Real.sqrt ((Fintype.card {P : Edge α // P ∈ Bad} : ℝ) ^ 3) +
         (Fintype.card {P : Edge α // P ∈ Bad} : ℝ) / 2) / 2 := by
-  exact fourCycleFree_edge_sqrt_bound (badPairUnionGraph Bad B₀) hFree
+  exact four_cycle_free_edge_sqrt_bound (badPairUnionGraph Bad B₀) hFree
 
 end JSP523.Rank4

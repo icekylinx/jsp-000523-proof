@@ -37,7 +37,7 @@ private def wedgeSum (G : SimpleGraph α) [DecidableRel G.Adj] : ℕ :=
   ∑ z : α, ∑ x : α, ∑ y : α,
     if x ≠ y ∧ G.Adj z x ∧ G.Adj z y then 1 else 0
 
-theorem wedgeSum_degree_identity (G : SimpleGraph α) [DecidableRel G.Adj] :
+theorem wedge_sum_degree_identity (G : SimpleGraph α) [DecidableRel G.Adj] :
     wedgeSum G = ∑ z : α, G.degree z * (G.degree z - 1) := by
   classical
   unfold wedgeSum
@@ -86,7 +86,7 @@ private theorem common_count (G : SimpleGraph α) [DecidableRel G.Adj]
   · rw [ite_eq_right hxy]
     simp [hxy]
 
-private theorem codegreeIndicatorSum_eq_wedgeSum
+private theorem codegree_indicator_sum_eq_wedge_sum
     (G : SimpleGraph α) [DecidableRel G.Adj] :
     codegreeIndicatorSum G = wedgeSum G := by
   classical
@@ -118,7 +118,7 @@ private theorem codegreeIndicatorSum_eq_wedgeSum
             · simp [hxy]
             · simp [hxy, G.adj_comm])
 
-theorem codegreeIndicatorSum_eq (G : SimpleGraph α) [DecidableRel G.Adj] :
+theorem codegree_indicator_sum_eq (G : SimpleGraph α) [DecidableRel G.Adj] :
     codegreeIndicatorSum G =
       ∑ x : α, ∑ y : α, if x ≠ y then JSP523.Coarse.graphCodegree G x y else 0 := by
   classical
@@ -129,11 +129,11 @@ theorem codegreeIndicatorSum_eq (G : SimpleGraph α) [DecidableRel G.Adj] :
   intro y hy
   exact common_count G x y
 
-theorem codegreeIndicatorSum_le_paircount (G : SimpleGraph α) [DecidableRel G.Adj]
+theorem codegree_indicator_sum_le_paircount (G : SimpleGraph α) [DecidableRel G.Adj]
     (hG : JSP523.Coarse.FourCycleFree G) :
     codegreeIndicatorSum G ≤ Fintype.card α * (Fintype.card α - 1) := by
   classical
-  rw [codegreeIndicatorSum_eq]
+  rw [codegree_indicator_sum_eq]
   calc
     (∑ x : α, ∑ y : α, if x ≠ y then JSP523.Coarse.graphCodegree G x y else 0) ≤
       ∑ x : α, ∑ y : α, if x ≠ y then 1 else 0 := by
@@ -184,7 +184,7 @@ theorem cauchy_degree (G : SimpleGraph α) [DecidableRel G.Adj] :
 /-- A finite four-cycle-free graph satisfies the standard quadratic
 incidence inequality. It follows from counting ordered two-edge paths by
 their endpoints and applying Cauchy to the degree sequence. -/
-theorem fourCycleFree_edge_quadratic_bound
+theorem four_cycle_free_edge_quadratic_bound
     (G : SimpleGraph α) [DecidableRel G.Adj]
     (hG : JSP523.Coarse.FourCycleFree G) :
     (4 : ℚ) * (G.edgeFinset.card : ℚ) ^ 2 ≤
@@ -196,11 +196,11 @@ theorem fourCycleFree_edge_quadratic_bound
         Fintype.card α * (Fintype.card α - 1) := by
     calc
       (∑ z : α, G.degree z * (G.degree z - 1)) = wedgeSum G :=
-        (wedgeSum_degree_identity G).symm
+        (wedge_sum_degree_identity G).symm
       _ = codegreeIndicatorSum G :=
-        (codegreeIndicatorSum_eq_wedgeSum G).symm
+        (codegree_indicator_sum_eq_wedge_sum G).symm
       _ ≤ Fintype.card α * (Fintype.card α - 1) :=
-        codegreeIndicatorSum_le_paircount G hG
+        codegree_indicator_sum_le_paircount G hG
   have hDegreeSum :
       (∑ z : α, G.degree z) = 2 * G.edgeFinset.card :=
     G.sum_degrees_eq_twice_card_edges
@@ -249,13 +249,13 @@ theorem fourCycleFree_edge_quadratic_bound
   nlinarith [hTarget]
 
 /-- The quadratic incidence inequality solved for the number of edges. -/
-theorem fourCycleFree_edge_sqrt_bound
+theorem four_cycle_free_edge_sqrt_bound
     (G : SimpleGraph α) [DecidableRel G.Adj]
     (hG : JSP523.Coarse.FourCycleFree G) :
     (G.edgeFinset.card : ℝ) ≤
       (Real.sqrt ((Fintype.card α : ℝ) ^ 3) +
         (Fintype.card α : ℝ) / 2) / 2 := by
-  have hQuadQ := fourCycleFree_edge_quadratic_bound G hG
+  have hQuadQ := four_cycle_free_edge_quadratic_bound G hG
   have hQuad :
       4 * (G.edgeFinset.card : ℝ) ^ 2 ≤
         (Fintype.card α : ℝ) ^ 2 * ((Fintype.card α : ℝ) - 1) +

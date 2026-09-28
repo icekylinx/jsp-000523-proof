@@ -101,7 +101,7 @@ theorem complete_star_max_matching_extremal
           (Finset.univ.erase v : Edge α).card / 4 := by
   have hAdmissible : Admissible (starFamily v 4 ∪ M) := by
     simpa only [starPlusMatching] using
-      starPlusMatching_admissible (by omega : 0 < 4)
+      star_plus_matching_admissible (by omega : 0 < 4)
         hMU hMatch hAvoid
   have hDisj : Disjoint (starFamily v 4) M := by
     apply Finset.disjoint_left.mpr

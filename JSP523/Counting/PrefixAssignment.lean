@@ -22,7 +22,7 @@ def chosenPrefixesAt (K : Family α) (V : Edge α) (p : ℕ)
   (V.powersetCard p).filter (fun Y =>
     Disjoint Y P ∧ Y ∪ P ∈ K ∧ chosenPrefix (Y ∪ P) = Y)
 
-theorem mem_chosenPrefixesAt {K : Family α} {V : Edge α} {p : ℕ}
+theorem mem_chosen_prefixes_at {K : Family α} {V : Edge α} {p : ℕ}
     {chosenPrefix : Edge α → Edge α} {P Y : Edge α} :
     Y ∈ chosenPrefixesAt K V p chosenPrefix P ↔
       Y ∈ V.powersetCard p ∧ Disjoint Y P ∧
@@ -36,8 +36,8 @@ theorem chosen_prefix_union_inj
     (hY : Y ∈ chosenPrefixesAt K V p chosenPrefix P)
     (hZ : Z ∈ chosenPrefixesAt K V p chosenPrefix P)
     (hEq : Y ∪ P = Z ∪ P) : Y = Z := by
-  have hY' := mem_chosenPrefixesAt.mp hY
-  have hZ' := mem_chosenPrefixesAt.mp hZ
+  have hY' := mem_chosen_prefixes_at.mp hY
+  have hZ' := mem_chosen_prefixes_at.mp hZ
   exact hY'.2.2.2.symm.trans ((congrArg chosenPrefix hEq).trans hZ'.2.2.2)
 
 /-- Every edge contributes exactly one assigned prefix/tail pair. -/
@@ -124,7 +124,7 @@ theorem chosen_prefix_vertex_degree_le
       constructor
       · intro hY
         obtain ⟨hYA, hxY⟩ := Finset.mem_filter.mp hY
-        have hYP := (mem_chosenPrefixesAt.mp hYA).2.1
+        have hYP := (mem_chosen_prefixes_at.mp hYA).2.1
         exact False.elim ((Finset.disjoint_left.mp hYP) hxY hxP)
       · simp
     simp only [hEmpty, Finset.card_empty, Nat.zero_le]
@@ -135,7 +135,7 @@ theorem chosen_prefix_vertex_degree_le
       apply Finset.card_le_card_of_injOn (fun Y => Y ∪ P)
       · intro Y hY
         obtain ⟨hYA, hxY⟩ := Finset.mem_filter.mp hY
-        have hYA' := mem_chosenPrefixesAt.mp hYA
+        have hYA' := mem_chosen_prefixes_at.mp hYA
         apply Finset.mem_filter.mpr
         refine ⟨hYA'.2.2.1, ?_⟩
         intro a ha

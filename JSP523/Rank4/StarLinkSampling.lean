@@ -73,7 +73,7 @@ theorem triple_link_edge_count_eq_root_incidence
     have hSet : e.toFinset = e'.toFinset := by
       have hErase := congrArg (Finset.erase · x) hEq
       simpa [f, hx, hx'] using hErase
-    exact JSP523.Coarse.sym2_toFinset_injective hSet
+    exact JSP523.Coarse.sym2_to_finset_injective hSet
   · intro T hT
     have hTA : T ∈ A := (Finset.mem_filter.mp hT).1
     have hxT : x ∈ T := (Finset.mem_filter.mp hT).2

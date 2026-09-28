@@ -21,7 +21,7 @@ def orderedOverlap (X : Finset ι) (A : ι → Finset β) : ℕ :=
   ∑ x ∈ X, ∑ y ∈ X.erase x, (A x ∩ A y).card
 
 omit [DecidableEq ι] in
-private theorem intersection_biUnion_card_le_sum
+private theorem intersection_bi_union_card_le_sum
     (S : Finset ι) (A : ι → Finset β) (B : Finset β) :
     (B ∩ S.biUnion A).card ≤ ∑ y ∈ S, (B ∩ A y).card := by
   have hEq : B ∩ S.biUnion A = S.biUnion (fun y => B ∩ A y) := by
@@ -31,7 +31,7 @@ private theorem intersection_biUnion_card_le_sum
   rw [hEq]
   exact Finset.card_biUnion_le
 
-private theorem orderedOverlap_insert
+private theorem ordered_overlap_insert
     (S : Finset ι) (A : ι → Finset β) (a : ι) (ha : a ∉ S) :
     orderedOverlap (insert a S) A = orderedOverlap S A +
       2 * (∑ y ∈ S, (A a ∩ A y).card) := by
@@ -62,7 +62,7 @@ private theorem orderedOverlap_insert
 
 /-- The total sizes of finite fibers are controlled by their union and
 their ordered pairwise overlaps. -/
-theorem sum_card_le_union_add_orderedOverlap
+theorem sum_card_le_union_add_ordered_overlap
     (X : Finset ι) (A : ι → Finset β) :
     (∑ x ∈ X, (A x).card) ≤
       (X.biUnion A).card + orderedOverlap X A := by
@@ -70,9 +70,9 @@ theorem sum_card_le_union_add_orderedOverlap
   induction X using Finset.induction_on with
   | empty => simp [orderedOverlap]
   | @insert a S ha ih =>
-    have hInt := intersection_biUnion_card_le_sum S A (A a)
+    have hInt := intersection_bi_union_card_le_sum S A (A a)
     have hUnion := Finset.card_union_add_card_inter (A a) (S.biUnion A)
-    have hOverlap := orderedOverlap_insert S A a ha
+    have hOverlap := ordered_overlap_insert S A a ha
     simp only [Finset.sum_insert ha, Finset.biUnion_insert] at *
     rw [hOverlap]
     omega
@@ -93,9 +93,9 @@ theorem shadow_allocation_ledger
     · obtain ⟨x, hx, hzx⟩ := Finset.mem_biUnion.mp hz
       exact hA x hx hzx
     · exact hS hz
-  have hInt := intersection_biUnion_card_le_sum X A S
+  have hInt := intersection_bi_union_card_le_sum X A S
   have hUnion := Finset.card_union_add_card_inter (X.biUnion A) S
-  have hFibers := sum_card_le_union_add_orderedOverlap X A
+  have hFibers := sum_card_le_union_add_ordered_overlap X A
   have hCap := Finset.card_le_card hUnionSub
   have hInt' : (X.biUnion A ∩ S).card ≤
       ∑ x ∈ X, (A x ∩ S).card := by
@@ -197,13 +197,13 @@ theorem mixed_common_cell_intersecting
     obtain ⟨hTW, hTcard⟩ := Finset.mem_powersetCard.mp hPow
     have hxT : x ∉ T := fun h => hxW (hTW h)
     have hyT := mixed_cell_y_not_mem (r := r) (by omega) hKU hT
-    apply mem_commonPrefixTails.mpr
+    apply mem_common_prefix_tails.mpr
     refine ⟨hTW, hTcard, ?_, hxF, hK hyK⟩
     apply Finset.disjoint_union_right.mpr
     constructor
     · exact Finset.disjoint_singleton_right.mpr hxT
     · exact Finset.disjoint_singleton_right.mpr hyT
-  have hCommon := commonPrefixTails_intersecting (W := W) hF
+  have hCommon := common_prefix_tails_intersecting (W := W) hF
     (by simp) (by simp)
     (Finset.disjoint_singleton.mpr hxy) (by omega : 1 ≤ r - 1)
   intro T U hT hU hNe
@@ -268,7 +268,7 @@ theorem mixed_common_cell_card_le_pair_degree
     exact (Finset.card_le_card_of_injOn (fun T => insert y T)
       hMap hInj).trans (hD Q hQcard)
 
-theorem oneRemovedLink_subset_facets
+theorem one_removed_link_subset_facets
     {F : Family α} {W : Edge α} {x : α} {r : ℕ}
     (hF : Uniform r F) :
     oneRemovedLink F W x ⊆ W.powersetCard (r - 1) := by
@@ -282,7 +282,7 @@ theorem oneRemovedLink_subset_facets
     have hUniform := hF hEF
     omega
 
-theorem oneRemovedLink_card_eq_fiber
+theorem one_removed_link_card_eq_fiber
     (F : Family α) (W : Edge α) (x : α) :
     (oneRemovedLink F W x).card = (oneRemovedFiber F W x).card := by
   unfold oneRemovedLink
@@ -293,7 +293,7 @@ theorem oneRemovedLink_card_eq_fiber
   have hInsert := congrArg (insert x) hEq
   simpa only [Finset.insert_erase hx, Finset.insert_erase hx'] using hInsert
 
-theorem oneRemovedLink_insert_mem
+theorem one_removed_link_insert_mem
     {F : Family α} {W T : Edge α} {x : α}
     (hT : T ∈ oneRemovedLink F W x) : insert x T ∈ F := by
   obtain ⟨E, hE, hErase⟩ := Finset.mem_image.mp hT
@@ -321,21 +321,21 @@ theorem two_one_removed_links_overlap_bound
     intro T hT
     obtain ⟨hxT, hyT⟩ := Finset.mem_inter.mp hT
     obtain ⟨hTW, hTcard⟩ :=
-      Finset.mem_powersetCard.mp (oneRemovedLink_subset_facets hU hxT)
+      Finset.mem_powersetCard.mp (one_removed_link_subset_facets hU hxT)
     have hnoX : x ∉ T := fun h => hxW (hTW h)
     have hnoY : y ∉ T := fun h => hyW (hTW h)
-    apply mem_commonPrefixTails.mpr
-    refine ⟨hTW, hTcard, ?_, oneRemovedLink_insert_mem hxT,
-      oneRemovedLink_insert_mem hyT⟩
+    apply mem_common_prefix_tails.mpr
+    refine ⟨hTW, hTcard, ?_, one_removed_link_insert_mem hxT,
+      one_removed_link_insert_mem hyT⟩
     exact Finset.disjoint_union_right.mpr
       ⟨Finset.disjoint_singleton_right.mpr hnoX,
         Finset.disjoint_singleton_right.mpr hnoY⟩
   have hCSub : C ⊆ W.powersetCard (r - 1) := by
     intro T hT
-    have hMem := mem_commonPrefixTails.mp hT
+    have hMem := mem_common_prefix_tails.mp hT
     exact Finset.mem_powersetCard.mpr ⟨hMem.1, hMem.2.1⟩
   have hI : PairwiseIntersecting C :=
-    commonPrefixTails_intersecting (W := W) hAdm
+    common_prefix_tails_intersecting (W := W) hAdm
       (by simp) (by simp) (Finset.disjoint_singleton.mpr hxy)
       (by omega)
   exact (Finset.card_le_card hSub).trans
@@ -465,7 +465,7 @@ theorem one_removed_link_shadow_overlap_bound
       W.biUnion (fun y => mixedCommonCell F K W x y r) := by
     intro T hT
     obtain ⟨hTL, hTS⟩ := Finset.mem_inter.mp hT
-    have hPow := oneRemovedLink_subset_facets hU hTL
+    have hPow := one_removed_link_subset_facets hU hTL
     have hTcard := (Finset.mem_powersetCard.mp hPow).2
     obtain ⟨_hPow, E, hE, hTE⟩ := Finset.mem_filter.mp hTS
     have hEcard := hKU hE
@@ -550,7 +550,7 @@ theorem edge_layer_card_le
       ∑ x ∈ X, (oneRemovedLink F W x).card := by
     apply Finset.sum_congr rfl
     intro x _
-    exact (oneRemovedLink_card_eq_fiber F W x).symm
+    exact (one_removed_link_card_eq_fiber F W x).symm
   omega
 
 /-- Finite coefficient-preserving shadow ledger, before bounding the three
@@ -573,7 +573,7 @@ theorem actual_shadow_ledger
     (W.powersetCard (r - 1)) (shadowOn K W r)
     (oneRemovedLink F W)
     (Finset.filter_subset _ _)
-    (fun x _ => oneRemovedLink_subset_facets hF)
+    (fun x _ => one_removed_link_subset_facets hF)
   have hLayers := edge_layer_card_le hSupport
   have hInside := Finset.card_sdiff_add_card_eq_card hK
   rw [Finset.card_powersetCard] at hAlloc
@@ -659,7 +659,7 @@ theorem finite_shadow_surplus_retention
   omega
 
 /-- Deleting edges cannot create shadow facets. -/
-theorem shadowOn_mono
+theorem shadow_on_mono
     {K H : Family α} {V : Edge α} {r : ℕ} (hKH : K ⊆ H) :
     shadowOn K V r ⊆ shadowOn H V r := by
   intro A hA
@@ -674,7 +674,7 @@ theorem shadow_surplus_loss_le_deleted_edges
         ((H \ K).card : ℤ) ≤
       (K.card : ℤ) - ((shadowOn K V r).card : ℤ) := by
   have hPart := Finset.card_sdiff_add_card_eq_card hKH
-  have hShadow := Finset.card_le_card (shadowOn_mono (V := V) (r := r) hKH)
+  have hShadow := Finset.card_le_card (shadow_on_mono (V := V) (r := r) hKH)
   omega
 
 end EdgeLayers

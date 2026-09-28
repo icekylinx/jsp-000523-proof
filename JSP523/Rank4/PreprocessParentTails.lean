@@ -20,7 +20,7 @@ private def centeredTailConflicts (J : Family α) (z : α) (R : Edge α) :
 
 /-- At most `2D` triples of a centered cell conflict with a fixed tail when
 every pair has degree at most `D`. -/
-private theorem centeredTailConflicts_card_le
+private theorem centered_tail_conflicts_card_le
     {J : Family α} {z : α} {R : Edge α} {D : ℕ}
     (hUniform : ∀ S ∈ J, S.card = 3)
     (hz : ∀ S ∈ J, z ∈ S)
@@ -101,7 +101,7 @@ theorem large_centered_cell_has_three_parent_tails
   have hRmem : insert z R ∈ J := by
     simpa [R, hR₀z] using hR₀
   have hBadR : (centeredTailConflicts J z R₀).card ≤ 2 * D :=
-    centeredTailConflicts_card_le hUniform hz hPair hR₀
+    centered_tail_conflicts_card_le hUniform hz hPair hR₀
   have hBadRsub : centeredTailConflicts J z R₀ ⊆ J := by
     intro T hT
     exact (Finset.mem_filter.mp hT).1
@@ -122,7 +122,7 @@ theorem large_centered_cell_has_three_parent_tails
   have hSmem : insert z S ∈ J := by
     simpa [S, hS₀z] using hS₀J
   have hBadS : (centeredTailConflicts J z S₀).card ≤ 2 * D :=
-    centeredTailConflicts_card_le hUniform hz hPair hS₀J
+    centered_tail_conflicts_card_le hUniform hz hPair hS₀J
   have hBadSsub : centeredTailConflicts J z S₀ ⊆ J := by
     intro T hT
     exact (Finset.mem_filter.mp hT).1
@@ -163,36 +163,36 @@ theorem large_centered_cell_has_three_parent_tails
   have hRsub : R ⊆ V := by
     intro x hx
     have hx' : x ∈ insert z R := Finset.mem_insert_of_mem hx
-    exact (mem_commonTripleCell.mp hRmem).1 hx'
+    exact (mem_common_triple_cell.mp hRmem).1 hx'
   have hSsub : S ⊆ V := by
     intro x hx
     have hx' : x ∈ insert z S := Finset.mem_insert_of_mem hx
-    exact (mem_commonTripleCell.mp hSmem).1 hx'
+    exact (mem_common_triple_cell.mp hSmem).1 hx'
   have hTmem : insert z (T₀.erase z) ∈ J := by
     simpa [Finset.insert_erase hT₀z] using hT₀J
   have hTsub : T₀.erase z ⊆ V := by
     intro x hx
     have hx' : x ∈ insert z (T₀.erase z) := Finset.mem_insert_of_mem hx
-    exact (mem_commonTripleCell.mp hTmem).1 hx'
-  have hzV : z ∈ V := (mem_commonTripleCell.mp hRmem).1 (by simp)
+    exact (mem_common_triple_cell.mp hTmem).1 hx'
+  have hzV : z ∈ V := (mem_common_triple_cell.mp hRmem).1 (by simp)
   refine ⟨R, S, T₀.erase z, hzV, hSDisj.symm, hTR.symm, hTS.symm,
     hRsub, hSsub, hTsub, hRmem, hSmem, hTmem⟩
 
 /-- Monotonicity of the actual common cell in both the family and the
 ground set. -/
-theorem commonTripleCell_mono_family_ground
+theorem common_triple_cell_mono_family_ground
     {K H : Family α} {U V : Edge α} {a b : α}
     (hKH : K ⊆ H) (hUV : U ⊆ V) :
     commonTripleCell K U a b ⊆ commonTripleCell H V a b := by
   intro T hT
-  have h := mem_commonTripleCell.mp hT
-  apply mem_commonTripleCell.mpr
+  have h := mem_common_triple_cell.mp hT
+  apply mem_common_triple_cell.mpr
   refine ⟨h.1.trans hUV, h.2.1, h.2.2.1, ?_, ?_⟩
   · exact hKH h.2.2.2.1
   · exact hKH h.2.2.2.2
 
 /-- The common cell depends on its two endpoints as an unordered pair. -/
-theorem commonTripleCell_swap
+theorem common_triple_cell_swap
     (H : Family α) (V : Edge α) (a b : α) :
     commonTripleCell H V a b = commonTripleCell H V b a := by
   ext T
@@ -200,7 +200,7 @@ theorem commonTripleCell_swap
 
 /-- Equality of the endpoint pairs identifies the corresponding common
 triple cells. -/
-theorem commonTripleCell_eq_of_pair_eq
+theorem common_triple_cell_eq_of_pair_eq
     (H : Family α) (V : Edge α) {a b c d : α}
     (hPair : ({a, b} : Edge α) = {c, d}) :
     commonTripleCell H V a b = commonTripleCell H V c d := by
@@ -233,7 +233,7 @@ theorem commonTripleCell_eq_of_pair_eq
         simpa using hd'
       · exact had.symm
     subst d
-    exact commonTripleCell_swap H V a b
+    exact common_triple_cell_swap H V a b
 
 /-- The bounded-pair-degree large-cell lemma yields the exact parent-tail
 record consumed by `StarLinkActualBudget`; the cell is measured in the
@@ -254,9 +254,9 @@ theorem surviving_common_cell_has_parent_tails
       (H := K) (V := U) hLarge hCenter hPair
   refine ⟨R, S, T, ?_, hRS, hRT, hST, hRU, hSU, hTU, ?_, ?_, ?_⟩
   · exact hzU
-  · exact commonTripleCell_mono_family_ground hKH hUV hRK
-  · exact commonTripleCell_mono_family_ground hKH hUV hSK
-  · exact commonTripleCell_mono_family_ground hKH hUV hTK
+  · exact common_triple_cell_mono_family_ground hKH hUV hRK
+  · exact common_triple_cell_mono_family_ground hKH hUV hSK
+  · exact common_triple_cell_mono_family_ground hKH hUV hTK
 
 /-- After finite small-cell clearing on the fixed core, every surviving
 large actual cell has a unique center and three pairwise-disjoint parent
@@ -297,7 +297,7 @@ theorem clear_small_cells_and_get_parent_tails
   have hKAdmissible := admissible_mono hKB hBAdmissible
   have hPair : ∀ P : Edge α, P.card = 2 →
       triplePairDegree (commonTripleCell K U a b) P ≤ D :=
-    commonTripleCell_pairDegree_le_of_facet_cap
+    common_triple_cell_pair_degree_le_of_facet_cap
       (by
         intro T hT
         have hFacetSub : facetCompletions K U T ⊆ facetCompletions H U T := by
@@ -307,7 +307,7 @@ theorem clear_small_cells_and_get_parent_tails
         exact (Finset.card_le_card hFacetSub).trans (hCap T hT))
   have hCellLarge' : 9 * D < (commonTripleCell K U a b).card := by
     omega
-  obtain ⟨z, hz⟩ := commonTripleCell_large_has_center_of_facet_cap
+  obtain ⟨z, hz⟩ := common_triple_cell_large_has_center_of_facet_cap
     hKAdmissible hab
     (by
       intro T hT
@@ -324,7 +324,7 @@ theorem clear_small_cells_and_get_parent_tails
     hKH hUsubV hCellLarge' hz hPair
   refine ⟨z, ⟨hz, hTails⟩, ?_⟩
   intro y hy
-  have hEq := commonTripleCell_center_unique hPairUnique hzD hz hy.1
+  have hEq := common_triple_cell_center_unique hPairUnique hzD hz hy.1
   subst y
   rfl
 
@@ -360,7 +360,7 @@ theorem clear_small_cells_and_get_chosen_parent_tails
     intro x hx
     have hx' := Finset.mem_filter.mp hx
     exact Finset.mem_filter.mpr ⟨hx'.1, hBH hx'.2⟩
-  obtain ⟨K, hKB, hCells, hLoss⟩ := clear_all_small_commonCells B U t
+  obtain ⟨K, hKB, hCells, hLoss⟩ := clear_all_small_common_cells B U t
   have hKH : K ⊆ H := fun E hE => hBH (hKB hE)
   have hKAdmissible := admissible_mono hKB hBAdmissible
   have hCapK : ∀ T : Edge α, T.card = 3 →
@@ -385,11 +385,11 @@ theorem clear_small_cells_and_get_chosen_parent_tails
           (commonTripleCell K U ab.1 ab.2).card := by
         rw [← hRootEq]
         omega
-      have hab : ab.1 ≠ ab.2 := (pairRootRep_spec P hPcard).1
+      have hab : ab.1 ≠ ab.2 := (pair_root_rep_spec P hPcard).1
       have hPair : ∀ Q : Edge α, Q.card = 2 →
           triplePairDegree (commonTripleCell K U ab.1 ab.2) Q ≤ D :=
-        commonTripleCell_pairDegree_le_of_facet_cap hCapK
-      obtain ⟨z, hz⟩ := commonTripleCell_large_has_center_of_facet_cap
+        common_triple_cell_pair_degree_le_of_facet_cap hCapK
+      obtain ⟨z, hz⟩ := common_triple_cell_large_has_center_of_facet_cap
         hKAdmissible hab hCapK hCellLarge
       have hzRoot : ∀ ⦃T : Edge α⦄,
           T ∈ commonRootCell K U P → z ∈ T := by
@@ -403,7 +403,7 @@ theorem clear_small_cells_and_get_chosen_parent_tails
             T ∈ commonTripleCell K U ab.1 ab.2 → y ∈ T := by
           intro T hT
           exact hy (hRootEq.symm ▸ hT)
-        exact (commonTripleCell_center_unique hPair
+        exact (common_triple_cell_center_unique hPair
           (by omega : D < (commonTripleCell K U ab.1 ab.2).card)
           hz hy').symm
       exact ⟨z, hzRoot, hzUnique⟩
@@ -429,7 +429,7 @@ theorem clear_small_cells_and_get_chosen_parent_tails
     · exact hBig
   let ab := pairRootRep P hPcard
   have hPairEq : ({a, b} : Edge α) = ({ab.1, ab.2} : Edge α) :=
-    by simpa [P] using (pairRootRep_spec P hPcard).2
+    by simpa [P] using (pair_root_rep_spec P hPcard).2
   have hRootEq : commonRootCell K U P =
       commonTripleCell K U ab.1 ab.2 := by
     simp [commonRootCell, hPcard, ab]
@@ -439,9 +439,9 @@ theorem clear_small_cells_and_get_chosen_parent_tails
     omega
   have hCapPair : ∀ Q : Edge α, Q.card = 2 →
       triplePairDegree (commonTripleCell K U ab.1 ab.2) Q ≤ D :=
-    commonTripleCell_pairDegree_le_of_facet_cap hCapK
-  have hab : ab.1 ≠ ab.2 := (pairRootRep_spec P hPcard).1
-  obtain ⟨z, hz⟩ := commonTripleCell_large_has_center_of_facet_cap
+    common_triple_cell_pair_degree_le_of_facet_cap hCapK
+  have hab : ab.1 ≠ ab.2 := (pair_root_rep_spec P hPcard).1
+  obtain ⟨z, hz⟩ := common_triple_cell_large_has_center_of_facet_cap
     hKAdmissible hab hCapK hCellLarge
   have hLabelCenter := chosen_common_root_label_center K U fallback
     hCenters P hPused
@@ -453,14 +453,14 @@ theorem clear_small_cells_and_get_chosen_parent_tails
     rw [hRootEq]
     exact hT
   have hLabelEq : chosenCommonRootLabel K U fallback hCenters P = z :=
-    (commonTripleCell_center_unique hCapPair
+    (common_triple_cell_center_unique hCapPair
       (by omega : D < (commonTripleCell K U ab.1 ab.2).card)
       hz hLabelOnRep).symm
   have hTailRep := surviving_common_cell_has_parent_tails
     hKH hUsubV hCellLarge hz hCapPair
   obtain ⟨R, S, T, hzU, hRS, hRT, hST,
     hRU, hSU, hTU, hR, hS, hT⟩ := hTailRep
-  have hCellEq := commonTripleCell_eq_of_pair_eq H V hPairEq
+  have hCellEq := common_triple_cell_eq_of_pair_eq H V hPairEq
   have hR' : insert z R ∈ commonTripleCell H V a b := by
     rw [hCellEq]
     exact hR

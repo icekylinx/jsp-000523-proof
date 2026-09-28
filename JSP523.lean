@@ -263,6 +263,16 @@ import JSP523.Rank5.StarLayerLoss
 import JSP523.Rank5.UniqueBadPairDeletionBudget
 import JSP523.Rank5.UniqueBadPairGeometry
 import JSP523.Rank5.UniqueBadPairTailPacking
+import JSP523.Rank4.GraphActualColoredMultiplicity
+import JSP523.Rank4.GraphActualPaymentBridge
+import JSP523.Rank4.GraphReciprocalDegreeTwo
+import JSP523.Rank4.PreprocessReciprocalAssembly
+import JSP523.Rank4.PreprocessReciprocalWrongWitness
+import JSP523.Rank4.PreprocessUsedParentCleanup
+import JSP523.Rank4.PreprocessUsedParentLabel
+import JSP523.Rank4.PreprocessUsedParentSeparation
+import JSP523.Rank5.FarStarAsymptotic
+import JSP523.Rank5.InheritanceLowRetention
 
 /-!
 # JSP-000523: partial Lean formalization

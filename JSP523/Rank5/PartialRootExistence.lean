@@ -121,7 +121,7 @@ theorem partial_root_exists
       exact (hcomp ha hx (Ne.symm hxa) hfax hfxa).symm
 
 /-- The root is unique, using the earlier elementary uniqueness lemma. -/
-theorem partial_root_existsUnique
+theorem partial_root_exists_unique
     {U : Finset α} {f : α → α}
     (hcard : 4 ≤ U.card)
     (hcomp : PartialCompatible U f)
@@ -134,7 +134,7 @@ theorem partial_root_existsUnique
 
 /-- The original ambient formulation.  The proof does not need the usual
     condition `|(V \ U)| ≤ 1`; it only needs every displayed value in `V`. -/
-theorem partial_root_existsUnique_in_ambient
+theorem partial_root_exists_unique_in_ambient
     {U V : Finset α} {f : α → α}
     (hcard : 4 ≤ U.card)
     (hmap : ∀ a ∈ U, f a ∈ V)

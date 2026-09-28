@@ -33,13 +33,13 @@ instance sampledGraph_decidableRel
   infer_instance
 
 omit [Fintype α] [DecidableEq α] in
-theorem sampledGraph_adj (F : SimpleGraph α) (S : Finset α)
+theorem sampled_graph_adj (F : SimpleGraph α) (S : Finset α)
     (a b : α) :
     (sampledGraph F S).Adj a b ↔ F.Adj a b ∧ a ∈ S ∧ b ∈ S :=
   Iff.rfl
 
 /-- An edge survives precisely when both its endpoints are sampled. -/
-theorem sampledGraph_edgeFinset_eq_filter
+theorem sampled_graph_edge_finset_eq_filter
     (F : SimpleGraph α) [DecidableRel F.Adj] (S : Finset α) :
     (sampledGraph F S).edgeFinset =
       F.edgeFinset.filter fun e => e.toFinset ⊆ S := by
@@ -48,7 +48,7 @@ theorem sampledGraph_edgeFinset_eq_filter
   induction e using Sym2.inductionOn with
   | hf a b =>
       simp [SimpleGraph.mem_edgeFinset, SimpleGraph.mem_edgeSet,
-        sampledGraph_adj, Finset.subset_iff]
+        sampled_graph_adj, Finset.subset_iff]
 
 /-- Vertex support also controls the two endpoints of each edge record. -/
 theorem edge_support_of_adj_support
@@ -74,7 +74,7 @@ theorem sampled_graph_potential
       orderedCommonPairCount (sampledGraph F S) +
       activeVertexCount (sampledGraph F S) := by
   classical
-  have h := graphDeficit_nonneg (sampledGraph F S)
+  have h := graph_deficit_nonneg (sampledGraph F S)
   unfold graphDeficit at h
   linarith
 
@@ -112,7 +112,7 @@ theorem sum_sampled_edge_count
         (F.edgeFinset.filter fun e => e.toFinset ⊆ S).card := by
           apply Finset.sum_congr rfl
           intro S _
-          rw [sampledGraph_edgeFinset_eq_filter]
+          rw [sampled_graph_edge_finset_eq_filter]
     _ = ∑ S ∈ V.powersetCard m,
           ∑ e ∈ F.edgeFinset, if e.toFinset ⊆ S then 1 else 0 := by
           apply Finset.sum_congr rfl
@@ -146,7 +146,7 @@ theorem sampled_active_vertex_in_sample
   obtain ⟨y, hy⟩ := Finset.card_pos.mp hNbr
   have hAdj : (sampledGraph F S).Adj x y := by
     simpa [SimpleGraph.mem_neighborFinset] using hy
-  exact (sampledGraph_adj F S x y).mp hAdj |>.2.1
+  exact (sampled_graph_adj F S x y).mp hAdj |>.2.1
 
 /-- The active-vertex term in a sampled graph is at most the sample size. -/
 theorem sampled_active_count_le_card
@@ -208,8 +208,8 @@ theorem sampled_common_neighbor_witness
   obtain ⟨hzNbr, hzAdj⟩ := Finset.mem_filter.mp hz
   have hxz : (sampledGraph F S).Adj x z := by
     simpa [SimpleGraph.mem_neighborFinset] using hzNbr
-  obtain ⟨hF, hxS, hzS⟩ := (sampledGraph_adj F S x z).mp hxz
-  obtain ⟨hFy, hyS, _⟩ := (sampledGraph_adj F S y z).mp hzAdj
+  obtain ⟨hF, hxS, hzS⟩ := (sampled_graph_adj F S x z).mp hxz
+  obtain ⟨hFy, hyS, _⟩ := (sampled_graph_adj F S y z).mp hzAdj
   exact ⟨z, hF, hFy, hxS, hyS, hzS⟩
 
 /-- A sample producing a common-neighbor record for a unique pair must
@@ -379,7 +379,7 @@ theorem sum_sampled_common_pairs_eq_event_counts
 
 /-- A pair with no original common neighbor cannot acquire one by
 sampling. -/
-theorem sampledCommonPairEvents_eq_empty_of_zero
+theorem sampled_common_pair_events_eq_empty_of_zero
     (F : SimpleGraph α) [DecidableRel F.Adj]
     (V : Finset α) (m : ℕ) (x y : α)
     (hZero : graphCommonMultiplicity F x y = 0) :
@@ -445,7 +445,7 @@ theorem sum_sampled_common_pairs_le
             exact_mod_cast hBound
       simpa [hOne, hMany, c₂] using hBoundQ
     · have hZero : graphCommonMultiplicity F x y = 0 := by omega
-      have hEmpty := sampledCommonPairEvents_eq_empty_of_zero
+      have hEmpty := sampled_common_pair_events_eq_empty_of_zero
         F V m x y hZero
       simp [hEmpty, hZero]
   rw [sum_sampled_common_pairs_eq_event_counts]

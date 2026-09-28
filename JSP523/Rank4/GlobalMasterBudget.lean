@@ -19,7 +19,7 @@ def rankFourFacetShadow (K : Family α) (U : Edge α) : Family α :=
   (U.powersetCard 3).filter fun T =>
     0 < (facetCompletions K U T).card
 
-theorem mem_rankFourFacetShadow
+theorem mem_rank_four_facet_shadow
     (K : Family α) (U T : Edge α) :
     T ∈ rankFourFacetShadow K U ↔
       T ∈ U.powersetCard 3 ∧
@@ -40,8 +40,8 @@ theorem rank_four_facet_shadow_mono
     rankFourFacetShadow K U ⊆ rankFourFacetShadow B U := by
   intro T hT
   obtain ⟨hTriple, x, hxU, hxK⟩ :=
-    (mem_rankFourFacetShadow K U T).mp hT
-  exact (mem_rankFourFacetShadow B U T).mpr
+    (mem_rank_four_facet_shadow K U T).mp hT
+  exact (mem_rank_four_facet_shadow B U T).mpr
     ⟨hTriple, x, hxU, hKB hxK⟩
 
 /-- The exact shadow-overlap budget from (III.B.1): the union consumes

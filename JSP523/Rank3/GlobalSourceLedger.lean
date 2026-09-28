@@ -22,21 +22,21 @@ noncomputable def corePositiveWeight
     exact positiveRootedWeight H V z e.1 e.2
   · exact 0
 
-theorem positiveRootedWeight_comm
+theorem positive_rooted_weight_comm
     (H : Family α) (V : Edge α) (z x y : α) :
     positiveRootedWeight H V z x y =
       positiveRootedWeight H V z y x := by
   unfold positiveRootedWeight
-  rw [rootedSignedWeight_comm]
+  rw [rooted_signed_weight_comm]
 
-theorem corePositiveWeight_eq_displayed_pair
+theorem core_positive_weight_eq_displayed_pair
     (H : Family α) (V p : Edge α) (z x y : α)
     (hp : p.card = 2) (hpair : p = ({x, y} : Edge α)) :
     corePositiveWeight H V z p =
       positiveRootedWeight H V z x y := by
   classical
   let e := corePairRep p hp
-  have he := corePairRep_spec p hp
+  have he := core_pair_rep_spec p hp
   have heq : ({e.1, e.2} : Edge α) = ({x, y} : Edge α) :=
     he.2.symm.trans hpair
   have he1 : e.1 = x ∨ e.1 = y := by
@@ -62,10 +62,10 @@ theorem corePositiveWeight_eq_displayed_pair
       · exact False.elim (he.1 (h1.trans h2.symm))
   rcases hcases with ⟨h1, h2⟩ | ⟨h1, h2⟩
   · simp [corePositiveWeight, hp, e, h1, h2]
-  · rw [positiveRootedWeight_comm]
+  · rw [positive_rooted_weight_comm]
     simp [corePositiveWeight, hp, e, h1, h2]
 
-private theorem rootLink_subset_erased_pairs
+private theorem root_link_subset_erased_pairs
     (H : Family α) (V : Edge α) (z : α) :
     rootLink H V z ⊆ (V.erase z).powersetCard 2 := by
   intro p hp
@@ -78,7 +78,7 @@ private theorem rootLink_subset_erased_pairs
       ⟨fun htz => hzNot (htz ▸ ht), hpSub ht⟩
   · exact hpCard
 
-private theorem rootNeighbors_eq_erased_pair_filter
+private theorem root_neighbors_eq_erased_pair_filter
     (H : Family α) (V : Edge α) {z x : α}
     (hx : x ∈ V.erase z) :
     rootNeighbors H V z x =
@@ -89,7 +89,7 @@ private theorem rootNeighbors_eq_erased_pair_filter
   have hzx : z ≠ x := Ne.symm (Finset.mem_erase.mp hx).1
   constructor
   · intro hy
-    have hLink := (mem_rootNeighbors_iff_mem_rootLink H V hxV hzx).mp hy
+    have hLink := (mem_root_neighbors_iff_mem_root_link H V hxV hzx).mp hy
     obtain ⟨hyV, hyNot, _⟩ := Finset.mem_filter.mp hy
     have hyz : y ≠ z := by
       intro h
@@ -102,7 +102,7 @@ private theorem rootNeighbors_eq_erased_pair_filter
         ⟨hyx, Finset.mem_erase.mpr ⟨hyz, hyV⟩⟩,
         hLink⟩
   · intro hy
-    exact (mem_rootNeighbors_iff_mem_rootLink H V hxV hzx).mpr
+    exact (mem_root_neighbors_iff_mem_root_link H V hxV hzx).mpr
       (Finset.mem_filter.mp hy).2
 
 /-- The manuscript's positive-weight total counts each source edge in both
@@ -131,7 +131,7 @@ theorem oriented_positive_eq_core_positive
               F ({x, y} : Edge α) := by
       apply Finset.sum_congr rfl
       intro x hx
-      rw [rootNeighbors_eq_erased_pair_filter H V hx]
+      rw [root_neighbors_eq_erased_pair_filter H V hx]
       rw [Finset.sum_filter]
       apply Finset.sum_congr rfl
       intro y hy
@@ -139,13 +139,13 @@ theorem oriented_positive_eq_core_positive
           ({x, y} : Edge α) ∈ rootLink H V z
       · have hxy : x ≠ y := Ne.symm (Finset.mem_erase.mp hy).1
         simp only [F, hxyLink, ↓reduceIte]
-        rw [corePositiveWeight_eq_displayed_pair H V
+        rw [core_positive_weight_eq_displayed_pair H V
           ({x, y} : Edge α) z x y (Finset.card_pair hxy) rfl]
       · simp [F, hxyLink]
     have hRight :
         (∑ p ∈ (V.erase z).powersetCard 2, F p) =
           ∑ p ∈ rootLink H V z, corePositiveWeight H V z p := by
-      have hSub := rootLink_subset_erased_pairs H V z
+      have hSub := root_link_subset_erased_pairs H V z
       calc
         (∑ p ∈ (V.erase z).powersetCard 2, F p) =
             ∑ p ∈ rootLink H V z, F p := by
@@ -175,7 +175,7 @@ theorem oriented_positive_eq_core_positive
 
 /-- The actual charge kernel over an ambient root's other vertices
 is supported exactly on the other completion vertices of its source pair. -/
-theorem coreChargeKernel_sum_eq_completion_sum
+theorem core_charge_kernel_sum_eq_completion_sum
     (H : Family α) (V p : Edge α) {z : α}
     (hp : p ∈ rootLink H V z) :
     (∑ v ∈ V.erase z, coreChargeKernel H V z v p) =
@@ -186,7 +186,7 @@ theorem coreChargeKernel_sum_eq_completion_sum
     intro v hv
     obtain ⟨hvz, hvN⟩ := Finset.mem_erase.mp hv
     exact Finset.mem_erase.mpr
-      ⟨hvz, completionVertices_subset_ground H V p hvN⟩
+      ⟨hvz, completion_vertices_subset_ground H V p hvN⟩
   calc
     (∑ v ∈ V.erase z, coreChargeKernel H V z v p) =
         ∑ v ∈ V.erase z,
@@ -209,7 +209,7 @@ theorem coreChargeKernel_sum_eq_completion_sum
 
 /-- A source pair's positive weight is either retained at degree one or
 conserved across its actual outgoing receiver charges. -/
-theorem corePositiveWeight_split
+theorem core_positive_weight_split
     (H : Family α) (V p : Edge α) {z : α}
     (hzV : z ∈ V) (hp : p ∈ rootLink H V z) :
     corePositiveWeight H V z p =
@@ -220,7 +220,7 @@ theorem corePositiveWeight_split
   have hp2 : p.card = 2 :=
     (Finset.mem_powersetCard.mp (Finset.mem_filter.mp hp).1).2
   let e := corePairRep p hp2
-  have he := corePairRep_spec p hp2
+  have he := core_pair_rep_spec p hp2
   have hsource : ({e.1, e.2} : Edge α) ∈ rootLink H V z := by
     rw [← he.2]
     exact hp
@@ -229,7 +229,7 @@ theorem corePositiveWeight_split
     exact root_mem_source_completion H V hzV hsource
   have hPos : 0 < (completionVertices H V p).card :=
     Finset.card_pos.mpr ⟨z, hzN⟩
-  have hSent := coreChargeKernel_sum_eq_completion_sum H V p hp
+  have hSent := core_charge_kernel_sum_eq_completion_sum H V p hp
   by_cases hOne : (completionVertices H V p).card = 1
   · have hEraseCard : ((completionVertices H V p).erase z).card = 0 := by
       have hCard := Finset.card_erase_add_one hzN
@@ -246,7 +246,7 @@ theorem corePositiveWeight_split
       H V hzV hsource hAtLeastTwo'
     have hWeight : corePositiveWeight H V z p =
         positiveRootedWeight H V z e.1 e.2 :=
-      corePositiveWeight_eq_displayed_pair H V p z e.1 e.2 hp2 he.2
+      core_positive_weight_eq_displayed_pair H V p z e.1 e.2 hp2 he.2
     have hCharges :
         (∑ v ∈ (completionVertices H V p).erase z,
           coreReceiverCharge H V z v p) =
@@ -258,7 +258,7 @@ theorem corePositiveWeight_split
       rw [hN]
       apply Finset.sum_congr rfl
       intro v hv
-      exact coreReceiverCharge_eq_displayed_pair
+      exact core_receiver_charge_eq_displayed_pair
         H V p z v e.1 e.2 hp2 he.2
     rw [hSent, hCharges, hConserve, hWeight]
     simp [hOne]
@@ -289,7 +289,7 @@ theorem core_positive_eq_retained_add_outgoing
       intro z hz
       apply Finset.sum_congr rfl
       intro p hp
-      exact corePositiveWeight_split H V p hz hp
+      exact core_positive_weight_split H V p hz hp
     _ = retainedCorePositiveTotal H V +
           outgoingCoreChargeTotal H V := by
       simp [retainedCorePositiveTotal, outgoingCoreChargeTotal,
@@ -302,26 +302,26 @@ theorem actual_positive_source_conservation
         incomingCommonLinkChargeTotal H V := by
   rw [oriented_positive_eq_core_positive,
     core_positive_eq_retained_add_outgoing,
-    actual_charge_fubini_by_commonLink]
+    actual_charge_fubini_by_common_link]
 
 
-theorem corePositiveWeight_lt_two_of_rootLink
+theorem core_positive_weight_lt_two_of_root_link
     (H : Family α) (V p : Edge α) {z : α}
     (hp : p ∈ rootLink H V z) :
     corePositiveWeight H V z p < 2 := by
   have hp2 : p.card = 2 :=
     (Finset.mem_powersetCard.mp (Finset.mem_filter.mp hp).1).2
   let e := corePairRep p hp2
-  have he := corePairRep_spec p hp2
+  have he := core_pair_rep_spec p hp2
   have hsource : ({e.1, e.2} : Edge α) ∈ rootLink H V z := by
     rw [← he.2]
     exact hp
-  rw [corePositiveWeight_eq_displayed_pair H V p z e.1 e.2 hp2 he.2]
+  rw [core_positive_weight_eq_displayed_pair H V p z e.1 e.2 hp2 he.2]
   exact positive_rooted_weight_lt_two H V hsource he.1
 
 /-- Every retained source has a unique root, so the total retained
 positive weight is at most two per singleton-completion pair. -/
-theorem retainedCorePositiveTotal_le_two_singletons
+theorem retained_core_positive_total_le_two_singletons
     (H : Family α) (V : Edge α)
     (hU : Uniform 3 H)
     (hGround : ∀ E ∈ H, E ⊆ V) :
@@ -350,10 +350,10 @@ theorem retainedCorePositiveTotal_le_two_singletons
       have hPos : 0 < (completionVertices H V p).card := by omega
       have hNonempty : (completionVertices H V p).Nonempty :=
         Finset.card_pos.mp hPos
-      exact ⟨(mem_usedPairs_iff_completion_nonempty
+      exact ⟨(mem_used_pairs_iff_completion_nonempty
         H V p hU hGround hpV).mpr hNonempty, hd1⟩
     · rintro ⟨hpUsed, hd1⟩
-      exact ⟨usedPairs_subset H V hpUsed, hd1⟩
+      exact ⟨used_pairs_subset H V hpUsed, hd1⟩
   calc
     retainedCorePositiveTotal H V =
         ∑ p ∈ V.powersetCard 2,
@@ -372,7 +372,7 @@ theorem retainedCorePositiveTotal_le_two_singletons
         apply Finset.sum_le_sum
         intro p hp
         have hpV : p ∈ V.powersetCard 2 :=
-          usedPairs_subset H V (Finset.mem_filter.mp hp).1
+          used_pairs_subset H V (Finset.mem_filter.mp hp).1
         have hd1 : (completionVertices H V p).card = 1 :=
           (Finset.mem_filter.mp hp).2
         obtain ⟨z, hN⟩ :=
@@ -383,7 +383,7 @@ theorem retainedCorePositiveTotal_le_two_singletons
             ⟨hpV, (Finset.mem_filter.mp hzN).2⟩
         rw [hN]
         simp
-        exact (corePositiveWeight_lt_two_of_rootLink H V p hroot).le
+        exact (core_positive_weight_lt_two_of_root_link H V p hroot).le
     _ = 2 * ((singletonCompletionPairs H V).card : ℚ) := by
         simp
         ring
@@ -407,11 +407,11 @@ theorem positive_total_le_capacity_of_incoming_bound
       actualXi H V := by
   have hConserve := actual_positive_source_conservation H V
   have hRetained :=
-    retainedCorePositiveTotal_le_two_singletons H V hU hGround
+    retained_core_positive_total_le_two_singletons H V hU hGround
   linarith
 
 
-theorem actualCellChargeForPair_eq_displayed
+theorem actual_cell_charge_for_pair_eq_displayed
     (H : Family α) (V : Edge α) {z v : α}
     (hzv : z ≠ v) :
     actualCellChargeForPair H V ({z, v} : Edge α) =
@@ -420,7 +420,7 @@ theorem actualCellChargeForPair_eq_displayed
   let q : Edge α := {z, v}
   have hq2 : q.card = 2 := Finset.card_pair hzv
   let e := corePairRep q hq2
-  have he := corePairRep_spec q hq2
+  have he := core_pair_rep_spec q hq2
   have heq : ({e.1, e.2} : Edge α) = ({z, v} : Edge α) := by
     simpa [q] using he.2.symm
   have he1 : e.1 = z ∨ e.1 = v := by
@@ -446,7 +446,7 @@ theorem actualCellChargeForPair_eq_displayed
       · exact False.elim (he.1 (h1.trans h2.symm))
   rcases hcases with ⟨h1, h2⟩ | ⟨h1, h2⟩
   · simp [actualCellChargeForPair, hq2, q, e, h1, h2]
-  · have hComm := actualCellChargeTotal_comm H V v z
+  · have hComm := actual_cell_charge_total_comm H V v z
     simp [actualCellChargeForPair, hq2, q, e, h1, h2] at hComm ⊢
     exact hComm
 
@@ -468,7 +468,7 @@ theorem incoming_charge_eq_cell_charge_sum
         coreReceiverCharge H V z v p) +
       (∑ p ∈ commonLink H V ({v, z} : Edge α),
         coreReceiverCharge H V v z p)
-    rw [actualCellChargeForPair_eq_displayed H V hzv]
+    rw [actual_cell_charge_for_pair_eq_displayed H V hzv]
     unfold actualCellChargeTotal
     rw [Finset.sum_add_distrib]
     simp only [Finset.pair_comm]
@@ -514,17 +514,17 @@ theorem incoming_charge_eq_cell_charge_sum
         ∑ q ∈ V.powersetCard 2, G q := hAll
     _ = ∑ q ∈ usedCells H V, G q := by
       symm
-      apply Finset.sum_subset (usedCells_subset H V)
+      apply Finset.sum_subset (used_cells_subset H V)
       intro q hqV hqNot
       have hEmpty : commonLink H V q = ∅ := by
         by_contra h
         have hNonempty : (commonLink H V q).Nonempty :=
           Finset.nonempty_iff_ne_empty.mpr h
-        exact hqNot ((mem_usedCells_iff_commonLink_nonempty H V q).mpr
+        exact hqNot ((mem_used_cells_iff_common_link_nonempty H V q).mpr
           ⟨hqV, hNonempty⟩)
       have hq2 := (Finset.mem_powersetCard.mp hqV).2
       let e := corePairRep q hq2
-      have he := corePairRep_spec q hq2
+      have he := core_pair_rep_spec q hq2
       have hLinkEmpty :
           commonLink H V ({e.1, e.2} : Edge α) = ∅ :=
         he.2.symm ▸ hEmpty

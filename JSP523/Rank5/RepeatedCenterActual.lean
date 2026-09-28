@@ -24,7 +24,7 @@ noncomputable def repeatedCenterIncidences
   exact (actualCenterPartners H W P s k t z U ×ˢ W.powersetCard k).filter
     fun qa => qa.2 ∈ commonPrefixTails H W P qa.1 k
 
-theorem mem_repeatedCenterIncidences
+theorem mem_repeated_center_incidences
     {H : Family α} {W P Q A : Edge α} {s k t : ℕ} {z : α} {U : Edge α} :
     (Q, A) ∈ repeatedCenterIncidences H W P s k t z U ↔
       Q ∈ actualCenterPartners H W P s k t z U ∧
@@ -45,7 +45,7 @@ theorem repeated_center_left_fiber_eq
   have hEq : ((repeatedCenterIncidences H W P s k t z U).filter
       fun qa => qa.1 = Q) = C.image (fun A => (Q, A)) := by
     ext ⟨Q', A⟩
-    simp only [Finset.mem_filter, mem_repeatedCenterIncidences,
+    simp only [Finset.mem_filter, mem_repeated_center_incidences,
       Finset.mem_image]
     constructor
     · rintro ⟨⟨hQ', hA, hCell⟩, rfl⟩
@@ -72,8 +72,8 @@ theorem repeated_center_tail_projection_le_codegree
     obtain ⟨⟨Q, B⟩, hI, hBA⟩ := Finset.mem_image.mp hA
     have hBA' : B = A := hBA
     subst B
-    obtain ⟨hQ, _, hCell⟩ := mem_repeatedCenterIncidences.mp hI
-    have hC := mem_commonPrefixTails.mp hCell
+    obtain ⟨hQ, _, hCell⟩ := mem_repeated_center_incidences.mp hI
+    have hC := mem_common_prefix_tails.mp hCell
     have hStrong : ActualStrongPartner H W P Q s k t z :=
       (Finset.mem_filter.mp hQ).2.1
     have hzA : z ∈ A := hStrong.2.2.2.1 A hCell
@@ -87,14 +87,14 @@ theorem repeated_center_tail_projection_le_codegree
     obtain ⟨⟨Q, C⟩, hI, hCA⟩ := Finset.mem_image.mp hA
     obtain ⟨⟨Q', D⟩, hI', hDB⟩ := Finset.mem_image.mp hB
     have hDisjA : Disjoint P A := by
-      have hCell := (mem_repeatedCenterIncidences.mp hI).2.2
-      have hDisj := (mem_commonPrefixTails.mp hCell).2.2.1
+      have hCell := (mem_repeated_center_incidences.mp hI).2.2
+      have hDisj := (mem_common_prefix_tails.mp hCell).2.2.1
       change C = A at hCA
       rw [hCA] at hDisj
       exact (Finset.disjoint_union_right.mp hDisj).1.symm
     have hDisjB : Disjoint P B := by
-      have hCell := (mem_repeatedCenterIncidences.mp hI').2.2
-      have hDisj := (mem_commonPrefixTails.mp hCell).2.2.1
+      have hCell := (mem_repeated_center_incidences.mp hI').2.2
+      have hDisj := (mem_common_prefix_tails.mp hCell).2.2.1
       change D = B at hDB
       rw [hDB] at hDisj
       exact (Finset.disjoint_union_right.mp hDisj).1.symm
@@ -117,8 +117,8 @@ theorem repeated_center_fixed_tail_le_codegree
   apply Finset.card_le_card_of_injOn f
   · intro qa hqa
     obtain ⟨hI, hEq⟩ := Finset.mem_filter.mp hqa
-    obtain ⟨hQ, _, hCell⟩ := mem_repeatedCenterIncidences.mp hI
-    have hC := mem_commonPrefixTails.mp hCell
+    obtain ⟨hQ, _, hCell⟩ := mem_repeated_center_incidences.mp hI
+    have hC := mem_common_prefix_tails.mp hCell
     have hUQ : U ⊆ qa.1 := (Finset.mem_filter.mp hQ).2.2
     have hEdge : A ∪ qa.1 ∈ H := by
       simpa [hEq, Finset.union_comm] using hC.2.2.2.2
@@ -130,13 +130,13 @@ theorem repeated_center_fixed_tail_le_codegree
   · intro qa hqa qb hqb hEq
     have hAqa : Disjoint A qa.1 := by
       obtain ⟨hI, hTailEq⟩ := Finset.mem_filter.mp hqa
-      have hC := mem_commonPrefixTails.mp (mem_repeatedCenterIncidences.mp hI).2.2
+      have hC := mem_common_prefix_tails.mp (mem_repeated_center_incidences.mp hI).2.2
       have hDisj := (Finset.disjoint_union_right.mp hC.2.2.1).2
       rw [hTailEq] at hDisj
       exact hDisj
     have hAqb : Disjoint A qb.1 := by
       obtain ⟨hI, hTailEq⟩ := Finset.mem_filter.mp hqb
-      have hC := mem_commonPrefixTails.mp (mem_repeatedCenterIncidences.mp hI).2.2
+      have hC := mem_common_prefix_tails.mp (mem_repeated_center_incidences.mp hI).2.2
       have hDisj := (Finset.disjoint_union_right.mp hC.2.2.1).2
       rw [hTailEq] at hDisj
       exact hDisj
@@ -166,7 +166,7 @@ theorem repeated_center_partner_degree_bound
   let I := repeatedCenterIncidences H W P s k t z U
   apply finite_incidence_degree_bound I partners t Dleft Dright
   · intro qa hqa
-    exact (mem_repeatedCenterIncidences.mp hqa).1
+    exact (mem_repeated_center_incidences.mp hqa).1
   · intro Q hQ
     rw [repeated_center_left_fiber_eq H W P Q s k t z U hQ]
     have hStrong : ActualStrongPartner H W P Q s k t z :=
@@ -206,9 +206,9 @@ theorem repeated_center_partner_bound_from_codegrees
     · exact Finset.disjoint_singleton_right.mpr hzP
   · intro A hA
     obtain ⟨⟨Q, B⟩, hI, hBA⟩ := Finset.mem_image.mp hA
-    have hCell := (mem_repeatedCenterIncidences.mp hI).2.2
-    have hC := mem_commonPrefixTails.mp hCell
-    have hQ := (mem_repeatedCenterIncidences.mp hI).1
+    have hCell := (mem_repeated_center_incidences.mp hI).2.2
+    have hC := mem_common_prefix_tails.mp hCell
+    have hQ := (mem_repeated_center_incidences.mp hI).1
     have hUQ : U ⊆ Q := (Finset.mem_filter.mp hQ).2.2
     have hAQ : Disjoint B Q :=
       (Finset.disjoint_union_right.mp hC.2.2.1).2

@@ -123,7 +123,7 @@ private theorem graph_wedge_sum
           simp only [Finset.sum_filter]
         _ = linkSurplus (N x ∩ N u).card := by
           rw [Finset.sum_const, nsmul_eq_mul]
-          exact card_mul_weightFraction_eq_linkSurplus _
+          exact card_mul_weight_fraction_eq_link_surplus _
 
 /-- The signed weight summed over both orientations of every link edge
     at one root. -/
@@ -152,15 +152,15 @@ theorem rooted_oriented_weight_sum
     constructor
     · intro hyz
       subst y
-      exact rootNeighbors_not_root H V z x hy
-    · exact rootNeighbors_subset_ground H V z x hy
+      exact root_neighbors_not_root H V z x hy
+    · exact root_neighbors_subset_ground H V z x hy
   have hSym : ∀ x ∈ U, ∀ y ∈ U, y ∈ N x ↔ x ∈ N y := by
     intro x hx y hy
     constructor
-    · exact rootNeighbors_mem_symm H V
+    · exact root_neighbors_mem_symm H V
         (Finset.mem_erase.mp hx).2
         (Ne.symm (Finset.mem_erase.mp hx).1)
-    · exact rootNeighbors_mem_symm H V
+    · exact root_neighbors_mem_symm H V
         (Finset.mem_erase.mp hy).2
         (Ne.symm (Finset.mem_erase.mp hy).1)
   let A : ℚ := ∑ x ∈ U, ∑ y ∈ N x,
@@ -185,7 +185,7 @@ theorem rooted_oriented_weight_sum
     apply Finset.sum_congr rfl
     intro x hx
     rw [Finset.sum_const, nsmul_eq_mul]
-    exact card_mul_weightPairBudget_eq_pairBudget _
+    exact card_mul_weight_pair_budget_eq_pair_budget _
   have hA : A = ∑ x ∈ U, ∑ u ∈ U.erase x,
       linkSurplus (rootCommonNeighbors H V z x u).card := by
     have hWedge := graph_wedge_sum U N hN hSym
@@ -204,7 +204,7 @@ theorem rooted_oriented_weight_sum
           intro y hy
           apply Finset.sum_congr rfl
           intro u hu
-          rw [rootCommonNeighbors_eq_inter_rootNeighbors]
+          rw [root_common_neighbors_eq_inter_root_neighbors]
       _ = ∑ x ∈ U, ∑ u ∈ U.erase x,
             linkSurplus
               (rootNeighbors H V z x ∩ rootNeighbors H V z u).card :=
@@ -215,7 +215,7 @@ theorem rooted_oriented_weight_sum
           intro x hx
           apply Finset.sum_congr rfl
           intro u hu
-          rw [rootCommonNeighbors_eq_inter_rootNeighbors]
+          rw [root_common_neighbors_eq_inter_root_neighbors]
   have hExpand : rootedOrientedWeightTotal H V z = A + B - C - D := by
     simp only [rootedOrientedWeightTotal, rootedSignedWeight,
       Finset.sum_add_distrib, Finset.sum_sub_distrib]
@@ -388,35 +388,35 @@ theorem all_roots_oriented_weight_sum
       intro u hu
       have huV : u ∈ V := (Finset.mem_erase.mp hu).2
       have hxu : x ≠ u := Ne.symm (Finset.mem_erase.mp hu).1
-      exact sum_root_linkSurplus_eq_linkSurplus hH hx huV hxu
+      exact sum_root_link_surplus_eq_link_surplus hH hx huV hxu
 
 /-- An ambient cell outside the actual support has zero link surplus. -/
-private theorem all_pair_linkSurplus_eq_actualLinkSurplus
+private theorem all_pair_link_surplus_eq_actual_link_surplus
     (H : Family α) (V : Edge α) :
     (∑ q ∈ V.powersetCard 2,
       linkSurplus (commonLink H V q).card) =
       actualLinkSurplus H V := by
   unfold actualLinkSurplus
   symm
-  apply Finset.sum_subset (usedCells_subset H V)
+  apply Finset.sum_subset (used_cells_subset H V)
   intro q hq hnot
   have hEmpty : commonLink H V q = ∅ := by
     apply Finset.not_nonempty_iff_eq_empty.mp
     intro hn
-    exact hnot ((mem_usedCells_iff_commonLink_nonempty H V q).mpr
+    exact hnot ((mem_used_cells_iff_common_link_nonempty H V q).mpr
       ⟨hq, hn⟩)
   simp [hEmpty, linkSurplus]
 
 /-- An ambient pair outside the actual pair support has no completion
     vertex and hence zero quadratic budget. -/
-theorem all_pair_budget_eq_actualPairBudget
+theorem all_pair_budget_eq_actual_pair_budget
     (H : Family α) (V : Edge α) :
     (∑ p ∈ V.powersetCard 2,
       pairBudget (completionVertices H V p).card) =
       actualPairBudget H V := by
   unfold actualPairBudget
   symm
-  apply Finset.sum_subset (usedPairs_subset H V)
+  apply Finset.sum_subset (used_pairs_subset H V)
   intro p hp hnot
   have hEmpty : completionVertices H V p = ∅ := by
     apply Finset.not_nonempty_iff_eq_empty.mp
@@ -440,8 +440,8 @@ theorem all_roots_oriented_weight_sum_eq_actual_ledgers
     (fun q => linkSurplus (commonLink H V q).card)
   have hBudgetPairs := ordered_pair_sum_eq_twice_unordered V
     (fun p => pairBudget (completionVertices H V p).card)
-  have hL := all_pair_linkSurplus_eq_actualLinkSurplus H V
-  have hB := all_pair_budget_eq_actualPairBudget H V
+  have hL := all_pair_link_surplus_eq_actual_link_surplus H V
+  have hB := all_pair_budget_eq_actual_pair_budget H V
   simp only [rootNeighbors] at hGlobal
   rw [hLinkPairs, hBudgetPairs, hL, hB] at hGlobal
   nlinarith

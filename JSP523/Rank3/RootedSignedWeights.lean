@@ -31,18 +31,18 @@ def rootLink (H : Family α) (V : Edge α) (z : α) : Family α :=
 def rootNeighbors (H : Family α) (V : Edge α) (z x : α) : Edge α :=
   completionVertices H V ({z, x} : Edge α)
 
-theorem rootNeighbors_subset_ground
+theorem root_neighbors_subset_ground
     (H : Family α) (V : Edge α) (z x : α) :
     rootNeighbors H V z x ⊆ V :=
-  completionVertices_subset_ground H V _
+  completion_vertices_subset_ground H V _
 
-theorem rootNeighbors_not_root
+theorem root_neighbors_not_root
     (H : Family α) (V : Edge α) (z x : α) :
     z ∉ rootNeighbors H V z x := by
   intro hz
   exact (Finset.mem_filter.mp hz).2.1 (by simp)
 
-theorem rootNeighbors_not_self
+theorem root_neighbors_not_self
     (H : Family α) (V : Edge α) (z x : α) :
     x ∉ rootNeighbors H V z x := by
   intro hx
@@ -50,7 +50,7 @@ theorem rootNeighbors_not_self
 
 /-- Adjacency in the graph link is symmetric on vertices distinct from
     its root. -/
-theorem rootNeighbors_mem_symm
+theorem root_neighbors_mem_symm
     (H : Family α) (V : Edge α) {z x y : α}
     (hxV : x ∈ V) (hzx : z ≠ x)
     (hy : y ∈ rootNeighbors H V z x) :
@@ -80,7 +80,7 @@ private theorem triple_rotate (a b c : α) :
 
 /-- Every actual rooted common neighbor is a completion of each endpoint
     pair, so its count never exceeds either endpoint degree. -/
-theorem rootCommonNeighbors_subset_rootNeighbors_left
+theorem root_common_neighbors_subset_root_neighbors_left
     (H : Family α) (V : Edge α) (z x u : α) :
     rootCommonNeighbors H V z x u ⊆ rootNeighbors H V z x := by
   intro t ht
@@ -91,7 +91,7 @@ theorem rootCommonNeighbors_subset_rootNeighbors_left
   · rw [triple_rotate z x t]
     exact hxtz
 
-theorem rootCommonNeighbors_subset_rootNeighbors_right
+theorem root_common_neighbors_subset_root_neighbors_right
     (H : Family α) (V : Edge α) (z x u : α) :
     rootCommonNeighbors H V z x u ⊆ rootNeighbors H V z u := by
   intro t ht
@@ -104,7 +104,7 @@ theorem rootCommonNeighbors_subset_rootNeighbors_right
 
 /-- The actual common-neighbor set agrees with the intersection of graph
     neighborhoods, independently of admissibility. -/
-theorem rootCommonNeighbors_eq_inter_rootNeighbors
+theorem root_common_neighbors_eq_inter_root_neighbors
     (H : Family α) (V : Edge α) (z x u : α) :
     rootCommonNeighbors H V z x u =
       rootNeighbors H V z x ∩ rootNeighbors H V z u := by
@@ -112,8 +112,8 @@ theorem rootCommonNeighbors_eq_inter_rootNeighbors
   constructor
   · intro ht
     exact Finset.mem_inter.mpr
-      ⟨rootCommonNeighbors_subset_rootNeighbors_left H V z x u ht,
-        rootCommonNeighbors_subset_rootNeighbors_right H V z x u ht⟩
+      ⟨root_common_neighbors_subset_root_neighbors_left H V z x u ht,
+        root_common_neighbors_subset_root_neighbors_right H V z x u ht⟩
   · intro ht
     obtain ⟨htx, htu⟩ := Finset.mem_inter.mp ht
     obtain ⟨htV, htNotZX, hxtz⟩ := Finset.mem_filter.mp htx
@@ -147,7 +147,7 @@ def rootedSignedWeight
 
 /-- Reversing the endpoints of a rooted graph edge leaves its signed
     weight unchanged.  This justifies doubling when summing orientations. -/
-theorem rootedSignedWeight_comm
+theorem rooted_signed_weight_comm
     (H : Family α) (V : Edge α) (z x y : α) :
     rootedSignedWeight H V z x y =
       rootedSignedWeight H V z y x := by
@@ -165,7 +165,7 @@ def rootedWeightDeficit
       (weightFraction (rootNeighbors H V z y).card -
         weightFraction (rootCommonNeighbors H V z y v).card))
 
-theorem rootedWeightDeficit_nonneg
+theorem rooted_weight_deficit_nonneg
     (H : Family α) (V : Edge α) (z x y : α) :
     0 ≤ rootedWeightDeficit H V z x y := by
   unfold rootedWeightDeficit
@@ -173,16 +173,16 @@ theorem rootedWeightDeficit_nonneg
   · apply Finset.sum_nonneg
     intro u hu
     apply sub_nonneg.mpr
-    exact weightFraction_mono (Finset.card_le_card
-      (rootCommonNeighbors_subset_rootNeighbors_left H V z x u))
+    exact weight_fraction_mono (Finset.card_le_card
+      (root_common_neighbors_subset_root_neighbors_left H V z x u))
   · apply Finset.sum_nonneg
     intro v hv
     apply sub_nonneg.mpr
-    exact weightFraction_mono (Finset.card_le_card
-      (rootCommonNeighbors_subset_rootNeighbors_left H V z y v))
+    exact weight_fraction_mono (Finset.card_le_card
+      (root_common_neighbors_subset_root_neighbors_left H V z y v))
 
 /-- A rooted link edge is seen at both endpoint neighborhoods. -/
-theorem rootLink_edge_in_endpoint_neighbors
+theorem root_link_edge_in_endpoint_neighbors
     (H : Family α) (V : Edge α) {z x y : α}
     (hxy : ({x, y} : Edge α) ∈ rootLink H V z)
     (hxyNe : x ≠ y) :
@@ -214,7 +214,7 @@ theorem rootLink_edge_in_endpoint_neighbors
 
 /-- On a ground vertex different from the root, adjacency in the rooted
     graph is exactly membership of the corresponding pair in the root link. -/
-theorem mem_rootNeighbors_iff_mem_rootLink
+theorem mem_root_neighbors_iff_mem_root_link
     (H : Family α) (V : Edge α) {z x y : α}
     (hxV : x ∈ V) (hzx : z ≠ x) :
     y ∈ rootNeighbors H V z x ↔
@@ -247,10 +247,10 @@ theorem mem_rootNeighbors_iff_mem_rootLink
       have hp2 : ({x, y} : Edge α).card = 2 :=
         (Finset.mem_powersetCard.mp (Finset.mem_filter.mp hxy).1).2
       simp [h] at hp2
-    exact (rootLink_edge_in_endpoint_neighbors H V hxy hxyNe).1
+    exact (root_link_edge_in_endpoint_neighbors H V hxy hxyNe).1
 
 /-- Formula (II.3) of `paper/proof.pdf` for an actual root-link edge. -/
-theorem rootedSignedWeight_eq_base_sub_deficit
+theorem rooted_signed_weight_eq_base_sub_deficit
     (H : Family α) (V : Edge α) {z x y : α}
     (hxy : ({x, y} : Edge α) ∈ rootLink H V z)
     (hxyNe : x ≠ y) :
@@ -258,7 +258,7 @@ theorem rootedSignedWeight_eq_base_sub_deficit
       baseWeight (rootNeighbors H V z x).card
         (rootNeighbors H V z y).card -
       rootedWeightDeficit H V z x y := by
-  obtain ⟨hyNx, hxNy⟩ := rootLink_edge_in_endpoint_neighbors H V hxy hxyNe
+  obtain ⟨hyNx, hxNy⟩ := root_link_edge_in_endpoint_neighbors H V hxy hxyNe
   let Nx := rootNeighbors H V z x
   let Ny := rootNeighbors H V z y
   let dx := Nx.card
@@ -287,8 +287,8 @@ theorem rootedSignedWeight_eq_base_sub_deficit
         ((dx : ℚ) - 1) * weightFraction dy := by
     rw [Finset.sum_const, nsmul_eq_mul]
     rw [← hyCard]
-  have hBudgetX := weightPairBudget_eq dx
-  have hBudgetY := weightPairBudget_eq dy
+  have hBudgetX := weight_pair_budget_eq dx
+  have hBudgetY := weight_pair_budget_eq dy
   have hsum : rootedSignedWeight H V z x y +
       rootedWeightDeficit H V z x y = baseWeight dx dy := by
     simp only [rootedSignedWeight, rootedWeightDeficit,
@@ -312,29 +312,29 @@ theorem rootedSignedWeight_eq_base_sub_deficit
   dsimp [Nx, Ny, dx, dy] at hsum
   linarith
 
-theorem rootedSignedWeight_le_twice_min
+theorem rooted_signed_weight_le_twice_min
     (H : Family α) (V : Edge α) {z x y : α}
     (hxy : ({x, y} : Edge α) ∈ rootLink H V z)
     (hxyNe : x ≠ y) :
     rootedSignedWeight H V z x y ≤
       2 * min (weightFraction (rootNeighbors H V z x).card)
         (weightFraction (rootNeighbors H V z y).card) := by
-  have hEq := rootedSignedWeight_eq_base_sub_deficit H V hxy hxyNe
-  have hDef := rootedWeightDeficit_nonneg H V z x y
-  have hBase := baseWeight_le_twice_min
+  have hEq := rooted_signed_weight_eq_base_sub_deficit H V hxy hxyNe
+  have hDef := rooted_weight_deficit_nonneg H V z x y
+  have hBase := base_weight_le_twice_min
     (rootNeighbors H V z x).card (rootNeighbors H V z y).card
   linarith
 
 /-- Every positive signed weight has both endpoint completion degrees at
     least four.  This is the first structural cutoff in the charging proof. -/
-theorem positive_rootedSignedWeight_high_degrees
+theorem positive_rooted_signed_weight_high_degrees
     (H : Family α) (V : Edge α) {z x y : α}
     (hxy : ({x, y} : Edge α) ∈ rootLink H V z)
     (hxyNe : x ≠ y)
     (hpositive : 0 < rootedSignedWeight H V z x y) :
     4 ≤ (rootNeighbors H V z x).card ∧
       4 ≤ (rootNeighbors H V z y).card := by
-  have hbound := rootedSignedWeight_le_twice_min H V hxy hxyNe
+  have hbound := rooted_signed_weight_le_twice_min H V hxy hxyNe
   have hminpos : 0 < min
       (weightFraction (rootNeighbors H V z x).card)
       (weightFraction (rootNeighbors H V z y).card) := by
@@ -346,20 +346,20 @@ theorem positive_rootedSignedWeight_high_degrees
   constructor
   · by_contra h
     have hsmall : (rootNeighbors H V z x).card ≤ 3 := by omega
-    rw [weightFraction_eq_zero_of_le_three hsmall] at hxpos
+    rw [weight_fraction_eq_zero_of_le_three hsmall] at hxpos
     exact (not_lt_of_ge le_rfl) hxpos
   · by_contra h
     have hsmall : (rootNeighbors H V z y).card ≤ 3 := by omega
-    rw [weightFraction_eq_zero_of_le_three hsmall] at hypos
+    rw [weight_fraction_eq_zero_of_le_three hsmall] at hypos
     exact (not_lt_of_ge le_rfl) hypos
 
-theorem rootedSignedWeight_lt_two
+theorem rooted_signed_weight_lt_two
     (H : Family α) (V : Edge α) {z x y : α}
     (hxy : ({x, y} : Edge α) ∈ rootLink H V z)
     (hxyNe : x ≠ y) :
     rootedSignedWeight H V z x y < 2 := by
-  have hbound := rootedSignedWeight_le_twice_min H V hxy hxyNe
-  have hxlt := weightFraction_lt_one (rootNeighbors H V z x).card
+  have hbound := rooted_signed_weight_le_twice_min H V hxy hxyNe
+  have hxlt := weight_fraction_lt_one (rootNeighbors H V z x).card
   have hminlt : min
       (weightFraction (rootNeighbors H V z x).card)
       (weightFraction (rootNeighbors H V z y).card) < 1 :=
@@ -393,21 +393,21 @@ private theorem weak_deficit_sum_bound
     apply Finset.sum_le_sum
     intro t ht
     have hsmall : degree t ≤ 3 := (Finset.mem_filter.mp ht).2
-    rw [weightFraction_eq_zero_of_le_three hsmall]
+    rw [weight_fraction_eq_zero_of_le_three hsmall]
     linarith
   have hrest :
       (∑ t ∈ W, (weightFraction d - weightFraction (degree t))) ≤
         ∑ t ∈ S, (weightFraction d - weightFraction (degree t)) := by
     apply Finset.sum_le_sum_of_subset_of_nonneg hWsub
     intro t htS htW
-    exact sub_nonneg.mpr (weightFraction_mono (hdegree t htS))
+    exact sub_nonneg.mpr (weight_fraction_mono (hdegree t htS))
   have hconst : ((W.card : ℚ) * m) = ∑ t ∈ W, m := by
     simp [Finset.sum_const, nsmul_eq_mul]
   exact hconst.trans_le (hweak.trans hrest)
 
 /-- Each weak alternative consumes at least the smaller endpoint fraction
     of the nonnegative deficit.  Both orientations are counted separately. -/
-theorem rootedWeightDeficit_ge_weak_count
+theorem rooted_weight_deficit_ge_weak_count
     (H : Family α) (V : Edge α) (z x y : α) :
     (((weakLeftAlternatives H V z x y).card : ℚ) +
       ((weakRightAlternatives H V z x y).card : ℚ)) *
@@ -426,7 +426,7 @@ theorem rootedWeightDeficit_ge_weak_count
       (by
         intro u hu
         exact Finset.card_le_card
-          (rootCommonNeighbors_subset_rootNeighbors_left H V z x u))
+          (root_common_neighbors_subset_root_neighbors_left H V z x u))
       m (min_le_left _ _)
   have hright : ((weakRightAlternatives H V z x y).card : ℚ) * m ≤
       ∑ v ∈ (rootNeighbors H V z x).erase y,
@@ -437,13 +437,13 @@ theorem rootedWeightDeficit_ge_weak_count
       (by
         intro v hv
         exact Finset.card_le_card
-          (rootCommonNeighbors_subset_rootNeighbors_left H V z y v))
+          (root_common_neighbors_subset_root_neighbors_left H V z y v))
       m (min_le_right _ _)
   change _ ≤ _ + _
   nlinarith [hleft, hright]
 
 /-- Two weak alternatives force the signed weight to be nonpositive. -/
-theorem rootedSignedWeight_nonpos_of_two_weak_alternatives
+theorem rooted_signed_weight_nonpos_of_two_weak_alternatives
     (H : Family α) (V : Edge α) {z x y : α}
     (hxy : ({x, y} : Edge α) ∈ rootLink H V z)
     (hxyNe : x ≠ y)
@@ -453,21 +453,21 @@ theorem rootedSignedWeight_nonpos_of_two_weak_alternatives
   let m := min (weightFraction (rootNeighbors H V z x).card)
     (weightFraction (rootNeighbors H V z y).card)
   have hm : 0 ≤ m :=
-    le_min (weightFraction_nonneg _) (weightFraction_nonneg _)
+    le_min (weight_fraction_nonneg _) (weight_fraction_nonneg _)
   have hcount : (2 : ℚ) ≤
       ((weakLeftAlternatives H V z x y).card : ℚ) +
         ((weakRightAlternatives H V z x y).card : ℚ) := by
     exact_mod_cast hweak
-  have hdef := rootedWeightDeficit_ge_weak_count H V z x y
-  have hbase := baseWeight_le_twice_min
+  have hdef := rooted_weight_deficit_ge_weak_count H V z x y
+  have hbase := base_weight_le_twice_min
     (rootNeighbors H V z x).card (rootNeighbors H V z y).card
-  have hEq := rootedSignedWeight_eq_base_sub_deficit H V hxy hxyNe
+  have hEq := rooted_signed_weight_eq_base_sub_deficit H V hxy hxyNe
   have hmul := mul_le_mul_of_nonneg_right hcount hm
   dsimp [m] at hm hmul
   nlinarith
 
 /-- A positive rooted weight can have at most one weak alternative. -/
-theorem positive_rootedSignedWeight_weak_count_le_one
+theorem positive_rooted_signed_weight_weak_count_le_one
     (H : Family α) (V : Edge α) {z x y : α}
     (hxy : ({x, y} : Edge α) ∈ rootLink H V z)
     (hxyNe : x ≠ y)
@@ -477,12 +477,12 @@ theorem positive_rootedSignedWeight_weak_count_le_one
   by_contra h
   have htwo : 2 ≤ (weakLeftAlternatives H V z x y).card +
       (weakRightAlternatives H V z x y).card := by omega
-  have hnonpos := rootedSignedWeight_nonpos_of_two_weak_alternatives
+  have hnonpos := rooted_signed_weight_nonpos_of_two_weak_alternatives
     H V hxy hxyNe htwo
   linarith
 
 /-- One weak alternative already lowers the signed weight below one. -/
-theorem rootedSignedWeight_lt_one_of_weak_alternative
+theorem rooted_signed_weight_lt_one_of_weak_alternative
     (H : Family α) (V : Edge α) {z x y : α}
     (hxy : ({x, y} : Edge α) ∈ rootLink H V z)
     (hxyNe : x ≠ y)
@@ -492,25 +492,25 @@ theorem rootedSignedWeight_lt_one_of_weak_alternative
   let m := min (weightFraction (rootNeighbors H V z x).card)
     (weightFraction (rootNeighbors H V z y).card)
   have hm : 0 ≤ m :=
-    le_min (weightFraction_nonneg _) (weightFraction_nonneg _)
+    le_min (weight_fraction_nonneg _) (weight_fraction_nonneg _)
   have hcount : (1 : ℚ) ≤
       ((weakLeftAlternatives H V z x y).card : ℚ) +
         ((weakRightAlternatives H V z x y).card : ℚ) := by
     exact_mod_cast hweak
-  have hdef := rootedWeightDeficit_ge_weak_count H V z x y
-  have hbase := baseWeight_le_twice_min
+  have hdef := rooted_weight_deficit_ge_weak_count H V z x y
+  have hbase := base_weight_le_twice_min
     (rootNeighbors H V z x).card (rootNeighbors H V z y).card
-  have hEq := rootedSignedWeight_eq_base_sub_deficit H V hxy hxyNe
+  have hEq := rooted_signed_weight_eq_base_sub_deficit H V hxy hxyNe
   have hmul := mul_le_mul_of_nonneg_right hcount hm
   have hmlt : m < 1 :=
     lt_of_le_of_lt (min_le_left _ _)
-      (weightFraction_lt_one (rootNeighbors H V z x).card)
+      (weight_fraction_lt_one (rootNeighbors H V z x).card)
   dsimp [m] at hm hmul hmlt
   nlinarith
 
 /-- A base pair in the oriented common link at `(z,v)` is an edge of the
     graph link at `z`. -/
-theorem orientedCommonLink_pair_mem_rootLink
+theorem oriented_common_link_pair_mem_root_link
     (H : Family α) (V : Edge α) {z v x y : α}
     (hxy : ({x, y} : Edge α) ∈ orientedCommonLink H V z v) :
     ({x, y} : Edge α) ∈ rootLink H V z := by
@@ -523,7 +523,7 @@ theorem orientedCommonLink_pair_mem_rootLink
 /-- The second book pair in `J_{zv}` is a weak alternative to the first
     source edge.  The common-neighbor cutoff is the actual admissibility
     consequence proved in `LinkFiberBound`. -/
-theorem second_book_pair_mem_weakRightAlternatives
+theorem second_book_pair_mem_weak_right_alternatives
     {H : Family α} {V : Edge α} {z v x y u : α}
     (hH : Admissible H)
     (hzV : z ∈ V) (hvV : v ∈ V)
@@ -532,9 +532,9 @@ theorem second_book_pair_mem_weakRightAlternatives
     (hxyLink : ({x, y} : Edge α) ∈ orientedCommonLink H V z v)
     (hxuLink : ({x, u} : Edge α) ∈ orientedCommonLink H V z v) :
     u ∈ weakRightAlternatives H V z x y := by
-  have hxuRoot := orientedCommonLink_pair_mem_rootLink H V hxuLink
+  have hxuRoot := oriented_common_link_pair_mem_root_link H V hxuLink
   have huNeighbor :=
-    (rootLink_edge_in_endpoint_neighbors H V hxuRoot hxu).1
+    (root_link_edge_in_endpoint_neighbors H V hxuRoot hxu).1
   have hmu := root_common_neighbors_card_le_two_of_two_book_pairs
     hH hzV hvV hzv hxy hxu hyu hxyLink hxuLink
   apply Finset.mem_filter.mpr
@@ -544,7 +544,7 @@ theorem second_book_pair_mem_weakRightAlternatives
 
 /-- A genuine two-pair book at a receiving cell caps the source weight by
     one, as used in the rank-three charge estimate. -/
-theorem rootedSignedWeight_lt_one_of_second_book_pair
+theorem rooted_signed_weight_lt_one_of_second_book_pair
     {H : Family α} {V : Edge α} {z v x y u : α}
     (hH : Admissible H)
     (hzV : z ∈ V) (hvV : v ∈ V)
@@ -554,15 +554,15 @@ theorem rootedSignedWeight_lt_one_of_second_book_pair
     (hxuLink : ({x, u} : Edge α) ∈ orientedCommonLink H V z v) :
     rootedSignedWeight H V z x y < 1 := by
   have hweak : u ∈ weakRightAlternatives H V z x y :=
-    second_book_pair_mem_weakRightAlternatives hH hzV hvV hzv
+    second_book_pair_mem_weak_right_alternatives hH hzV hvV hzv
       hxy hxu hyu hxyLink hxuLink
   have hcount : 1 ≤ (weakLeftAlternatives H V z x y).card +
       (weakRightAlternatives H V z x y).card := by
     have : 0 < (weakRightAlternatives H V z x y).card :=
       Finset.card_pos.mpr ⟨u, hweak⟩
     omega
-  exact rootedSignedWeight_lt_one_of_weak_alternative H V
-    (orientedCommonLink_pair_mem_rootLink H V hxyLink) hxy hcount
+  exact rooted_signed_weight_lt_one_of_weak_alternative H V
+    (oriented_common_link_pair_mem_root_link H V hxyLink) hxy hcount
 
 end RootedSignedWeights
 

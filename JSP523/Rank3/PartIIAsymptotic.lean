@@ -36,9 +36,9 @@ private theorem lower_choose_ratio (n : ℕ) (hn : 3 ≤ n) :
   ring
 
 /-- The finite extremal sandwich, normalized by `choose n 2`. -/
-theorem rankThreeDensity_bounds (n : ℕ) (hn : 3 ≤ n) :
+theorem rank_three_density_bounds (n : ℕ) (hn : 3 ≤ n) :
     1 - 2 / (n : ℝ) ≤ rankThreeDensity n ∧ rankThreeDensity n ≤ 1 := by
-  have hBounds := corollary_II_2_finite
+  have hBounds := corollary_ii_2_finite
     (Finset.univ : Finset (Fin n)) (by simpa using hn)
   have hLower : (n - 1).choose 2 ≤
       maxAvoidingCard (Finset.univ : Finset (Fin n)) 3 := by
@@ -61,7 +61,7 @@ theorem rankThreeDensity_bounds (n : ℕ) (hn : 3 ≤ n) :
     exact (div_le_iff₀ hDenPos).2 (by simpa using hCast)
 
 /-- The asymptotic assertion of Corollary II.2: extremal density tends to one. -/
-theorem corollary_II_2_asymptotic :
+theorem corollary_ii_2_asymptotic :
     Tendsto rankThreeDensity atTop (nhds 1) := by
   have hZero : Tendsto (fun n : ℕ => (2 : ℝ) / (n : ℝ))
       atTop (nhds 0) := tendsto_const_div_atTop_nhds_zero_nat 2
@@ -71,10 +71,10 @@ theorem corollary_II_2_asymptotic :
   have hLowerEvent : ∀ᶠ n : ℕ in atTop,
       1 - 2 / (n : ℝ) ≤ rankThreeDensity n := by
     filter_upwards [eventually_ge_atTop 3] with n hn
-    exact (rankThreeDensity_bounds n hn).1
+    exact (rank_three_density_bounds n hn).1
   have hUpperEvent : ∀ᶠ n : ℕ in atTop, rankThreeDensity n ≤ 1 := by
     filter_upwards [eventually_ge_atTop 3] with n hn
-    exact (rankThreeDensity_bounds n hn).2
+    exact (rank_three_density_bounds n hn).2
   exact hLowerLimit.squeeze' tendsto_const_nhds hLowerEvent hUpperEvent
 
 end JSP523.Rank3

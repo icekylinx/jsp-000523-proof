@@ -18,17 +18,17 @@ def localPhi (n : ℕ) : ℚ := weightFraction (n + 1)
 /-- The local graph part-size budget in §II.A. -/
 def localGraphBudget (n : ℕ) : ℚ := ((n : ℚ) - 1) * localPhi n
 
-theorem localPhi_nonneg (n : ℕ) : 0 ≤ localPhi n :=
-  weightFraction_nonneg (n + 1)
+theorem local_phi_nonneg (n : ℕ) : 0 ≤ localPhi n :=
+  weight_fraction_nonneg (n + 1)
 
-theorem localPhi_mono {m n : ℕ} (hmn : m ≤ n) :
+theorem local_phi_mono {m n : ℕ} (hmn : m ≤ n) :
     localPhi m ≤ localPhi n :=
-  weightFraction_mono (Nat.add_le_add_right hmn 1)
+  weight_fraction_mono (Nat.add_le_add_right hmn 1)
 
 /-- Enlarging a part cannot reduce its available local budget.  This
 allows isolated pure nodes to be reinstated after the active pair types
 have been counted. -/
-theorem localGraphBudget_mono {m n : ℕ} (hmn : m ≤ n) :
+theorem local_graph_budget_mono {m n : ℕ} (hmn : m ≤ n) :
     localGraphBudget m ≤ localGraphBudget n := by
   by_cases hm : m = 0
   · subst m
@@ -40,28 +40,28 @@ theorem localGraphBudget_mono {m n : ℕ} (hmn : m ≤ n) :
     · have hnPos : 1 ≤ n := Nat.pos_of_ne_zero hn
       have hnCast : (1 : ℚ) ≤ n := by exact_mod_cast hnPos
       unfold localGraphBudget
-      exact mul_nonneg (by linarith) (localPhi_nonneg n)
+      exact mul_nonneg (by linarith) (local_phi_nonneg n)
   · have hmPos : 1 ≤ m := Nat.pos_of_ne_zero hm
     have hmCast : (1 : ℚ) ≤ m := by exact_mod_cast hmPos
     have hCast : (m : ℚ) ≤ n := by exact_mod_cast hmn
-    have hPhi : localPhi m ≤ localPhi n := localPhi_mono hmn
+    have hPhi : localPhi m ≤ localPhi n := local_phi_mono hmn
     have hFirst := mul_le_mul_of_nonneg_left hPhi
       (show 0 ≤ (m : ℚ) - 1 by linarith)
     have hSecond := mul_le_mul_of_nonneg_right
       (show (m : ℚ) - 1 ≤ (n : ℚ) - 1 by linarith)
-      (localPhi_nonneg n)
+      (local_phi_nonneg n)
     unfold localGraphBudget
     linarith
 
-theorem localGraphBudget_eq_shifted_pairBudget (n : ℕ) :
+theorem local_graph_budget_eq_shifted_pair_budget (n : ℕ) :
     localGraphBudget n = weightPairBudget (n + 1) := by
-  rw [weightPairBudget_eq]
+  rw [weight_pair_budget_eq]
   unfold localGraphBudget localPhi
   push_cast
   ring
 
 /-- Above the zero range, `φ` has the manuscript's rational formula. -/
-theorem localPhi_eq_formula {n : ℕ} (hn : 2 ≤ n) :
+theorem local_phi_eq_formula {n : ℕ} (hn : 2 ≤ n) :
     localPhi n = ((n : ℚ) - 2) / ((n : ℚ) + 1) := by
   by_cases hn2 : n = 2
   · subst n
@@ -71,20 +71,20 @@ theorem localPhi_eq_formula {n : ℕ} (hn : 2 ≤ n) :
     push_cast
     ring
 
-theorem localGraphBudget_eq_formula {n : ℕ} (hn : 2 ≤ n) :
+theorem local_graph_budget_eq_formula {n : ℕ} (hn : 2 ≤ n) :
     localGraphBudget n =
       (((n : ℚ) - 1) * ((n : ℚ) - 2)) / ((n : ℚ) + 1) := by
-  rw [localGraphBudget, localPhi_eq_formula hn]
+  rw [localGraphBudget, local_phi_eq_formula hn]
   ring
 
 /-- The exact discrete increment used in §II.A's low-degree and
     mixed-node estimates. -/
-theorem localPhi_succ_sub_eq
+theorem local_phi_succ_sub_eq
     {n : ℕ} (hn : 2 ≤ n) :
     localPhi (n + 1) - localPhi n =
       3 / (((n : ℚ) + 1) * ((n : ℚ) + 2)) := by
-  rw [localPhi_eq_formula (by omega : 2 ≤ n + 1),
-    localPhi_eq_formula hn]
+  rw [local_phi_eq_formula (by omega : 2 ≤ n + 1),
+    local_phi_eq_formula hn]
   have hn1Pos : (0 : ℚ) < (n : ℚ) + 1 := by
     have : (0 : ℚ) ≤ n := by exact_mod_cast (Nat.zero_le n)
     linarith
@@ -95,14 +95,14 @@ theorem localPhi_succ_sub_eq
 
 /-- Every single added neighbor raises a local graph contribution by at
     most one quarter. -/
-theorem localPhi_succ_sub_le_quarter (n : ℕ) :
+theorem local_phi_succ_sub_le_quarter (n : ℕ) :
     localPhi (n + 1) - localPhi n ≤ (1 : ℚ) / 4 := by
   by_cases hn : n ≤ 1
   · rcases (by omega : n = 0 ∨ n = 1) with h | h
     · subst n; norm_num [localPhi, weightFraction]
     · subst n; norm_num [localPhi, weightFraction]
   · have hn2 : 2 ≤ n := by omega
-    rw [localPhi_succ_sub_eq hn2]
+    rw [local_phi_succ_sub_eq hn2]
     have hnq : (2 : ℚ) ≤ n := by exact_mod_cast hn2
     have hden : 0 < ((n : ℚ) + 1) * ((n : ℚ) + 2) := by
       apply mul_pos <;> linarith
@@ -111,7 +111,7 @@ theorem localPhi_succ_sub_le_quarter (n : ℕ) :
 
 /-- The excess of a complete bipartite pair type is the same degree-only
     base weight that appears in the global deficit formula. -/
-theorem complete_bipartite_excess_eq_baseWeight (x y : ℕ) :
+theorem complete_bipartite_excess_eq_base_weight (x y : ℕ) :
     (x : ℚ) * localPhi y + (y : ℚ) * localPhi x -
       localGraphBudget x - localGraphBudget y =
       baseWeight (x + 1) (y + 1) := by
@@ -125,21 +125,21 @@ theorem complete_bipartite_excess_le_twice_min (x y : ℕ) :
     (x : ℚ) * localPhi y + (y : ℚ) * localPhi x -
       localGraphBudget x - localGraphBudget y ≤
       2 * min (localPhi x) (localPhi y) := by
-  rw [complete_bipartite_excess_eq_baseWeight]
-  exact baseWeight_le_twice_min (x + 1) (y + 1)
+  rw [complete_bipartite_excess_eq_base_weight]
+  exact base_weight_le_twice_min (x + 1) (y + 1)
 
 /-- equation (II.A.6): exact budget gain when two part sizes are at least two. -/
-theorem localGraphBudget_merge_exact
+theorem local_graph_budget_merge_exact
     {x u : ℕ} (hx : 2 ≤ x) (hu : 2 ≤ u) :
     localGraphBudget (x + u) - localGraphBudget x -
         localGraphBudget u =
       2 * localPhi x + 2 * localPhi u +
         6 / (((x + u : ℕ) : ℚ) + 1) := by
   have hxu : 2 ≤ x + u := by omega
-  rw [localGraphBudget_eq_formula hxu,
-    localGraphBudget_eq_formula hx,
-    localGraphBudget_eq_formula hu,
-    localPhi_eq_formula hx, localPhi_eq_formula hu]
+  rw [local_graph_budget_eq_formula hxu,
+    local_graph_budget_eq_formula hx,
+    local_graph_budget_eq_formula hu,
+    local_phi_eq_formula hx, local_phi_eq_formula hu]
   have hxPos : (0 : ℚ) < (x : ℚ) + 1 := by
     have : (0 : ℚ) ≤ x := by exact_mod_cast (Nat.zero_le x)
     linarith
@@ -155,14 +155,14 @@ theorem localGraphBudget_merge_exact
   ring
 
 /-- The size-one boundary case used in equation (II.A.7). -/
-theorem localGraphBudget_merge_one
+theorem local_graph_budget_merge_one
     {u : ℕ} (hu : 2 ≤ u) :
     localGraphBudget (1 + u) - localGraphBudget 1 -
       localGraphBudget u - localPhi 1 - localPhi u =
       (3 * (u : ℚ)) / (((u : ℚ) + 1) * ((u : ℚ) + 2)) := by
   have hplus : 2 ≤ 1 + u := by omega
-  rw [localGraphBudget_eq_formula hplus,
-    localGraphBudget_eq_formula hu, localPhi_eq_formula hu]
+  rw [local_graph_budget_eq_formula hplus,
+    local_graph_budget_eq_formula hu, local_phi_eq_formula hu]
   have hOneBudget : localGraphBudget 1 = 0 := by
     norm_num [localGraphBudget]
   have hOnePhi : localPhi 1 = 0 := by
@@ -178,7 +178,7 @@ theorem localGraphBudget_merge_one
 
 /-- equation (II.A.7): merging positive part sizes pays both local vertex
     contributions. -/
-theorem localGraphBudget_merge_lower
+theorem local_graph_budget_merge_lower
     {x u : ℕ} (hx : 0 < x) (hu : 0 < u) :
     localGraphBudget (x + u) ≥ localGraphBudget x +
       localGraphBudget u + localPhi x + localPhi u := by
@@ -187,7 +187,7 @@ theorem localGraphBudget_merge_lower
     rcases (by omega : u = 1 ∨ 2 ≤ u) with hu1 | hu2
     · subst u
       norm_num [localGraphBudget, localPhi, weightFraction]
-    · have hExact := localGraphBudget_merge_one hu2
+    · have hExact := local_graph_budget_merge_one hu2
       have huq : (0 : ℚ) ≤ u := by exact_mod_cast (Nat.zero_le u)
       have hden : 0 < ((u : ℚ) + 1) * ((u : ℚ) + 2) := by
         apply mul_pos <;> linarith
@@ -197,7 +197,7 @@ theorem localGraphBudget_merge_lower
       linarith
   · rcases (by omega : u = 1 ∨ 2 ≤ u) with hu1 | hu2
     · subst u
-      have hExact := localGraphBudget_merge_one hx2
+      have hExact := local_graph_budget_merge_one hx2
       have hxq : (0 : ℚ) ≤ x := by exact_mod_cast (Nat.zero_le x)
       have hden : 0 < ((x : ℚ) + 1) * ((x : ℚ) + 2) := by
         apply mul_pos <;> linarith
@@ -207,9 +207,9 @@ theorem localGraphBudget_merge_lower
       have hsum : x + 1 = 1 + x := Nat.add_comm x 1
       rw [hsum]
       linarith
-    · have hExact := localGraphBudget_merge_exact hx2 hu2
-      have hPhiX := localPhi_nonneg x
-      have hPhiU := localPhi_nonneg u
+    · have hExact := local_graph_budget_merge_exact hx2 hu2
+      have hPhiX := local_phi_nonneg x
+      have hPhiU := local_phi_nonneg u
       have hDen : (0 : ℚ) < ((x + u : ℕ) : ℚ) + 1 := by
         have : (0 : ℚ) ≤ (x + u : ℕ) := by
           exact_mod_cast (Nat.zero_le (x + u))
@@ -220,12 +220,12 @@ theorem localGraphBudget_merge_lower
 
 /-- The exact growth of the local part budget when a mixed node is added,
     as used in equation (II.A.8). -/
-theorem localGraphBudget_succ_sub_eq
+theorem local_graph_budget_succ_sub_eq
     {a : ℕ} (ha : 2 ≤ a) :
     localGraphBudget (a + 1) - localGraphBudget a =
       1 - 6 / (((a : ℚ) + 1) * ((a : ℚ) + 2)) := by
-  rw [localGraphBudget_eq_formula (by omega : 2 ≤ a + 1),
-    localGraphBudget_eq_formula ha]
+  rw [local_graph_budget_eq_formula (by omega : 2 ≤ a + 1),
+    local_graph_budget_eq_formula ha]
   have ha1Pos : (0 : ℚ) < (a : ℚ) + 1 := by
     have : (0 : ℚ) ≤ a := by exact_mod_cast (Nat.zero_le a)
     linarith
@@ -236,11 +236,11 @@ theorem localGraphBudget_succ_sub_eq
 
 /-- From size two onward, adding a node creates at least one half of a
     unit of budget. -/
-theorem localGraphBudget_succ_sub_ge_half
+theorem local_graph_budget_succ_sub_ge_half
     {a : ℕ} (ha : 2 ≤ a) :
     (1 : ℚ) / 2 ≤ localGraphBudget (a + 1) -
       localGraphBudget a := by
-  rw [localGraphBudget_succ_sub_eq ha]
+  rw [local_graph_budget_succ_sub_eq ha]
   have haq : (2 : ℚ) ≤ a := by exact_mod_cast ha
   have hden : 0 < ((a : ℚ) + 1) * ((a : ℚ) + 2) := by
     apply mul_pos <;> linarith
@@ -253,7 +253,7 @@ theorem localGraphBudget_succ_sub_ge_half
 
 /-- Degrees zero and one remain below `φ`'s positive threshold after a
     single new neighbor. -/
-theorem localPhi_succ_sub_eq_zero_of_le_one
+theorem local_phi_succ_sub_eq_zero_of_le_one
     {d : ℕ} (hd : d ≤ 1) :
     localPhi (d + 1) - localPhi d = 0 := by
   rcases (by omega : d = 0 ∨ d = 1) with h | h
@@ -272,29 +272,29 @@ theorem two_neighbor_increment_le_budget_increment
   by_cases ha : a ≤ 1
   · have hd₁' : d₁ ≤ 1 := hd₁.trans ha
     have hd₂' : d₂ ≤ 1 := hd₂.trans ha
-    rw [localPhi_succ_sub_eq_zero_of_le_one hd₁',
-      localPhi_succ_sub_eq_zero_of_le_one hd₂']
+    rw [local_phi_succ_sub_eq_zero_of_le_one hd₁',
+      local_phi_succ_sub_eq_zero_of_le_one hd₂']
     rcases (by omega : a = 0 ∨ a = 1) with h | h
     · subst a; norm_num [localGraphBudget, localPhi, weightFraction]
     · subst a; norm_num [localGraphBudget, localPhi, weightFraction]
   · have ha2 : 2 ≤ a := by omega
-    have h₁ := localPhi_succ_sub_le_quarter d₁
-    have h₂ := localPhi_succ_sub_le_quarter d₂
-    have hBudget := localGraphBudget_succ_sub_ge_half ha2
+    have h₁ := local_phi_succ_sub_le_quarter d₁
+    have h₂ := local_phi_succ_sub_le_quarter d₂
+    have hBudget := local_graph_budget_succ_sub_ge_half ha2
     linarith
 
 /-- Total `φ` contribution of a complete bipartite pair type. -/
 def completePairScore (x y : ℕ) : ℚ :=
   (x : ℚ) * localPhi y + (y : ℚ) * localPhi x
 
-theorem completePairScore_comm (x y : ℕ) :
+theorem complete_pair_score_comm (x y : ℕ) :
     completePairScore x y = completePairScore y x := by
   unfold completePairScore
   ac_rfl
 
 /-- The weaker form of (II.A.5) used when all three pair types are
     present. -/
-theorem completePairScore_le_budgets_add_phis (x y : ℕ) :
+theorem complete_pair_score_le_budgets_add_phis (x y : ℕ) :
     completePairScore x y ≤
       localGraphBudget x + localGraphBudget y +
         localPhi x + localPhi y := by
@@ -305,7 +305,7 @@ theorem completePairScore_le_budgets_add_phis (x y : ℕ) :
   linarith
 
 /-- For a nonempty side, its own budget covers one `φ` contribution. -/
-theorem localPhi_le_localGraphBudget_of_pos
+theorem local_phi_le_local_graph_budget_of_pos
     {n : ℕ} (hn : 0 < n) :
     localPhi n ≤ localGraphBudget n := by
   rcases (by omega : n = 1 ∨ 2 ≤ n) with hOne | hTwo
@@ -314,20 +314,20 @@ theorem localPhi_le_localGraphBudget_of_pos
   · have hcast : (0 : ℚ) ≤ (n : ℚ) - 2 := by
       have hq : (2 : ℚ) ≤ n := by exact_mod_cast hTwo
       linarith
-    have hprod := mul_nonneg hcast (localPhi_nonneg n)
+    have hprod := mul_nonneg hcast (local_phi_nonneg n)
     unfold localGraphBudget
     nlinarith
 
-theorem localPhi_le_localGraphBudget (n : ℕ) :
+theorem local_phi_le_local_graph_budget (n : ℕ) :
     localPhi n ≤ localGraphBudget n := by
   by_cases hn : n = 0
   · subst n
     norm_num [localPhi, localGraphBudget, weightFraction]
-  · exact localPhi_le_localGraphBudget_of_pos (Nat.pos_of_ne_zero hn)
+  · exact local_phi_le_local_graph_budget_of_pos (Nat.pos_of_ne_zero hn)
 
 /-- A pair type with one vertex on its first side contributes exactly
     `φ` of the opposite side. -/
-theorem completePairScore_one_left (y : ℕ) :
+theorem complete_pair_score_one_left (y : ℕ) :
     completePairScore 1 y = localPhi y := by
   norm_num [completePairScore, localPhi, weightFraction]
 
@@ -344,12 +344,12 @@ theorem three_complete_pair_types_le_part_budgets
       localGraphBudget (a₁ + a₂) +
       localGraphBudget (b₁ + b₂) +
       localGraphBudget (c₁ + c₂) := by
-  have hAB := completePairScore_le_budgets_add_phis a₁ b₁
-  have hAC := completePairScore_le_budgets_add_phis a₂ c₁
-  have hBC := completePairScore_le_budgets_add_phis b₂ c₂
-  have hA := localGraphBudget_merge_lower ha₁ ha₂
-  have hB := localGraphBudget_merge_lower hb₁ hb₂
-  have hC := localGraphBudget_merge_lower hc₁ hc₂
+  have hAB := complete_pair_score_le_budgets_add_phis a₁ b₁
+  have hAC := complete_pair_score_le_budgets_add_phis a₂ c₁
+  have hBC := complete_pair_score_le_budgets_add_phis b₂ c₂
+  have hA := local_graph_budget_merge_lower ha₁ ha₂
+  have hB := local_graph_budget_merge_lower hb₁ hb₂
+  have hC := local_graph_budget_merge_lower hc₁ hc₂
   linarith
 
 /-- If both side sets at the shared original part have size at least two,
@@ -363,7 +363,7 @@ theorem two_complete_pair_types_le_part_budgets_large
   have hUV := complete_bipartite_excess_le_twice_min u v
   have hMinX : min (localPhi x) (localPhi y) ≤ localPhi x := min_le_left _ _
   have hMinU : min (localPhi u) (localPhi v) ≤ localPhi u := min_le_left _ _
-  have hMerge := localGraphBudget_merge_exact hx hu
+  have hMerge := local_graph_budget_merge_exact hx hu
   have hDen : (0 : ℚ) < (((x + u : ℕ) : ℚ) + 1) := by
     have hNat : (0 : ℚ) ≤ (x + u : ℕ) := by
       exact_mod_cast (Nat.zero_le (x + u))
@@ -388,8 +388,8 @@ theorem two_complete_pair_types_capped
   rcases (by omega : x = 1 ∨ 2 ≤ x) with hxOne | hxLarge
   · subst x
     have hFirst : completePairScore 1 y ≤ localGraphBudget y := by
-      rw [completePairScore_one_left]
-      exact localPhi_le_localGraphBudget_of_pos hy
+      rw [complete_pair_score_one_left]
+      exact local_phi_le_local_graph_budget_of_pos hy
     have hMinFirst := min_le_left (completePairScore 1 y)
       (localGraphBudget (1 + u) + localGraphBudget y)
     have hMinSecond := min_le_right (completePairScore u v)
@@ -398,8 +398,8 @@ theorem two_complete_pair_types_capped
   · rcases (by omega : u = 1 ∨ 2 ≤ u) with huOne | huLarge
     · subst u
       have hSecond : completePairScore 1 v ≤ localGraphBudget v := by
-        rw [completePairScore_one_left]
-        exact localPhi_le_localGraphBudget_of_pos hv
+        rw [complete_pair_score_one_left]
+        exact local_phi_le_local_graph_budget_of_pos hv
       have hMinFirst := min_le_right (completePairScore x y)
         (localGraphBudget (x + 1) + localGraphBudget y)
       have hMinSecond := min_le_left (completePairScore 1 v)
@@ -414,7 +414,7 @@ theorem two_complete_pair_types_capped
       linarith
 
 /-- The part-size budget is nonnegative, including the empty part. -/
-theorem localGraphBudget_nonneg (n : ℕ) :
+theorem local_graph_budget_nonneg (n : ℕ) :
     0 ≤ localGraphBudget n := by
   by_cases hn : n = 0
   · subst n
@@ -423,7 +423,7 @@ theorem localGraphBudget_nonneg (n : ℕ) :
     have hcast : (0 : ℚ) ≤ (n : ℚ) - 1 := by
       have : (1 : ℚ) ≤ n := by exact_mod_cast hnPos
       linarith
-    exact mul_nonneg hcast (localPhi_nonneg n)
+    exact mul_nonneg hcast (local_phi_nonneg n)
 
 /-- The local signed payment from inequality (II.A.2), before identifying its
     graph scores with actual rooted signed weights. -/
@@ -433,14 +433,14 @@ def localGraphPayment
   max (localGraphBudget nA + localGraphBudget nC - tAC) 0 +
   max (localGraphBudget nB + localGraphBudget nC - tBC) 0
 
-theorem localGraphPayment_swap_first_two
+theorem local_graph_payment_swap_first_two
     (nA nB nC : ℕ) (tAB tAC tBC : ℚ) :
     localGraphPayment nA nB nC tAB tAC tBC =
       localGraphPayment nB nA nC tAB tBC tAC := by
   unfold localGraphPayment
   ac_rfl
 
-theorem localGraphPayment_swap_last_two
+theorem local_graph_payment_swap_last_two
     (nA nB nC : ℕ) (tAB tAC tBC : ℚ) :
     localGraphPayment nA nB nC tAB tAC tBC =
       localGraphPayment nA nC nB tAC tAB tBC := by
@@ -449,7 +449,7 @@ theorem localGraphPayment_swap_last_two
 
 /-- Completing edges raises pair-type scores and can only make the
 local signed-payment inequality harder. -/
-theorem localGraphPayment_antitone_scores
+theorem local_graph_payment_antitone_scores
     (nA nB nC : ℕ)
     {tAB tAC tBC sAB sAC sBC : ℚ}
     (hAB : tAB ≤ sAB) (hAC : tAC ≤ sAC) (hBC : tBC ≤ sBC) :
@@ -479,7 +479,7 @@ theorem max_budget_sub_score_eq_sub_min (budget score : ℚ) :
     ring
 
 /-- inequality (II.A.2) is exactly a capped-score inequality. -/
-theorem localGraphPayment_ge_iff_capped_scores
+theorem local_graph_payment_ge_iff_capped_scores
     (nA nB nC : ℕ) (tAB tAC tBC : ℚ) :
     localGraphBudget nA + localGraphBudget nB +
         localGraphBudget nC ≤
@@ -502,34 +502,34 @@ theorem one_pair_type_local_payment
     localGraphBudget nA + localGraphBudget nB +
         localGraphBudget nC ≤
       localGraphPayment nA nB nC tAB 0 0 := by
-  rw [localGraphPayment_ge_iff_capped_scores]
+  rw [local_graph_payment_ge_iff_capped_scores]
   have hAC : 0 ≤ localGraphBudget nA + localGraphBudget nC :=
-    add_nonneg (localGraphBudget_nonneg nA) (localGraphBudget_nonneg nC)
+    add_nonneg (local_graph_budget_nonneg nA) (local_graph_budget_nonneg nC)
   have hBC : 0 ≤ localGraphBudget nB + localGraphBudget nC :=
-    add_nonneg (localGraphBudget_nonneg nB) (localGraphBudget_nonneg nC)
+    add_nonneg (local_graph_budget_nonneg nB) (local_graph_budget_nonneg nC)
   rw [min_eq_left hAC, min_eq_left hBC]
   have hAB := min_le_right tAB
     (localGraphBudget nA + localGraphBudget nB)
-  have hC := localGraphBudget_nonneg nC
+  have hC := local_graph_budget_nonneg nC
   linarith
 
-theorem one_pair_type_AC_local_payment
+theorem one_pair_type_ac_local_payment
     (nA nB nC : ℕ) (tAC : ℚ) :
     localGraphBudget nA + localGraphBudget nB +
         localGraphBudget nC ≤
       localGraphPayment nA nB nC 0 tAC 0 := by
-  rw [localGraphPayment_swap_last_two nA nB nC 0 tAC 0]
+  rw [local_graph_payment_swap_last_two nA nB nC 0 tAC 0]
   have h := one_pair_type_local_payment nA nC nB tAC
   convert h using 1
   ring
 
-theorem one_pair_type_BC_local_payment
+theorem one_pair_type_bc_local_payment
     (nA nB nC : ℕ) (tBC : ℚ) :
     localGraphBudget nA + localGraphBudget nB +
         localGraphBudget nC ≤
       localGraphPayment nA nB nC 0 0 tBC := by
-  rw [localGraphPayment_swap_first_two nA nB nC 0 0 tBC,
-    localGraphPayment_swap_last_two nB nA nC 0 tBC 0]
+  rw [local_graph_payment_swap_first_two nA nB nC 0 0 tBC,
+    local_graph_payment_swap_last_two nB nA nC 0 tBC 0]
   have h := one_pair_type_local_payment nB nC nA tBC
   convert h using 1
   ring
@@ -544,10 +544,10 @@ theorem two_complete_pair_types_local_payment
         localGraphBudget y + localGraphBudget v ≤
       localGraphPayment (x + u) y v
         (completePairScore x y) (completePairScore u v) 0 := by
-  rw [localGraphPayment_ge_iff_capped_scores]
+  rw [local_graph_payment_ge_iff_capped_scores]
   have hCapped := two_complete_pair_types_capped hx hu hy hv
   have hNonneg : 0 ≤ localGraphBudget y + localGraphBudget v :=
-    add_nonneg (localGraphBudget_nonneg y) (localGraphBudget_nonneg v)
+    add_nonneg (local_graph_budget_nonneg y) (local_graph_budget_nonneg v)
   rw [min_eq_left hNonneg]
   simpa using hCapped
 
@@ -565,7 +565,7 @@ theorem three_complete_pair_types_local_payment
         (completePairScore a₁ b₁)
         (completePairScore a₂ c₁)
         (completePairScore b₂ c₂) := by
-  rw [localGraphPayment_ge_iff_capped_scores]
+  rw [local_graph_payment_ge_iff_capped_scores]
   have hTotal := three_complete_pair_types_le_part_budgets
     ha₁ ha₂ hb₁ hb₂ hc₁ hc₂
   have hAB := min_le_left (completePairScore a₁ b₁)
@@ -588,7 +588,7 @@ theorem two_bounded_pair_types_local_payment
         localGraphBudget y + localGraphBudget v ≤
       localGraphPayment (x + u) y v tAB tAC 0 := by
   have hComplete := two_complete_pair_types_local_payment hx hu hy hv
-  have hMono := localGraphPayment_antitone_scores (x + u) y v
+  have hMono := local_graph_payment_antitone_scores (x + u) y v
     hAB hAC (le_refl (0 : ℚ))
   linarith
 
@@ -610,7 +610,7 @@ theorem three_bounded_pair_types_local_payment
         tAB tAC tBC := by
   have hComplete := three_complete_pair_types_local_payment
     ha₁ ha₂ hb₁ hb₂ hc₁ hc₂
-  have hMono := localGraphPayment_antitone_scores
+  have hMono := local_graph_payment_antitone_scores
     (a₁ + a₂) (b₁ + b₂) (c₁ + c₂) hAB hAC hBC
   linarith
 
@@ -626,20 +626,20 @@ theorem two_bounded_pair_types_local_payment_with_isolates
     localGraphBudget nA + localGraphBudget nB +
         localGraphBudget nC ≤
       localGraphPayment nA nB nC tAB tAC 0 := by
-  rw [localGraphPayment_ge_iff_capped_scores]
+  rw [local_graph_payment_ge_iff_capped_scores]
   have hBC : 0 ≤ localGraphBudget nB + localGraphBudget nC :=
-    add_nonneg (localGraphBudget_nonneg nB) (localGraphBudget_nonneg nC)
+    add_nonneg (local_graph_budget_nonneg nB) (local_graph_budget_nonneg nC)
   rw [min_eq_left hBC]
-  have hBudgetA := localGraphBudget_mono hA
-  have hBudgetB := localGraphBudget_mono hB
-  have hBudgetC := localGraphBudget_mono hC
+  have hBudgetA := local_graph_budget_mono hA
+  have hBudgetB := local_graph_budget_mono hB
+  have hBudgetC := local_graph_budget_mono hC
   rcases (by omega : x = 1 ∨ 2 ≤ x) with hxOne | hxLarge
   · subst x
     have hFirst : tAB ≤ localGraphBudget nB := by
       calc
         tAB ≤ completePairScore 1 y := hAB
-        _ = localPhi y := completePairScore_one_left y
-        _ ≤ localGraphBudget y := localPhi_le_localGraphBudget y
+        _ = localPhi y := complete_pair_score_one_left y
+        _ ≤ localGraphBudget y := local_phi_le_local_graph_budget y
         _ ≤ localGraphBudget nB := hBudgetB
     have hMinFirst := min_le_left tAB
       (localGraphBudget nA + localGraphBudget nB)
@@ -651,8 +651,8 @@ theorem two_bounded_pair_types_local_payment_with_isolates
       have hSecond : tAC ≤ localGraphBudget nC := by
         calc
           tAC ≤ completePairScore 1 v := hAC
-          _ = localPhi v := completePairScore_one_left v
-          _ ≤ localGraphBudget v := localPhi_le_localGraphBudget v
+          _ = localPhi v := complete_pair_score_one_left v
+          _ ≤ localGraphBudget v := local_phi_le_local_graph_budget v
           _ ≤ localGraphBudget nC := hBudgetC
       have hMinFirst := min_le_right tAB
         (localGraphBudget nA + localGraphBudget nB)
@@ -684,12 +684,12 @@ theorem three_bounded_pair_types_local_payment_with_isolates
     localGraphBudget nA + localGraphBudget nB +
         localGraphBudget nC ≤
       localGraphPayment nA nB nC tAB tAC tBC := by
-  rw [localGraphPayment_ge_iff_capped_scores]
+  rw [local_graph_payment_ge_iff_capped_scores]
   have hTotal := three_complete_pair_types_le_part_budgets
     ha₁ ha₂ hb₁ hb₂ hc₁ hc₂
-  have hBudgetA := localGraphBudget_mono hA
-  have hBudgetB := localGraphBudget_mono hB
-  have hBudgetC := localGraphBudget_mono hC
+  have hBudgetA := local_graph_budget_mono hA
+  have hBudgetB := local_graph_budget_mono hB
+  have hBudgetC := local_graph_budget_mono hC
   have hMinAB := min_le_left tAB
     (localGraphBudget nA + localGraphBudget nB)
   have hMinAC := min_le_left tAC

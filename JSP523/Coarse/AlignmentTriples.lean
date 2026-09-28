@@ -29,7 +29,7 @@ noncomputable def differenceFiber
     familyDifference F s κ hU hC e E = δ
 
 omit [Fintype α] [DecidableEq α] [Fintype β] in
-theorem mem_differenceFiber_iff
+theorem mem_difference_fiber_iff
     (F : Family α) (s : ℕ) (κ : α → Fin (s + 3))
     (hU : Uniform (s + 3) F)
     (hC : ∀ E ∈ F, CrossingOn (s + 3) κ E)
@@ -57,7 +57,7 @@ noncomputable def contractedFamily
     (contractTriple F s κ hU hC e)
 
 omit [Fintype β] in
-theorem expand_contractTriple
+theorem expand_contract_triple
     (F : Family α) (s : ℕ) (κ : α → Fin (s + 3))
     (hU : Uniform (s + 3) F)
     (hC : ∀ E ∈ F, CrossingOn (s + 3) κ E)
@@ -71,7 +71,7 @@ theorem expand_contractTriple
 
 
 omit [Fintype α] [AddCommGroup β] [Fintype β] in
-theorem contractTriple_anchor_mem
+theorem contract_triple_anchor_mem
     (F : Family α) (s : ℕ) (κ : α → Fin (s + 3))
     (hU : Uniform (s + 3) F)
     (hC : ∀ E ∈ F, CrossingOn (s + 3) κ E)
@@ -81,7 +81,7 @@ theorem contractTriple_anchor_mem
   simp [contractTriple]
 
 omit [Fintype α] [AddCommGroup β] [Fintype β] in
-theorem contractTriple_last₁_mem
+theorem contract_triple_last_1_mem
     (F : Family α) (s : ℕ) (κ : α → Fin (s + 3))
     (hU : Uniform (s + 3) F)
     (hC : ∀ E ∈ F, CrossingOn (s + 3) κ E)
@@ -91,7 +91,7 @@ theorem contractTriple_last₁_mem
   simp [contractTriple]
 
 omit [Fintype α] [AddCommGroup β] [Fintype β] in
-theorem contractTriple_last₂_mem
+theorem contract_triple_last_2_mem
     (F : Family α) (s : ℕ) (κ : α → Fin (s + 3))
     (hU : Uniform (s + 3) F)
     (hC : ∀ E ∈ F, CrossingOn (s + 3) κ E)
@@ -118,47 +118,47 @@ theorem family_disjoint_of_contract_disjoint
   rcases color_eq_prefix_or_last s (κ v) with ⟨i, hi⟩ | hi | hi
   · have hEv : familyVertex F s κ hU hC E (prefixColor s i) = v := by
       rw [← hi]
-      exact familyVertex_surjective_on_edge F s κ hU hC E v hvE
+      exact family_vertex_surjective_on_edge F s κ hU hC E v hvE
     have hKv : familyVertex F s κ hU hC K (prefixColor s i) = v := by
       rw [← hi]
-      exact familyVertex_surjective_on_edge F s κ hU hC K v hvK
+      exact family_vertex_surjective_on_edge F s κ hU hC K v hvK
     have hcE : e v = familyAnchor F s κ hU hC e E +
         prefixOffset δ i := by
       rw [← hEv, ← hEδ]
-      exact familyVertex_prefix_coordinate F s κ hU hC e E i
+      exact family_vertex_prefix_coordinate F s κ hU hC e E i
     have hcK : e v = familyAnchor F s κ hU hC e K +
         prefixOffset δ i := by
       rw [← hKv, ← hKδ]
-      exact familyVertex_prefix_coordinate F s κ hU hC e K i
+      exact family_vertex_prefix_coordinate F s κ hU hC e K i
     have hAnchor : familyAnchor F s κ hU hC e E =
         familyAnchor F s κ hU hC e K :=
       add_right_cancel (hcE.symm.trans hcK)
     exact (Finset.disjoint_left.mp hdisj)
-      (contractTriple_anchor_mem F s κ hU hC e E)
-      (hAnchor ▸ contractTriple_anchor_mem F s κ hU hC e K)
+      (contract_triple_anchor_mem F s κ hU hC e E)
+      (hAnchor ▸ contract_triple_anchor_mem F s κ hU hC e K)
   · have hEv : familyVertex F s κ hU hC E (lastColor₁ s) = v := by
       rw [← hi]
-      exact familyVertex_surjective_on_edge F s κ hU hC E v hvE
+      exact family_vertex_surjective_on_edge F s κ hU hC E v hvE
     have hKv : familyVertex F s κ hU hC K (lastColor₁ s) = v := by
       rw [← hi]
-      exact familyVertex_surjective_on_edge F s κ hU hC K v hvK
+      exact family_vertex_surjective_on_edge F s κ hU hC K v hvK
     exact (Finset.disjoint_left.mp hdisj)
-      (hEv ▸ contractTriple_last₁_mem F s κ hU hC e E)
-      (hKv ▸ contractTriple_last₁_mem F s κ hU hC e K)
+      (hEv ▸ contract_triple_last_1_mem F s κ hU hC e E)
+      (hKv ▸ contract_triple_last_1_mem F s κ hU hC e K)
   · have hEv : familyVertex F s κ hU hC E (lastColor₂ s) = v := by
       rw [← hi]
-      exact familyVertex_surjective_on_edge F s κ hU hC E v hvE
+      exact family_vertex_surjective_on_edge F s κ hU hC E v hvE
     have hKv : familyVertex F s κ hU hC K (lastColor₂ s) = v := by
       rw [← hi]
-      exact familyVertex_surjective_on_edge F s κ hU hC K v hvK
+      exact family_vertex_surjective_on_edge F s κ hU hC K v hvK
     exact (Finset.disjoint_left.mp hdisj)
-      (hEv ▸ contractTriple_last₂_mem F s κ hU hC e E)
-      (hKv ▸ contractTriple_last₂_mem F s κ hU hC e K)
+      (hEv ▸ contract_triple_last_2_mem F s κ hU hC e E)
+      (hKv ▸ contract_triple_last_2_mem F s κ hU hC e K)
 
 
 
 omit [Fintype β] in
-theorem contractTriple_inj_on_fiber
+theorem contract_triple_inj_on_fiber
     (F : Family α) (s : ℕ) (κ : α → Fin (s + 3))
     (hU : Uniform (s + 3) F)
     (hC : ∀ E ∈ F, CrossingOn (s + 3) κ E)
@@ -170,14 +170,14 @@ theorem contractTriple_inj_on_fiber
       contractTriple F s κ hU hC e K) : E = K := by
   apply Subtype.ext
   have h := congrArg (expandBlock (prefixBlock s κ e δ)) heq
-  rw [expand_contractTriple F s κ hU hC e δ E
-      ((mem_differenceFiber_iff ..).mp hE),
-    expand_contractTriple F s κ hU hC e δ K
-      ((mem_differenceFiber_iff ..).mp hK)] at h
+  rw [expand_contract_triple F s κ hU hC e δ E
+      ((mem_difference_fiber_iff ..).mp hE),
+    expand_contract_triple F s κ hU hC e δ K
+      ((mem_difference_fiber_iff ..).mp hK)] at h
   exact h
 
 omit [Fintype β] in
-theorem contractedFamily_card_eq_fiber
+theorem contracted_family_card_eq_fiber
     (F : Family α) (s : ℕ) (κ : α → Fin (s + 3))
     (hU : Uniform (s + 3) F)
     (hC : ∀ E ∈ F, CrossingOn (s + 3) κ E)
@@ -186,10 +186,10 @@ theorem contractedFamily_card_eq_fiber
       (differenceFiber F s κ hU hC e δ).card := by
   classical
   exact Finset.card_image_of_injOn (fun E hE K hK heq =>
-    contractTriple_inj_on_fiber F s κ hU hC e δ E K hE hK heq)
+    contract_triple_inj_on_fiber F s κ hU hC e δ E K hE hK heq)
 
 omit [Fintype β] in
-theorem contractedFamily_admissible
+theorem contracted_family_admissible
     (F : Family α) (s : ℕ) (κ : α → Fin (s + 3))
     (hU : Uniform (s + 3) F)
     (hC : ∀ E ∈ F, CrossingOn (s + 3) κ E)
@@ -197,34 +197,34 @@ theorem contractedFamily_admissible
     (e : α ≃ β) (δ : Fin s → β) :
     Admissible (contractedFamily F s κ hU hC e δ) := by
   let B : β → Edge α := prefixBlock s κ e δ
-  apply admissible_of_expandBlock B
+  apply admissible_of_expand_block B
     (contractedFamily F s κ hU hC e δ) F hAdm
   · intro S hS
     obtain ⟨E, hE, rfl⟩ := Finset.mem_image.mp hS
-    exact (expand_contractTriple F s κ hU hC e δ E
-      ((mem_differenceFiber_iff ..).mp hE)) ▸ E.property
+    exact (expand_contract_triple F s κ hU hC e δ E
+      ((mem_difference_fiber_iff ..).mp hE)) ▸ E.property
   · intro S hS U hU' heq
     obtain ⟨E, hE, rfl⟩ := Finset.mem_image.mp hS
     obtain ⟨K, hK, rfl⟩ := Finset.mem_image.mp hU'
     have heq' : E.1 = K.1 := by
       simpa only [B,
-        expand_contractTriple F s κ hU hC e δ E
-          ((mem_differenceFiber_iff ..).mp hE),
-        expand_contractTriple F s κ hU hC e δ K
-          ((mem_differenceFiber_iff ..).mp hK)] using heq
+        expand_contract_triple F s κ hU hC e δ E
+          ((mem_difference_fiber_iff ..).mp hE),
+        expand_contract_triple F s κ hU hC e δ K
+          ((mem_difference_fiber_iff ..).mp hK)] using heq
     exact congrArg (contractTriple F s κ hU hC e)
       (Subtype.ext heq')
   · intro S hS U hU' hdisj
     obtain ⟨E, hE, rfl⟩ := Finset.mem_image.mp hS
     obtain ⟨K, hK, rfl⟩ := Finset.mem_image.mp hU'
     rw [show B = prefixBlock s κ e δ from rfl,
-      expand_contractTriple F s κ hU hC e δ E
-        ((mem_differenceFiber_iff ..).mp hE),
-      expand_contractTriple F s κ hU hC e δ K
-        ((mem_differenceFiber_iff ..).mp hK)]
+      expand_contract_triple F s κ hU hC e δ E
+        ((mem_difference_fiber_iff ..).mp hE),
+      expand_contract_triple F s κ hU hC e δ K
+        ((mem_difference_fiber_iff ..).mp hK)]
     exact family_disjoint_of_contract_disjoint F s κ hU hC e δ
-      E K ((mem_differenceFiber_iff ..).mp hE)
-      ((mem_differenceFiber_iff ..).mp hK) hdisj
+      E K ((mem_difference_fiber_iff ..).mp hE)
+      ((mem_difference_fiber_iff ..).mp hK) hdisj
 
 
 
@@ -234,7 +234,7 @@ def contractedColor (s : ℕ) (κ : α → Fin (s + 3)) :
   | Sum.inr v => if κ v = lastColor₁ s then 1 else 2
 
 omit [Fintype α] [AddCommGroup β] [Fintype β] in
-theorem contractTriple_rainbow
+theorem contract_triple_rainbow
     (F : Family α) (s : ℕ) (κ : α → Fin (s + 3))
     (hU : Uniform (s + 3) F)
     (hC : ∀ E ∈ F, CrossingOn (s + 3) κ E)
@@ -252,15 +252,15 @@ theorem contractTriple_rainbow
         familyVertex F s κ hU hC E (lastColor₂ s) :=
       Sum.inr_injective h
     have hc := congrArg κ hv
-    exact lastColor₁_ne_lastColor₂ s (by
-      simpa only [familyVertex_color F s κ hU hC E (lastColor₁ s),
-        familyVertex_color F s κ hU hC E (lastColor₂ s)] using hc)
+    exact last_color_1_ne_last_color_2 s (by
+      simpa only [family_vertex_color F s κ hU hC E (lastColor₁ s),
+        family_vertex_color F s κ hU hC E (lastColor₂ s)] using hc)
   have hcolorA : contractedColor s κ a = 0 := rfl
   have hcolorB : contractedColor s κ b = 1 := by
-    simp [b, contractedColor, familyVertex_color]
+    simp [b, contractedColor, family_vertex_color]
   have hcolorC : contractedColor s κ c = 2 := by
-    simp [c, contractedColor, familyVertex_color,
-      (lastColor₁_ne_lastColor₂ s).symm]
+    simp [c, contractedColor, family_vertex_color,
+      (last_color_1_ne_last_color_2 s).symm]
   have hcard : ({a, b, c} : Edge (β ⊕ α)).card = 3 := by
     apply Finset.card_triple_eq_three_iff.mpr
     exact ⟨by simp [a, b], by simp [a, c], hbc⟩
@@ -275,7 +275,7 @@ theorem contractTriple_rainbow
       simp_all
 
 omit [Fintype α] [Fintype β] in
-theorem contractedFamily_rainbow
+theorem contracted_family_rainbow
     (F : Family α) (s : ℕ) (κ : α → Fin (s + 3))
     (hU : Uniform (s + 3) F)
     (hC : ∀ E ∈ F, CrossingOn (s + 3) κ E)
@@ -285,12 +285,12 @@ theorem contractedFamily_rainbow
       (contractedColor s κ) := by
   intro S hS
   obtain ⟨E, _, rfl⟩ := Finset.mem_image.mp hS
-  exact contractTriple_rainbow F s κ hU hC e E
+  exact contract_triple_rainbow F s κ hU hC e E
 
 
 
 omit [AddCommGroup β] in
-theorem contractedColor_class_card_le
+theorem contracted_color_class_card_le
     (s : ℕ) (κ : α → Fin (s + 3)) (e : α ≃ β)
     (i : Fin 3) :
     (colorClass (contractedColor (β := β) s κ) i).card ≤ Fintype.card α := by
@@ -340,7 +340,7 @@ theorem contractedColor_class_card_le
 
 /-- The manuscript's aligned-edge estimate for one deterministic
 coordinate-difference fiber. -/
-theorem differenceFiber_card_le_three_square
+theorem difference_fiber_card_le_three_square
     (F : Family α) (s : ℕ) (κ : α → Fin (s + 3))
     (hU : Uniform (s + 3) F)
     (hC : ∀ E ∈ F, CrossingOn (s + 3) κ E)
@@ -348,12 +348,12 @@ theorem differenceFiber_card_le_three_square
     (e : α ≃ β) (δ : Fin s → β) :
     (differenceFiber F s κ hU hC e δ).card ≤
       3 * (Fintype.card α) ^ 2 := by
-  rw [← contractedFamily_card_eq_fiber F s κ hU hC e δ]
+  rw [← contracted_family_card_eq_fiber F s κ hU hC e δ]
   exact rainbow_triple_card_le_three_square
-    (contractedFamily_admissible F s κ hU hC hAdm e δ)
-    (contractedFamily_rainbow F s κ hU hC e δ)
+    (contracted_family_admissible F s κ hU hC hAdm e δ)
+    (contracted_family_rainbow F s κ hU hC e δ)
     (Fintype.card α)
-    (contractedColor_class_card_le s κ e)
+    (contracted_color_class_card_le s κ e)
 
 
 
@@ -388,7 +388,7 @@ theorem crossing_family_card_le_three_power
         3 * (Fintype.card α) ^ 2 := by
       apply Finset.sum_le_sum
       intro δ _
-      exact differenceFiber_card_le_three_square F s κ hU hC hAdm e δ
+      exact difference_fiber_card_le_three_square F s κ hU hC hAdm e δ
     _ = (Fintype.card α) ^ s *
         (3 * (Fintype.card α) ^ 2) := by
       simp [hcount, mul_comm]

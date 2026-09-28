@@ -16,7 +16,7 @@ section ReceiverGlobalCapacity
 
 variable {α : Type*} [DecidableEq α]
 
-theorem actualReceiverCharge_nonneg_of_source
+theorem actual_receiver_charge_nonneg_of_source
     {H : Family α} {V : Edge α} {z v x y : α}
     (hzV : z ∈ V) (hsource : ({x, y} : Edge α) ∈ rootLink H V z)
     (hrecv : v ∈ (completionVertices H V ({x, y} : Edge α)).erase z) :
@@ -39,7 +39,7 @@ theorem actualReceiverCharge_nonneg_of_source
   exact div_nonneg (le_max_right _ _) (le_of_lt hden)
 
 /-- Symmetric difference is determined by a two-element unordered family. -/
-theorem symmDiff_eq_of_pair_family_eq
+theorem symm_diff_eq_of_pair_family_eq
     {p r a b : Edge α} (hpr : p ≠ r) (_hab : a ≠ b)
     (hset : ({p, r} : Family α) = {a, b}) :
     p ∆ r = a ∆ b := by
@@ -72,7 +72,7 @@ noncomputable def reciprocalCellMap (H : Family α) (V : Edge α) (q : Edge α) 
     exact e.1 ∆ e.2
   else exact ∅
 
-theorem reciprocalCellMap_eq_pair_symmDiff
+theorem reciprocal_cell_map_eq_pair_symm_diff
     (H : Family α) (V q : Edge α)
     (hc : (commonLink H V q).card = 2)
     {p r : Edge α} (hp : p ∈ commonLink H V q)
@@ -87,13 +87,13 @@ theorem reciprocalCellMap_eq_pair_symmDiff
       · exact (Finset.mem_singleton.mp h) ▸ hr
     · rw [Finset.card_pair hpr, hc]
   let e := corePairRep (commonLink H V q) hc
-  have he := corePairRep_spec (commonLink H V q) hc
+  have he := core_pair_rep_spec (commonLink H V q) hc
   have hpair : ({p, r} : Family α) = ({e.1, e.2} : Family α) := by
     rw [hset, he.2]
-  have hresult := symmDiff_eq_of_pair_family_eq hpr he.1 hpair
+  have hresult := symm_diff_eq_of_pair_family_eq hpr he.1 hpair
   simpa [reciprocalCellMap, hc, e] using hresult.symm
 
-theorem pair_symmDiff_shared_right {a b c : α}
+theorem pair_symm_diff_shared_right {a b c : α}
     (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c) :
     ({a, c} : Edge α) ∆ ({b, c} : Edge α) = {a, b} := by
   ext w
@@ -111,7 +111,7 @@ theorem pair_symmDiff_shared_right {a b c : α}
 /-- Whenever a two-core cell and its canonical reciprocal both have two
 cores, the reciprocal map returns to the original cell. The two alternatives
 in the local reciprocal witness give the same symmetric-difference identity. -/
-theorem reciprocalCellMap_involutive_of_double
+theorem reciprocal_cell_map_involutive_of_double
     {H : Family α} {V q : Edge α}
     (hH : Admissible H) (hq : q ∈ doubleLinkCells H V)
     (hrecip : reciprocalCellMap H V q ∈ doubleLinkCells H V) :
@@ -120,14 +120,14 @@ theorem reciprocalCellMap_involutive_of_double
   have hqUsed := (Finset.mem_filter.mp hq).1
   have hqCard := (Finset.mem_filter.mp hq).2
   have hq2 : q.card = 2 :=
-    (Finset.mem_powersetCard.mp (usedCells_subset H V hqUsed)).2
+    (Finset.mem_powersetCard.mp (used_cells_subset H V hqUsed)).2
   let e := corePairRep q hq2
-  have he := corePairRep_spec q hq2
+  have he := core_pair_rep_spec q hq2
   have hqCardRep :
       (commonLink H V ({e.1, e.2} : Edge α)).card = 2 := by
     rw [← he.2]
     exact hqCard
-  have hsub := (Finset.mem_powersetCard.mp (usedCells_subset H V hqUsed)).1
+  have hsub := (Finset.mem_powersetCard.mp (used_cells_subset H V hqUsed)).1
   have hsub' : ({e.1, e.2} : Edge α) ⊆ V := by rw [← he.2]; exact hsub
   have heV : e.1 ∈ V ∧ e.2 ∈ V :=
     ⟨hsub' (by simp), hsub' (by simp)⟩
@@ -148,12 +148,12 @@ theorem reciprocalCellMap_involutive_of_double
         rcases Finset.mem_insert.mp hyMem with hyx | hyu'
         · exact hxy hyx.symm
         · exact hyu (Finset.mem_singleton.mp hyu')
-      have hmap := reciprocalCellMap_eq_pair_symmDiff H V
+      have hmap := reciprocal_cell_map_eq_pair_symm_diff H V
         ({e.1, e.2} : Edge α) hqCardRep hp hr hne
       left
       rw [he.2, hmap]
       simpa only [Finset.pair_comm] using
-        (pair_symmDiff_shared_right hyu (Ne.symm hxy) (Ne.symm hxu))
+        (pair_symm_diff_shared_right hyu (Ne.symm hxy) (Ne.symm hxu))
     ·
       have hne : ({x, y} : Edge α) ≠ ({y, u} : Edge α) := by
         intro hh
@@ -161,12 +161,12 @@ theorem reciprocalCellMap_involutive_of_double
         rcases Finset.mem_insert.mp hxMem with hxy' | hxu'
         · exact hxy hxy'
         · exact hxu (Finset.mem_singleton.mp hxu')
-      have hmap := reciprocalCellMap_eq_pair_symmDiff H V
+      have hmap := reciprocal_cell_map_eq_pair_symm_diff H V
         ({e.1, e.2} : Edge α) hqCardRep hp hr hne
       right
       rw [he.2, hmap]
       simpa only [Finset.pair_comm] using
-        (pair_symmDiff_shared_right hxu hxy (Ne.symm hyu))
+        (pair_symm_diff_shared_right hxu hxy (Ne.symm hyu))
   rcases hcaseMap with hq' | hq'
   ·
     have htargetCard : (commonLink H V ({y, u} : Edge α)).card = 2 := by
@@ -187,7 +187,7 @@ theorem reciprocalCellMap_involutive_of_double
               (Finset.mem_filter.mp hpc).1).2
             exact Ne.symm (Finset.card_pair_eq_two_iff.mp hc)
           exact hxv (Finset.mem_singleton.mp hvx).symm
-      have hback := reciprocalCellMap_eq_pair_symmDiff H V
+      have hback := reciprocal_cell_map_eq_pair_symm_diff H V
         ({y, u} : Edge α) htargetCard hpc hrc hne
       rw [hq', hback]
       have he2x : e.2 ≠ x := Finset.card_pair_eq_two_iff.mp
@@ -196,7 +196,7 @@ theorem reciprocalCellMap_involutive_of_double
         ((Finset.mem_powersetCard.mp (Finset.mem_filter.mp hrc).1).2)
       calc
         ({e.2, x} : Edge α) ∆ {e.1, x} = {e.2, e.1} :=
-          pair_symmDiff_shared_right (Ne.symm hzv) he2x he1x
+          pair_symm_diff_shared_right (Ne.symm hzv) he2x he1x
         _ = ({e.1, e.2} : Edge α) := Finset.pair_comm e.2 e.1
         _ = q := he.2.symm
 
@@ -207,11 +207,11 @@ theorem reciprocalCellMap_involutive_of_double
           rcases Finset.mem_insert.mp hxMem with hxy' | hxu'
           · exact hxy hxy'
           · exact hxu (Finset.mem_singleton.mp hxu')
-        have hm := reciprocalCellMap_eq_pair_symmDiff H V
+        have hm := reciprocal_cell_map_eq_pair_symm_diff H V
           ({e.1, e.2} : Edge α) hqCardRep hpOther hrOther hne'
         rw [he.2, hm]
         simpa only [Finset.pair_comm] using
-          (pair_symmDiff_shared_right hxu hxy (Ne.symm hyu))
+          (pair_symm_diff_shared_right hxu hxy (Ne.symm hyu))
       have : False := by
         have htarget : ({x, u} : Edge α) = ({y, u} : Edge α) := hother.symm.trans hq'
         have hxMem : x ∈ ({y, u} : Edge α) := by rw [← htarget]; simp
@@ -231,11 +231,11 @@ theorem reciprocalCellMap_involutive_of_double
           rcases Finset.mem_insert.mp hyMem with hxy' | hyu'
           · exact hxy hxy'.symm
           · exact hyu (Finset.mem_singleton.mp hyu')
-        have hm := reciprocalCellMap_eq_pair_symmDiff H V
+        have hm := reciprocal_cell_map_eq_pair_symm_diff H V
           ({e.1, e.2} : Edge α) hqCardRep hpOther hrOther hne'
         rw [he.2, hm]
         simpa only [Finset.pair_comm] using
-          (pair_symmDiff_shared_right hyu (Ne.symm hxy) (Ne.symm hxu))
+          (pair_symm_diff_shared_right hyu (Ne.symm hxy) (Ne.symm hxu))
       have : False := by
         have htarget : ({y, u} : Edge α) = ({x, u} : Edge α) := hother.symm.trans hq'
         have hyMem : y ∈ ({x, u} : Edge α) := by rw [← htarget]; simp
@@ -257,7 +257,7 @@ theorem reciprocalCellMap_involutive_of_double
               (Finset.mem_filter.mp hpc).1).2
             exact Ne.symm (Finset.card_pair_eq_two_iff.mp hc)
           exact hyv (Finset.mem_singleton.mp hvy).symm
-      have hback := reciprocalCellMap_eq_pair_symmDiff H V
+      have hback := reciprocal_cell_map_eq_pair_symm_diff H V
         ({x, u} : Edge α) htargetCard hpc hrc hne
       rw [hq', hback]
       have he2y : e.2 ≠ y := Finset.card_pair_eq_two_iff.mp
@@ -266,12 +266,12 @@ theorem reciprocalCellMap_involutive_of_double
         ((Finset.mem_powersetCard.mp (Finset.mem_filter.mp hrc).1).2)
       calc
         ({e.2, y} : Edge α) ∆ {e.1, y} = {e.2, e.1} :=
-          pair_symmDiff_shared_right (Ne.symm hzv) he2y he1y
+          pair_symm_diff_shared_right (Ne.symm hzv) he2y he1y
         _ = ({e.1, e.2} : Edge α) := Finset.pair_comm e.2 e.1
         _ = q := he.2.symm
 
 
-theorem reciprocalCellMap_card_ge_two_of_double
+theorem reciprocal_cell_map_card_ge_two_of_double
     {H : Family α} {V q : Edge α} (hH : Admissible H)
     (hq : q ∈ doubleLinkCells H V) :
     2 ≤ (commonLink H V (reciprocalCellMap H V q)).card := by
@@ -279,14 +279,14 @@ theorem reciprocalCellMap_card_ge_two_of_double
   have hqUsed := (Finset.mem_filter.mp hq).1
   have hqCard := (Finset.mem_filter.mp hq).2
   have hq2 : q.card = 2 := (Finset.mem_powersetCard.mp
-    (usedCells_subset H V hqUsed)).2
+    (used_cells_subset H V hqUsed)).2
   let e := corePairRep q hq2
-  have he := corePairRep_spec q hq2
+  have he := core_pair_rep_spec q hq2
   have hqCardRep :
       (commonLink H V ({e.1, e.2} : Edge α)).card = 2 := by
     rw [← he.2]
     exact hqCard
-  have hsub := (Finset.mem_powersetCard.mp (usedCells_subset H V hqUsed)).1
+  have hsub := (Finset.mem_powersetCard.mp (used_cells_subset H V hqUsed)).1
   have hsub' : ({e.1, e.2} : Edge α) ⊆ V := by rw [← he.2]; exact hsub
   have heV : e.1 ∈ V ∧ e.2 ∈ V :=
     ⟨hsub' (by simp), hsub' (by simp)⟩
@@ -299,12 +299,12 @@ theorem reciprocalCellMap_card_ge_two_of_double
       rcases Finset.mem_insert.mp hyMem with hyx | hyu'
       · exact hxy hyx.symm
       · exact hyu (Finset.mem_singleton.mp hyu')
-    have hmap := reciprocalCellMap_eq_pair_symmDiff H V
+    have hmap := reciprocal_cell_map_eq_pair_symm_diff H V
       ({e.1, e.2} : Edge α) hqCardRep h₁ h₂ hne
     have htarget : reciprocalCellMap H V q = ({y, u} : Edge α) := by
       rw [he.2, hmap]
       simpa only [Finset.pair_comm] using
-        (pair_symmDiff_shared_right hyu (Ne.symm hxy) (Ne.symm hxu))
+        (pair_symm_diff_shared_right hyu (Ne.symm hxy) (Ne.symm hxu))
     have hp : ({e.2, x} : Edge α) ∈ commonLink H V ({y, u} : Edge α) := by
       simpa only [Finset.pair_comm] using h₃
     have hr : ({e.1, x} : Edge α) ∈ commonLink H V ({y, u} : Edge α) := by
@@ -327,12 +327,12 @@ theorem reciprocalCellMap_card_ge_two_of_double
       rcases Finset.mem_insert.mp hxMem with hxy' | hxu'
       · exact hxy hxy'
       · exact hxu (Finset.mem_singleton.mp hxu')
-    have hmap := reciprocalCellMap_eq_pair_symmDiff H V
+    have hmap := reciprocal_cell_map_eq_pair_symm_diff H V
       ({e.1, e.2} : Edge α) hqCardRep h₁ h₂ hne
     have htarget : reciprocalCellMap H V q = ({x, u} : Edge α) := by
       rw [he.2, hmap]
       simpa only [Finset.pair_comm] using
-        (pair_symmDiff_shared_right hxu hxy (Ne.symm hyu))
+        (pair_symm_diff_shared_right hxu hxy (Ne.symm hyu))
     have hp : ({e.2, y} : Edge α) ∈ commonLink H V ({x, u} : Edge α) := by
       simpa only [Finset.pair_comm] using h₃
     have hr : ({e.1, y} : Edge α) ∈ commonLink H V ({x, u} : Edge α) := by
@@ -357,30 +357,30 @@ noncomputable def reciprocalRegularDoubleCells
   exact (doubleLinkCells H V).filter
     (fun q => reciprocalCellMap H V q ∈ doubleLinkCells H V)
 
-theorem reciprocalRegularDoubleCells_subset
+theorem reciprocal_regular_double_cells_subset
     (H : Family α) (V : Edge α) :
     reciprocalRegularDoubleCells H V ⊆ doubleLinkCells H V := by
   classical
   intro q hq
   exact (Finset.mem_filter.mp hq).1
 
-theorem reciprocalRegular_map_mem
+theorem reciprocal_regular_map_mem
     {H : Family α} {V : Edge α} (hH : Admissible H) (q : Edge α)
     (hq : q ∈ reciprocalRegularDoubleCells H V) :
     reciprocalCellMap H V q ∈ reciprocalRegularDoubleCells H V := by
   classical
   have hdouble := (Finset.mem_filter.mp hq).1
   have htarget := (Finset.mem_filter.mp hq).2
-  have hback := reciprocalCellMap_involutive_of_double hH hdouble htarget
+  have hback := reciprocal_cell_map_involutive_of_double hH hdouble htarget
   apply Finset.mem_filter.mpr
   exact ⟨htarget, hback.symm ▸ hdouble⟩
 
-theorem reciprocalRegular_map_involutive
+theorem reciprocal_regular_map_involutive
     {H : Family α} {V : Edge α} (hH : Admissible H) (q : Edge α)
     (hq : q ∈ reciprocalRegularDoubleCells H V) :
     reciprocalCellMap H V (reciprocalCellMap H V q) = q := by
   classical
-  exact reciprocalCellMap_involutive_of_double
+  exact reciprocal_cell_map_involutive_of_double
     hH (Finset.mem_filter.mp hq).1 (Finset.mem_filter.mp hq).2
 
 theorem actual_regular_pair_capacity_le_four
@@ -394,21 +394,21 @@ theorem actual_regular_pair_capacity_le_four
   have hqUsed := (Finset.mem_filter.mp hdouble).1
   have hqCard := (Finset.mem_filter.mp hdouble).2
   have hq2 : q.card = 2 := (Finset.mem_powersetCard.mp
-    (usedCells_subset H V hqUsed)).2
+    (used_cells_subset H V hqUsed)).2
   let e := corePairRep q hq2
-  have he := corePairRep_spec q hq2
+  have he := core_pair_rep_spec q hq2
   have hqCardRep :
       (commonLink H V ({e.1, e.2} : Edge α)).card = 2 := by
     rw [← he.2]
     exact hqCard
-  have hsub := (Finset.mem_powersetCard.mp (usedCells_subset H V hqUsed)).1
+  have hsub := (Finset.mem_powersetCard.mp (used_cells_subset H V hqUsed)).1
   have hsub' : ({e.1, e.2} : Edge α) ⊆ V := by rw [← he.2]; exact hsub
   have heV : e.1 ∈ V ∧ e.2 ∈ V :=
     ⟨hsub' (by simp), hsub' (by simp)⟩
   have hchargeQ : actualCellChargeForPair H V q =
       actualCellChargeTotal H V e.1 e.2 := by
     rw [he.2]
-    exact actualCellChargeForPair_eq_displayed H V he.1
+    exact actual_cell_charge_for_pair_eq_displayed H V he.1
   have hrecipCard := (Finset.mem_filter.mp hrecipDouble).2
   obtain ⟨x, y, u, hxy, hxu, hyu, hyV, huV, hcases⟩ :=
     double_receiver_has_reciprocal_cell hH heV.1 heV.2 he.1 hqCardRep
@@ -419,12 +419,12 @@ theorem actual_regular_pair_capacity_le_four
       rcases Finset.mem_insert.mp hyMem with hyx | hyu'
       · exact hxy hyx.symm
       · exact hyu (Finset.mem_singleton.mp hyu')
-    have hmap := reciprocalCellMap_eq_pair_symmDiff H V
+    have hmap := reciprocal_cell_map_eq_pair_symm_diff H V
       ({e.1, e.2} : Edge α) hqCardRep h₁ h₂ hne
     have htarget : reciprocalCellMap H V q = ({y, u} : Edge α) := by
       rw [he.2, hmap]
       simpa only [Finset.pair_comm] using
-        (pair_symmDiff_shared_right hyu (Ne.symm hxy) (Ne.symm hxu))
+        (pair_symm_diff_shared_right hyu (Ne.symm hxy) (Ne.symm hxu))
     have htargetCard : (commonLink H V ({y, u} : Edge α)).card = 2 := by
       rw [← htarget]
       exact hrecipCard
@@ -444,7 +444,7 @@ theorem actual_regular_pair_capacity_le_four
     have hchargeR : actualCellChargeForPair H V (reciprocalCellMap H V q) =
         actualCellChargeTotal H V y u := by
       rw [htarget]
-      exact actualCellChargeForPair_eq_displayed H V hyu
+      exact actual_cell_charge_for_pair_eq_displayed H V hyu
     rw [hchargeQ, hchargeR]
     exact hcap
   · have hne : ({x, y} : Edge α) ≠ ({y, u} : Edge α) := by
@@ -453,12 +453,12 @@ theorem actual_regular_pair_capacity_le_four
       rcases Finset.mem_insert.mp hxMem with hxy' | hxu'
       · exact hxy hxy'
       · exact hxu (Finset.mem_singleton.mp hxu')
-    have hmap := reciprocalCellMap_eq_pair_symmDiff H V
+    have hmap := reciprocal_cell_map_eq_pair_symm_diff H V
       ({e.1, e.2} : Edge α) hqCardRep h₁ h₂ hne
     have htarget : reciprocalCellMap H V q = ({x, u} : Edge α) := by
       rw [he.2, hmap]
       simpa only [Finset.pair_comm] using
-        (pair_symmDiff_shared_right hxu hxy (Ne.symm hyu))
+        (pair_symm_diff_shared_right hxu hxy (Ne.symm hyu))
     have htargetCard : (commonLink H V ({x, u} : Edge α)).card = 2 := by
       rw [← htarget]
       exact hrecipCard
@@ -479,7 +479,7 @@ theorem actual_regular_pair_capacity_le_four
     have hchargeR : actualCellChargeForPair H V (reciprocalCellMap H V q) =
         actualCellChargeTotal H V x u := by
       rw [htarget]
-      exact actualCellChargeForPair_eq_displayed H V hxu
+      exact actual_cell_charge_for_pair_eq_displayed H V hxu
     rw [hchargeQ, hchargeR]
     exact hcap
 
@@ -492,8 +492,8 @@ theorem actual_regular_double_cell_sum_le_two_card
   apply sum_le_two_card_of_reciprocal_involution
     (reciprocalRegularDoubleCells H V) (reciprocalCellMap H V)
     (actualCellChargeForPair H V)
-  · exact reciprocalRegular_map_mem hH
-  · exact reciprocalRegular_map_involutive hH
+  · exact reciprocal_regular_map_mem hH
+  · exact reciprocal_regular_map_involutive hH
   · intro q hq
     exact actual_regular_pair_capacity_le_four hH hq
 
@@ -508,7 +508,7 @@ theorem actual_receiver_charge_positive_card_le_two
   have hp2 : p.card = 2 := (Finset.mem_powersetCard.mp
     (Finset.mem_filter.mp hp).1).2
   let e := corePairRep p hp2
-  have he := corePairRep_spec p hp2
+  have he := core_pair_rep_spec p hp2
   have hpZ : ({e.1, e.2} : Edge α) ∈ rootLink H V z := by
     rw [← he.2]
     exact (common_link_pair_gives_two_sources hzv hp).1
@@ -549,11 +549,11 @@ theorem actual_cell_charge_for_pair_eq_zero_of_card_ge_three
     actualCellChargeForPair H V q = 0 := by
   classical
   have hq2 : q.card = 2 := (Finset.mem_powersetCard.mp
-    (usedCells_subset H V hq)).2
+    (used_cells_subset H V hq)).2
   let e := corePairRep q hq2
-  have he := corePairRep_spec q hq2
+  have he := core_pair_rep_spec q hq2
   have heV : e.1 ∈ V ∧ e.2 ∈ V := by
-    have hsub := (Finset.mem_powersetCard.mp (usedCells_subset H V hq)).1
+    have hsub := (Finset.mem_powersetCard.mp (used_cells_subset H V hq)).1
     have hsub' : ({e.1, e.2} : Edge α) ⊆ V := by
       rw [← he.2]
       exact hsub
@@ -568,7 +568,7 @@ theorem actual_cell_charge_for_pair_eq_zero_of_card_ge_three
         have hnon : 0 ≤ coreReceiverCharge H V e.1 e.2 p := by
           by_cases hp' : p.card = 2
           · let f := corePairRep p hp'
-            have hf := corePairRep_spec p hp'
+            have hf := core_pair_rep_spec p hp'
             have hsource : ({f.1, f.2} : Edge α) ∈ rootLink H V e.1 := by
               rw [← hf.2]
               exact (common_link_pair_gives_two_sources he.1 hp).1
@@ -577,7 +577,7 @@ theorem actual_cell_charge_for_pair_eq_zero_of_card_ge_three
               rw [← hf.2]
               exact hrecv.2
             simpa [coreReceiverCharge, hp', f] using
-              actualReceiverCharge_nonneg_of_source heV.1 hsource hrecv'
+              actual_receiver_charge_nonneg_of_source heV.1 hsource hrecv'
           · simp [coreReceiverCharge, hp']
         have hpositive' : 0 < coreReceiverCharge H V e.1 e.2 p := lt_of_le_of_ne hnon (Ne.symm hne)
         exact hpositive'
@@ -593,7 +593,7 @@ theorem actual_cell_charge_for_pair_eq_zero_of_card_ge_three
         have hnon : 0 ≤ coreReceiverCharge H V e.2 e.1 p := by
           by_cases hp' : p.card = 2
           · let f := corePairRep p hp'
-            have hf := corePairRep_spec p hp'
+            have hf := core_pair_rep_spec p hp'
             have hsource : ({f.1, f.2} : Edge α) ∈ rootLink H V e.2 := by
               rw [← hf.2]
               exact (common_link_pair_gives_two_sources he.1 hp).2
@@ -604,7 +604,7 @@ theorem actual_cell_charge_for_pair_eq_zero_of_card_ge_three
               rw [← hf.2]
               exact hrecv.2
             simpa [coreReceiverCharge, hp', f] using
-              actualReceiverCharge_nonneg_of_source heV.2 hsource hrecv'
+              actual_receiver_charge_nonneg_of_source heV.2 hsource hrecv'
           · simp [coreReceiverCharge, hp']
         have hpositive' : 0 < coreReceiverCharge H V e.2 e.1 p := lt_of_le_of_ne hnon (Ne.symm hne)
         exact hpositive'
@@ -623,14 +623,14 @@ theorem actual_cell_charge_for_pair_eq_zero_of_card_ge_three
 
 /-- A core's receiver charge is nonnegative whenever its core belongs to
 the displayed receiving common link. -/
-theorem coreReceiverCharge_nonneg_of_commonLink
+theorem core_receiver_charge_nonneg_of_common_link
     {H : Family α} {V : Edge α} {z v : α} {p : Edge α}
     (hzV : z ∈ V) (hvV : v ∈ V) (hzv : z ≠ v)
     (hp : p ∈ commonLink H V ({z, v} : Edge α)) :
     0 ≤ coreReceiverCharge H V z v p := by
   by_cases hp2 : p.card = 2
   · let e := corePairRep p hp2
-    have he := corePairRep_spec p hp2
+    have he := core_pair_rep_spec p hp2
     have hsource : ({e.1, e.2} : Edge α) ∈ rootLink H V z := by
       rw [← he.2]
       exact (common_link_pair_gives_two_sources hzv hp).1
@@ -639,11 +639,11 @@ theorem coreReceiverCharge_nonneg_of_commonLink
       rw [← he.2]
       exact hrecv.2
     simpa [coreReceiverCharge, hp2, e] using
-      actualReceiverCharge_nonneg_of_source hzV hsource hrecv'
+      actual_receiver_charge_nonneg_of_source hzV hsource hrecv'
   · simp [coreReceiverCharge, hp2]
 
 /-- Each actual unordered receiver-cell total is nonnegative. -/
-theorem actualCellChargeTotal_nonneg
+theorem actual_cell_charge_total_nonneg
     {H : Family α} {V : Edge α} {z v : α}
     (hzV : z ∈ V) (hvV : v ∈ V) (hzv : z ≠ v) :
     0 ≤ actualCellChargeTotal H V z v := by
@@ -651,46 +651,46 @@ theorem actualCellChargeTotal_nonneg
   apply Finset.sum_nonneg
   intro p hp
   exact add_nonneg
-    (coreReceiverCharge_nonneg_of_commonLink hzV hvV hzv hp)
-    (coreReceiverCharge_nonneg_of_commonLink hvV hzV (Ne.symm hzv)
+    (core_receiver_charge_nonneg_of_common_link hzV hvV hzv hp)
+    (core_receiver_charge_nonneg_of_common_link hvV hzV (Ne.symm hzv)
       (by simpa only [Finset.pair_comm] using hp))
 
 /-- The charge assigned to any actual cell pair is nonnegative. -/
-theorem actualCellChargeForPair_nonneg
+theorem actual_cell_charge_for_pair_nonneg
     {H : Family α} {V q : Edge α}
     (hq : q ∈ usedCells H V) : 0 ≤ actualCellChargeForPair H V q := by
   classical
-  have hq2 : q.card = 2 := (Finset.mem_powersetCard.mp (usedCells_subset H V hq)).2
+  have hq2 : q.card = 2 := (Finset.mem_powersetCard.mp (used_cells_subset H V hq)).2
   let e := corePairRep q hq2
-  have he := corePairRep_spec q hq2
-  have hsub := (Finset.mem_powersetCard.mp (usedCells_subset H V hq)).1
+  have he := core_pair_rep_spec q hq2
+  have hsub := (Finset.mem_powersetCard.mp (used_cells_subset H V hq)).1
   have heV : e.1 ∈ V ∧ e.2 ∈ V := by
     have hsub' : ({e.1, e.2} : Edge α) ⊆ V := by rw [← he.2]; exact hsub
     exact ⟨hsub' (by simp), hsub' (by simp)⟩
   simpa [actualCellChargeForPair, hq2, e] using
-    actualCellChargeTotal_nonneg heV.1 heV.2 he.1
+    actual_cell_charge_total_nonneg heV.1 heV.2 he.1
 
 /-- Receiver cells with at least three common-link cores. -/
 def atLeastThreeReceiverCells (H : Family α) (V : Edge α) : Family α :=
   (usedCells H V).filter (fun q => 3 ≤ (commonLink H V q).card)
 
-theorem actualCellChargeForPair_lt_four_of_singleton
+theorem actual_cell_charge_for_pair_lt_four_of_singleton
     {H : Family α} {V q : Edge α} (hq : q ∈ singletonLinkCells H V) :
     actualCellChargeForPair H V q < 4 := by
   have hused := (Finset.mem_filter.mp hq).1
   have hc := (Finset.mem_filter.mp hq).2
   have hq2 : q.card = 2 := (Finset.mem_powersetCard.mp
-    (usedCells_subset H V hused)).2
+    (used_cells_subset H V hused)).2
   let e := corePairRep q hq2
-  have he := corePairRep_spec q hq2
-  have hsub := (Finset.mem_powersetCard.mp (usedCells_subset H V hused)).1
+  have he := core_pair_rep_spec q hq2
+  have hsub := (Finset.mem_powersetCard.mp (used_cells_subset H V hused)).1
   have hsub' : ({e.1, e.2} : Edge α) ⊆ V := by rw [← he.2]; exact hsub
   have heV : e.1 ∈ V ∧ e.2 ∈ V :=
     ⟨hsub' (by simp), hsub' (by simp)⟩
   have hdisplay : actualCellChargeForPair H V q =
       actualCellChargeTotal H V e.1 e.2 := by
     rw [he.2]
-    exact actualCellChargeForPair_eq_displayed H V he.1
+    exact actual_cell_charge_for_pair_eq_displayed H V he.1
   rw [hdisplay]
   have hc' : (commonLink H V ({e.1, e.2} : Edge α)).card = 1 := by
     rw [← he.2]
@@ -705,7 +705,7 @@ theorem actual_cell_singleton_sum_le
     _ ≤ ∑ q ∈ singletonLinkCells H V, (4 : ℚ) := by
       apply Finset.sum_le_sum
       intro q hq
-      exact (actualCellChargeForPair_lt_four_of_singleton hq).le
+      exact (actual_cell_charge_for_pair_lt_four_of_singleton hq).le
     _ = 4 * (singletonLinkCells H V).card := by
       simp
       ring
@@ -733,7 +733,7 @@ theorem actual_cell_charge_sum_partition
         (if 3 ≤ (commonLink H V q).card then actualCellChargeForPair H V q else 0) := by
     intro q hq
     have hpos : 0 < (commonLink H V q).card := Finset.card_pos.mpr
-      ((mem_usedCells_iff_commonLink_nonempty H V q).mp hq).2
+      ((mem_used_cells_iff_common_link_nonempty H V q).mp hq).2
     by_cases h1 : (commonLink H V q).card = 1
     · simp [h1]
     · by_cases h2 : (commonLink H V q).card = 2
@@ -759,13 +759,13 @@ noncomputable def actualTriangleExcess
   exact if triangleExceptionalReceiverCell H V q then
     max (actualCellChargeForPair H V q - 2) 0 else 0
 
-theorem actualXi_eq_sum_triangle_excess
+theorem actual_xi_eq_sum_triangle_excess
     (H : Family α) (V : Edge α) :
     actualXi H V = ∑ q ∈ usedCells H V, actualTriangleExcess H V q := by
   classical
   simp [actualXi, actualTriangleExcess]
 
-theorem actualTriangleExcess_nonneg
+theorem actual_triangle_excess_nonneg
     (H : Family α) (V : Edge α) (q : Edge α) :
     0 ≤ actualTriangleExcess H V q := by
   classical
@@ -790,7 +790,7 @@ theorem actual_double_cell_charge_le_two_add_excess
     simpa [actualTriangleExcess, hq] using h
 
 /-- Finite aggregation of the preceding local estimate over the c=2 cells. -/
-theorem actual_double_cell_sum_le_two_card_add_Xi
+theorem actual_double_cell_sum_le_two_card_add_xi
     (H : Family α) (V : Edge α)
     (hordinary : ∀ q ∈ doubleLinkCells H V,
       ¬ triangleExceptionalReceiverCell H V q →
@@ -810,7 +810,7 @@ theorem actual_double_cell_sum_le_two_card_add_Xi
       simp only [Finset.sum_add_distrib, Finset.sum_const, nsmul_eq_mul]
       ring
     _ ≤ 2 * (doubleLinkCells H V).card + actualXi H V := by
-      rw [actualXi_eq_sum_triangle_excess]
+      rw [actual_xi_eq_sum_triangle_excess]
       have hsum := Finset.sum_le_sum_of_subset_of_nonneg
         (s := doubleLinkCells H V) (t := usedCells H V)
         (f := actualTriangleExcess H V)
@@ -819,7 +819,7 @@ theorem actual_double_cell_sum_le_two_card_add_Xi
           exact (Finset.mem_filter.mp hq).1)
         (by
           intro q hq hnot
-          exact actualTriangleExcess_nonneg H V q)
+          exact actual_triangle_excess_nonneg H V q)
       linarith [hsum]
 
 end ReceiverGlobalCapacity

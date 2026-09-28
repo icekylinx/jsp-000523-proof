@@ -18,12 +18,12 @@ noncomputable def canonicalCompletionEnum [Fintype α] (C : Finset α) :
   ((Fintype.equivFin {x // x ∈ C}).symm (Fin.cast (by simp) i)).val
 
 omit [DecidableEq α] in
-theorem canonicalCompletionEnum_mem [Fintype α] (C : Finset α)
+theorem canonical_completion_enum_mem [Fintype α] (C : Finset α)
     (i : Fin C.card) : canonicalCompletionEnum C i ∈ C :=
   (Fintype.equivFin {x // x ∈ C}).symm (Fin.cast (by simp) i) |>.property
 
 omit [DecidableEq α] in
-theorem canonicalCompletionEnum_injective [Fintype α] (C : Finset α) :
+theorem canonical_completion_enum_injective [Fintype α] (C : Finset α) :
     Function.Injective (canonicalCompletionEnum C) := by
   intro i j hij
   have hSub : (Fintype.equivFin {x // x ∈ C}).symm (Fin.cast (by simp) i) =
@@ -44,32 +44,32 @@ noncomputable def canonicalK4Completion [Fintype α] (D : FiniteCompletionClique
     Fin 4 → α := fun i => canonicalCompletionEnum
       (graphFacetCompletions D.K D.ground T) (Fin.cast hcard.symm i)
 
-theorem canonicalTriangleCompletion_mem [Fintype α] (D : FiniteCompletionCliqueData α)
+theorem canonical_triangle_completion_mem [Fintype α] (D : FiniteCompletionCliqueData α)
     (T : Edge α) (hcard : (graphFacetCompletions D.K D.ground T).card = 3)
     (i : Fin 3) :
     canonicalTriangleCompletion D T hcard i ∈ graphFacetCompletions D.K D.ground T :=
-  canonicalCompletionEnum_mem _ _
+  canonical_completion_enum_mem _ _
 
-theorem canonicalK4Completion_mem [Fintype α] (D : FiniteCompletionCliqueData α)
+theorem canonical_k4_completion_mem [Fintype α] (D : FiniteCompletionCliqueData α)
     (T : Edge α) (hcard : (graphFacetCompletions D.K D.ground T).card = 4)
     (i : Fin 4) :
     canonicalK4Completion D T hcard i ∈ graphFacetCompletions D.K D.ground T :=
-  canonicalCompletionEnum_mem _ _
+  canonical_completion_enum_mem _ _
 
-theorem canonicalTriangleCompletion_injective [Fintype α] (D : FiniteCompletionCliqueData α)
+theorem canonical_triangle_completion_injective [Fintype α] (D : FiniteCompletionCliqueData α)
     (T : Edge α) (hcard : (graphFacetCompletions D.K D.ground T).card = 3) :
     Function.Injective (canonicalTriangleCompletion D T hcard) := by
   intro i j hij
-  have h := (canonicalCompletionEnum_injective
+  have h := (canonical_completion_enum_injective
     (graphFacetCompletions D.K D.ground T)) hij
   apply Fin.ext
   simpa using congrArg Fin.val h
 
-theorem canonicalK4Completion_injective [Fintype α] (D : FiniteCompletionCliqueData α)
+theorem canonical_k4_completion_injective [Fintype α] (D : FiniteCompletionCliqueData α)
     (T : Edge α) (hcard : (graphFacetCompletions D.K D.ground T).card = 4) :
     Function.Injective (canonicalK4Completion D T hcard) := by
   intro i j hij
-  have h := (canonicalCompletionEnum_injective
+  have h := (canonical_completion_enum_injective
     (graphFacetCompletions D.K D.ground T)) hij
   apply Fin.ext
   simpa using congrArg Fin.val h
@@ -224,15 +224,15 @@ theorem divergent_completion_facet_no_monochromatic_triangle
   rcases hDivergent with ⟨a, ha, b, hb, c, hc, hab, hac, hbc, hDiff⟩
   exact hDiff ((hAll a ha b hb hab).trans (hAll a ha c hc hac).symm)
 
-theorem canonicalTriangleMark_injective [Fintype α]
+theorem canonical_triangle_mark_injective [Fintype α]
     (D : FiniteCompletionCliqueData α) (T : Edge α)
     (hcard : (graphFacetCompletions D.K D.ground T).card = 3)
     (hRainbow : CompletionTriangleRainbow D
       (graphFacetCompletions D.K D.ground T)) :
     Function.Injective (canonicalTriangleMark D T hcard) := by
   let v := canonicalTriangleCompletion D T hcard
-  have hv := canonicalTriangleCompletion_injective D T hcard
-  have hm := fun i => canonicalTriangleCompletion_mem D T hcard i
+  have hv := canonical_triangle_completion_injective D T hcard
+  have hm := fun i => canonical_triangle_completion_mem D T hcard i
   have h01 := (hRainbow (v 0) (hm 0) (v 1) (hm 1) (v 2) (hm 2)
     (by intro h; have hh := hv h; norm_num at hh)
     (by intro h; have hh := hv h; norm_num at hh)
@@ -274,12 +274,12 @@ theorem canonical_triangle_mark_mem_facet [Fintype α]
   all_goals
     unfold canonicalTriangleMark
     apply completion_pair_label_mem_facet D T hTcard hTsub
-    · exact canonicalTriangleCompletion_mem D T hcard _
-    · exact canonicalTriangleCompletion_mem D T hcard _
+    · exact canonical_triangle_completion_mem D T hcard _
+    · exact canonical_triangle_completion_mem D T hcard _
     · intro h
-      exact (completionTriangleEnds_offdiag
+      exact (completion_triangle_ends_offdiag
         (canonicalTriangleCompletion D T hcard)
-        (canonicalTriangleCompletion_injective D T hcard) _) h
+        (canonical_triangle_completion_injective D T hcard) _) h
 
 
 theorem completion_facet_triangle_rainbow_of_no_mono

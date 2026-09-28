@@ -23,7 +23,7 @@ def commonFacetCell (H : Family α) (V P : Edge α) (r : ℕ) : Family α :=
   (V.powersetCard (r - 1)).filter fun A =>
     Disjoint A P ∧ ∀ x ∈ P, insert x A ∈ H
 
-theorem pair_subset_facetCompletions_iff
+theorem pair_subset_facet_completions_iff
     {H : Family α} {V A P : Edge α}
     (hPV : P ⊆ V) :
     P ⊆ facetCompletions H V A ↔
@@ -80,7 +80,7 @@ theorem facet_energy_double_count
       ext A
       simp only [commonFacetCell, Finset.mem_filter]
       exact and_congr_right fun _ =>
-        (pair_subset_facetCompletions_iff hPV).symm
+        (pair_subset_facet_completions_iff hPV).symm
     rw [hEq, Finset.card_filter]
   calc
     (∑ A ∈ Facets, (facetCompletions H V A).card.choose 2) =
@@ -99,7 +99,7 @@ theorem facet_energy_double_count
 
 /-- A common facet cell of two completion vertices is intersecting by
 admissibility. -/
-theorem commonFacetCell_intersecting
+theorem common_facet_cell_intersecting
     {H : Family α} {V : Edge α} {x y : α} {r : ℕ}
     (hH : Admissible H) (hxy : x ≠ y) (hr : 2 ≤ r) :
     PairwiseIntersecting (commonFacetCell H V ({x, y} : Edge α) r) := by
@@ -109,12 +109,12 @@ theorem commonFacetCell_intersecting
     intro A hA
     obtain ⟨hPow, hDisj, hEdges⟩ := Finset.mem_filter.mp hA
     obtain ⟨hAV, hAcard⟩ := Finset.mem_powersetCard.mp hPow
-    apply mem_commonPrefixTails.mpr
+    apply mem_common_prefix_tails.mpr
     refine ⟨hAV, hAcard, ?_, ?_, ?_⟩
     · simpa using hDisj
     · simpa using hEdges x (by simp)
     · simpa using hEdges y (by simp)
-  have hI := commonPrefixTails_intersecting (W := V) hH
+  have hI := common_prefix_tails_intersecting (W := V) hH
     (by simp) (by simp) (Finset.disjoint_singleton.mpr hxy)
     (by omega : 1 ≤ r - 1)
   intro A B hA hB hNe
@@ -122,7 +122,7 @@ theorem commonFacetCell_intersecting
 
 /-- The finite common-cell estimate needed after (IV.4.6), expressed
 through actual parent two-point degree rather than an abstract cell cap. -/
-theorem commonFacetCell_card_le_pair_degree
+theorem common_facet_cell_card_le_pair_degree
     {H : Family α} {V : Edge α} {r D : ℕ}
     (hH : Admissible H) (hr : 2 ≤ r)
     (hD : ∀ Q : Edge α, Q.card = 2 →
@@ -141,7 +141,7 @@ theorem commonFacetCell_card_le_pair_degree
     intro T hT
     exact (Finset.mem_powersetCard.mp (Finset.mem_filter.mp hT).1).2
   have hI : PairwiseIntersecting C :=
-    commonFacetCell_intersecting hH hxy hr
+    common_facet_cell_intersecting hH hxy hr
   apply intersecting_card_le_vertex_cap hU hI hA (by omega)
   intro z
   by_cases hzx : z = x
@@ -197,7 +197,7 @@ theorem facet_energy_le_pair_degree_budget
   have hEach : ∀ P ∈ V.powersetCard 2,
       (commonFacetCell H V P r).card ≤ (r - 1) * D := by
     intro P hP
-    exact commonFacetCell_card_le_pair_degree hH hr hD hP
+    exact common_facet_cell_card_le_pair_degree hH hr hD hP
   simpa [nsmul_eq_mul, Finset.card_powersetCard] using
     Finset.sum_le_card_nsmul (V.powersetCard 2)
       (fun P => (commonFacetCell H V P r).card) ((r - 1) * D) hEach
@@ -223,7 +223,7 @@ private theorem high_degree_choose_budget (d t : ℕ) (hdt : t < d) :
 
 /-- Every deleted edge has a heavy facet and therefore appears among the
 completion incidences of that facet. -/
-theorem edgesMeetingHeavyFacet_card_le_incidence
+theorem edges_meeting_heavy_facet_card_le_incidence
     {H : Family α} {V : Edge α} {r t : ℕ}
     (hU : Uniform r H) (hGround : ∀ E ∈ H, E ⊆ V)
     (hr : 1 ≤ r) :
@@ -259,7 +259,7 @@ theorem edgesMeetingHeavyFacet_card_le_incidence
   exact (Finset.card_le_card hCover).trans (hBi.trans hImage)
 
 /-- The weighted incidence bound for heavy facets. -/
-theorem heavyFacet_incidence_energy_bound
+theorem heavy_facet_incidence_energy_bound
     (H : Family α) (V : Edge α) (r t : ℕ) :
     (t - 1) *
       (∑ A ∈ heavyFacets H V r t,
@@ -289,10 +289,10 @@ theorem high_facet_deletion_bound
       (H.filter fun E => Q ⊆ E).card ≤ D) :
     (t - 1) * (edgesMeetingHeavyFacet H V r t).card ≤
       2 * (V.card.choose 2 * ((r - 1) * D)) := by
-  have hInc := edgesMeetingHeavyFacet_card_le_incidence hU hGround
+  have hInc := edges_meeting_heavy_facet_card_le_incidence hU hGround
     (t := t) (by omega : 1 ≤ r)
   have hWeighted := Nat.mul_le_mul_left (t - 1) hInc
-  have hEnergy := heavyFacet_incidence_energy_bound H V r t
+  have hEnergy := heavy_facet_incidence_energy_bound H V r t
   have hCap := facet_energy_le_pair_degree_budget (V := V) hAdm hr hD
   have hCap' := Nat.mul_le_mul_left 2 hCap
   omega
@@ -301,24 +301,24 @@ theorem high_facet_deletion_bound
 def facetCleanedFamily (H : Family α) (V : Edge α) (r t : ℕ) : Family α :=
   H \ edgesMeetingHeavyFacet H V r t
 
-theorem facetCleanedFamily_subset
+theorem facet_cleaned_family_subset
     (H : Family α) (V : Edge α) (r t : ℕ) :
     facetCleanedFamily H V r t ⊆ H := Finset.sdiff_subset
 
-theorem facetCleanedFamily_admissible
+theorem facet_cleaned_family_admissible
     {H : Family α} {V : Edge α} {r t : ℕ}
     (hH : Admissible H) :
     Admissible (facetCleanedFamily H V r t) :=
-  admissible_mono (facetCleanedFamily_subset H V r t) hH
+  admissible_mono (facet_cleaned_family_subset H V r t) hH
 
-theorem facetCleanedFamily_uniform
+theorem facet_cleaned_family_uniform
     {H : Family α} {V : Edge α} {r t : ℕ}
     (hH : Uniform r H) :
     Uniform r (facetCleanedFamily H V r t) := by
   intro E hE
-  exact hH (facetCleanedFamily_subset H V r t hE)
+  exact hH (facet_cleaned_family_subset H V r t hE)
 
-theorem facetCleanedFamily_codegree_le
+theorem facet_cleaned_family_codegree_le
     (H : Family α) (V S : Edge α) (r t : ℕ) :
     ((facetCleanedFamily H V r t).filter fun E => S ⊆ E).card ≤
       (H.filter fun E => S ⊆ E).card := by
@@ -326,10 +326,10 @@ theorem facetCleanedFamily_codegree_le
   intro E hE
   obtain ⟨hEH, hSE⟩ := Finset.mem_filter.mp hE
   exact Finset.mem_filter.mpr
-    ⟨facetCleanedFamily_subset H V r t hEH, hSE⟩
+    ⟨facet_cleaned_family_subset H V r t hEH, hSE⟩
 
 /-- Every retained facet has completion degree at most the cutoff. -/
-theorem facetCleanedFamily_facet_degree_le
+theorem facet_cleaned_family_facet_degree_le
     (H : Family α) (V : Edge α) (r t : ℕ)
     {A : Edge α} (hA : A ∈ V.powersetCard (r - 1)) :
     (facetCompletions (facetCleanedFamily H V r t) V A).card ≤ t := by
@@ -357,12 +357,12 @@ theorem facetCleanedFamily_facet_degree_le
       intro x hx
       obtain ⟨hxV, hxA, hEdge⟩ := Finset.mem_filter.mp hx
       exact Finset.mem_filter.mpr
-        ⟨hxV, hxA, facetCleanedFamily_subset H V r t hEdge⟩
+        ⟨hxV, hxA, facet_cleaned_family_subset H V r t hEdge⟩
     exact (Finset.card_le_card hSub).trans hParent
 
 /-- The actual number of edges removed by facet cleaning satisfies the
 weighted energy budget. -/
-theorem facetCleanedFamily_loss_bound
+theorem facet_cleaned_family_loss_bound
     {H : Family α} {V : Edge α} {r t D : ℕ}
     (hAdm : Admissible H) (hU : Uniform r H)
     (hGround : ∀ E ∈ H, E ⊆ V) (hr : 2 ≤ r)

@@ -28,7 +28,7 @@ def baseWeight (d e : ℕ) : ℚ :=
   weightFraction d + weightFraction e -
     ((d : ℚ) - (e : ℚ)) * (weightFraction d - weightFraction e)
 
-theorem weightFraction_nonneg (d : ℕ) : 0 ≤ weightFraction d := by
+theorem weight_fraction_nonneg (d : ℕ) : 0 ≤ weightFraction d := by
   by_cases hsmall : d ≤ 3
   · simp [weightFraction, hsmall]
   · have hd : 4 ≤ d := by omega
@@ -39,7 +39,7 @@ theorem weightFraction_nonneg (d : ℕ) : 0 ≤ weightFraction d := by
     simp only [weightFraction, ite_eq_right hsmall]
     exact div_nonneg hnum hdpos.le
 
-theorem weightFraction_lt_one (d : ℕ) : weightFraction d < 1 := by
+theorem weight_fraction_lt_one (d : ℕ) : weightFraction d < 1 := by
   by_cases hsmall : d ≤ 3
   · simp [weightFraction, hsmall]
   · have hd : 4 ≤ d := by omega
@@ -48,13 +48,13 @@ theorem weightFraction_lt_one (d : ℕ) : weightFraction d < 1 := by
     apply (div_lt_iff₀ hdpos).mpr
     linarith
 
-theorem weightFraction_eq_zero_of_le_three
+theorem weight_fraction_eq_zero_of_le_three
     {d : ℕ} (hd : d ≤ 3) : weightFraction d = 0 := by
   simp [weightFraction, hd]
 
 /-- Multiplying by the number of common neighbors removes the normalized
     fraction and gives the common-link surplus. -/
-theorem card_mul_weightFraction_eq_linkSurplus (d : ℕ) :
+theorem card_mul_weight_fraction_eq_link_surplus (d : ℕ) :
     (d : ℚ) * weightFraction d = linkSurplus d := by
   by_cases hsmall : d ≤ 3
   · have hsurplus : ¬ 3 < d := by omega
@@ -67,11 +67,11 @@ theorem card_mul_weightFraction_eq_linkSurplus (d : ℕ) :
     field_simp
 
 /-- Larger integer degrees have no smaller normalized excess. -/
-theorem weightFraction_mono {d e : ℕ} (hde : d ≤ e) :
+theorem weight_fraction_mono {d e : ℕ} (hde : d ≤ e) :
     weightFraction d ≤ weightFraction e := by
   by_cases hdsmall : d ≤ 3
-  · rw [weightFraction_eq_zero_of_le_three hdsmall]
-    exact weightFraction_nonneg e
+  · rw [weight_fraction_eq_zero_of_le_three hdsmall]
+    exact weight_fraction_nonneg e
   · have hesmall : ¬ e ≤ 3 := by omega
     have hdpos : (0 : ℚ) < d := by exact_mod_cast (by omega : 0 < d)
     have hepos : (0 : ℚ) < e := by exact_mod_cast (by omega : 0 < e)
@@ -83,7 +83,7 @@ theorem weightFraction_mono {d e : ℕ} (hde : d ≤ e) :
 
 /-- The budget `b(d)/d` equals `(d-2)f(d)` for every positive degree,
     with the low-degree branches both zero. -/
-theorem weightPairBudget_eq (d : ℕ) :
+theorem weight_pair_budget_eq (d : ℕ) :
     weightPairBudget d = ((d : ℚ) - 2) * weightFraction d := by
   by_cases hd0 : d = 0
   · subst d; norm_num [weightPairBudget, weightFraction]
@@ -101,7 +101,7 @@ theorem weightPairBudget_eq (d : ℕ) :
 
 /-- Multiplying the per-triple pair budget by the completion degree gives
     the original pair budget. -/
-theorem card_mul_weightPairBudget_eq_pairBudget (d : ℕ) :
+theorem card_mul_weight_pair_budget_eq_pair_budget (d : ℕ) :
     (d : ℚ) * weightPairBudget d = pairBudget d := by
   by_cases hd0 : d = 0
   · subst d
@@ -110,11 +110,11 @@ theorem card_mul_weightPairBudget_eq_pairBudget (d : ℕ) :
     simp only [weightPairBudget, ite_eq_right hd0]
     field_simp
 
-theorem baseWeight_comm (d e : ℕ) : baseWeight d e = baseWeight e d := by
+theorem base_weight_comm (d e : ℕ) : baseWeight d e = baseWeight e d := by
   unfold baseWeight
   ring
 
-private theorem baseWeight_le_twice_left
+private theorem base_weight_le_twice_left
     {d e : ℕ} (hde : d ≤ e) :
     baseWeight d e ≤ 2 * weightFraction d := by
   by_cases heq : d = e
@@ -127,7 +127,7 @@ private theorem baseWeight_le_twice_left
         exact_mod_cast hgapNat
       linarith
     have hfgap : (0 : ℚ) ≤ weightFraction e - weightFraction d := by
-      have hf := weightFraction_mono hde
+      have hf := weight_fraction_mono hde
       linarith
     have hprod := mul_nonneg hgap hfgap
     unfold baseWeight
@@ -135,15 +135,15 @@ private theorem baseWeight_le_twice_left
 
 /-- The base of every signed edge weight is at most twice its smaller
     endpoint fraction.  Integer degree gaps are essential here. -/
-theorem baseWeight_le_twice_min (d e : ℕ) :
+theorem base_weight_le_twice_min (d e : ℕ) :
     baseWeight d e ≤ 2 * min (weightFraction d) (weightFraction e) := by
   by_cases hde : d ≤ e
-  · have hf := weightFraction_mono hde
+  · have hf := weight_fraction_mono hde
     rw [min_eq_left hf]
-    exact baseWeight_le_twice_left hde
+    exact base_weight_le_twice_left hde
   · have hed : e ≤ d := by omega
-    have hf := weightFraction_mono hed
-    rw [min_eq_right hf, baseWeight_comm]
-    exact baseWeight_le_twice_left hed
+    have hf := weight_fraction_mono hed
+    rw [min_eq_right hf, base_weight_comm]
+    exact base_weight_le_twice_left hed
 
 end JSP523.Rank3

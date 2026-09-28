@@ -36,19 +36,19 @@ def usedCells (H : Family α) (V : Finset α) : Family α := by
       x ≠ y ∧ Disjoint p q ∧
       p ∪ {x} ∈ H ∧ p ∪ {y} ∈ H)
 
-theorem usedPairs_subset (H : Family α) (V : Finset α) :
+theorem used_pairs_subset (H : Family α) (V : Finset α) :
     usedPairs H V ⊆ V.powersetCard 2 := by
   intro p hp
   exact (Finset.mem_filter.mp hp).1
 
-theorem usedCells_subset (H : Family α) (V : Finset α) :
+theorem used_cells_subset (H : Family α) (V : Finset α) :
     usedCells H V ⊆ V.powersetCard 2 := by
   intro q hq
   exact (Finset.mem_filter.mp hq).1
 
 /-- The cell support is exactly the collection of ambient pairs with a
     nonempty actual common link. -/
-theorem mem_usedCells_iff_commonLink_nonempty
+theorem mem_used_cells_iff_common_link_nonempty
     (H : Family α) (V : Finset α) (q : Edge α) :
     q ∈ usedCells H V ↔
       q ∈ V.powersetCard 2 ∧ (commonLink H V q).Nonempty := by
@@ -72,7 +72,7 @@ theorem triple_family_card_le_choose_two_of_actual_supports
       (usedPairs H V).card + (usedCells H V).card) :
     H.card ≤ V.card.choose 2 := by
   exact triple_family_card_le_choose_two H V (usedPairs H V) (usedCells H V)
-    (usedPairs_subset H V) (usedCells_subset H V) hSupport
+    (used_pairs_subset H V) (used_cells_subset H V) hSupport
 
 end Supports
 

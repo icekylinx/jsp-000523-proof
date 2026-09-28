@@ -19,7 +19,7 @@ def graphCommonMultiplicity (F : SimpleGraph α) [DecidableRel F.Adj]
     (x y : α) : ℕ :=
   ((F.neighborFinset x).filter fun z => F.Adj y z).card
 
-theorem graphCommonMultiplicity_eq_inter
+theorem graph_common_multiplicity_eq_inter
     (F : SimpleGraph α) [DecidableEq α] [DecidableRel F.Adj] (x y : α) :
     graphCommonMultiplicity F x y =
       (F.neighborFinset x ∩ F.neighborFinset y).card := by
@@ -28,11 +28,11 @@ theorem graphCommonMultiplicity_eq_inter
   ext z
   simp [SimpleGraph.mem_neighborFinset]
 
-theorem graphCommonMultiplicity_symm
+theorem graph_common_multiplicity_symm
     (F : SimpleGraph α) [DecidableEq α] [DecidableRel F.Adj] (x y : α) :
     graphCommonMultiplicity F x y = graphCommonMultiplicity F y x := by
-  rw [graphCommonMultiplicity_eq_inter,
-    graphCommonMultiplicity_eq_inter, Finset.inter_comm]
+  rw [graph_common_multiplicity_eq_inter,
+    graph_common_multiplicity_eq_inter, Finset.inter_comm]
 
 /-- The sum of degrees of all neighbors of `x`. -/
 def graphNeighborDegreeSum (F : SimpleGraph α) [DecidableRel F.Adj]
@@ -58,7 +58,7 @@ def graphOffDiagonalCappedSum (F : SimpleGraph α) [DecidableEq α]
   ∑ y ∈ (Finset.univ.erase x),
     (min 2 (graphCommonMultiplicity F x y) : ℚ)
 
-theorem graphCommonMultiplicity_self
+theorem graph_common_multiplicity_self
     (F : SimpleGraph α) [DecidableRel F.Adj] (x : α) :
     graphCommonMultiplicity F x x = F.degree x := by
   unfold graphCommonMultiplicity SimpleGraph.degree
@@ -66,7 +66,7 @@ theorem graphCommonMultiplicity_self
   ext z
   simp [SimpleGraph.mem_neighborFinset]
 
-theorem graphVertexDeficit_eq_manuscript
+theorem graph_vertex_deficit_eq_manuscript
     (F : SimpleGraph α) [DecidableEq α] [DecidableRel F.Adj] (x : α)
     (hx : 2 ≤ F.degree x) :
     graphVertexDeficit F x = graphOffDiagonalCappedSum F x -
@@ -75,20 +75,20 @@ theorem graphVertexDeficit_eq_manuscript
     (fun y : α => (min 2 (graphCommonMultiplicity F x y) : ℚ))
     (Finset.mem_univ x)
   have hDiag : min (2 : ℚ) (graphCommonMultiplicity F x x : ℚ) = 2 := by
-    rw [graphCommonMultiplicity_self]
+    rw [graph_common_multiplicity_self]
     exact min_eq_left (by exact_mod_cast hx)
   unfold graphVertexDeficit graphCappedCommonSum graphOffDiagonalCappedSum
   rw [hDiag] at hSplit
   linarith
 
-theorem graphCommonMultiplicity_le_degree
+theorem graph_common_multiplicity_le_degree
     (F : SimpleGraph α) [DecidableRel F.Adj] (x y : α) :
     graphCommonMultiplicity F x y ≤ F.degree x := by
   unfold graphCommonMultiplicity SimpleGraph.degree
   exact Finset.card_filter_le _ _
 
 /-- Double-count length-two walks beginning at `x`. -/
-theorem sum_graphCommonMultiplicity
+theorem sum_graph_common_multiplicity
     (F : SimpleGraph α) [DecidableRel F.Adj] (x : α) :
     (∑ y : α, graphCommonMultiplicity F x y) =
       graphNeighborDegreeSum F x := by
@@ -132,11 +132,11 @@ private theorem capped_fraction_le
 
 /-- The manuscript's local graph deficit is nonnegative at every vertex
 of degree at least two. -/
-theorem graphVertexDeficit_nonneg
+theorem graph_vertex_deficit_nonneg
     (F : SimpleGraph α) [DecidableRel F.Adj] (x : α)
     (hx : 2 ≤ F.degree x) :
     0 ≤ graphVertexDeficit F x := by
-  have hsum := sum_graphCommonMultiplicity F x
+  have hsum := sum_graph_common_multiplicity F x
   have hsumQ :
       (∑ y : α, (graphCommonMultiplicity F x y : ℚ)) =
         (graphNeighborDegreeSum F x : ℚ) := by
@@ -147,7 +147,7 @@ theorem graphVertexDeficit_nonneg
         (min 2 (graphCommonMultiplicity F x y) : ℚ) := by
     intro y
     exact capped_fraction_le _ _ hx
-      (graphCommonMultiplicity_le_degree F x y)
+      (graph_common_multiplicity_le_degree F x y)
   have hSumTerm := Finset.sum_le_sum
     (s := Finset.univ) (fun y _ => hterm y)
   have hEq :
@@ -165,7 +165,7 @@ theorem graphVertexDeficit_nonneg
 /-- At a marked vertex, all off-diagonal common-neighbor counts are at
 most two.  The capped sum then has the exact linear form used in the
 marked-vertex allocation of §III.B of the all-rank manuscript equation (III.B.6). -/
-theorem graphVertexDeficit_marked_formula
+theorem graph_vertex_deficit_marked_formula
     (F : SimpleGraph α) [DecidableEq α] [DecidableRel F.Adj]
     (x : α) (hx : 2 ≤ F.degree x)
     (hMarked : ∀ y : α, y ≠ x →
@@ -184,7 +184,7 @@ theorem graphVertexDeficit_marked_formula
     have hmu := hMarked y hyNe
     norm_cast
     exact min_eq_right hmu
-  have hTotal := sum_graphCommonMultiplicity F x
+  have hTotal := sum_graph_common_multiplicity F x
   have hTotalQ :
       (∑ y : α, (graphCommonMultiplicity F x y : ℚ)) =
         (graphNeighborDegreeSum F x : ℚ) := by
@@ -192,18 +192,18 @@ theorem graphVertexDeficit_marked_formula
   have hSplit := Finset.sum_erase_add Finset.univ
     (fun y : α => (graphCommonMultiplicity F x y : ℚ))
     (Finset.mem_univ x)
-  rw [graphCommonMultiplicity_self] at hSplit
+  rw [graph_common_multiplicity_self] at hSplit
   have hOff :
       (∑ y ∈ Finset.univ.erase x,
         (graphCommonMultiplicity F x y : ℚ)) =
       (graphNeighborDegreeSum F x : ℚ) - (F.degree x : ℚ) := by
     linarith
-  rw [graphVertexDeficit_eq_manuscript F x hx, hCap, hOff]
+  rw [graph_vertex_deficit_eq_manuscript F x hx, hCap, hOff]
   ring
 
 /-- At a leaf, the off-diagonal capped sum is the degree of its unique
 neighbor minus one.  This is exactly the leaf correction in equation (III.B.6). -/
-theorem graphOffDiagonalCappedSum_leaf
+theorem graph_off_diagonal_capped_sum_leaf
     (F : SimpleGraph α) [DecidableEq α] [DecidableRel F.Adj]
     (x : α) (hx : F.degree x = 1) :
     ∃ z : α, F.Adj x z ∧
@@ -244,7 +244,7 @@ theorem graphOffDiagonalCappedSum_leaf
   rw [Finset.sum_boole, hFilter]
   exact hCardQ
 
-theorem graphOffDiagonalCappedSum_isolated
+theorem graph_off_diagonal_capped_sum_isolated
     (F : SimpleGraph α) [DecidableEq α] [DecidableRel F.Adj]
     (x : α) (hx : F.degree x = 0) :
     graphOffDiagonalCappedSum F x = 0 := by
@@ -252,7 +252,7 @@ theorem graphOffDiagonalCappedSum_isolated
   unfold graphOffDiagonalCappedSum graphCommonMultiplicity
   simp [hN]
 
-theorem graphNeighborDegreeSum_isolated
+theorem graph_neighbor_degree_sum_isolated
     (F : SimpleGraph α) [DecidableRel F.Adj]
     (x : α) (hx : F.degree x = 0) :
     graphNeighborDegreeSum F x = 0 := by

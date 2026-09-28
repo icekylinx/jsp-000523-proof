@@ -42,7 +42,7 @@ def singletonCompletionPairs (H : Family α) (V : Edge α) : Family α :=
 def doubleLinkCells (H : Family α) (V : Edge α) : Family α :=
   (usedCells H V).filter (fun q => (commonLink H V q).card = 2)
 
-private theorem pairBudget_pointwise (d : ℕ) (hd : 0 < d) :
+private theorem pair_budget_pointwise (d : ℕ) (hd : 0 < d) :
     2 * (d.choose 2 : ℚ) - pairBudget d =
       4 * (d : ℚ) - 6 + (if d = 1 then 2 else 0) := by
   rcases (by omega : d = 1 ∨ d = 2 ∨ d = 3 ∨ 4 ≤ d) with h | h | h | h
@@ -54,7 +54,7 @@ private theorem pairBudget_pointwise (d : ℕ) (hd : 0 < d) :
     rw [Nat.cast_choose_two ℚ d]
     ring
 
-private theorem linkSurplus_pointwise (c : ℕ) (hc : 0 < c) :
+private theorem link_surplus_pointwise (c : ℕ) (hc : 0 < c) :
     linkSurplus c = (c : ℚ) - 3 +
       (if c = 1 then 2 else 0) + (if c = 2 then 1 else 0) := by
   rcases (by omega : c = 1 ∨ c = 2 ∨ c = 3 ∨ 3 < c) with h | h | h | h
@@ -66,7 +66,7 @@ private theorem linkSurplus_pointwise (c : ℕ) (hc : 0 < c) :
     simp [linkSurplus, h, hne1, hne2]
 
 /-- The second completion moment vanishes off the actual pair support. -/
-theorem usedPairs_completion_second_moment
+theorem used_pairs_completion_second_moment
     (H : Family α) (V : Edge α)
     (hUniform : Uniform 3 H)
     (hground : ∀ E ∈ H, E ⊆ V) :
@@ -78,17 +78,17 @@ theorem usedPairs_completion_second_moment
         (completionVertices H V p).card.choose 2) =
         ∑ p ∈ V.powersetCard 2,
           (completionVertices H V p).card.choose 2 := by
-      apply Finset.sum_subset (usedPairs_subset H V)
+      apply Finset.sum_subset (used_pairs_subset H V)
       intro p hp hnot
       by_cases hz : (completionVertices H V p).card = 0
       · simp [hz]
       · have hnon : (completionVertices H V p).Nonempty :=
           Finset.card_pos.mp (Nat.pos_of_ne_zero hz)
         exact False.elim (hnot
-          ((mem_usedPairs_iff_completion_nonempty H V p
+          ((mem_used_pairs_iff_completion_nonempty H V p
             hUniform hground hp).mpr hnon))
     _ = ∑ q ∈ usedCells H V, (commonLink H V q).card :=
-      (usedCells_common_link_double_count H V).symm
+      (used_cells_common_link_double_count H V).symm
 
 private theorem card_filter_eq_sum_indicator
     {β : Type*} [DecidableEq β]
@@ -114,12 +114,12 @@ theorem actual_pair_budget_ledger
   have hfirst : (∑ p ∈ U, (d p : ℚ)) = 3 * (H.card : ℚ) := by
     simpa [U, d] using
       congrArg (fun n : ℕ => (n : ℚ))
-        (usedPairs_completion_first_moment H V hUniform hground)
+        (used_pairs_completion_first_moment H V hUniform hground)
   have hsecond : (∑ p ∈ U, ((d p).choose 2 : ℚ)) =
       ∑ q ∈ usedCells H V, ((commonLink H V q).card : ℚ) := by
     simpa [U, d] using
       congrArg (fun n : ℕ => (n : ℚ))
-        (usedPairs_completion_second_moment H V hUniform hground)
+        (used_pairs_completion_second_moment H V hUniform hground)
   have hK : (∑ p ∈ U, if d p = 1 then (1 : ℚ) else 0) =
       ((singletonCompletionPairs H V).card : ℚ) := by
     exact (card_filter_eq_sum_indicator U (fun p => d p = 1)).symm
@@ -130,8 +130,8 @@ theorem actual_pair_budget_ledger
     apply Finset.sum_congr rfl
     intro p hp
     have hnon : (completionVertices H V p).Nonempty :=
-      usedPair_has_completion H V p hUniform hground hp
-    exact pairBudget_pointwise (d p) (Finset.card_pos.mpr hnon)
+      used_pair_has_completion H V p hUniform hground hp
+    exact pair_budget_pointwise (d p) (Finset.card_pos.mpr hnon)
   have hL :
       (∑ p ∈ U, (2 * ((d p).choose 2 : ℚ) - pairBudget (d p))) =
         2 * (∑ p ∈ U, ((d p).choose 2 : ℚ)) -
@@ -179,8 +179,8 @@ theorem actual_link_surplus_ledger (H : Family α) (V : Edge α) :
     apply Finset.sum_congr rfl
     intro q hq
     have hnon : (commonLink H V q).Nonempty :=
-      ((mem_usedCells_iff_commonLink_nonempty H V q).mp hq).2
-    exact linkSurplus_pointwise (c q) (Finset.card_pos.mpr hnon)
+      ((mem_used_cells_iff_common_link_nonempty H V q).mp hq).2
+    exact link_surplus_pointwise (c q) (Finset.card_pos.mpr hnon)
   have htwice :
       (∑ q ∈ C, if c q = 1 then (2 : ℚ) else 0) =
         2 * (∑ q ∈ C, if c q = 1 then (1 : ℚ) else 0) := by

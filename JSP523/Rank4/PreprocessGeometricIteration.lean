@@ -12,7 +12,7 @@ namespace JSP523.Rank4
 
 variable {α : Type*} [DecidableEq α]
 
-private theorem rankFourPairDegree_mono {F K : Family α}
+private theorem rank_four_pair_degree_mono {F K : Family α}
     (hKF : K ⊆ F) (P : Edge α) :
     rankFourPairDegree K P ≤ rankFourPairDegree F P := by
   unfold rankFourPairDegree
@@ -21,7 +21,7 @@ private theorem rankFourPairDegree_mono {F K : Family α}
   exact Finset.mem_filter.mpr ⟨hKF (Finset.mem_filter.mp hE).1,
     (Finset.mem_filter.mp hE).2⟩
 
-private theorem facetCompletions_mono {F K : Family α}
+private theorem facet_completions_mono {F K : Family α}
     (hKF : K ⊆ F) (U T : Edge α) :
     facetCompletions K U T ⊆ facetCompletions F U T := by
   intro x hx
@@ -47,7 +47,7 @@ The output is a subfamily with the final surviving degree bounded by one of
 the supplied targets, and a weighted total loss bound.  The explicit finite
 premises are the pair and facet codegree caps used in each one-step moment
 estimate. -/
-theorem iterate_highCodegree_regularization
+theorem iterate_high_codegree_regularization
     (U : Edge α) (M D rmin : ℕ) (targets : List ℕ) (F : Family α)
     (hNonempty : targets ≠ [])
     (hTargets : ∀ r ∈ targets, rmin ≤ r)
@@ -67,7 +67,7 @@ theorem iterate_highCodegree_regularization
       contradiction
   | cons R rest ih =>
       have hRmin : rmin ≤ R := hTargets R (by simp)
-      have hStep := highCodegreeDeletion_regularizes_of_degree_caps
+      have hStep := high_codegree_deletion_regularizes_of_degree_caps
         F U R M D hUniform hAdmissible hPair hFacet
       obtain ⟨K₁, hK₁F, hLoss₁, hReg₁⟩ := hStep
       by_cases hRest : rest = []
@@ -86,11 +86,11 @@ theorem iterate_highCodegree_regularization
         have hKPair : ∀ P : Edge α, P.card = 2 →
             rankFourPairDegree K₁ P ≤ M := by
           intro P hP
-          exact (rankFourPairDegree_mono hK₁F P).trans (hPair P hP)
+          exact (rank_four_pair_degree_mono hK₁F P).trans (hPair P hP)
         have hKFacet : ∀ T : Edge α, T.card = 3 →
             (facetCompletions K₁ U T).card ≤ D := by
           intro T hT
-          exact (Finset.card_le_card (facetCompletions_mono hK₁F U T)).trans
+          exact (Finset.card_le_card (facet_completions_mono hK₁F U T)).trans
             (hFacet T hT)
         obtain ⟨K₂, hK₂K₁, hReg₂, hLoss₂⟩ :=
           ih K₁ hRest (fun r hr => hTargets r (by simp [hr]))
