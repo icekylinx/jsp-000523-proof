@@ -4,6 +4,8 @@ import JSP523.Rank5.RegularizationFinite
 import JSP523.Rank5.RegularizationNatural
 import Mathlib.Order.Interval.Finset.Nat
 
+set_option linter.style.haveILetI false
+
 /-!
 # Initial codegree cleanup for IV.5.1
 
@@ -224,6 +226,37 @@ theorem exists_high_degree_vertex_cover
     exact hz (Finset.mem_filter.mpr ⟨Finset.mem_univ z, hT⟩)
   omega
 
+/-- Avoiding a set that contains all high-degree vertices reduces the
+maximum degree of the actual filtered family to the chosen threshold. -/
+theorem avoiding_high_degree_cover_max_degree
+    {n T : ℕ} (H : Family (Fin n)) (X : Edge (Fin n))
+    (hOutside : ∀ z : Fin n, z ∉ X →
+      (H.filter (fun E => z ∈ E)).card < T) :
+    ∀ z : Fin n,
+      ((H.filter (fun E => Disjoint E X)).filter
+        (fun E => z ∈ E)).card ≤ T := by
+  classical
+  intro z
+  by_cases hzX : z ∈ X
+  · have hEmpty :
+        (H.filter (fun E => Disjoint E X)).filter
+          (fun E => z ∈ E) = ∅ := by
+      ext E
+      constructor
+      · intro hE
+        obtain ⟨hEF, hzE⟩ := Finset.mem_filter.mp hE
+        have hDisj := (Finset.mem_filter.mp hEF).2
+        exact False.elim ((Finset.disjoint_left.mp hDisj) hzE hzX)
+      · intro hE
+        simp at hE
+    simp [hEmpty]
+  · have hD : (H.filter (fun E => ({z} : Edge (Fin n)) ⊆ E)).card ≤ T := by
+      simpa only [Finset.singleton_subset_iff] using
+        Nat.le_of_lt (hOutside z hzX)
+    simpa only [Finset.singleton_subset_iff] using
+      (completion_codegree_mono (Finset.filter_subset _ _)
+        ({z} : Edge (Fin n))).trans hD
+
 /-- Finite IV.5.1 cleanup from an actual admissible family with a maximum
 vertex-degree cap. All higher codegree caps, including facets, hold for the
 retained actual subfamily; its deletion cost is explicit. -/
@@ -290,23 +323,7 @@ theorem initial_codegree_cleanup_after_high_degree_removal
   have hUniform₀ : Uniform r H₀ := fun E hE => hUniform (hH₀sub hE)
   have hMax₀ : ∀ z : Fin n,
       (H₀.filter (fun E => z ∈ E)).card ≤ T := by
-    intro z
-    by_cases hzX : z ∈ X
-    · have hEmpty : H₀.filter (fun E => z ∈ E) = ∅ := by
-        ext E
-        constructor
-        · intro hE
-          obtain ⟨hEH₀, hzE⟩ := Finset.mem_filter.mp hE
-          have hDisj := (Finset.mem_filter.mp hEH₀).2
-          exact False.elim ((Finset.disjoint_left.mp hDisj) hzE hzX)
-        · intro hE
-          simp at hE
-      simp [hEmpty]
-    · have hD : (H.filter (fun E => ({z} : Edge (Fin n)) ⊆ E)).card ≤ T := by
-        simpa only [Finset.singleton_subset_iff] using
-          (Nat.le_of_lt (hOutside z hzX))
-      simpa only [Finset.singleton_subset_iff] using
-        (completion_codegree_mono hH₀sub ({z} : Edge (Fin n))).trans hD
+    exact avoiding_high_degree_cover_max_degree H X hOutside
   obtain ⟨K, hKH₀, hAdmK, hUniformK, hCaps, hLoss₁⟩ :=
     initial_codegree_cleanup_from_max_degree H₀ d a hAdm₀ hUniform₀
       hr hMax₀ hGap
@@ -388,6 +405,453 @@ theorem initial_cover_size_le_rank_square
     _ ≤ r * (r * a) := Nat.mul_le_mul_right _ hCard
     _ = r * r * a := by ring
 
+/-- The natural-round heavy-root cover obeys its expected `n/T` scale,
+using the same rank-square counting lemma as the initial cleanup. -/
+theorem discrete_round_cover_times_root_bound
+    (n r R : ℕ)
+    (hTn : discreteRoundRoot R ≤ n) :
+    discreteRoundCoverSize n r R * discreteRoundRoot R ≤
+      3 * r * r * n := by
+  let T := discreteRoundRoot R
+  let a := discreteRoundMultiplier n R
+  have hCover : discreteRoundCoverSize n r R ≤ r * r * a := by
+    have hSubset : Finset.Icc 1 (r - 2) ⊆ Finset.Icc 1 (r - 1) := by
+      intro s hs
+      simp only [Finset.mem_Icc] at hs ⊢
+      omega
+    have hSum : (∑ s ∈ Finset.Icc 1 (r - 2), s * (a - 1)) ≤
+        ∑ s ∈ Finset.Icc 1 (r - 1), s * (a - 1) :=
+      Finset.sum_le_sum_of_subset hSubset
+    change discreteRoundCoverSize n r R ≤
+      ∑ s ∈ Finset.Icc 1 (r - 1), s * (a - 1) at hSum
+    exact hSum.trans (initial_cover_size_le_rank_square r a)
+  have hDiv := Nat.mod_add_div (2 * n) T
+  have haHi : a * T ≤ 2 * n + T := by
+    dsimp [a, T, discreteRoundMultiplier]
+    rw [Nat.add_mul, Nat.one_mul]
+    rw [Nat.mul_comm (discreteRoundRoot R)
+      (2 * n / discreteRoundRoot R)] at hDiv
+    omega
+  have haN : a * T ≤ 3 * n := by dsimp [T] at hTn haHi ⊢; omega
+  calc
+    discreteRoundCoverSize n r R * T ≤ (r * r * a) * T :=
+      Nat.mul_le_mul_right T hCover
+    _ = (r * r) * (a * T) := by ring
+    _ ≤ (r * r) * (3 * n) := Nat.mul_le_mul_left _ haN
+    _ = 3 * r * r * n := by ring
+
+/-- The cover-pair term of one natural round has an arbitrary fixed
+integer saving against `n^(r-1)` once the current scale is large. -/
+theorem discrete_round_cover_pair_rate
+    (n r R m : ℕ) (hr : 4 ≤ r)
+    (hRpos : 1 ≤ R) (hTn : discreteRoundRoot R ≤ n)
+    (hmR : (4 * m) ^ 4 ≤ R) :
+    m * ((discreteRoundCoverSize n r R).choose 2 *
+      (R * n ^ (r - 3))) ≤ 9 * r ^ 4 * n ^ (r - 1) := by
+  let T := discreteRoundRoot R
+  let h := discreteRoundCoverSize n r R
+  have hRatio := discrete_round_root_square_ratio_bound R (4 * m)
+    hRpos hmR
+  have hmRT : m * R ≤ T ^ 2 := by
+    dsimp [T] at hRatio ⊢
+    nlinarith [hRatio]
+  have hCoverT : h * T ≤ 3 * r * r * n :=
+    discrete_round_cover_times_root_bound n r R hTn
+  have hCoverSq := Nat.pow_le_pow_left hCoverT 2
+  have hChoose : h.choose 2 ≤ h ^ 2 := Nat.choose_le_pow h 2
+  have hExp : 2 + (r - 3) = r - 1 := by omega
+  have hNpow : n ^ 2 * n ^ (r - 3) = n ^ (r - 1) := by
+    rw [← pow_add, hExp]
+  calc
+    m * (h.choose 2 * (R * n ^ (r - 3))) ≤
+        m * (h ^ 2 * (R * n ^ (r - 3))) :=
+      Nat.mul_le_mul_left m (Nat.mul_le_mul_right _ hChoose)
+    _ = (h ^ 2 * (m * R)) * n ^ (r - 3) := by ring
+    _ ≤ (h ^ 2 * T ^ 2) * n ^ (r - 3) :=
+      Nat.mul_le_mul_right _ (Nat.mul_le_mul_left _ hmRT)
+    _ = (h * T) ^ 2 * n ^ (r - 3) := by ring
+    _ ≤ (3 * r * r * n) ^ 2 * n ^ (r - 3) :=
+      Nat.mul_le_mul_right _ hCoverSq
+    _ = 9 * r ^ 4 * n ^ (r - 1) := by rw [← hNpow]; ring
+
+theorem discrete_round_cover_pair_star_rate
+    (n r R m : ℕ) (hr : 4 ≤ r)
+    (hn : 2 * (r - 1) + 1 ≤ n)
+    (hRpos : 1 ≤ R) (hTn : discreteRoundRoot R ≤ n)
+    (hmR : (4 * m) ^ 4 ≤ R) :
+    m * ((discreteRoundCoverSize n r R).choose 2 *
+      (R * n ^ (r - 3))) ≤
+        9 * r ^ 4 * (2 ^ (r - 1) * (r - 1).factorial) *
+          (n - 1).choose (r - 1) := by
+  have hPair := discrete_round_cover_pair_rate n r R m hr hRpos hTn hmR
+  have hStar := far_star_power_le_choose_multiple n (r - 1) hn
+  calc
+    _ ≤ 9 * r ^ 4 * n ^ (r - 1) := hPair
+    _ ≤ 9 * r ^ 4 * (2 ^ (r - 1) * (r - 1).factorial) *
+        (n - 1).choose (r - 1) := by
+      have hMul := Nat.mul_le_mul_left (9 * r ^ 4) hStar
+      nlinarith [hMul]
+
+/-- A direct arbitrary-factor saving for the natural-round radius layer.
+The scalar condition `m^(r-1)(r-1)! R ≤ n` follows from `R³ ≤ n²`
+once `n` is sufficiently large for a fixed `m` and rank. -/
+theorem discrete_round_radius_layer_rate
+    (n r R m : ℕ) (hr : 4 ≤ r)
+    (hScale : m ^ (r - 1) * (r - 1).factorial * R ≤ n)
+    (hmn : m * r ≤ n) :
+    m * (((discreteRoundRadius n r R + (r - 1)) *
+      n.choose (r - 2)) / (r - 1)) ≤ 2 * n ^ (r - 1) := by
+  let k := r - 1
+  let U := Nat.nthRoot k (k.factorial * (R * n ^ (k - 1)))
+  have hk : 1 ≤ k := by dsimp [k]; omega
+  have hU : U ^ k ≤ k.factorial * (R * n ^ (k - 1)) :=
+    Nat.pow_nthRoot_le (Or.inl (by omega))
+  have hPow : (m * U) ^ k ≤ n ^ k := by
+    calc
+      (m * U) ^ k = m ^ k * U ^ k := by rw [mul_pow]
+      _ ≤ m ^ k * (k.factorial * (R * n ^ (k - 1))) :=
+        Nat.mul_le_mul_left _ hU
+      _ = (m ^ k * k.factorial * R) * n ^ (k - 1) := by ring
+      _ ≤ n * n ^ (k - 1) := Nat.mul_le_mul_right _ hScale
+      _ = n ^ k := by
+        have he : k - 1 + 1 = k := by omega
+        rw [Nat.mul_comm, ← pow_succ, he]
+  have hmU : m * U ≤ n := by
+    by_contra h
+    have hlt : n < m * U := by omega
+    have hltPow := Nat.pow_lt_pow_left hlt (by omega : k ≠ 0)
+    omega
+  have hL : discreteRoundRadius n r R = U + 1 := by
+    dsimp [discreteRoundRadius, U, k]
+    congr 1
+  have hRadius : m * (discreteRoundRadius n r R + (r - 1)) ≤ 2 * n := by
+    rw [hL]
+    have he : 1 + (r - 1) = r := by omega
+    have hRewrite : m * (U + 1 + (r - 1)) = m * U + m * r := by
+      rw [add_assoc, he]
+      ring
+    rw [hRewrite]
+    omega
+  have hChoose : n.choose (r - 2) ≤ n ^ (r - 2) :=
+    Nat.choose_le_pow n (r - 2)
+  have hDiv : ((discreteRoundRadius n r R + (r - 1)) *
+      n.choose (r - 2)) / (r - 1) ≤
+      (discreteRoundRadius n r R + (r - 1)) * n.choose (r - 2) :=
+    Nat.div_le_self _ _
+  have hExp : 1 + (r - 2) = r - 1 := by omega
+  calc
+    m * (((discreteRoundRadius n r R + (r - 1)) *
+        n.choose (r - 2)) / (r - 1)) ≤
+      m * ((discreteRoundRadius n r R + (r - 1)) *
+        n.choose (r - 2)) := Nat.mul_le_mul_left _ hDiv
+    _ = (m * (discreteRoundRadius n r R + (r - 1))) *
+        n.choose (r - 2) := by ring
+    _ ≤ (2 * n) * n.choose (r - 2) :=
+      Nat.mul_le_mul_right _ hRadius
+    _ ≤ (2 * n) * n ^ (r - 2) :=
+      Nat.mul_le_mul_left _ hChoose
+    _ = 2 * n ^ (r - 1) := by
+      calc
+        (2 * n) * n ^ (r - 2) = 2 * (n ^ (r - 2) * n) := by ring
+        _ = 2 * n ^ (r - 1) := by
+          rw [← pow_succ]
+          rw [show r - 2 + 1 = r - 1 by omega]
+
+theorem scale_cube_separation
+    (n R c : ℕ) (hR23 : R ^ 3 ≤ n ^ 2)
+    (hLarge : c ^ 3 ≤ n) :
+    c * R ≤ n := by
+  by_contra h
+  have hlt : n < c * R := by omega
+  have hltCube := Nat.pow_lt_pow_left hlt (by norm_num : 3 ≠ 0)
+  have hUpper : (c * R) ^ 3 ≤ n ^ 3 := by
+    calc
+      (c * R) ^ 3 = c ^ 3 * R ^ 3 := by ring
+      _ ≤ n * n ^ 2 := Nat.mul_le_mul hLarge hR23
+      _ = n ^ 3 := by ring
+  omega
+
+/-- The radius saving follows directly from the manuscript's
+`R³ ≤ n²` scale condition and one fixed finite threshold. -/
+theorem discrete_round_radius_layer_rate_at_natural_scale
+    (n r R m : ℕ) (hr : 4 ≤ r)
+    (hR23 : R ^ 3 ≤ n ^ 2)
+    (hLarge : (m ^ (r - 1) * (r - 1).factorial) ^ 3 ≤ n)
+    (hmn : m * r ≤ n) :
+    m * (((discreteRoundRadius n r R + (r - 1)) *
+      n.choose (r - 2)) / (r - 1)) ≤ 2 * n ^ (r - 1) := by
+  exact discrete_round_radius_layer_rate n r R m hr
+    (scale_cube_separation n R _ hR23 hLarge) hmn
+
+theorem discrete_round_collision_inner_bound
+    (n r R : ℕ) (hn : 1 ≤ n) (hr : 4 ≤ r) :
+    (r - 1) * (r - 1) * (R * n ^ (r - 3)) +
+      n * (n - 1) * (r - 2) * (R * n ^ (r - 4)) ≤
+        2 * r ^ 2 * (R * n ^ (r - 2)) := by
+  have hRank₁ : (r - 1) * (r - 1) ≤ r ^ 2 := by
+    have hSub : r - 1 ≤ r := Nat.sub_le r 1
+    nlinarith
+  have hRank₂ : r - 2 ≤ r ^ 2 :=
+    (Nat.sub_le r 2).trans
+      (le_self_pow (by omega : 1 ≤ r) (by norm_num : 2 ≠ 0))
+  have hPow₁ : n ^ (r - 3) ≤ n ^ (r - 2) :=
+    Nat.pow_le_pow_right hn (by omega)
+  have hPow₂ : n * (n - 1) * n ^ (r - 4) ≤ n ^ (r - 2) := by
+    have hSub : n - 1 ≤ n := Nat.sub_le n 1
+    have hMul := Nat.mul_le_mul_left n hSub
+    have hExp : 2 + (r - 4) = r - 2 := by omega
+    calc
+      n * (n - 1) * n ^ (r - 4) ≤ n * n * n ^ (r - 4) :=
+        Nat.mul_le_mul_right _ hMul
+      _ = n ^ (r - 2) := by
+        calc
+          n * n * n ^ (r - 4) = n ^ 2 * n ^ (r - 4) := by ring
+          _ = n ^ (r - 2) := by rw [← pow_add, hExp]
+  have hFirst : (r - 1) * (r - 1) * (R * n ^ (r - 3)) ≤
+      r ^ 2 * (R * n ^ (r - 2)) := by
+    exact (Nat.mul_le_mul_right _ hRank₁).trans
+      (Nat.mul_le_mul_left _ (Nat.mul_le_mul_left R hPow₁))
+  have hSecond : n * (n - 1) * (r - 2) * (R * n ^ (r - 4)) ≤
+      r ^ 2 * (R * n ^ (r - 2)) := by
+    have hExp : n * (n - 1) * (r - 2) * (R * n ^ (r - 4)) =
+        (r - 2) * R * (n * (n - 1) * n ^ (r - 4)) := by ring
+    rw [hExp]
+    calc
+      _ ≤ (r - 2) * R * n ^ (r - 2) :=
+        Nat.mul_le_mul_left _ hPow₂
+      _ ≤ r ^ 2 * R * n ^ (r - 2) :=
+        Nat.mul_le_mul_right _ (Nat.mul_le_mul_right R hRank₂)
+      _ = r ^ 2 * (R * n ^ (r - 2)) := by ring
+  nlinarith [hFirst, hSecond]
+
+/-- The collision square root has the same arbitrary-factor saving as
+the cover-pair term. The final `+1` from integer rounding is absorbed by
+`m ≤ n`. -/
+theorem discrete_round_collision_rate
+    (n r R m : ℕ) (hn : 1 ≤ n) (hr : 4 ≤ r)
+    (hRpos : 1 ≤ R) (hTn : discreteRoundRoot R ≤ n)
+    (hmn : m ≤ n) (hmR : (4 * m ^ 2) ^ 4 ≤ R) :
+    m * (Nat.nthRoot 2 (discreteRoundCollision n r R) + 1) ≤
+      6 * r ^ 3 * n ^ (r - 1) := by
+  let h := discreteRoundCoverSize n r R
+  let T := discreteRoundRoot R
+  let C := discreteRoundCollision n r R
+  let U := Nat.nthRoot 2 C
+  let N := n ^ (r - 1)
+  have hCoverT : h * T ≤ 3 * r * r * n :=
+    discrete_round_cover_times_root_bound n r R hTn
+  have hRatio := discrete_round_root_square_ratio_bound R (4 * m ^ 2)
+    hRpos hmR
+  have hmRT : m ^ 2 * R ≤ T ^ 2 := by
+    dsimp [T] at hRatio ⊢
+    nlinarith [hRatio]
+  have hChoose : n.choose (r - 2) ≤ n ^ (r - 2) :=
+    Nat.choose_le_pow n (r - 2)
+  have hH : h * (h - 1) ≤ h ^ 2 := by
+    have hSub : h - 1 ≤ h := Nat.sub_le h 1
+    nlinarith
+  have hInner := discrete_round_collision_inner_bound n r R hn hr
+  have hC : C ≤ 2 * r ^ 2 * (h ^ 2 * R) * (n ^ (r - 2)) ^ 2 := by
+    calc
+      C = n.choose (r - 2) * (h * (h - 1) *
+          ((r - 1) * (r - 1) * (R * n ^ (r - 3)) +
+            n * (n - 1) * (r - 2) * (R * n ^ (r - 4)))) := by
+        rfl
+      _ ≤ n ^ (r - 2) * (h ^ 2 *
+          ((r - 1) * (r - 1) * (R * n ^ (r - 3)) +
+            n * (n - 1) * (r - 2) * (R * n ^ (r - 4)))) := by
+        apply Nat.mul_le_mul hChoose
+        exact Nat.mul_le_mul_right _ hH
+      _ ≤ n ^ (r - 2) * (h ^ 2 *
+          (2 * r ^ 2 * (R * n ^ (r - 2)))) := by
+        exact Nat.mul_le_mul_left _ (Nat.mul_le_mul_left _ hInner)
+      _ = 2 * r ^ 2 * (h ^ 2 * R) * (n ^ (r - 2)) ^ 2 := by ring
+  have hCScaled : m ^ 2 * C ≤
+      2 * r ^ 2 * (h * T) ^ 2 * (n ^ (r - 2)) ^ 2 := by
+    calc
+      m ^ 2 * C ≤ m ^ 2 *
+          (2 * r ^ 2 * (h ^ 2 * R) * (n ^ (r - 2)) ^ 2) :=
+        Nat.mul_le_mul_left _ hC
+      _ = 2 * r ^ 2 * (h ^ 2 * (m ^ 2 * R)) *
+          (n ^ (r - 2)) ^ 2 := by ring
+      _ ≤ 2 * r ^ 2 * (h ^ 2 * T ^ 2) *
+          (n ^ (r - 2)) ^ 2 := by
+        exact Nat.mul_le_mul_right _
+          (Nat.mul_le_mul_left _ (Nat.mul_le_mul_left _ hmRT))
+      _ = 2 * r ^ 2 * (h * T) ^ 2 * (n ^ (r - 2)) ^ 2 := by ring
+  have hCoverSq := Nat.pow_le_pow_left hCoverT 2
+  have hNExp : 1 + (r - 2) = r - 1 := by omega
+  have hCN : m ^ 2 * C ≤ 18 * r ^ 6 * N ^ 2 := by
+    calc
+      m ^ 2 * C ≤ 2 * r ^ 2 * (h * T) ^ 2 *
+          (n ^ (r - 2)) ^ 2 := hCScaled
+      _ ≤ 2 * r ^ 2 * (3 * r * r * n) ^ 2 *
+          (n ^ (r - 2)) ^ 2 :=
+        Nat.mul_le_mul_right _ (Nat.mul_le_mul_left _ hCoverSq)
+      _ = 18 * r ^ 6 * N ^ 2 := by
+        dsimp [N]
+        rw [← hNExp]
+        ring
+  have hU : U ^ 2 ≤ C := Nat.pow_nthRoot_le (Or.inl (by norm_num))
+  have hUScaled : (m * U) ^ 2 ≤ (5 * r ^ 3 * N) ^ 2 := by
+    calc
+      (m * U) ^ 2 = m ^ 2 * U ^ 2 := by ring
+      _ ≤ m ^ 2 * C := Nat.mul_le_mul_left _ hU
+      _ ≤ 18 * r ^ 6 * N ^ 2 := hCN
+      _ ≤ (5 * r ^ 3 * N) ^ 2 := by nlinarith
+  have hmU : m * U ≤ 5 * r ^ 3 * N := by
+    by_contra h
+    have hlt : 5 * r ^ 3 * N < m * U := by omega
+    have hltSq := Nat.pow_lt_pow_left hlt (by norm_num : 2 ≠ 0)
+    omega
+  have hnN : n ≤ N := by
+    dsimp [N]
+    exact le_self_pow hn (by omega : r - 1 ≠ 0)
+  have hRcube : 1 ≤ r ^ 3 := Nat.one_le_pow _ _ (by omega)
+  have hmN : m ≤ r ^ 3 * N :=
+    (hmn.trans hnN).trans (by
+      simpa only [Nat.one_mul] using Nat.mul_le_mul_right N hRcube)
+  calc
+    m * (U + 1) = m * U + m := by ring
+    _ ≤ 5 * r ^ 3 * N + r ^ 3 * N := Nat.add_le_add hmU hmN
+    _ = 6 * r ^ 3 * N := by ring
+
+theorem natural_scale_le_ambient
+    (n R : ℕ) (hn : 1 ≤ n) (hR23 : R ^ 3 ≤ n ^ 2) :
+    R ≤ n := by
+  by_contra h
+  have hlt : n < R := by omega
+  have hltCube := Nat.pow_lt_pow_left hlt (by norm_num : 3 ≠ 0)
+  have hNpow : n ^ 2 ≤ n ^ 3 := by
+    calc
+      n ^ 2 = n ^ 2 * 1 := by simp
+      _ ≤ n ^ 2 * n := Nat.mul_le_mul_left _ hn
+      _ = n ^ 3 := by ring
+  omega
+
+/-- Every component of the exact additive round loss has an arbitrary
+fixed-factor saving against the extremal star size. -/
+theorem discrete_round_additive_loss_star_rate
+    (n r R m : ℕ) (hr : 4 ≤ r) (hm : 1 ≤ m)
+    (hn : 2 * (r - 1) + 1 ≤ n)
+    (hR23 : R ^ 3 ≤ n ^ 2)
+    (hRlarge : (4 * m ^ 2) ^ 4 ≤ R)
+    (hnlarge : (m ^ (r - 1) * (r - 1).factorial) ^ 3 ≤ n)
+    (hmn : m * r ≤ n) :
+    m * discreteRoundAdditiveLoss n r R ≤
+      (6 * r ^ 3 + 2 + 9 * r ^ 4 + 2 * (r - 1)) *
+        (2 ^ (r - 1) * (r - 1).factorial) *
+          (n - 1).choose (r - 1) := by
+  have hnpos : 1 ≤ n := by omega
+  have hRpos : 1 ≤ R := by
+    have hBase : 1 ≤ 4 * m ^ 2 := by nlinarith [hm]
+    have hPow : 1 ≤ (4 * m ^ 2) ^ 4 := Nat.one_le_pow _ _ hBase
+    omega
+  have hRn : R ≤ n := natural_scale_le_ambient n R hnpos hR23
+  have hTn : discreteRoundRoot R ≤ n :=
+    ((discrete_round_root_le_target R hRpos).trans
+      (discrete_round_target_le_self R)).trans hRn
+  have hmn' : m ≤ n := by nlinarith [hmn, hr]
+  have hmPair : (4 * m) ^ 4 ≤ R := by
+    have hmSq : m ≤ m ^ 2 := le_self_pow hm (by norm_num : 2 ≠ 0)
+    have hBase : 4 * m ≤ 4 * m ^ 2 := Nat.mul_le_mul_left 4 hmSq
+    exact (Nat.pow_le_pow_left hBase 4).trans hRlarge
+  have hmFacet : (2 * m) ^ 8 ≤ R := by
+    have he : (2 * m) ^ 8 = (4 * m ^ 2) ^ 4 := by ring
+    simpa only [he] using hRlarge
+  have hCollision := discrete_round_collision_rate n r R m hnpos hr
+    hRpos hTn hmn' hRlarge
+  have hRadius := discrete_round_radius_layer_rate_at_natural_scale
+    n r R m hr hR23 hnlarge hmn
+  have hPair := discrete_round_cover_pair_rate n r R m hr hRpos hTn hmPair
+  have hFacet := discrete_round_facet_quotient_bound n r R m hm hmFacet
+  have hFacetN : 2 * (n.choose 2 * ((r - 1) * n ^ (r - 3))) ≤
+      2 * (r - 1) * n ^ (r - 1) := by
+    have hChoose : n.choose 2 ≤ n ^ 2 := Nat.choose_le_pow n 2
+    have hExp : 2 + (r - 3) = r - 1 := by omega
+    calc
+      _ = 2 * (r - 1) * (n.choose 2 * n ^ (r - 3)) := by ring
+      _ ≤ 2 * (r - 1) * (n ^ 2 * n ^ (r - 3)) :=
+        Nat.mul_le_mul_left _ (Nat.mul_le_mul_right _ hChoose)
+      _ = 2 * (r - 1) * n ^ (r - 1) := by rw [← pow_add, hExp]
+  have hLossPower : m * discreteRoundAdditiveLoss n r R ≤
+      (6 * r ^ 3 + 2 + 9 * r ^ 4 + 2 * (r - 1)) *
+        n ^ (r - 1) := by
+    have hDecomp : m * discreteRoundAdditiveLoss n r R =
+        m * (Nat.nthRoot 2 (discreteRoundCollision n r R) + 1) +
+        m * (((discreteRoundRadius n r R + (r - 1)) *
+          n.choose (r - 2)) / (r - 1)) +
+        m * ((discreteRoundCoverSize n r R).choose 2 *
+          (R * n ^ (r - 3))) +
+        m * (2 * (n.choose 2 * ((r - 1) *
+          (discreteRoundRoot R * n ^ (r - 3)))) /
+            (discreteRoundTarget R - 1)) := by
+      dsimp [discreteRoundAdditiveLoss, discreteRoundLayerBudget]
+      ring
+    rw [hDecomp]
+    have hBound :
+        m * (Nat.nthRoot 2 (discreteRoundCollision n r R) + 1) +
+        m * (((discreteRoundRadius n r R + (r - 1)) *
+          n.choose (r - 2)) / (r - 1)) +
+        m * ((discreteRoundCoverSize n r R).choose 2 *
+          (R * n ^ (r - 3))) +
+        m * (2 * (n.choose 2 * ((r - 1) *
+          (discreteRoundRoot R * n ^ (r - 3)))) /
+            (discreteRoundTarget R - 1)) ≤
+          6 * r ^ 3 * n ^ (r - 1) + 2 * n ^ (r - 1) +
+            9 * r ^ 4 * n ^ (r - 1) +
+              2 * (r - 1) * n ^ (r - 1) := by
+      omega
+    calc
+      _ ≤ _ := hBound
+      _ = (6 * r ^ 3 + 2 + 9 * r ^ 4 + 2 * (r - 1)) *
+          n ^ (r - 1) := by ring
+  have hStar := far_star_power_le_choose_multiple n (r - 1) hn
+  calc
+    _ ≤ (6 * r ^ 3 + 2 + 9 * r ^ 4 + 2 * (r - 1)) *
+        n ^ (r - 1) := hLossPower
+    _ ≤ (6 * r ^ 3 + 2 + 9 * r ^ 4 + 2 * (r - 1)) *
+        (2 ^ (r - 1) * (r - 1).factorial) *
+          (n - 1).choose (r - 1) := by
+      have hMul := Nat.mul_le_mul_left
+        (6 * r ^ 3 + 2 + 9 * r ^ 4 + 2 * (r - 1)) hStar
+      nlinarith [hMul]
+
+/-- The complete loss of any fixed finite number of natural rounds is
+arbitrarily small compared with the extremal star, with one explicit
+threshold shared by all rounds. -/
+theorem discrete_round_iterated_loss_star_rate
+    (n r R steps m : ℕ) (hr : 4 ≤ r) (hm : 1 ≤ m)
+    (hn : 2 * (r - 1) + 1 ≤ n)
+    (hR23 : R ^ 3 ≤ n ^ 2)
+    (hLarge : ∀ i < steps,
+      (4 * m ^ 2) ^ 4 ≤ discreteRoundIterate R i)
+    (hnlarge : (m ^ (r - 1) * (r - 1).factorial) ^ 3 ≤ n)
+    (hmn : m * r ≤ n) :
+    m * (∑ i ∈ Finset.range steps,
+      discreteRoundAdditiveLoss n r (discreteRoundIterate R i)) ≤
+        steps * ((6 * r ^ 3 + 2 + 9 * r ^ 4 + 2 * (r - 1)) *
+          (2 ^ (r - 1) * (r - 1).factorial)) *
+            (n - 1).choose (r - 1) := by
+  rw [Finset.mul_sum]
+  calc
+    (∑ i ∈ Finset.range steps,
+      m * discreteRoundAdditiveLoss n r (discreteRoundIterate R i)) ≤
+      ∑ _i ∈ Finset.range steps,
+        (6 * r ^ 3 + 2 + 9 * r ^ 4 + 2 * (r - 1)) *
+          (2 ^ (r - 1) * (r - 1).factorial) *
+            (n - 1).choose (r - 1) := by
+          apply Finset.sum_le_sum
+          intro i hi
+          have hScale : (discreteRoundIterate R i) ^ 3 ≤ n ^ 2 :=
+            (Nat.pow_le_pow_left (discrete_round_iterate_le_start R i) 3).trans hR23
+          exact discrete_round_additive_loss_star_rate n r
+            (discreteRoundIterate R i) m hr hm hn hScale
+              (hLarge i (Finset.mem_range.mp hi)) hnlarge hmn
+    _ = steps * ((6 * r ^ 3 + 2 + 9 * r ^ 4 + 2 * (r - 1)) *
+        (2 ^ (r - 1) * (r - 1).factorial)) *
+          (n - 1).choose (r - 1) := by simp [mul_assoc]
+
 /-- Exact finite degree threshold obtained from the degree sum. -/
 def initialVertexCap (r h edgeCount : ℕ) : ℕ :=
   r * edgeCount / (h + 1) + 1
@@ -399,6 +863,39 @@ theorem initial_vertex_cap_budget (r h edgeCount : ℕ) :
   unfold initialVertexCap
   rw [Nat.mul_add, Nat.mul_one]
   omega
+
+/-- The high-degree threshold costs only the ratio between the matching
+parameter and the removed-set size. This is the exact finite estimate
+used for the polynomial scale choice. -/
+theorem initial_vertex_cap_loss_rate
+    (r h a edgeCount star m C D : ℕ)
+    (hGap : m * (r * r * a) ≤ h + 1)
+    (hFamily : edgeCount ≤ C * star)
+    (hSet : h + 1 ≤ D * star) :
+    m * (r * r * a * initialVertexCap r h edgeCount) ≤
+      (r * C + D) * star := by
+  let q := h + 1
+  have hDiv : q * (r * edgeCount / q) ≤ r * edgeCount := by
+    simpa only [Nat.mul_comm] using Nat.div_mul_le_self (r * edgeCount) q
+  have hCap : q * initialVertexCap r h edgeCount ≤
+      r * edgeCount + q := by
+    calc
+      q * initialVertexCap r h edgeCount =
+          q * (r * edgeCount / q) + q := by
+        dsimp [initialVertexCap, q]
+        ring
+      _ ≤ r * edgeCount + q := Nat.add_le_add_right hDiv q
+  have hMain : m * (r * r * a * initialVertexCap r h edgeCount) ≤
+      q * initialVertexCap r h edgeCount := by
+    have hMul := Nat.mul_le_mul_right
+      (initialVertexCap r h edgeCount) hGap
+    simpa only [mul_assoc] using hMul
+  calc
+    _ ≤ q * initialVertexCap r h edgeCount := hMain
+    _ ≤ r * edgeCount + q := hCap
+    _ ≤ r * (C * star) + D * star := by
+      exact Nat.add_le_add (Nat.mul_le_mul_left r hFamily) hSet
+    _ = (r * C + D) * star := by ring
 
 /-- The rounded number of heavy roots in the initial cleanup. -/
 def initialScaleMultiplier (n Scale : ℕ) : ℕ :=
@@ -560,6 +1057,68 @@ theorem far_star_initial_codegree_extraction
     h₀.choose 2 * (n - 2).choose (r - 2) at hTail
   omega
 
+/-- Choose the first removed vertex set as the actual high-degree cover.
+The far tail then has maximum degree at most `⌊r|H|/(h₀+1)⌋+1` before
+the heavy-root cleanup. This avoids the second high-degree deletion stage
+and its `h₁*M` charge. -/
+theorem far_star_initial_codegree_extraction_from_actual_cover
+    {n r h₀ M Scale : ℕ}
+    (H : Family (Fin n))
+    (hAdm : Admissible H) (hUniform : Uniform r H)
+    (hn : 1 ≤ n) (hr : 4 ≤ r)
+    (hMax : ∀ z : Fin n,
+      (H.filter (fun E => z ∈ E)).card ≤ M)
+    (hScalePos : 0 < Scale) (hScaleN : Scale ≤ n)
+    (hSeparation : 16 * r * n < Scale ^ 2) :
+    ∃ X₀ : Edge (Fin n), ∃ K : Family (Fin n),
+      X₀.card ≤ h₀ ∧ K ⊆ H ∧ Admissible K ∧ Uniform r K ∧
+      (∀ s, 1 ≤ s → s ≤ r - 1 →
+        ∀ S : Edge (Fin n), S.card = s →
+          (K.filter (fun E => S ⊆ E)).card ≤
+            Scale * n ^ (r - s - 1)) ∧
+      H.card ≤ K.card +
+        farStarDeletion n r h₀ +
+        ((farStarRadius r M + (r - 1)) * n.choose (r - 2)) / (r - 1) +
+        h₀.choose 2 * (n - 2).choose (r - 2) +
+        r * r * initialScaleMultiplier n Scale *
+          initialVertexCap r h₀ H.card := by
+  classical
+  letI : Inhabited (Fin n) := ⟨⟨0, by omega⟩⟩
+  let T := initialVertexCap r h₀ H.card
+  let a := initialScaleMultiplier n Scale
+  obtain ⟨X₀, hX₀, hOutside⟩ :=
+    exists_high_degree_vertex_cover H hUniform
+      (initial_vertex_cap_budget r h₀ H.card)
+  let F₀ : Family (Fin n) := H.filter (fun E => Disjoint E X₀)
+  have hF₀H : F₀ ⊆ H := Finset.filter_subset _ _
+  have hAdm₀ : Admissible F₀ := admissible_mono hF₀H hAdm
+  have hUniform₀ : Uniform r F₀ := fun E hE => hUniform (hF₀H hE)
+  have hMax₀ : ∀ z : Fin n,
+      (F₀.filter (fun E => z ∈ E)).card ≤ T :=
+    avoiding_high_degree_cover_max_degree H X₀ hOutside
+  obtain ⟨haT, haSq⟩ :=
+    initial_scale_multiplier_bounds n r Scale hn hScalePos hScaleN hSeparation
+  obtain ⟨K, hKF₀, hAdmK, hUniformK, hCapsK, hCleanup⟩ :=
+    initial_codegree_cleanup_from_max_degree F₀
+      (fun s => Scale * n ^ (r - s - 1)) (fun _ => a)
+      hAdm₀ hUniform₀ hr hMax₀
+      (by
+        intro s hs hsr
+        exact initial_sqrt_scale_gap n r s Scale a hn hr hs hsr haT haSq)
+  have hCleanup' : F₀.card - K.card ≤ r * r * a * T :=
+    hCleanup.trans (Nat.mul_le_mul_right T
+      (initial_cover_size_le_rank_square r a))
+  have hTail := finite_far_star_tail_from_max_degree H X₀
+    hAdm hUniform hr hX₀ hMax
+  have hKcard := Finset.card_le_card hKF₀
+  refine ⟨X₀, K, hX₀, hKF₀.trans hF₀H,
+    hAdmK, hUniformK, hCapsK, ?_⟩
+  change H.card ≤ F₀.card + farStarDeletion n r h₀ +
+    ((farStarRadius r M + (r - 1)) * n.choose (r - 2)) / (r - 1) +
+    h₀.choose 2 * (n - 2).choose (r - 2) at hTail
+  dsimp [T, a] at hCleanup'
+  omega
+
 /-- After the actual far-star and initial cleanup stages, the retained
 family satisfies every hypothesis of the natural-scale IV.4 round. The
 first contraction is constructed here with both deletion ledgers retained. -/
@@ -627,5 +1186,83 @@ theorem far_star_first_natural_round_exists
       (initial_vertex_cap_budget r h₁ H.card)
       haT haSq hScale23 hScaleLarge
   exact ⟨K', hK'K.trans hKH, hAdmK', hUniformK', hCapsK'⟩
+
+/-- The far-star extraction and initial cleanup feed any finite sequence
+of natural regularization rounds on the actual family. The theorem keeps
+all deletion costs in one additive ledger. -/
+theorem far_star_initial_natural_iterate
+    {n r h₀ h₁ M VCap Scale a : ℕ} [Inhabited (Fin n)]
+    (steps : ℕ) (H : Family (Fin n)) (X₀ : Edge (Fin n))
+    (hAdm : Admissible H) (hUniform : Uniform r H)
+    (hn : 1 ≤ n) (hr : 4 ≤ r) (hX₀ : X₀.card ≤ h₀)
+    (hMax : ∀ z : Fin n,
+      (H.filter (fun E => z ∈ E)).card ≤ M)
+    (hBudget : r * H.card < (h₁ + 1) * VCap)
+    (haT : 3 * n ≤ a * Scale) (haSq : a * a * r < n)
+    (hScale23 : Scale ^ 3 ≤ n ^ 2)
+    (hLarge : ∀ i < steps,
+      (16 * (36 * r) ^ 3) ^ 8 ≤
+        (discreteRoundIterate Scale i) ^ 5) :
+    ∃ K : Family (Fin n), K ⊆ H ∧ Admissible K ∧ Uniform r K ∧
+      (∀ j, 1 ≤ j → j ≤ r - 1 →
+        ∀ S : Edge (Fin n), S.card = j →
+          (K.filter (fun E => S ⊆ E)).card ≤
+            discreteRoundIterate Scale steps * n ^ (r - j - 1)) ∧
+      H.card ≤ K.card +
+        farStarDeletion n r h₀ +
+        ((farStarRadius r M + (r - 1)) * n.choose (r - 2)) / (r - 1) +
+        h₀.choose 2 * (n - 2).choose (r - 2) +
+        h₁ * M +
+        (∑ s ∈ Finset.Icc 1 (r - 1), s * (a - 1)) * VCap +
+        ∑ i ∈ Finset.range steps,
+          discreteRoundAdditiveLoss n r (discreteRoundIterate Scale i) := by
+  obtain ⟨K₀, hK₀H, hAdm₀, hUniform₀, hCaps₀, hInitialLoss⟩ :=
+    far_star_initial_codegree_extraction H X₀ hAdm hUniform hn hr hX₀
+      hMax hBudget haT haSq
+  obtain ⟨K, hKK₀, hAdmK, hUniformK, hCapsK, hRoundLoss⟩ :=
+    natural_scale_finite_regularization_iterate steps K₀ hr hn hScale23
+      hLarge hAdm₀ hUniform₀ hCaps₀
+  refine ⟨K, hKK₀.trans hK₀H, hAdmK, hUniformK, hCapsK, ?_⟩
+  omega
+
+/-- The high-degree set is chosen from the actual initial family, and
+its complement feeds all requested natural rounds with one exact ledger. -/
+theorem far_star_initial_natural_iterate_from_actual_cover
+    {n r h₀ M Scale : ℕ}
+    (steps : ℕ) (H : Family (Fin n))
+    (hAdm : Admissible H) (hUniform : Uniform r H)
+    (hn : 1 ≤ n) (hr : 4 ≤ r)
+    (hMax : ∀ z : Fin n,
+      (H.filter (fun E => z ∈ E)).card ≤ M)
+    (hScalePos : 0 < Scale) (hScaleN : Scale ≤ n)
+    (hSeparation : 16 * r * n < Scale ^ 2)
+    (hScale23 : Scale ^ 3 ≤ n ^ 2)
+    (hLarge : ∀ i < steps,
+      (16 * (36 * r) ^ 3) ^ 8 ≤
+        (discreteRoundIterate Scale i) ^ 5) :
+    ∃ X₀ : Edge (Fin n), ∃ K : Family (Fin n),
+      X₀.card ≤ h₀ ∧ K ⊆ H ∧ Admissible K ∧ Uniform r K ∧
+      (∀ j, 1 ≤ j → j ≤ r - 1 →
+        ∀ S : Edge (Fin n), S.card = j →
+          (K.filter (fun E => S ⊆ E)).card ≤
+            discreteRoundIterate Scale steps * n ^ (r - j - 1)) ∧
+      H.card ≤ K.card +
+        farStarDeletion n r h₀ +
+        ((farStarRadius r M + (r - 1)) * n.choose (r - 2)) / (r - 1) +
+        h₀.choose 2 * (n - 2).choose (r - 2) +
+        r * r * initialScaleMultiplier n Scale *
+          initialVertexCap r h₀ H.card +
+        ∑ i ∈ Finset.range steps,
+          discreteRoundAdditiveLoss n r (discreteRoundIterate Scale i) := by
+  obtain ⟨X₀, K₀, hX₀, hK₀H, hAdm₀, hUniform₀, hCaps₀,
+      hInitialLoss⟩ :=
+    far_star_initial_codegree_extraction_from_actual_cover H
+      hAdm hUniform hn hr hMax hScalePos hScaleN hSeparation
+  obtain ⟨K, hKK₀, hAdmK, hUniformK, hCapsK, hRoundLoss⟩ :=
+    natural_scale_finite_regularization_iterate steps K₀ hr hn hScale23
+      hLarge hAdm₀ hUniform₀ hCaps₀
+  refine ⟨X₀, K, hX₀, hKK₀.trans hK₀H,
+    hAdmK, hUniformK, hCapsK, ?_⟩
+  omega
 
 end JSP523.Rank5

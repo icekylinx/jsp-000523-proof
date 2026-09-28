@@ -210,6 +210,96 @@ theorem reciprocal_wrong_common_witness_deletion_subset_budget
       ⟨hAB'.2.2.1, hAB'.2.2.2.1⟩,
       Finset.mem_biUnion.mpr ⟨w, hwFiber, hParent⟩⟩
 
+/-- Only valid three-element label facets can support an actual
+wrong-common-witness target. -/
+noncomputable def reciprocalWrongCommonWitnessTripleBudget
+    (D : FiniteCompletionCliqueData α) : Family α := by
+  classical
+  exact ((D.ground.product D.ground).filter fun ab =>
+    ab.1 ≠ ab.2 ∧ D.label ab.1 ab.2 ≠ ab.1 ∧
+      D.label ab.1 ab.2 ≠ ab.2).biUnion fun ab =>
+        rankFourFacetParents D.K
+          ({ab.1, ab.2, D.label ab.1 ab.2} : Edge α)
+
+theorem reciprocal_wrong_common_witness_deletion_subset_triple_budget
+    (D : FiniteCompletionCliqueData α) :
+    reciprocalWrongCommonWitnessDeletionSetAll D ⊆
+      reciprocalWrongCommonWitnessTripleBudget D := by
+  classical
+  intro E hE
+  obtain ⟨P, hP, hRoot⟩ := Finset.mem_biUnion.mp hE
+  have hP' := Finset.mem_powersetCard.mp hP
+  obtain ⟨hEK, a, b, w, hEeq, hAB, hAW, hBW,
+    _, _, hWrong⟩ := Finset.mem_filter.mp hRoot
+  have hzP : D.label a b ∈ P :=
+    reciprocal_wrong_common_witness_label_in_root D P a b w
+      hP'.2 hP'.1 hAB hAW hBW hWrong
+  have hAB' := hAB
+  change a ∉ P ∧ b ∉ P ∧ a ∈ D.ground ∧ b ∈ D.ground ∧
+    a ≠ b ∧ insert a (insert b P) ∈ D.K at hAB'
+  have hla : D.label a b ≠ a := by
+    intro h
+    exact hAB'.1 (h ▸ hzP)
+  have hlb : D.label a b ≠ b := by
+    intro h
+    exact hAB'.2.1 (h ▸ hzP)
+  have hPair : (a, b) ∈ (D.ground.product D.ground).filter
+      (fun ab => ab.1 ≠ ab.2 ∧
+        D.label ab.1 ab.2 ≠ ab.1 ∧
+        D.label ab.1 ab.2 ≠ ab.2) :=
+    Finset.mem_filter.mpr
+      ⟨Finset.mem_product.mpr
+        ⟨hAB'.2.2.1, hAB'.2.2.2.1⟩,
+        hAB'.2.2.2.2.1, hla, hlb⟩
+  have hTripleSub : ({a, b, D.label a b} : Edge α) ⊆ E := by
+    intro x hx
+    simp only [Finset.mem_insert, Finset.mem_singleton] at hx
+    rcases hx with rfl | rfl | hx
+    · simp [hEeq]
+    · simp [hEeq]
+    · have hx' : x ∈ P := hx ▸ hzP
+      simp [hEeq, hx']
+  exact Finset.mem_biUnion.mpr
+    ⟨(a, b), hPair, Finset.mem_filter.mpr ⟨hEK, hTripleSub⟩⟩
+
+/-- The realistic triple-degree assumption alone gives a stronger
+D times ground-card squared bound for actual wrong-common-witness targets. -/
+theorem reciprocal_wrong_common_witness_deletion_card_le_triple_cap
+    (D : FiniteCompletionCliqueData α) (Dcap : ℕ)
+    (h_facet : ∀ T : Edge α, T.card = 3 →
+      (D.K.filter fun E => T ⊆ E).card ≤ Dcap) :
+    (reciprocalWrongCommonWitnessDeletionSetAll D).card ≤
+      D.ground.card * D.ground.card * Dcap := by
+  classical
+  let pairs := (D.ground.product D.ground).filter fun ab =>
+    ab.1 ≠ ab.2 ∧ D.label ab.1 ab.2 ≠ ab.1 ∧
+      D.label ab.1 ab.2 ≠ ab.2
+  have hPerPair : ∀ ab ∈ pairs,
+      (rankFourFacetParents D.K
+        ({ab.1, ab.2, D.label ab.1 ab.2} : Edge α)).card ≤ Dcap := by
+    intro ab hab
+    have hParts := (Finset.mem_filter.mp hab).2
+    apply h_facet
+    have hnot : D.label ab.1 ab.2 ∉ ({ab.1, ab.2} : Edge α) := by
+      simp [hParts.2.1, hParts.2.2]
+    have hset : ({ab.1, ab.2, D.label ab.1 ab.2} : Edge α) =
+        insert (D.label ab.1 ab.2) ({ab.1, ab.2} : Edge α) := by
+      ext z
+      simp only [Finset.mem_insert, Finset.mem_singleton]
+      tauto
+    rw [hset, Finset.card_insert_of_notMem hnot,
+      Finset.card_pair hParts.1]
+  calc
+    _ ≤ (reciprocalWrongCommonWitnessTripleBudget D).card :=
+      Finset.card_le_card
+        (reciprocal_wrong_common_witness_deletion_subset_triple_budget D)
+    _ ≤ pairs.card * Dcap := by
+      exact Finset.card_biUnion_le_card_mul pairs _ Dcap hPerPair
+    _ ≤ (D.ground.product D.ground).card * Dcap :=
+      Nat.mul_le_mul_right Dcap (Finset.card_filter_le _ _)
+    _ = D.ground.card * D.ground.card * Dcap := by
+      simp [Finset.card_product, Nat.mul_assoc]
+
 /-- Explicit `u² K_* D` budget for the missing §III.A.6 deletion,
 under the actual label-fiber and triple-degree caps. -/
 theorem reciprocal_wrong_common_witness_deletion_card_le

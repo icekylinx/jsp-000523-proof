@@ -1,5 +1,6 @@
 import JSP523.Rank4.GraphColoredFacetClassification
 import JSP523.Rank4.GraphActualEligibleSlots
+import JSP523.Rank4.GraphMarkedCapacity
 
 /-!
 # Two-color obstruction for a colored completion facet
@@ -165,5 +166,100 @@ theorem actual_colored_slot_common_multiplicity_le_two
   exact rainbow_slot_selected_common_multiplicity_le_two
     D (actualEligiblePairSlotVertices D Q) Q hQ
       x y hxU hxQ hyU hyQ hxy hRainbow
+
+/-- A vertex outside the selected set has no common neighbors in the
+selected pair link. -/
+theorem selected_pair_link_common_multiplicity_zero_of_not_mem
+    [Fintype α]
+    (D : FiniteCompletionCliqueData α)
+    (S : Finset α) (Q : Edge α)
+    [DecidableRel (selectedCompletionPairGraph D S Q).Adj]
+    (x y : α) (hy : y ∉ S) :
+    graphCommonMultiplicity (selectedCompletionPairGraph D S Q) x y = 0 := by
+  classical
+  unfold graphCommonMultiplicity
+  apply Finset.card_eq_zero.mpr
+  apply Finset.eq_empty_of_forall_notMem
+  intro z hz
+  have hAdj := (Finset.mem_filter.mp hz).2
+  exact hy hAdj.2.1
+
+/-- The actual colored slots of completion degree three whose full
+facet degree survives in the selected pair link. -/
+noncomputable def actualColoredMarkedThreeSlots
+    [Fintype α] (D : FiniteCompletionCliqueData α)
+    (Q : Edge α) : Finset α := by
+  classical
+  exact D.ground.filter fun x =>
+    x ∉ Q ∧
+      (graphFacetCompletions D.K D.ground (insert x Q)).card = 3 ∧
+      FacetHasDivergentLabels
+        (graphFacetCompletions D.K D.ground (insert x Q)) D.label ∧
+      (selectedCompletionPairGraph D
+        (actualEligiblePairSlotVertices D Q) Q).degree x = 3
+
+/-- The analogous marked slots of completion degree four. -/
+noncomputable def actualColoredMarkedFourSlots
+    [Fintype α] (D : FiniteCompletionCliqueData α)
+    (Q : Edge α) : Finset α := by
+  classical
+  exact D.ground.filter fun x =>
+    x ∉ Q ∧
+      (graphFacetCompletions D.K D.ground (insert x Q)).card = 4 ∧
+      FacetHasDivergentLabels
+        (graphFacetCompletions D.K D.ground (insert x Q)) D.label ∧
+      (selectedCompletionPairGraph D
+        (actualEligiblePairSlotVertices D Q) Q).degree x = 4
+
+/-- The actual marked sets satisfy every premise of the marked graph
+deficit inequality at one base pair. -/
+theorem actual_colored_marked_pair_link_payment
+    [Fintype α]
+    (D : FiniteCompletionCliqueData α)
+    (Q : Edge α) (hQ : Q ∈ D.ground.powersetCard 2) :
+    let F := selectedCompletionPairGraph D
+      (actualEligiblePairSlotVertices D Q) Q
+    orderedUniquePairCount F / 4 +
+      ((actualColoredMarkedThreeSlots D Q).card : ℚ) / 2 +
+      ((actualColoredMarkedFourSlots D Q).card : ℚ) ≤
+    graphDeficit F := by
+  classical
+  let S := actualEligiblePairSlotVertices D Q
+  let F := selectedCompletionPairGraph D S Q
+  let M3 := actualColoredMarkedThreeSlots D Q
+  let M4 := actualColoredMarkedFourSlots D Q
+  have hDisj : Disjoint M3 M4 := by
+    apply Finset.disjoint_left.mpr
+    intro x hx3 hx4
+    have h3 := (Finset.mem_filter.mp hx3).2.2.1
+    have h4 := (Finset.mem_filter.mp hx4).2.2.1
+    omega
+  have hMarked (m : ℕ) (x : α)
+      (hxU : x ∈ D.ground) (hxQ : x ∉ Q)
+      (hColored : FacetHasDivergentLabels
+        (graphFacetCompletions D.K D.ground (insert x Q)) D.label)
+      (hDegree : F.degree x = m) :
+      F.degree x = m ∧
+        ∀ y : α, y ≠ x → graphCommonMultiplicity F x y ≤ 2 := by
+    refine ⟨hDegree, ?_⟩
+    intro y hxy
+    by_cases hyS : y ∈ S
+    · have hS := (Finset.mem_filter.mp hyS)
+      exact actual_colored_slot_common_multiplicity_le_two
+        D Q hQ x y hxU hxQ hS.1 hS.2.1 hxy.symm hColored
+    · rw [selected_pair_link_common_multiplicity_zero_of_not_mem
+        D S Q x y hyS]
+      omega
+  have h3 : ∀ x ∈ M3, F.degree x = 3 ∧
+      ∀ y : α, y ≠ x → graphCommonMultiplicity F x y ≤ 2 := by
+    intro x hx
+    have h := Finset.mem_filter.mp hx
+    exact hMarked 3 x h.1 h.2.1 h.2.2.2.1 h.2.2.2.2
+  have h4 : ∀ x ∈ M4, F.degree x = 4 ∧
+      ∀ y : α, y ≠ x → graphCommonMultiplicity F x y ≤ 2 := by
+    intro x hx
+    have h := Finset.mem_filter.mp hx
+    exact hMarked 4 x h.1 h.2.1 h.2.2.2.1 h.2.2.2.2
+  exact graph_deficit_marked F M3 M4 hDisj h3 h4
 
 end JSP523.Rank4

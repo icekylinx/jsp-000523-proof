@@ -6,7 +6,7 @@ variable {α : Type*} [Fintype α] [DecidableEq α]
 
 /-- Aggregate the canonical proper-K4 records of a finite divergent-facet
 family into the global actual record ledger. -/
-theorem canonical_k4_family_actual_h_records
+theorem canonical_k4_family_actual_h_records_into
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     (D : FiniteCompletionCliqueData α) (C : Finset ι)
     (T : ι → Edge α) (hTInjective : Function.Injective T)
@@ -16,15 +16,15 @@ theorem canonical_k4_family_actual_h_records
     (hTSub : ∀ t ∈ C, T t ⊆ D.ground)
     (hProper : ∀ t ∈ C, CompletionProperlyEdgeColored D
       (graphFacetCompletions D.K D.ground (T t)))
-    (S : Finset α) (S₀ : ι → CliqueColor → Finset (Fin 4))
-    (hMarkSelected : ∀ (t : ι) (ht : t ∈ C) (x : CliqueColor),
-      canonicalActualK4ColorMark D (T t) (hCard t ht) x ∈ S)
-    (hVerticesSelected : ∀ (t : ι) (ht : t ∈ C) (x : CliqueColor) (i : Fin 4),
-      i ∈ S₀ t x →
-        canonicalK4Completion D (T t) (hCard t ht) i ∈ S) :
+    (S₀ : ι → CliqueColor → Finset (Fin 4))
+    (U : Finset (Edge α × Edge α))
+    (hSubset : ∀ (t : ι) (ht : t ∈ C) (x : CliqueColor),
+      selectedActualK4UndirectedColorSlotRecords D (T t)
+        (canonicalK4Completion D (T t) (hCard t ht))
+        (canonicalActualK4ColorMark D (T t) (hCard t ht)) x (S₀ t x) ⊆ U) :
     (∑ t ∈ C, (coloredFacetRecords 4 -
       ∑ x : CliqueColor, coloredSlotLoss 4 (S₀ t x).card)) ≤
-        (selectedUndirectedCompletionRecordKeys D S).card := by
+        U.card := by
   classical
   let v (t : ι) (ht : t ∈ C) : Fin 4 → α :=
     canonicalK4Completion D (T t) (hCard t ht)
@@ -44,17 +44,10 @@ theorem canonical_k4_family_actual_h_records
       x (S₀ t x) (k t x) rfl
     simpa [R, k, v, mark, ht, actualColoredSlotBase,
       actualColoredSlotLoss, properFourRecordLoss] using h
-  have hSub : ∀ t ∈ C, ∀ x, R t x ⊆ selectedUndirectedCompletionRecordKeys D S := by
+  have hSub : ∀ t ∈ C, ∀ x, R t x ⊆ U := by
     intro t ht x
     simp only [R, dite_eq_left ht]
-    have hv : Function.Injective (v t ht) := by
-      simpa [v] using canonical_k4_completion_injective D (T t) (hCard t ht)
-    exact selected_actual_k4_undirected_records_subset_global
-      D (T t) (v t ht) (mark t ht) x S (S₀ t x)
-      (hMarkSelected t ht x) (hVerticesSelected t ht x)
-      (hTCard t ht) (hTSub t ht)
-      (fun i => canonical_k4_completion_mem D (T t) (hCard t ht) i)
-      hv
+    exact hSubset t ht x
   have hDisjoint : ∀ t ∈ C, ∀ x, ∀ t' ∈ C, ∀ x',
       (t, x) ≠ (t', x') → Disjoint (R t x) (R t' x') := by
     intro t ht x t' ht' x' hne
@@ -93,8 +86,39 @@ theorem canonical_k4_family_actual_h_records
   simpa [R, k, actualColoredRecordBase, actualColoredSlotLoss,
     coloredFacetRecords, coloredSlotLoss] using
     actual_colored_records_loss_le_ledger_rat C (fun _ => 4) k R
-      (selectedUndirectedCompletionRecordKeys D S)
+      U
       (by intro t ht; exact Or.inr rfl) hSlot hSub hDisjoint
+
+theorem canonical_k4_family_actual_h_records
+    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (D : FiniteCompletionCliqueData α) (C : Finset ι)
+    (T : ι → Edge α) (hTInjective : Function.Injective T)
+    (hCard : ∀ t ∈ C,
+      (graphFacetCompletions D.K D.ground (T t)).card = 4)
+    (hTCard : ∀ t ∈ C, (T t).card = 3)
+    (hTSub : ∀ t ∈ C, T t ⊆ D.ground)
+    (hProper : ∀ t ∈ C, CompletionProperlyEdgeColored D
+      (graphFacetCompletions D.K D.ground (T t)))
+    (S : Finset α) (S₀ : ι → CliqueColor → Finset (Fin 4))
+    (hMarkSelected : ∀ (t : ι) (ht : t ∈ C) (x : CliqueColor),
+      canonicalActualK4ColorMark D (T t) (hCard t ht) x ∈ S)
+    (hVerticesSelected : ∀ (t : ι) (ht : t ∈ C) (x : CliqueColor) (i : Fin 4),
+      i ∈ S₀ t x →
+        canonicalK4Completion D (T t) (hCard t ht) i ∈ S) :
+    (∑ t ∈ C, (coloredFacetRecords 4 -
+      ∑ x : CliqueColor, coloredSlotLoss 4 (S₀ t x).card)) ≤
+        (selectedUndirectedCompletionRecordKeys D S).card := by
+  apply canonical_k4_family_actual_h_records_into
+    D C T hTInjective hCard hTCard hTSub hProper S₀
+      (selectedUndirectedCompletionRecordKeys D S)
+  intro t ht x
+  exact selected_actual_k4_undirected_records_subset_global
+    D (T t) (canonicalK4Completion D (T t) (hCard t ht))
+      (canonicalActualK4ColorMark D (T t) (hCard t ht)) x S (S₀ t x)
+      (hMarkSelected t ht x) (hVerticesSelected t ht x)
+      (hTCard t ht) (hTSub t ht)
+      (fun i => canonical_k4_completion_mem D (T t) (hCard t ht) i)
+      (canonical_k4_completion_injective D (T t) (hCard t ht))
 
 /-- The family record ledger is precisely the record premise needed by the
 colored-slot payment inequality for proper completion K4 facets. -/

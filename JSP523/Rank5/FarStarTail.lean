@@ -273,6 +273,40 @@ theorem power_gap_linear_bound (p d k : ℕ) :
               (Nat.add_le_add_left (Nat.mul_le_mul_left d hPow) _) _
           _ = p ^ k * p + (k + 1) * d * (p + d) ^ k := by ring
 
+/-- A rational gap in maximum degree can be absorbed by a slightly larger
+radius coefficient. This integer inequality is the finite Bernoulli step. -/
+theorem rational_power_gap
+    (A B k q d : ℕ) (hAB : A ≤ B) (hk : 1 ≤ k)
+    (hqd : 2 * d ≤ q)
+    (hMargin : 2 * B * k * d ≤ (B - A) * q) :
+    A * q ^ k ≤ B * (q - 2 * d) ^ k := by
+  let p := q - 2 * d
+  have hpq : p + 2 * d = q := Nat.sub_add_cancel hqd
+  have hPower : q ^ k ≤ p ^ k + k * (2 * d) * q ^ (k - 1) := by
+    simpa only [hpq, Nat.mul_assoc] using power_gap_linear_bound p (2 * d) k
+  have hExp : q * q ^ (k - 1) = q ^ k := by
+    have he : k - 1 + 1 = k := by omega
+    rw [Nat.mul_comm, ← pow_succ, he]
+  have hError : B * (k * (2 * d) * q ^ (k - 1)) ≤
+      (B - A) * q ^ k := by
+    calc
+      B * (k * (2 * d) * q ^ (k - 1)) =
+          (2 * B * k * d) * q ^ (k - 1) := by ring
+      _ ≤ ((B - A) * q) * q ^ (k - 1) :=
+        Nat.mul_le_mul_right _ hMargin
+      _ = (B - A) * q ^ k := by rw [mul_assoc, hExp]
+  have hScaled := Nat.mul_le_mul_left B hPower
+  have hSplit : A + (B - A) = B := Nat.add_sub_of_le hAB
+  have hScaled' : B * q ^ k ≤ B * p ^ k +
+      B * (k * (2 * d) * q ^ (k - 1)) := by
+    simpa only [mul_add] using hScaled
+  have hCoef : B * q ^ k = A * q ^ k + (B - A) * q ^ k := by
+    calc
+      B * q ^ k = (A + (B - A)) * q ^ k := by rw [hSplit]
+      _ = _ := by ring
+  change A * q ^ k ≤ B * p ^ k
+  omega
+
 /-- A radius coefficient `p/q` is promoted to any larger coefficient
 `p'/q` by an explicit linear ground-set threshold. The conclusion is the
 sharp finite comparison with `choose(n-1,k)`, with no division. -/

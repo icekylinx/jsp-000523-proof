@@ -1,4 +1,5 @@
 import JSP523.Rank5.FarStarTail
+import JSP523.Rank5.FarStarConstants
 import Mathlib.Analysis.Asymptotics.Basic
 import Mathlib.Data.Nat.Log
 
@@ -164,5 +165,54 @@ theorem eventually_far_star_positive_mass
     (hMax n)
     hpp'.le hp'q hDegree hThreshold hnMass hTiny hQ
     hCollisionCoeff hErrorCoeff
+
+/-- A fixed positive real gap in maximum degree gives a fixed positive
+fraction of the extremal star in the far tail of the actual family. -/
+theorem eventually_far_star_positive_mass_of_real_degree_gap
+    (r : ℕ) (δ : ℝ) (hr : 4 ≤ r) (hδ : 0 < δ)
+    (H : ∀ n : ℕ, Family (Fin n))
+    (X : ∀ n : ℕ, Edge (Fin n))
+    (h M : ℕ → ℕ)
+    (hAdm : ∀ n, Admissible (H n))
+    (hUniform : ∀ n, Uniform r (H n))
+    (hX : ∀ n, (X n).card ≤ h n)
+    (hMax : ∀ n z, ((H n).filter (fun E => z ∈ E)).card ≤ M n)
+    (hDegree : ∀ᶠ n : ℕ in atTop,
+      (M n : ℝ) ≤ (1 - δ) * ((n - 1).choose (r - 1) : ℝ))
+    (hMass : ∀ᶠ n : ℕ in atTop,
+      (n - 1).choose (r - 1) ≤ (H n).card)
+    (hLittle : (fun n : ℕ => ((h n) ^ 2 : ℝ)) =o[atTop]
+      (fun n : ℕ => (n : ℝ))) :
+    ∃ a b : ℕ, 0 < a ∧ 0 < b ∧
+      ∀ᶠ n : ℕ in atTop,
+        a * (n - 1).choose (r - 1) ≤
+          b * ((H n).filter (fun E => Disjoint E (X n))).card := by
+  obtain ⟨A, B, hAB, hGap⟩ :=
+    exists_integer_degree_gap_of_real_gap δ hδ
+  obtain ⟨p, p', q, s, hpp', hp'q, hPower, hCollision, hError⟩ :=
+    exists_far_star_rational_coefficients r (r - 1) A B hAB (by omega)
+  have hBpos : 0 < B := by omega
+  have hRatio : ∀ᶠ n : ℕ in atTop,
+      q ^ (r - 1) * M n ≤
+        p ^ (r - 1) * (n - 1).choose (r - 1) := by
+    filter_upwards [hDegree] with n hn
+    let t := (n - 1).choose (r - 1)
+    have hBDegree : B * M n ≤ A * t := hGap (M n) t hn
+    have hMul : B * (q ^ (r - 1) * M n) ≤
+        B * (p ^ (r - 1) * t) := by
+      calc
+        B * (q ^ (r - 1) * M n) =
+            q ^ (r - 1) * (B * M n) := by ring
+        _ ≤ q ^ (r - 1) * (A * t) :=
+          Nat.mul_le_mul_left _ hBDegree
+        _ = (A * q ^ (r - 1)) * t := by ring
+        _ ≤ (B * p ^ (r - 1)) * t :=
+          Nat.mul_le_mul_right _ hPower
+        _ = B * (p ^ (r - 1) * t) := by ring
+    exact Nat.le_of_mul_le_mul_left hMul hBpos
+  refine ⟨q - p', 2 * q, Nat.sub_pos_of_lt hp'q, ?_, ?_⟩
+  · omega
+  · exact eventually_far_star_positive_mass r p p' q s hr hpp' hp'q
+      hCollision hError H X h M hAdm hUniform hX hMax hRatio hMass hLittle
 
 end JSP523.Rank5

@@ -273,6 +273,22 @@ import JSP523.Rank4.PreprocessUsedParentLabel
 import JSP523.Rank4.PreprocessUsedParentSeparation
 import JSP523.Rank5.FarStarAsymptotic
 import JSP523.Rank5.InheritanceLowRetention
+import JSP523.Rank4.GlobalReciprocalAsymptotic
+import JSP523.Rank4.GraphActualColoredFamilyPayment
+import JSP523.Rank4.GraphActualColoredMarks
+import JSP523.Rank4.GraphActualColoredPayment
+import JSP523.Rank4.GraphActualMixedColoredRecords
+import JSP523.Rank4.GraphActualUniquePairLedger
+import JSP523.Rank4.GraphCanonicalActualUniqueFamily
+import JSP523.Rank4.PreprocessReciprocalC4Asymptotic
+import JSP523.Rank4.PreprocessReciprocalC4Scale
+import JSP523.Rank4.PreprocessReciprocalGraphBudget
+import JSP523.Rank4.PreprocessReciprocalTailCap
+import JSP523.Rank4.PreprocessUsedParentPairDegree
+import JSP523.Rank4.PreprocessUsedParentWedgeBudget
+import JSP523.Rank5.FarStarConstants
+import JSP523.Rank5.InitialPolynomialScale
+import JSP523.Rank5.RegularizationLossAsymptotic
 
 /-!
 # JSP-000523: partial Lean formalization

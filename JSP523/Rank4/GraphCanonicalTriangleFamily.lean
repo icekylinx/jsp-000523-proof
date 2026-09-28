@@ -4,7 +4,7 @@ namespace JSP523.Rank4
 
 variable {α : Type*} [Fintype α] [DecidableEq α]
 
-theorem canonical_triangle_family_actual_h_records
+theorem canonical_triangle_family_actual_h_records_into
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     (D : FiniteCompletionCliqueData α) (C : Finset ι)
     (T : ι → Edge α) (hTInjective : Function.Injective T)
@@ -14,15 +14,15 @@ theorem canonical_triangle_family_actual_h_records
     (hTSub : ∀ t ∈ C, T t ⊆ D.ground)
     (hRainbow : ∀ t ∈ C, CompletionTriangleRainbow D
       (graphFacetCompletions D.K D.ground (T t)))
-    (S : Finset α) (S₀ : ι → CliqueColor → Finset (Fin 3))
-    (hMarkSelected : ∀ (t : ι) (ht : t ∈ C) (x : CliqueColor),
-      canonicalTriangleMark D (T t) (hCard t ht) x ∈ S)
-    (hVerticesSelected : ∀ (t : ι) (ht : t ∈ C) (x : CliqueColor) (i : Fin 3),
-      i ∈ S₀ t x →
-        canonicalTriangleCompletion D (T t) (hCard t ht) i ∈ S) :
+    (S₀ : ι → CliqueColor → Finset (Fin 3))
+    (U : Finset (Edge α × Edge α))
+    (hSubset : ∀ (t : ι) (ht : t ∈ C) (x : CliqueColor),
+      selectedActualTriangleUndirectedColorSlotRecords D (T t)
+        (canonicalTriangleCompletion D (T t) (hCard t ht))
+        (canonicalTriangleMark D (T t) (hCard t ht)) x (S₀ t x) ⊆ U) :
     (∑ t ∈ C, (coloredFacetRecords 3 -
       ∑ x : CliqueColor, coloredSlotLoss 3 (S₀ t x).card)) ≤
-        (selectedUndirectedCompletionRecordKeys D S).card := by
+        U.card := by
   classical
   let v (t : ι) (ht : t ∈ C) : Fin 3 → α :=
     canonicalTriangleCompletion D (T t) (hCard t ht)
@@ -42,17 +42,10 @@ theorem canonical_triangle_family_actual_h_records
       x (S₀ t x) (k t x) rfl
     simpa [R, k, v, mark, ht, actualColoredSlotBase,
       actualColoredSlotLoss, rainbowRecordLoss] using h
-  have hSub : ∀ t ∈ C, ∀ x, R t x ⊆ selectedUndirectedCompletionRecordKeys D S := by
+  have hSub : ∀ t ∈ C, ∀ x, R t x ⊆ U := by
     intro t ht x
     simp only [R, dite_eq_left ht]
-    have hv : Function.Injective (v t ht) := by
-      simpa [v] using canonical_triangle_completion_injective D (T t) (hCard t ht)
-    exact selected_actual_triangle_undirected_records_subset_global
-      D (T t) (v t ht) (mark t ht) x S (S₀ t x)
-      (hMarkSelected t ht x) (hVerticesSelected t ht x)
-      (hTCard t ht) (hTSub t ht)
-      (fun i => canonical_triangle_completion_mem D (T t) (hCard t ht) i)
-      hv
+    exact hSubset t ht x
   have hDisjoint : ∀ t ∈ C, ∀ x, ∀ t' ∈ C, ∀ x',
       (t, x) ≠ (t', x') → Disjoint (R t x) (R t' x') := by
     intro t ht x t' ht' x' hne
@@ -89,8 +82,39 @@ theorem canonical_triangle_family_actual_h_records
   simpa [R, k, actualColoredRecordBase, actualColoredSlotLoss,
     coloredFacetRecords, coloredSlotLoss] using
     actual_colored_records_loss_le_ledger_rat C (fun _ => 3) k R
-      (selectedUndirectedCompletionRecordKeys D S)
+      U
       (by intro t ht; exact Or.inl rfl) hSlot hSub hDisjoint
+
+theorem canonical_triangle_family_actual_h_records
+    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (D : FiniteCompletionCliqueData α) (C : Finset ι)
+    (T : ι → Edge α) (hTInjective : Function.Injective T)
+    (hCard : ∀ t ∈ C,
+      (graphFacetCompletions D.K D.ground (T t)).card = 3)
+    (hTCard : ∀ t ∈ C, (T t).card = 3)
+    (hTSub : ∀ t ∈ C, T t ⊆ D.ground)
+    (hRainbow : ∀ t ∈ C, CompletionTriangleRainbow D
+      (graphFacetCompletions D.K D.ground (T t)))
+    (S : Finset α) (S₀ : ι → CliqueColor → Finset (Fin 3))
+    (hMarkSelected : ∀ (t : ι) (ht : t ∈ C) (x : CliqueColor),
+      canonicalTriangleMark D (T t) (hCard t ht) x ∈ S)
+    (hVerticesSelected : ∀ (t : ι) (ht : t ∈ C) (x : CliqueColor) (i : Fin 3),
+      i ∈ S₀ t x →
+        canonicalTriangleCompletion D (T t) (hCard t ht) i ∈ S) :
+    (∑ t ∈ C, (coloredFacetRecords 3 -
+      ∑ x : CliqueColor, coloredSlotLoss 3 (S₀ t x).card)) ≤
+        (selectedUndirectedCompletionRecordKeys D S).card := by
+  apply canonical_triangle_family_actual_h_records_into
+    D C T hTInjective hCard hTCard hTSub hRainbow S₀
+      (selectedUndirectedCompletionRecordKeys D S)
+  intro t ht x
+  exact selected_actual_triangle_undirected_records_subset_global
+    D (T t) (canonicalTriangleCompletion D (T t) (hCard t ht))
+      (canonicalTriangleMark D (T t) (hCard t ht)) x S (S₀ t x)
+      (hMarkSelected t ht x) (hVerticesSelected t ht x)
+      (hTCard t ht) (hTSub t ht)
+      (fun i => canonical_triangle_completion_mem D (T t) (hCard t ht) i)
+      (canonical_triangle_completion_injective D (T t) (hCard t ht))
 
 theorem canonical_triangle_family_colored_payment
     {ι : Type*} [Fintype ι] [DecidableEq ι]
