@@ -440,9 +440,8 @@ theorem rank_four_near_star_theorem_III2
           ((presentStarTriples H W v).card +
             (missingStarTriples H W v).card) + (outsideEdges H W).card := by omega
       _ = W.card.choose 3 + (outsideEdges H W).card := by rw [hPartition]
-  refine ⟨hIdentity,
-    (rank_four_near_star_exactness hH hUniform hSupport hvW hw hq).1,
-    (rank_four_near_star_exactness hH hUniform hSupport hvW hw hq).2, ?_⟩
+  have hExact := rank_four_near_star_exactness hH hUniform hSupport hvW hw hq
+  refine ⟨hIdentity, hExact.1, hExact.2, ?_⟩
   intro hEquality
   exact rank_four_near_star_equality_necessary
     hH hUniform hSupport hvW hw hq hEquality

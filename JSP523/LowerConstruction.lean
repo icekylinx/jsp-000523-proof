@@ -160,6 +160,41 @@ theorem starPlusMatching_admissible
     exact hcRight
   · exact matching_admissible hr hU hMatch hAm hBm hCm hDm hq
 
+/-- The complete star is counted by the `(r-1)`-sets away from its center.
+This is the common counting step in the equality constructions of Parts III
+and IV of `paper/proof.pdf`. -/
+theorem rank_r_star_card (c : α) (r : ℕ) (hr : 0 < r) :
+    (starFamily c r).card =
+      ((Finset.univ.erase c : Edge α).card).choose (r - 1) := by
+  have hcount := Finset.card_filter_powersetCard_subset
+    ({c} : Finset α) Finset.univ r (by simp) (by simpa using Nat.succ_le_iff.mpr hr)
+  simpa [starFamily, Finset.singleton_subset_iff, Finset.card_erase_of_mem] using hcount
+
+/-- The common construction from §I of `paper/proof.pdf` exists on every
+finite vertex type and has exactly the stated number of edges. -/
+theorem exists_star_plus_matching_exact (c : α) (r : ℕ) (hr : 0 < r) :
+    ∃ H : Family α,
+      Uniform r H ∧ Admissible H ∧
+      H.card = ((Finset.univ.erase c : Edge α).card).choose (r - 1) +
+        (Finset.univ.erase c : Edge α).card / r := by
+  classical
+  let W : Edge α := Finset.univ.erase c
+  obtain ⟨M, hMatch, hMU, hSupport, hMcard⟩ :=
+    exists_uniform_matching_floor W r hr
+  have hAvoid : ∀ ⦃E : Edge α⦄, E ∈ M → c ∉ E := by
+    intro E hE hcE
+    exact (Finset.notMem_erase c Finset.univ) (hSupport E hE hcE)
+  have hDisj : Disjoint (starFamily c r) M := by
+    apply Finset.disjoint_left.mpr
+    intro E hStar hM
+    exact hAvoid hM (mem_starFamily.mp hStar).2
+  refine ⟨starPlusMatching c r M,
+    starPlusMatching_uniform hMU,
+    starPlusMatching_admissible hr hMU hMatch hAvoid, ?_⟩
+  change (starFamily c r ∪ M).card = W.card.choose (r - 1) + W.card / r
+  rw [Finset.card_union_of_disjoint hDisj,
+    rank_r_star_card c r hr, hMcard]
+
 end LowerConstruction
 
 end JSP523
