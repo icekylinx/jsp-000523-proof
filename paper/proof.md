@@ -14,7 +14,7 @@ $$
 A\cap B=C\cap D=\varnothing,\qquad A\cup B=C\cup D.
 $$
 
-For disjoint sets, concatenation denotes union; a vertex in such an expression denotes its singleton. Write $A-x=A\setminus\\{x\\}$. For any $j$, let $d_H(S)=|\\{E\in H:S\subseteq E\\}|$ and $\Delta_j(H)=\max_{|S|=j}d_H(S)$, taking an empty maximum as zero. The $j$-shadow $\partial_jH$ is the family of $j$-sets contained in an edge of $H$; write $\partial H=\partial_{r-1}H$.
+For disjoint sets, concatenation denotes union; a vertex in such an expression denotes its singleton. Write $A-x=A\setminus\lbrace x\rbrace$. For any $j$, let $d_H(S)=|\lbrace E\in H:S\subseteq E\rbrace|$ and $\Delta_j(H)=\max_{|S|=j}d_H(S)$, taking an empty maximum as zero. The $j$-shadow $\partial_jH$ is the family of $j$-sets contained in an edge of $H$; write $\partial H=\partial_{r-1}H$.
 Let $g_r(n)$ be the maximum number of edges of such a family on $n$ vertices, and set $F_r(n)=g_r(n)+1$. Erdős problem #643 [1], recorded as JSP-000523 [2], asks whether $F_r(n)=(1+o(1))\binom n{r-1}$ for every fixed $r\ge3$.
 
 **Theorem 1 (main theorem).** Every admissible triple system on $n$ vertices has at most $\binom n2$ edges. For every fixed $r\ge4$ and every sufficiently large $n$,
@@ -44,7 +44,7 @@ It follows by expanding $\sum_i(a_i-tb_i)^2\ge0$ and requiring its quadratic dis
 **Theorem I.1 (finite coarse bound).** For every admissible $r$-uniform family $H$ on $n$ vertices, where $r\ge3$ and $n\ge0$,
 
 $$
-\boxed{r!\\,|H|\le 3r^r n^{r-1}.}
+\boxed{r!\thinspace|H|\le 3r^r n^{r-1}.}
 \tag{I.1}
 $$
 
@@ -66,8 +66,8 @@ For a finite simple graph $G$, let $D(G)$ be the unordered vertex pairs with at 
 **Proof.** Induct on $|E(G)|$. If $D(G)=\varnothing$, stop. Otherwise choose an edge $uv$ on a four-cycle and set
 
 $$
-X=N(v)\cap\\{x:ux\in D(G)\\},\qquad
-Y=N(u)\cap\\{y:vy\in D(G)\\}.
+X=N(v)\cap\lbrace x:ux\in D(G)\rbrace,\qquad
+Y=N(u)\cap\lbrace y:vy\in D(G)\rbrace.
 $$
 
 Both sets are nonempty and avoid $u,v$. Delete the $|X|+|Y|$ distinct edges $vx$ and $uy$.
@@ -105,7 +105,7 @@ In particular, if $a,b,c\le n$, then $|T|\le3n^2$.
 For two distinct vertices $x,y$, let
 
 $$
-J_{xy}(T)=\\{Q:|Q|=2,\ xQ,yQ\in T,\ Q\cap\\{x,y\\}=\varnothing\\}.
+J_{xy}(T)=\lbrace Q:|Q|=2,\ xQ,yQ\in T,\ Q\cap\lbrace x,y\rbrace=\varnothing\rbrace.
 $$
 
 This is an intersecting graph: disjoint $Q,Q'$ would give the forbidden pairs $xQ,yQ'$ and $yQ,xQ'$.
@@ -163,7 +163,7 @@ Assume $n\ge1$; if $n=0$, the theorem is immediate.
 Color each vertex with one of $r$ colors. Over all $r^n$ colorings, a fixed $r$-edge has all colors distinct in a fraction $r!/r^r$ of them. Double counting pairs consisting of a coloring and one of its crossing edges shows that some coloring has a crossing subfamily $H^\times$ with
 
 $$
-r!\\,|H|\le r^r|H^\times|.
+r!\thinspace|H|\le r^r|H^\times|.
 \tag{I.6}
 $$
 
@@ -181,7 +181,7 @@ $$
 
 of the choices. This is a finite counting ratio: among all bijection choices, the prescribed indices have exactly $n^s$ equally sized fibers and exactly $n$ aligned index tuples.
 
-An aligned edge has the form $B_j\cup\\{x,y\\}$ with $x\in V_{r-1}$ and $y\in V_r$; in particular its block contains no dummy element. Represent it by the triple $(j,x,y)$. Use tagged copies to make the index symbols distinct from all original vertices. This creates a three-partite triple system $T$ on the disjoint classes
+An aligned edge has the form $B_j\cup\lbrace x,y\rbrace$ with $x\in V_{r-1}$ and $y\in V_r$; in particular its block contains no dummy element. Represent it by the triple $(j,x,y)$. Use tagged copies to make the index symbols distinct from all original vertices. This creates a three-partite triple system $T$ on the disjoint classes
 
 $$
 [n],\quad V_{r-1},\quad V_r,
@@ -214,17 +214,17 @@ The support sets in this proof consist only of pairs that actually occur. The lo
 Let $H$ be a finite simple triple system on $V$. Assume that for distinct $x,y$ the common link
 
 $$
- J_{xy}=\\{p\in\binom{V\setminus\\{x,y\\}}2:px,py\in H\\}
+ J_{xy}=\lbrace p\in\binom{V\setminus\lbrace x,y\rbrace}2:px,py\in H\rbrace
 $$
 
-is intersecting. Equivalently, there are no two distinct pairs of disjoint triples with the same union. Indeed, disjoint pairs $p,q$ in $J_{xy}$ give the two partitions $\\{px,qy\\}$ and $\\{py,qx\\}$. Conversely, in two different partitions of a six-set into triples, relabel the parts so that one intersection has size two; the two opposite intersections are pairs $p,q$, and the remaining points $x,y$ give this configuration.
+is intersecting. Equivalently, there are no two distinct pairs of disjoint triples with the same union. Indeed, disjoint pairs $p,q$ in $J_{xy}$ give the two partitions $\lbrace px,qy\rbrace$ and $\lbrace py,qx\rbrace$. Conversely, in two different partitions of a six-set into triples, relabel the parts so that one intersection has size two; the two opposite intersections are pairs $p,q$, and the remaining points $x,y$ give this configuration.
 
 We use the elementary classification that an intersecting simple graph is a star or a triangle (with empty and one-edge graphs allowed as stars). To see this, choose two edges $ab,ac$. Any edge avoiding $a$ must be $bc$, and then every edge lies in the triangle $abc$; if none avoids $a$ the graph is a star. In particular, an intersecting graph with at least four edges has a unique star center.
 
-Write $xy$ for the unordered pair $\\{x,y\\}$, and $px$ for $p\cup\\{x\\}$. Define $N(p)=\\{x\in V\setminus p:px\in H\\}$. For a pair $p$, put $d(p)=|N(p)|$, and put $c(xy)=|J_{xy}|$. Let
+Write $xy$ for the unordered pair $\lbrace x,y\rbrace$, and $px$ for $p\cup\lbrace x\rbrace$. Define $N(p)=\lbrace x\in V\setminus p:px\in H\rbrace$. For a pair $p$, put $d(p)=|N(p)|$, and put $c(xy)=|J_{xy}|$. Let
 
 $$
- m=|H|,\quad P=\\{p:d(p)>0\\},\quad C=\\{q:c(q)>0\\},
+ m=|H|,\quad P=\lbrace p:d(p)>0\rbrace,\quad C=\lbrace q:c(q)>0\rbrace,
  \quad s=|P|,\quad t=|C|,\quad\Psi=2m-s-t.
 $$
 
@@ -234,7 +234,7 @@ Write $k_i$ for the number of pairs with $d=i$ and $b_i$ for the number with $c=
 
 $$
  L=\sum_q(c(q)-3)_{+},\quad
- b(d)=\begin{cases}(d-2)(d-3),&d\ge4,\\\\0,&d\le3,\end{cases}
+ b(d)=\begin{cases}(d-2)(d-3),&d\ge4,\cr 0,&d\le3,\end{cases}
  \quad \mathcal B=\sum_p b(d(p)).
 $$
 
@@ -249,7 +249,7 @@ $$
 For every positive integer $d$,
 
 $$
- \binom d2-\frac12b(d)=2d-3+\mathbf1_{\\{d=1\\}}.
+ \binom d2-\frac12b(d)=2d-3+\mathbf1_{\lbrace d=1\rbrace}.
 $$
 
 Summing only over used pairs yields
@@ -274,12 +274,12 @@ $$
 
 For $d\ge0$ define $f(d)=(d-3)_{+}/d$ when $d>0$ and $f(0)=0$. Put $h(d)=b(d)/d$ for $d>0$ and $h(0)=0$, and let $g=f$.
 
-For root $z$, let $G_z$ be the ordinary graph on $V\setminus\\{z\\}$ with edges $p$ for which $zp\in H$. Write $d_x=d(zx)$, and $\mu_z(x,u)=|N_{G_z}(x)\cap N_{G_z}(u)|$. For $xy\in G_z$ set
+For root $z$, let $G_z$ be the ordinary graph on $V\setminus\lbrace z\rbrace$ with edges $p$ for which $zp\in H$. Write $d_x=d(zx)$, and $\mu_z(x,u)=|N_{G_z}(x)\cap N_{G_z}(u)|$. For $xy\in G_z$ set
 
 $$
  w_z(xy)=
- \sum_{u\in N_{G_z}(y)\setminus\\{x\\}}g(\mu_z(x,u))
- +\sum_{v\in N_{G_z}(x)\setminus\\{y\\}}g(\mu_z(y,v))
+ \sum_{u\in N_{G_z}(y)\setminus\lbrace x\rbrace}g(\mu_z(x,u))
+ +\sum_{v\in N_{G_z}(x)\setminus\lbrace y\rbrace}g(\mu_z(y,v))
  -h(d_x)-h(d_y).\tag{II.2}
 $$
 
@@ -294,27 +294,27 @@ where
 
 $$
  P_{xy}=
- \sum_{u\in N(y)\setminus\\{x\\}}[f(d_x)-g(\mu_z(x,u))]
- +\sum_{v\in N(x)\setminus\\{y\\}}[f(d_y)-g(\mu_z(y,v))]\ge0.
+ \sum_{u\in N(y)\setminus\lbrace x\rbrace}[f(d_x)-g(\mu_z(x,u))]
+ +\sum_{v\in N(x)\setminus\lbrace y\rbrace}[f(d_y)-g(\mu_z(y,v))]\ge0.
 $$
 
 All common-neighbor counts in the first sum are at most $d_x$, and analogously in the second, proving nonnegativity.
 
-The base term before $P$ is at most $2\min\\{f(d_x),f(d_y)\\}$: when the integer degrees differ their difference has magnitude at least one, and when equal the claim is equality. Thus:
+The base term before $P$ is at most $2\min\lbrace f(d_x),f(d_y)\rbrace$: when the integer degrees differ their difference has magnitude at least one, and when equal the claim is equality. Thus:
 
 * $w_z(xy)\le2$; if $w_z(xy)>0$ then both endpoint degrees are at least four.
-* A weak alternative is an edge adjacent to $xy$ whose opposite endpoints have common-neighbor count at most three. Each weak alternative contributes at least $\min\\{f(d_x),f(d_y)\\}$ to $P$. A positive edge therefore has at most one weak alternative.
-* With one weak alternative the weight is at most $\min\\{f(d_x),f(d_y)\\}<1$.
+* A weak alternative is an edge adjacent to $xy$ whose opposite endpoints have common-neighbor count at most three. Each weak alternative contributes at least $\min\lbrace f(d_x),f(d_y)\rbrace$ to $P$. A positive edge therefore has at most one weak alternative.
+* With one weak alternative the weight is at most $\min\lbrace f(d_x),f(d_y)\rbrace<1$.
 
 Summing (II.2) over one link gives
 
 $$
 \sum_{xy\in G_z}w_z(xy)
-=2\sum_{\\{x,u\\}\subseteq V\setminus\\{z\\}}(\mu_z(x,u)-3)_{+}
+=2\sum_{\lbrace x,u\rbrace\subseteq V\setminus\lbrace z\rbrace}(\mu_z(x,u)-3)_{+}
 -\sum_{x\ne z}b(d(zx)).
 $$
 
-For each unordered pair $\\{x,u\\}$, its common neighbors contribute twice, so its contribution is $2\mu_z(x,u)g(\mu_z(x,u))=2\max(\mu_z(x,u)-3,0)$. Each vertex $x$ contributes $d(zx)h(d(zx))=b(d(zx))$ to the negative part. A common link $J_{xu}$ with at least four edges has a unique star center $z$, and only that root has $\mu_z(x,u)>3$; at that root $\mu_z(x,u)=c(xu)$. All other common links give zero surplus at every root. Each pair budget $b(d(p))$ appears at its two endpoints. Hence summing over **all** roots gives
+For each unordered pair $\lbrace x,u\rbrace$, its common neighbors contribute twice, so its contribution is $2\mu_z(x,u)g(\mu_z(x,u))=2\max(\mu_z(x,u)-3,0)$. Each vertex $x$ contributes $d(zx)h(d(zx))=b(d(zx))$ to the negative part. A common link $J_{xu}$ with at least four edges has a unique star center $z$, and only that root has $\mu_z(x,u)>3$; at that root $\mu_z(x,u)=c(xu)$. All other common links give zero surplus at every root. Each pair budget $b(d(p))$ appears at its two endpoints. Hence summing over **all** roots gives
 
 $$
  \sum_{z,xy\in G_z}w_z(xy)=2L-2\mathcal B.\tag{II.4}
@@ -325,7 +325,7 @@ Let $W^{+},W^{-}$ denote the totals of positive weights and absolute negative we
 For $E\in H$ define
 
 $$
- \delta_E=\sum_{z\in E}(-w_z(E\setminus\\{z\\}))_{+}
+ \delta_E=\sum_{z\in E}(-w_z(E\setminus\lbrace z\rbrace))_{+}
               -\sum_{p\in\binom E2}h(d(p)).\tag{II.5}
 $$
 
@@ -347,42 +347,42 @@ The local graph theorem proved in §II.A states that $\delta_E\ge0$ for every $E
 
 A positive weight $w_z(p)$ with $d(p)=1$ is retained at $p$; it is at most two, so all such weights total at most $2k_1$.
 
-If $d(p)\ge2$, distribute $w_z(p)/(d(p)-1)$ to each other completion pair $zv$ with $v\in N(p)\setminus\\{z\\}$. The total distributed equals the original weight. Let $\rho(q)$ be the charge received by $q$.
+If $d(p)\ge2$, distribute $w_z(p)/(d(p)-1)$ to each other completion pair $zv$ with $v\in N(p)\setminus\lbrace z\rbrace$. The total distributed equals the original weight. Let $\rho(q)$ be the charge received by $q$.
 
-To see the possible receiving sizes, suppose $J_{zv}$ contains $xy$ and $xu$. In $G_z$, $xu$ is an alternative to $xy$. For every $t\in N_{G_z}(y)\cap N_{G_z}(u)$, the common link $J_{yu}$ contains $zt$, and it also contains $vx$. Intersectingness forces $t\in\\{v,x\\}$; therefore $\mu_z(y,u)\le2$. Every additional edge of $J_{zv}$ gives a weak alternative to the source $xy$. If $c(zv)\ge3$, there are at least two, so no positive weight can be sent there.
+To see the possible receiving sizes, suppose $J_{zv}$ contains $xy$ and $xu$. In $G_z$, $xu$ is an alternative to $xy$. For every $t\in N_{G_z}(y)\cap N_{G_z}(u)$, the common link $J_{yu}$ contains $zt$, and it also contains $vx$. Intersectingness forces $t\in\lbrace v,x\rbrace$; therefore $\mu_z(y,u)\le2$. Every additional edge of $J_{zv}$ gives a weak alternative to the source $xy$. If $c(zv)\ge3$, there are at least two, so no positive weight can be sent there.
 
 Thus only $c=1$ and $c=2$ receivers get positive charge. A $c=1$ receiver has one core $p$, two possible roots, and weight at most two from each; division by $d(p)-1$ cannot increase it. Its capacity is at most four.
 
 A $c=2$ receiver is written uniquely as
 
 $$
- J_{zw}=\\{xy,xu\\}.
+ J_{zw}=\lbrace xy,xu\rbrace.
 $$
 
 Every contributing weight is below one by the preceding weak-alternative argument. Its reciprocal satisfies
 
 $$
- J_{yu}\supseteq\\{xz,xw\\}.\tag{II.7}
+ J_{yu}\supseteq\lbrace xz,xw\rbrace.\tag{II.7}
 $$
 
 ### II.5 Reciprocal grouping, and the only exception
 
 If $c(yu)=2$, applying reciprocity again returns $zw$. These receivers form disjoint unordered pairs.
 
-Put $t_v=d(xv)$ for $v\in\\{z,w,y,u\\}$. The charge from root $v$ toward a core containing the opposite vertex $v'$ is at most
+Put $t_v=d(xv)$ for $v\in\lbrace z,w,y,u\rbrace$. The charge from root $v$ toward a core containing the opposite vertex $v'$ is at most
 
 $$
- \frac{1}{t_{v'}-1}\mathbf1_{\\{t_v\ge4\\}}.
+ \frac{1}{t_{v'}-1}\mathbf1_{\lbrace t_v\ge4\rbrace}.
 $$
 
-Let $h_1,h_2\in\\{0,1,2\\}$ be the numbers of $t_v\ge4$ on sides $\\{z,w\\}$ and $\\{y,u\\}$. The combined charge to the two reciprocal receivers is at most
+Let $h_1,h_2\in\lbrace0,1,2\rbrace$ be the numbers of $t_v\ge4$ on sides $\lbrace z,w\rbrace$ and $\lbrace y,u\rbrace$. The combined charge to the two reciprocal receivers is at most
 
 $$
  h_1(2-2h_2/3)+h_2(2-2h_1/3)
  =2(h_1+h_2)-4h_1h_2/3\le4.
 $$
 
-The last inequality is immediate for $h_i\in\\{0,1,2\\}$; its largest value is four. Thus the pair's total capacity is two per receiver.
+The last inequality is immediate for $h_i\in\lbrace0,1,2\rbrace$; its largest value is four. Thus the pair's total capacity is two per receiver.
 
 If $c(yu)\ge3$ and $J_{yu}$ is a star, it is centered at $x$. Its at least three leaves are completions of both $xy$ and $xu$. Thus $d(xy),d(xu)\ge3$, and the four source contributions sum to at most
 
@@ -393,13 +393,13 @@ $$
 The sole remaining case is the exact triangle
 
 $$
- J_{yu}=\\{xz,xw,zw\\}.
+ J_{yu}=\lbrace xz,xw,zw\rbrace.
 $$
 
 Define
 
 $$
- \Xi=\sum_{\substack{J_{zw}=\\{xy,xu\\}\\\\J_{yu}=\\{xz,xw,zw\\}}}
+ \Xi=\sum_{\substack{J_{zw}=\lbrace xy,xu\rbrace\cr J_{yu}=\lbrace xz,xw,zw\rbrace}}
                    (\rho(zw)-2)_{+},
 $$
 
@@ -425,7 +425,7 @@ $$
 
 and no five-element subset of $H_0$ spans nine or ten triples. This works with arbitrary interfaces and arbitrary pair degrees.
 
-It suffices to prove $\Psi\le0$ for $H_0$. From this point through the application of (II.9), all degrees, common links, weights, charges, $\delta$, and $\Xi$ are recomputed in $H_0$. For such a system, consider an exceptional receiver $zw$ with book base $\\{x,z,w\\}$ and pages $\\{y,u\\}$. Its four individual charges are $\alpha_y,\beta_y,\alpha_u,\beta_u$, where
+It suffices to prove $\Psi\le0$ for $H_0$. From this point through the application of (II.9), all degrees, common links, weights, charges, $\delta$, and $\Xi$ are recomputed in $H_0$. For such a system, consider an exceptional receiver $zw$ with book base $\lbrace x,z,w\rbrace$ and pages $\lbrace y,u\rbrace$. Its four individual charges are $\alpha_y,\beta_y,\alpha_u,\beta_u$, where
 
 $$
  \alpha_y=\frac{(w_z(xy))_{+}}{d(xy)-1},\quad
@@ -464,21 +464,21 @@ $$
 Its exact graph formulation is as follows. At bridge $E=act$ for receiver $at$ with
 
 $$
- J_{at}=\\{bc,bx\\},\qquad J_{cx}=\\{ab,bt,at\\},
+ J_{at}=\lbrace bc,bx\rbrace,\qquad J_{cx}=\lbrace ab,bt,at\rbrace,
 $$
 
 use auxiliary parts
 
 $$
- X=N(at)\setminus\\{c\\},\quad
- Y=N(ac)\setminus\\{t\\},\quad
- Z=N(ct)\setminus\\{a\\}.
+ X=N(at)\setminus\lbrace c\rbrace,\quad
+ Y=N(ac)\setminus\lbrace t\rbrace,\quad
+ Z=N(ct)\setminus\lbrace a\rbrace.
 $$
 
 The marked $X$-node $x$ has its two neighbors $Y_b,Z_b$. When the bridge demand is positive, their relevant degrees $r,s$ are at least three, and their neighborhoods in $X$ intersect exactly at $x$. A marked-node strengthening of the local signed graph theorem gives
 
 $$
- \delta_E\ge\min\\{\phi(r),\phi(s)\\},\qquad
+ \delta_E\ge\min\lbrace\phi(r),\phi(s)\rbrace,\qquad
  \phi(j)=(j-2)_{+}/(j+1).
 $$
 
@@ -518,14 +518,14 @@ This appendix proves $\delta_E\ge0$ from (II.5). Its equations are numbered (II.
 
 #### II.A.1 Exact graph reduction
 
-At $E=\\{a,b,c\\}$, form the tagged tripartite graph $K$ with parts
+At $E=\lbrace a,b,c\rbrace$, form the tagged tripartite graph $K$ with parts
 
 $$
-A=N(bc)\setminus\\{a\\},\quad B=N(ac)\setminus\\{b\\},\quad
-C=N(ab)\setminus\\{c\\},
+A=N(bc)\setminus\lbrace a\rbrace,\quad B=N(ac)\setminus\lbrace b\rbrace,\quad
+C=N(ab)\setminus\lbrace c\rbrace,
 $$
 
-joining $A_x B_y$ if $cxy\in H$, and cyclically. All labels in the parts lie outside $E$; copies of the same label in different parts are distinct vertices of $K$. Every node meeting both other parts has degree exactly two. For example, if $A_x$ meets $B_y$ and $C_z$, then $bc,cy,bz$ lie in $J_{ax}$. Intersectingness of $cy$ and $bz$ forces $y=z$, since all these labels avoid the central triple. The resulting triangle $\\{bc,by,cy\\}$ in $J_{ax}$ excludes every further edge and hence every further neighbor of $A_x$. The argument for the other parts is symmetric.
+joining $A_x B_y$ if $cxy\in H$, and cyclically. All labels in the parts lie outside $E$; copies of the same label in different parts are distinct vertices of $K$. Every node meeting both other parts has degree exactly two. For example, if $A_x$ meets $B_y$ and $C_z$, then $bc,cy,bz$ lie in $J_{ax}$. Intersectingness of $cy$ and $bz$ forces $y=z$, since all these labels avoid the central triple. The resulting triangle $\lbrace bc,by,cy\rbrace$ in $J_{ax}$ excludes every further edge and hence every further neighbor of $A_x$. The argument for the other parts is symmetric.
 
 The scalar function $H(n)$ below is an auxiliary budget, distinct from the hypergraph $H$. Put
 
@@ -556,7 +556,7 @@ with the analogous formulas at the other two roots. To check (II.A.1), an $A_x$ 
 Hence the local inequality $\delta_E\ge0$ is equivalent to
 
 $$
-\sum_{ij\in\\{AB,AC,BC\\}}[H(n_i)+H(n_j)-T_{ij}]_{+}
+\sum_{ij\in\lbrace AB,AC,BC\rbrace}[H(n_i)+H(n_j)-T_{ij}]_{+}
 \ge H(n_A)+H(n_B)+H(n_C).\tag{II.A.2}
 $$
 
@@ -572,17 +572,17 @@ $$
 
 **Proof.**
 
-Because $phi$ is nondecreasing, complete all edges among the vertices other than the two designated low-degree vertices. Their degrees remain at most one.
+Because $\phi$ is nondecreasing, complete all edges among the vertices other than the two designated low-degree vertices. Their degrees remain at most one.
 
 ##### Two designated vertices in the same part
 
-Suppose they belong to the $a$-part. For $a≥4,b≥2$, the other $a-2$ vertices each contribute at most $phi(b)$. The $b$ opposite vertices initially have degree $a-2$. The two possible low-vertex edges add at most
+Suppose they belong to the $a$-part. For $a\ge 4,b\ge 2$, the other $a-2$ vertices each contribute at most $\phi(b)$. The $b$ opposite vertices initially have degree $a-2$. The two possible low-vertex edges add at most
 
 $$
 \frac6{a(a-1)}
 $$
 
-to their total contribution: the increments of $phi$ are decreasing starting at degree two. Thus the total is at most
+to their total contribution: the increments of $\phi$ are decreasing starting at degree two. Thus the total is at most
 
 $$
 S=(a-2)\phi(b)+b\phi(a-2)+\frac6{a(a-1)}.
@@ -596,13 +596,13 @@ H(a)+H(b)-S
 +\frac6{a+1}-\frac6{a(a-1)}\ge0.
 $$
 
-The consecutive-integer product is nonnegative, and the final difference is nonnegative for $a≥4$.
+The consecutive-integer product is nonnegative, and the final difference is nonnegative for $a\ge 4$.
 
-If $a=2$, every degree is at most two, so the sum is zero. If $a=3,b≥2$, the sum is at most $phi(b)+1/4$, while $H(b)≥phi(b)$ and $H(3)=1/2$. If $b=1$, the sum is at most $phi(a)≤H(a)$; $b=0$ is trivial.
+If $a=2$, every degree is at most two, so the sum is zero. If $a=3,b\ge 2$, the sum is at most $\phi(b)+1/4$, while $H(b)\ge \phi(b)$ and $H(3)=1/2$. If $b=1$, the sum is at most $\phi(a)\le H(a)$; $b=0$ is trivial.
 
 ##### One designated vertex in each part
 
-For $a,b≥3$, complete all edges between the other $a-1$ and $b-1$ vertices. Attaching each low vertex to a high vertex is at least as good for the sum as joining the two low vertices together. Therefore the sum is at most
+For $a,b\ge 3$, complete all edges between the other $a-1$ and $b-1$ vertices. Attaching each low vertex to a high vertex is at least as good for the sum as joining the two low vertices together. Therefore the sum is at most
 
 $$
 S=(a-1)\phi(b-1)+(b-1)\phi(a-1)
@@ -617,7 +617,7 @@ H(a)+H(b)-S
 +\frac{a-2}{a(a+1)}+\frac{b-2}{b(b+1)}\right]\ge0.
 $$
 
-If one part has size two, only its one nondesignated vertex can contribute positively; the sum is at most $phi$ of the opposite part size, hence at most that part's $H$. If a part has size at most one, its designated vertex has degree at most one and every contribution is zero. This proves (II.A.3). ∎
+If one part has size two, only its one nondesignated vertex can contribute positively; the sum is at most $\phi$ of the opposite part size, hence at most that part's $H$. If a part has size at most one, its designated vertex has degree at most one and every contribution is zero. This proves (II.A.3). ∎
 
 #### II.A.3 A positive pair type is unique and controls the other types
 
@@ -627,15 +627,15 @@ $$
 R_{AB}=T_{AB}-H(n_A)-H(n_B)
 $$
 
-and cyclically. If $R_AB>0$, Lemma II.A.1 shows that at most one node of $A∪B$ has degree at most one in $K[A,B]$.
+and cyclically. If $R_{AB}>0$, Lemma II.A.1 shows that at most one node of $A\cup B$ has degree at most one in $K[A,B]$.
 
-Every node of $A∪B$ touching $C$ has such low $AB$ degree: it is either pure toward $C$, or mixed with total degree two. Thus all $AC$ and $BC$ edges meet at most one node of $A∪B$. Those edges form one star, whose leaves in $C$ contribute zero to $T_AC+T_BC$. Consequently
+Every node of $A\cup B$ touching $C$ has such low $AB$ degree: it is either pure toward $C$, or mixed with total degree two. Thus all $AC$ and $BC$ edges meet at most one node of $A\cup B$. Those edges form one star, whose leaves in $C$ contribute zero to $T_{AC}+T_{BC}$. Consequently
 
 $$
 T_{AC}+T_{BC}\le\phi(n_C)\le H(n_C).\tag{II.A.4}
 $$
 
-The last inequality holds also for $n_C=0,1,2$, when both sides vanish. In particular $R_AC,R_BC≤0$, so a positive pair type is unique.
+The last inequality holds also for $n_C=0,1,2$, when both sides vanish. In particular $R_{AC},R_{BC}\le 0$, so a positive pair type is unique.
 
 When a positive pair type exists, (II.A.4) immediately gives (II.A.2): the two other negative signed weights sum to
 
@@ -659,12 +659,12 @@ Its excess over the two individual budgets is exactly
 $$
 S(x,y)-H(x)-H(y)
 =\phi(x)+\phi(y)-(x-y)(\phi(x)-\phi(y))
-\le2\min\\{\phi(x),\phi(y)\\}.\tag{II.A.5}
+\le2\min\lbrace\phi(x),\phi(y)\rbrace.\tag{II.A.5}
 $$
 
 The final bound uses integer side sizes: if they differ, their difference has magnitude at least one.
 
-There are two useful merging identities/inequalities. For $x,u≥2$,
+There are two useful merging identities/inequalities. For $x,u\ge 2$,
 
 $$
 H(x+u)-H(x)-H(u)=2\phi(x)+2\phi(u)+\frac6{x+u+1}.\tag{II.A.6}
@@ -676,19 +676,19 @@ $$
 H(x+u)\ge H(x)+H(u)+\phi(x)+\phi(u).\tag{II.A.7}
 $$
 
-For $x,u≥2$, (II.A.7) follows from (II.A.6). If $x=1,u≥2$, the difference between its two sides is $3u/[(u+1)(u+2)]$; if $x=u=1$, it is zero.
+For $x,u\ge 2$, (II.A.7) follows from (II.A.6). If $x=1,u\ge 2$, the difference between its two sides is $3u/[(u+1)(u+2)]$; if $x=u=1$, it is zero.
 
 - With zero or one nonempty pair type, (II.A.2) is immediate by capping that one type at its own two-part budget.
-- With two types, write them as $K_{x,y}$ on $AB$ and $K_{u,v}$ on $AC$. If $x,u≥2$, (II.A.5) and (II.A.6) give $T_AB+T_AC≤H(x+u)+H(y)+H(v)$, which proves (II.A.2). If $x=1$, then $T_AB=phi(y)≤H(y)$. Cap the other type by $H(x+u)+H(v)$; again (II.A.2) follows. The case $u=1$ is symmetric.
-- With three types, each original part is the union of two positive side sets. Sum (II.A.5), using its weaker bound by $phi(x)+phi(y)$, and apply (II.A.7) at each original part. This gives $T_AB+T_AC+T_BC≤Σ_iH(n_i)$, proving (II.A.2).
+- With two types, write them as $K_{x,y}$ on $AB$ and $K_{u,v}$ on $AC$. If $x,u\ge 2$, (II.A.5) and (II.A.6) give $T_{AB}+T_{AC}\le H(x+u)+H(y)+H(v)$, which proves (II.A.2). If $x=1$, then $T_{AB}=\phi(y)\le H(y)$. Cap the other type by $H(x+u)+H(v)$; again (II.A.2) follows. The case $u=1$ is symmetric.
+- With three types, each original part is the union of two positive side sets. Sum (II.A.5), using its weaker bound by $\phi(x)+\phi(y)$, and apply (II.A.7) at each original part. This gives $T_{AB}+T_{AC}+T_{BC}\le \sum_i H(n_i)$, proving (II.A.2).
 
-Equivalently, in the pure base case we have the following stronger dichotomy: if all $R_ij≤0$, then $ΣT_ij≤ΣH(n_i)$; if one is positive, it is unique and (II.A.4) holds. The implication in the all-nonpositive case remains valid before completing missing edges, because $Σ min(T_ij,H_i+H_j)−ΣH_i$ is coordinatewise nondecreasing in the $T$ values. Thus (II.A.2) for the completion implies (II.A.2) for the original graph, and with no positive $R$ this is exactly $ΣT≤ΣH$.
+Equivalently, in the pure base case we have the following stronger dichotomy: if all $R_{ij}\le 0$, then $\sum T_{ij}\le \sum H(n_i)$; if one is positive, it is unique and (II.A.4) holds. The implication in the all-nonpositive case remains valid before completing missing edges, because $\sum\min(T_{ij},H_i+H_j)-\sum H_i$ is coordinatewise nondecreasing in the $T$ values. Thus (II.A.2) for the completion implies (II.A.2) for the original graph, and with no positive $R$ this is exactly $\sum T\le \sum H$.
 
 #### II.A.5 Induction over mixed nodes
 
-We prove the dichotomy stated at the end of §II.A.4. Suppose $v∈A$ is mixed. It has one neighbor in $B$ and one in $C$. Delete $v$, apply induction, and add it back. Let $a$ be the old size of $A$.
+We prove the dichotomy stated at the end of §II.A.4. Suppose $v\in A$ is mixed. It has one neighbor in $B$ and one in $C$. Delete $v$, apply induction, and add it back. Let $a$ be the old size of $A$.
 
-The new node contributes zero to every $T$. Each of its two neighbors can increase its contribution by at most $1/4$, because this is the largest increment of $phi$. If $a≤1$, neither increase can be positive: any neighbor with a positive increase would have at least three neighbors in $A$ after insertion. If $a≥2$,
+The new node contributes zero to every $T$. Each of its two neighbors can increase its contribution by at most $1/4$, because this is the largest increment of $\phi$. If $a\le 1$, neither increase can be positive: any neighbor with a positive increase would have at least three neighbors in $A$ after insertion. If $a\ge 2$,
 
 $$
 \Delta H_A=1-\frac6{(a+1)(a+2)}\ge\frac12.
@@ -700,7 +700,7 @@ $$
 \Delta T_{AB}+\Delta T_{AC}\le\Delta H_A.\tag{II.A.8}
 $$
 
-Each individual affected $R$ can only decrease, and $R_BC$ stays unchanged. No new positive pair type can appear.
+Each individual affected $R$ can only decrease, and $R_{BC}$ stays unchanged. No new positive pair type can appear.
 
 If the smaller graph has no positive type, its total $T$ is at most its total $H$, and (II.A.8) preserves this. If its positive type survives insertion, §II.A.3 directly proves the desired dichotomy for the new graph. If a positive type disappears, it must be $AB$ or $AC$; suppose it is $AB$.
 
@@ -710,9 +710,9 @@ $$
 \Delta T_{AC}=0.\tag{II.A.9}
 $$
 
-Otherwise the $C$ neighbor of $v$ has at least three $A$ neighbors after insertion, hence at least two distinct $A$ neighbors before insertion. Both of those old $A$ nodes touch $C$, so each has $AB$ degree at most one. This contradicts the two-low-vertices lemma because the old $R_AB$ was positive.
+Otherwise the $C$ neighbor of $v$ has at least three $A$ neighbors after insertion, hence at least two distinct $A$ neighbors before insertion. Both of those old $A$ nodes touch $C$, so each has $AB$ degree at most one. This contradicts the two-low-vertices lemma because the old $R_{AB}$ was positive.
 
-In the smaller graph, (II.A.4) gave $T_AC+T_BC≤H_C$. Equation (II.A.9) preserves that bound, while the disappearance of the positive type says $T_AB≤H_A+H_B$. Summing proves $ΣT≤ΣH$ for the new graph.
+In the smaller graph, (II.A.4) gave $T_{AC}+T_{BC}\le H_C$. Equation (II.A.9) preserves that bound, while the disappearance of the positive type says $T_{AB}\le H_A+H_B$. Summing proves $\sum T\le \sum H$ for the new graph.
 
 Deletion of a mixed node preserves the defining graph property and strictly reduces the number of mixed nodes, so the induction terminates at the pure case. Isolated nodes can be reintroduced in the same argument with all $\Delta T=0$: a surviving positive type is handled by §II.A.3, and a disappearing type leaves the other-type bound unchanged. This finishes the graph theorem and proves $\delta_E\ge0$ for every triple $E$. ∎
 
@@ -724,13 +724,13 @@ Deletion of a mixed node preserves the defining graph property and strictly redu
 Let $A$ have five vertices and $H[A]$ contain at least nine triples. Fix $x\notin A$ and define the external trace
 
 $$
- F_{A,x}=\\{p\in\binom A2:px\in H\\}.
+ F_{A,x}=\lbrace p\in\binom A2:px\in H\rbrace.
 $$
 
 For $p\in F_{A,x}$, let
 
 $$
- N_A(p)=\\{y\in A\setminus p:py\in H\\}.
+ N_A(p)=\lbrace y\in A\setminus p:py\in H\rbrace.
 $$
 
 **Lemma II.B.1.** There are pairwise disjoint two-element sets $Y_p\subseteq N_A(p)$, one for each $p\in F_{A,x}$.
@@ -741,15 +741,15 @@ $$
  (px,A\setminus p),\qquad(qx,A\setminus q)
 $$
 
-of $A\cup\\{x\\}$ into two disjoint triples. Also $|N_A(p)|=3$.
+of $A\cup\lbrace x\rbrace$ into two disjoint triples. Also $|N_A(p)|=3$.
 
-Suppose the unique missing triple is $M$ and put $q=A\setminus M$. Every pair $p\ne q$ has $A\setminus p\in H$. The same decomposition argument shows that at most one such pair belongs to $F_{A,x}$. Thus $|F_{A,x}|\le2$, and if it is two then $F_{A,x}=\\{q,p\\}$ for $p\ne q$. We have $N_A(q)=M$. If $p$ intersects $q$ in one vertex, then $N_A(p)=A\setminus p$ and $|N_A(q)\cup N_A(p)|=4$. If $p$ is disjoint from $q$, then $p\subseteq M$ and $N_A(p)=q$, so the union has size five. Each neighborhood has at least two points and their union has at least four. If either has size two, allocate those two points first. Otherwise, if one has at least four, allocate two points from the other first. In the remaining case both have size three; choose one point belonging only to the first and one further point from it, leaving two for the second. ∎
+Suppose the unique missing triple is $M$ and put $q=A\setminus M$. Every pair $p\ne q$ has $A\setminus p\in H$. The same decomposition argument shows that at most one such pair belongs to $F_{A,x}$. Thus $|F_{A,x}|\le2$, and if it is two then $F_{A,x}=\lbrace q,p\rbrace$ for $p\ne q$. We have $N_A(q)=M$. If $p$ intersects $q$ in one vertex, then $N_A(p)=A\setminus p$ and $|N_A(q)\cup N_A(p)|=4$. If $p$ is disjoint from $q$, then $p\subseteq M$ and $N_A(p)=q$, so the union has size five. Each neighborhood has at least two points and their union has at least four. If either has size two, allocate those two points first. Otherwise, if one has at least four, allocate two points from the other first. In the remaining case both have size three; choose one point belonging only to the first and one further point from it, leaving two for the second. ∎
 
 #### II.B.2 Simultaneous removal of all nine- or ten-triple blocks
 
-**Elementary block linearity.** Distinct five-element sets $A,D$ spanning at least nine triples intersect in at most one vertex. If they intersect in exactly two vertices $x,y$, internal witnesses for $J_{xy}$ in their disjoint remaining three-sets are disjoint. If their intersection has three vertices, choose $x,y$ in that intersection with the same membership in the at-most-one missing triple of $A$ (possible by the pigeonhole principle; if $A$ is complete choose any pair). Then $J_{xy}$ contains the full triangle on $A\setminus\\{x,y\\}$. Every internal witness from $D$ meets its vertex set in at most one vertex, hence is disjoint from some edge of that triangle. If the intersection has four vertices $Q$, let $a,d$ be the respective outside vertices. Both the $a$- and $d$-links on $Q$ have at least five of its six pairs; their intersection gives at least four edges in $J_{ad}$ on four vertices, impossible for an intersecting graph. These exclude all possible nontrivial intersections. Also, every pair inside such a block has at least two internal common-link witnesses, since one missing triple deletes at most one of the three possible witnesses.
+**Elementary block linearity.** Distinct five-element sets $A,D$ spanning at least nine triples intersect in at most one vertex. If they intersect in exactly two vertices $x,y$, internal witnesses for $J_{xy}$ in their disjoint remaining three-sets are disjoint. If their intersection has three vertices, choose $x,y$ in that intersection with the same membership in the at-most-one missing triple of $A$ (possible by the pigeonhole principle; if $A$ is complete choose any pair). Then $J_{xy}$ contains the full triangle on $A\setminus\lbrace x,y\rbrace$. Every internal witness from $D$ meets its vertex set in at most one vertex, hence is disjoint from some edge of that triangle. If the intersection has four vertices $Q$, let $a,d$ be the respective outside vertices. Both the $a$- and $d$-links on $Q$ have at least five of its six pairs; their intersection gives at least four edges in $J_{ad}$ on four vertices, impossible for an intersecting graph. These exclude all possible nontrivial intersections. Also, every pair inside such a block has at least two internal common-link witnesses, since one missing triple deletes at most one of the three possible witnesses.
 
-Let $B$ be the collection of all five-element sets spanning at least nine triples. By the preceding elementary proof, distinct members of $B$ intersect in at most one vertex. Call a pair covered if it is contained in a member of $B$. Put $b_9=|\\{A\in B:|H[A]|=9\\}|$ and define $b_{10}$ analogously. Every covered pair belongs to a unique block.
+Let $B$ be the collection of all five-element sets spanning at least nine triples. By the preceding elementary proof, distinct members of $B$ intersect in at most one vertex. Call a pair covered if it is contained in a member of $B$. Put $b_9=|\lbrace A\in B:|H[A]|=9\rbrace|$ and define $b_{10}$ analogously. Every covered pair belongs to a unique block.
 
 A triple not contained in a block is of type $R_i$ if it contains exactly $i$ covered pairs, and $R_i$ also denotes their number. Delete every triple containing a covered pair, and call the remainder $H_0$. The number of deleted triples is
 
@@ -773,11 +773,11 @@ $$
 
 For each fixed $(A,x)$, all chosen $y$ are different, even when $x$ completes two pairs of $A$.
 
-No ordered pair $(y,x)$ occurs for certificates from different blocks. Otherwise $A\cap A'=\\{y\\}$, and the corresponding witness pairs $p\subseteq A\setminus\\{y\\}$ and $p'\subseteq A'\setminus\\{y\\}$ are disjoint, contradicting the intersectingness of $J_{yx}$. Thus every orientation occurs at most once.
+No ordered pair $(y,x)$ occurs for certificates from different blocks. Otherwise $A\cap A'=\lbrace y\rbrace$, and the corresponding witness pairs $p\subseteq A\setminus\lbrace y\rbrace$ and $p'\subseteq A'\setminus\lbrace y\rbrace$ are disjoint, contradicting the intersectingness of $J_{yx}$. Thus every orientation occurs at most once.
 
-Every certificate pair $yx$ is uncovered. Indeed, if $yx$ lay in another block $D$, linearity gives $A\cap D=\\{y\\}$; the internal common-link witness for $yx$ in $D$ is disjoint from $p$, again a contradiction.
+Every certificate pair $yx$ is uncovered. Indeed, if $yx$ lay in another block $D$, linearity gives $A\cap D=\lbrace y\rbrace$; the internal common-link witness for $yx$ in $D$ is disjoint from $p$, again a contradiction.
 
-If an unordered certificate pair $yx$ occurs in both orientations, write the two certificates as $(y,x;p,A,E)$ and $(x,y;q,D,F)$. Their cores must intersect, because both are edges of $J_{xy}$. The blocks are different and linear, so $p\cap q=\\{a\\}$, where $A\cap D=\\{a\\}$. Hence $E=p+x$ contains the additional covered pair $ax\subseteq D$ and $F=q+y$ contains the additional covered pair $ay\subseteq A$. Both generating triples therefore have type at least two.
+If an unordered certificate pair $yx$ occurs in both orientations, write the two certificates as $(y,x;p,A,E)$ and $(x,y;q,D,F)$. Their cores must intersect, because both are edges of $J_{xy}$. The blocks are different and linear, so $p\cap q=\lbrace a\rbrace$, where $A\cap D=\lbrace a\rbrace$. Hence $E=p+x$ contains the additional covered pair $ax\subseteq D$ and $F=q+y$ contains the additional covered pair $ay\subseteq A$. Both generating triples therefore have type at least two.
 
 It follows that the $2R_1$ certificates generated by $R_1$ triples give distinct unordered pairs which occur nowhere else. The $4R_2+6R_3$ other certificates have multiplicity at most two. If $\Gamma$ is the set of unordered certificate pairs, then
 
@@ -785,9 +785,9 @@ $$
  |\Gamma|\ge 2R_1+2R_2+3R_3. \tag{II.B.1}
 $$
 
-Every $\Gamma$-pair disappears from $C$ after the removal. To see this, let $yx$ have core $p=\\{u,v\\}\subseteq A\setminus\\{y\\}$. Any $q\in J_{yx}$ intersects $p$. If $u\in q$, then the witnessing triple $yq$ contains covered pair $yu\subseteq A$ and is deleted; if $v\in q$ the same follows from covered pair $yv$. Thus no witness survives.
+Every $\Gamma$-pair disappears from $C$ after the removal. To see this, let $yx$ have core $p=\lbrace u,v\rbrace\subseteq A\setminus\lbrace y\rbrace$. Any $q\in J_{yx}$ intersects $p$. If $u\in q$, then the witnessing triple $yq$ contains covered pair $yu\subseteq A$ and is deleted; if $v\in q$ the same follows from covered pair $yv$. Thus no witness survives.
 
-All $10(b_9+b_{10})$ covered pairs disappear from $P$. They also disappear from $C$: a covered pair $xy\subseteq A$ has an internal witness $p\subseteq A\setminus\\{x,y\\}$. A surviving witness $q$ for $xy$ would have to avoid $A$, because otherwise $xq$ contains a covered pair and is deleted. But $q$ would then be disjoint from $p$, violating admissibility.
+All $10(b_9+b_{10})$ covered pairs disappear from $P$. They also disappear from $C$: a covered pair $xy\subseteq A$ has an internal witness $p\subseteq A\setminus\lbrace x,y\rbrace$. A surviving witness $q$ for $xy$ would have to avoid $A$, because otherwise $xq$ contains a covered pair and is deleted. But $q$ would then be disjoint from $p$, violating admissibility.
 
 Covered $C$-pairs and $\Gamma$ are disjoint. Thus the total support loss is at least
 
@@ -809,16 +809,16 @@ $$
 
 where $\gamma_E$ is the unique positive bridge demand if it exists, and zero otherwise. No bridge is counted twice in this sum.
 
-**Proof.** Suppose the contrary. Rename the triple $E=abc$ and two receiving pairs as $ab$ and $ac$. There are vertices $x,u$ outside $\\{a,b,c\\}$, with $x\ne u$, such that
+**Proof.** Suppose the contrary. Rename the triple $E=abc$ and two receiving pairs as $ab$ and $ac$. There are vertices $x,u$ outside $\lbrace a,b,c\rbrace$, with $x\ne u$, such that
 
 $$
- J_{ab}=\\{xc,xu\\},\qquad J_{cu}=\\{ab,ax,bx\\}.
+ J_{ab}=\lbrace xc,xu\rbrace,\qquad J_{cu}=\lbrace ab,ax,bx\rbrace.
 $$
 
-There are likewise vertices $y,v$ outside $\\{a,b,c\\}$, with $y\ne v$, such that
+There are likewise vertices $y,v$ outside $\lbrace a,b,c\rbrace$, with $y\ne v$, such that
 
 $$
- J_{ac}=\\{yb,yv\\},\qquad J_{bv}=\\{ac,ay,cy\\}.
+ J_{ac}=\lbrace yb,yv\rbrace,\qquad J_{bv}=\lbrace ac,ay,cy\rbrace.
 $$
 
 Positive demand at $E$ for the first receiver implies $w_b(xc)>0$; positive demand at $E$ for the second implies $w_c(yb)>0$.
@@ -833,7 +833,7 @@ because $J_{cu}$ is the displayed triangle and exactly two of its edges contain 
 
 Symmetrically, in $G_c$, edge $yb$ has the mandatory weak alternative $yv$ with $\mu_{G_c}(b,v)=2$; the first book supplies the different alternative $bx$. The positivity of $w_c(yb)$ forces $\mu_{G_c}(x,y)\ge4$, making $c$ the unique center of the same $J_{xy}$. Since $b\ne c$ this is impossible. This argument allows coincidences $u=y$ or $v=x$; the two alternative edges remain distinct.
 
-It remains that $x=y$. The two books imply that $bc,bu,cv$ all belong to $J_{ax}$. If $u\ne v$, the latter two edges are disjoint, so admissibility forces $u=v$. The books now have the same five vertices $\\{a,b,c,x,u\\}$. Their union consists of the nine distinct triples
+It remains that $x=y$. The two books imply that $bc,bu,cv$ all belong to $J_{ax}$. If $u\ne v$, the latter two edges are disjoint, so admissibility forces $u=v$. The books now have the same five vertices $\lbrace a,b,c,x,u\rbrace$. Their union consists of the nine distinct triples
 
 $$
  abc,\ abu,\ acx,\ axu,\ bcx,\ bxu,\ acu,\ abx,\ cxu.
@@ -857,13 +857,13 @@ $$
 **Lemma II.D.1 (marked mixed node).** Suppose $x\in A$ is mixed, with neighbors $y\in B,z\in C$. Assume $d_K(y)=r\ge3$, $d_K(z)=s\ge3$, and
 
 $$
-N_K(y)\cap N_K(z)=\\{x\\}.
+N_K(y)\cap N_K(z)=\lbrace x\rbrace.
 $$
 
 Then
 
 $$
-\boxed{\delta(K)\ge\min\\{\phi(r),\phi(s)\\}.}\tag{II.D.1}
+\boxed{\delta(K)\ge\min\lbrace\phi(r),\phi(s)\rbrace.}\tag{II.D.1}
 $$
 
 **Proof.** Both $y,z$ are pure toward $A$, because their degrees exceed two. Their $A$-neighbor sets have union of size $r+s-1$, so $a=|A|\ge r+s-1$.
@@ -900,18 +900,18 @@ whose difference is $2r(r-3)+1>0$ for $r\ge3$. This proves (II.D.1), in fact wit
 Suppose a receiving common link and its reciprocal are
 
 $$
-J_{at}=\\{bc,bx\\},\qquad J_{cx}=\\{ab,at,bt\\}.
+J_{at}=\lbrace bc,bx\rbrace,\qquad J_{cx}=\lbrace ab,at,bt\rbrace.
 $$
 
 Consider the bridge triple $E=act$. Use its auxiliary parts
 
 $$
-A=N(at)\setminus\\{c\\},\quad
-B=N(ac)\setminus\\{t\\},\quad
-C=N(ct)\setminus\\{a\\}.
+A=N(at)\setminus\lbrace c\rbrace,\quad
+B=N(ac)\setminus\lbrace t\rbrace,\quad
+C=N(ct)\setminus\lbrace a\rbrace.
 $$
 
-The node $A_x$ is mixed, adjacent to $B_b,C_b$. If both their degrees are at least three, they are pure toward $A$. Their common $A$ neighbors correspond exactly to edges $bu$ of $J_{at}$, other than its edge $bc$ already represented by the central triple. Since $J_{at}=\\{bc,bx\\}$, their common-neighbor set is exactly $\\{A_x\\}$.
+The node $A_x$ is mixed, adjacent to $B_b,C_b$. If both their degrees are at least three, they are pure toward $A$. Their common $A$ neighbors correspond exactly to edges $bu$ of $J_{at}$, other than its edge $bc$ already represented by the central triple. Since $J_{at}=\lbrace bc,bx\rbrace$, their common-neighbor set is exactly $\lbrace A_x\rbrace$.
 
 Here $c(bt)=1+d_K(B_b)$: the common link $J_{bt}$ contains $ac$, and each of its other edges must contain $a$ or $c$. Those other edges correspond bijectively to neighbors of $B_b$ in $A$ or $C$, respectively. The analogous identity holds for $C_b$ and $J_{ab}$. Thus the full auxiliary degree is used before any assertion of purity.
 
@@ -934,7 +934,7 @@ $$
 The denominator is at least one. If both are positive, (II.D.2) implies both marked-neighbor degrees are at least three. The marked lemma therefore yields
 
 $$
-\boxed{\delta(act)\ge\min\\{\alpha_c,\beta_c\\}.}\tag{II.D.3}
+\boxed{\delta(act)\ge\min\lbrace\alpha_c,\beta_c\rbrace.}\tag{II.D.3}
 $$
 
 If either contribution is zero, (II.D.3) follows from the unmarked theorem. The other bridge $atx$ satisfies the symmetric inequality for the core edge $bx$.
@@ -953,7 +953,7 @@ All families are admissible, all degrees count actual edges, and the ambient par
 
 #### III.A.1 Elementary consequences of admissibility
 
-For distinct vertices $a,b$, the common triple family $J_{ab}$ is intersecting: disjoint members $T,T'$ would give the forbidden pairs $\\{aT,bT'\\}$ and $\\{bT,aT'\\}$.
+For distinct vertices $a,b$, the common triple family $J_{ab}$ is intersecting: disjoint members $T,T'$ would give the forbidden pairs $\lbrace aT,bT'\rbrace$ and $\lbrace bT,aT'\rbrace$.
 
 An intersecting triple family with maximum pair degree $D$ has at most $\max(Du/2,9D)$ members on at most $u+1$ vertices. If it has a common point, count the opposite-pair graph of maximum degree $D$. Otherwise fix one member $T$, and for each $x\in T$ choose a member avoiding $x$. Every member contains one of the resulting at most nine pairs. An intersecting ordinary graph is a star or a triangle, so with maximum degree $D$ it has at most $\max(D,3)$ edges.
 
@@ -961,13 +961,13 @@ The same trade shows that, for disjoint pair roots $P,Q$, their common pair-tail
 
 #### III.A.2 Separating star layers
 
-Let $z_1,\ldots,z_h$ lie outside a common ground set $U$, $u=|U|$, and put $L_i=\\{T\subseteq U:|T|=3,\ z_iT\in H\\}$. For $P\in\binom U2$, write $d_i(P)=|\\{x:Px\in L_i\\}|$. For $i\ne j$,
+Let $z_1,\ldots,z_h$ lie outside a common ground set $U$, $u=|U|$, and put $L_i=\lbrace T\subseteq U:|T|=3,\ z_iT\in H\rbrace$. For $P\in\binom U2$, write $d_i(P)=|\lbrace x:Px\in L_i\rbrace|$. For $i\ne j$,
 
 $$
 \sum_Pd_i(P)d_j(P)=O(u^3). \tag{III.A.18}
 $$
 
-Equal completions contribute $3|L_i\cap L_j|=O(u^2)$, since the intersection is an intersecting triple family and is covered by the three stars through a fixed member. For distinct completions $x,y$, the corresponding pairs $P$ form an intersecting graph on $U\setminus\\{x,y\\}$, with at most $u-3$ edges for $u\ge6$. This proves (III.A.18).
+Equal completions contribute $3|L_i\cap L_j|=O(u^2)$, since the intersection is an intersecting triple family and is covered by the three stars through a fixed member. For distinct completions $x,y$, the corresponding pairs $P$ form an intersecting graph on $U\setminus\lbrace x,y\rbrace$, with at most $u-3$ edges for $u\ge6$. This proves (III.A.18).
 
 Assign each pair to an index maximizing $d_i(P)$; delete every colored triple containing a pair assigned elsewhere. The surviving pair shadows are disjoint. If $s_P$ is the sum of the nonmaximal entries at $P$, then
 
@@ -1020,7 +1020,7 @@ $$
 |H|\le |B|+\sum_c|A_c|+O(n^{29/10}).
 $$
 
-For each $c\in Z,y\in U$, the family $\\{T\in A_c:yT\in B\\}$ is intersecting, with maximum pair degree at most $t$. §III.A.1 bounds its size by $O(tn)$. Summing over $c,y$ gives
+For each $c\in Z,y\in U$, the family $\lbrace T\in A_c:yT\in B\rbrace$ is intersecting, with maximum pair degree at most $t$. §III.A.1 bounds its size by $O(tn)$. Summing over $c,y$ gives
 
 $$
 |A\cap\partial_3B|\le O(|Z|tn^2)=O(n^{29/10}).
@@ -1056,7 +1056,7 @@ $$
 
 for sufficiently large fixed $R_{\ast}$. The maximal matching covers the heavy pairs.
 
-Edges meeting $X$ at least twice cost $O(R/T^2)n^3$. For the exactly-once layer, (III.A.18) improves to $O(Rn^2)$: its distinct-completion intersecting graphs have maximum degree at most $R$, and the equal-completion contribution is $O(Rn)$. The same pair-owner cleaning therefore costs $O(|X|\sqrt R\\,n^2)=O(R^{-1/8})n^3$. By (III.A.19), the remaining exactly-once layer is at most
+Edges meeting $X$ at least twice cost $O(R/T^2)n^3$. For the exactly-once layer, (III.A.18) improves to $O(Rn^2)$: its distinct-completion intersecting graphs have maximum degree at most $R$, and the equal-completion contribution is $O(Rn)$. The same pair-owner cleaning therefore costs $O(|X|\sqrt R\thinspace n^2)=O(R^{-1/8})n^3$. By (III.A.19), the remaining exactly-once layer is at most
 
 $$
 \frac{n^2}{6}(6Rn^2)^{1/3}=O(R^{-1/8})n^3,
@@ -1088,7 +1088,7 @@ Choosing $L$ large enough makes this at most any prescribed $\rho>0$, proving (I
 **Lemma III.A.1 (bounded-label separation).** Let a four-family $F$ have $\Delta_3(F)\le D$, and let a triple system $\mathcal Q$ have maximum pair degree at most $\kappa$. For fixed $D,\kappa$, one can delete $O_{D,\kappa}(n^{5/2})$ edges so that, for each remaining edge $E$, the six sets
 
 $$
-C_{\mathcal Q}(P)=\\{x:Px\in\mathcal Q\\},\qquad P\in\binom E2,
+C_{\mathcal Q}(P)=\lbrace x:Px\in\mathcal Q\rbrace,\qquad P\in\binom E2,
 $$
 
 are pairwise disjoint and each is disjoint from $E$.
@@ -1102,7 +1102,7 @@ A $C_4$-free bipartite graph with parts $S,T$, of sizes $s,t$, and $e$ edges sat
 $$
 2e(\text{pair-node graph})
 \le N_x\sum_i\sqrt{N_i}+rN_x
-\le\sqrt{c_\kappa}\\,N_x^{3/2}+c_\kappa N_x.
+\le\sqrt{c_\kappa}\thinspace N_x^{3/2}+c_\kappa N_x.
 $$
 
 Since $N_x=O_\kappa(n)$, summing over $x$ costs $O_\kappa(n^{5/2})$. Delete all four-edges so represented, together with the earlier exceptions. ∎
@@ -1120,14 +1120,14 @@ $2(t-1)\binom u2\le\alpha n^3$. Call the result $B_0$.
 
 Every nonempty cell of $B_0$ is intersecting with maximum pair degree $D$. For large $n$, $t>9D$, so §III.A.1 gives a unique common point $\ell(ab)$; two common points would bound the cell size by $D$. The native graph has at least $t$ edges and maximum degree $D$, hence a matching of at least $t/(2D-1)$ tails, eventually at least three.
 
-The center graphs $\Gamma_z=\\{ab:\ell(ab)=z\\}$ have maximum degree at most
+The center graphs $\Gamma_z=\lbrace ab:\ell(ab)=z\rbrace$ have maximum degree at most
 
 $$
 K_{\ast}=\max(1,\lceil(D-1)L_\rho/\alpha\rceil).
 $$
 
-Indeed $t\\,d_{\Gamma_z}(a)\le(D-1)d_{B_0}(az)$: each edge through $az$ is counted for at most $D-1$ other completions of its opposite facet. The symmetric system
-$\mathcal Q=\\{ab\ell(ab)\\}$ thus has maximum pair degree at most $2K_{\ast}+1$.
+Indeed $t\thinspace d_{\Gamma_z}(a)\le(D-1)d_{B_0}(az)$: each edge through $az$ is counted for at most $D-1$ other completions of its opposite facet. The symmetric system
+$\mathcal Q=\lbrace ab\ell(ab)\rbrace$ thus has maximum pair degree at most $2K_{\ast}+1$.
 
 All labels and witnesses in the next deletions are measured in this fixed parent $B_0$.
 
@@ -1153,7 +1153,7 @@ Multiple witnesses would include a distinct-witness choice already deleted.
 
 Finally apply §III.A.5 to the parent $B_0,\mathcal Q$, and delete its exceptional edges. Take the union of all deletions to obtain $K$. The additional cost after weak-cell clearing is $O_{\rho,\alpha}(n^{5/2})$.
 
-To verify the reciprocal condition, a surviving reciprocal has three edges $Pab,Paw,Pbw$. Suppose the ordinary pair-link triangle at $P$ has an attachment $Pat$, $t\notin\\{a,b,w\\}$. The completion triangle $b,w,t$ at $Pa$ is monochromatic or rainbow. In the first case, $\ell(bt)=a$ is a second reciprocal witness in $Pab$, impossible. In the second, writing $P=pq$, its other two labels are $p,q$; after interchanging their names, $\ell(bt)=p,\ell(wt)=q$. Then
+To verify the reciprocal condition, a surviving reciprocal has three edges $Pab,Paw,Pbw$. Suppose the ordinary pair-link triangle at $P$ has an attachment $Pat$, $t\notin\lbrace a,b,w\rbrace$. The completion triangle $b,w,t$ at $Pa$ is monochromatic or rainbow. In the first case, $\ell(bt)=a$ is a second reciprocal witness in $Pab$, impossible. In the second, writing $P=pq$, its other two labels are $p,q$; after interchanging their names, $\ell(bt)=p,\ell(wt)=q$. Then
 
 $$
 t\in C_{\mathcal Q}(pb)\cap C_{\mathcal Q}(qw)
@@ -1219,10 +1219,10 @@ $$
 Here is the precise finite structure of $K$. For each used completion pair $ab$, all triples in
 
 $$
-J_{ab}(K)=\\{T:aT,bT\in K\\}
+J_{ab}(K)=\lbrace T:aT,bT\in K\rbrace
 $$
 
-contain a fixed label $z=\ell(ab)\notin\\{a,b\\}$. Write $J_{ab}=z+G_{ab}$, where $G_{ab}$ is counted on its nonisolated vertices, and put
+contain a fixed label $z=\ell(ab)\notin\lbrace a,b\rbrace$. Write $J_{ab}=z+G_{ab}$, where $G_{ab}$ is counted on its nonisolated vertices, and put
 
 $$
 V=\sum_{ab}|V(G_{ab})|.
@@ -1289,7 +1289,7 @@ $$
 
 For $d=3$ it is at least $1/4$; for $d=4$ it is at least $3/8$. The first bound is equivalent to $(k-2)(k-3)\ge0$, and the second to $2k^2-11k+16>0$. Leaf neighbors give $1/4$ and $1/2$, respectively.
 
-On a marked--marked edge, use only each endpoint's own $D_x/4$ contribution: it is $k/12$ at degree three and $k/8$ at degree four. Since $k\in\\{3,4\\}$, these are at least $1/4$ and $3/8$, respectively. Discard the ratio term. Thus no special allocation is needed on an edge joining degrees $3$ and $4$.
+On a marked--marked edge, use only each endpoint's own $D_x/4$ contribution: it is $k/12$ at degree three and $k/8$ at degree four. Since $k\in\lbrace3,4\rbrace$, these are at least $1/4$ and $3/8$, respectively. Discard the ratio term. Thus no special allocation is needed on an edge joining degrees $3$ and $4$.
 
 Subtracting the constant $(d-2)/4$ at each marked vertex leaves $1/2$ for degree three and $1$ for degree four. Edges between unmarked vertices have nonnegative remaining contributions by the leaf calculation. This proves (III.B.5), and also the unmarked assertion. ∎
 
@@ -1299,8 +1299,8 @@ Subtracting the constant $(d-2)/4$ at each marked vertex leaves $1/2$ for degree
 
 $$
 m=|K|,\quad s=|\partial_3K|,\quad
-b=\\#\\{\text{nonprivate facets}\\},\quad
-m_0=\\#\\{\text{edges with four private facets}\\}.
+b=|\lbrace\text{nonprivate facets}\rbrace|,\quad
+m_0=|\lbrace\text{edges with four private facets}\rbrace|.
 $$
 
 Then the single estimate needed for both asymptotics and stability is
@@ -1327,9 +1327,9 @@ $$
 V=2R_3-W+\sum_Qq(F_Q). \tag{III.B.8}
 $$
 
-Here is the full incidence explanation. By the degree-sum identity, $W=\sum_Q\sum_{a<b}\mu_{ab}(F_Q)$, while $\sum_Qq(F_Q)=\sum_Q\sum_{a<b}\mathbf1_{\\{\mu_{ab}(F_Q)>0\\}}$. Thus $W-\sum_Qq(F_Q)$ counts $\sum\max(\mu-1,0)$ over all $(Q,ab)$. A pair $ab$ with a common neighbor in $F_Q$ is a used completion pair and has its fixed label $z=\ell(ab)$. If $z\notin Q$, each common neighbor $x$ would give $Qx\in J_{ab}$, hence $z\in Qx$; therefore $x=z$ and $\mu\le1$, contributing zero.
+Here is the full incidence explanation. By the degree-sum identity, $W=\sum_Q\sum_{a<b}\mu_{ab}(F_Q)$, while $\sum_Qq(F_Q)=\sum_Q\sum_{a<b}\mathbf1_{\lbrace\mu_{ab}(F_Q)>0\rbrace}$. Thus $W-\sum_Qq(F_Q)$ counts $\sum\max(\mu-1,0)$ over all $(Q,ab)$. A pair $ab$ with a common neighbor in $F_Q$ is a used completion pair and has its fixed label $z=\ell(ab)$. If $z\notin Q$, each common neighbor $x$ would give $Qx\in J_{ab}$, hence $z\in Qx$; therefore $x=z$ and $\mu\le1$, contributing zero.
 
-If $z\in Q$, write $Q=\\{z,w\\}$. The common neighbors of $a,b$ in $F_Q$ correspond to edges at the native vertex $w$ of $G_{ab}$. If $w$ has at least two native neighbors, the facets $Q+a$ and $Q+b$ are nonprivate. Choose two distinct native neighbors $x,y$ of $w$. The completion pair $xy$ is supported at both facets $Q+a$ and $Q+b$, so its unique parent label lies in their intersection $Q$. If either facet is monochromatic, its center is this label and lies in $Q$; a colored facet is selected by definition. Thus both endpoint facets are eligible. For any native neighbor $x$, the facet $Q+x$ has completions $a,b$, so is also selected. All native neighbors therefore occur, and $\mu_{ab}(F_Q)=d_{G_{ab}}(w)$. If $w$ has degree one it contributes nothing to $\sum\max(\mu-1,0)$. Consequently
+If $z\in Q$, write $Q=\lbrace z,w\rbrace$. The common neighbors of $a,b$ in $F_Q$ correspond to edges at the native vertex $w$ of $G_{ab}$. If $w$ has at least two native neighbors, the facets $Q+a$ and $Q+b$ are nonprivate. Choose two distinct native neighbors $x,y$ of $w$. The completion pair $xy$ is supported at both facets $Q+a$ and $Q+b$, so its unique parent label lies in their intersection $Q$. If either facet is monochromatic, its center is this label and lies in $Q$; a colored facet is selected by definition. Thus both endpoint facets are eligible. For any native neighbor $x$, the facet $Q+x$ has completions $a,b$, so is also selected. All native neighbors therefore occur, and $\mu_{ab}(F_Q)=d_{G_{ab}}(w)$. If $w$ has degree one it contributes nothing to $\sum\max(\mu-1,0)$. Consequently
 
 $$
 W-\sum_Qq(F_Q)=\sum_{ab}\sum_{w\in V(G_{ab})}(d_{G_{ab}}(w)-1)
@@ -1371,7 +1371,7 @@ To verify the coefficient identity without an implicit row count, first use $R_3
 
 $$
 2V=\sum_T\left(2d(T)^2-\sum_{\text{slots at }T}k^2
--\\#\\{\text{positive slots at }T\\}\right)-8m+4e_{\ast}+2\mathcal L.
+-|\lbrace\text{positive slots at }T\rbrace|\right)-8m+4e_{\ast}+2\mathcal L.
 $$
 
 the facet bracket is $2$ for a private facet,
@@ -1391,7 +1391,7 @@ $$
 For a colored facet $T$, a color $z\in T$, and $Q=T-z$, its completion pairs of color $z$ give one record for a rainbow triangle and two disjoint records for a proper $K_4$. If both endpoints survive as neighbors of $z$ in $F_Q$, their unique common neighbor is $z$. Different records $(Q,ab)$ recover $T=Q+\ell(ab)$, so are distinct. A selected degree $k$ loses at most
 
 $$
-\lambda_3(k)=1_{\\{k<3\\}},\qquad
+\lambda_3(k)=1_{\lbrace k<3\rbrace},\qquad
 \lambda_4(k)=\min(2,4-k)
 $$
 
@@ -1404,7 +1404,7 @@ $$
 For $c_3=1/2,c_4=1$, the nine elementary slot inequalities are
 
 $$
-\tfrac12 g_d(k)+c_d1_{\\{k=d\\}}-\tfrac12\lambda_d(k)\ge c_d. \tag{III.B.11}
+\tfrac12 g_d(k)+c_d1_{\lbrace k=d\rbrace}-\tfrac12\lambda_d(k)\ge c_d. \tag{III.B.11}
 $$
 
 For $d=3$, the values of $g_d(k)/2$ are $5/4,3/2,5/4,0$; for $d=4$, they are $7/2,15/4,7/2,9/4,0$. Thus (III.B.10)--(III.B.11), with three slots per colored facet, imply
@@ -1433,7 +1433,7 @@ $$
 
 Both endpoints must be sampled for a pair record; conditional on this, at least one of its $\mu_{ab}$ common neighbors must be sampled. Dividing the expected inequality by $\theta^2$ proves (III.B.13).
 
-Apply this to the graphs $L_x=\\{ab:xab\in A\\}$, and sum over $x\in U$. For a used pair $ab$, (III.B.12) implies $\mu_{ab}(L_x)\le1$ unless $x=\ell(ab)$. Thus this pair contributes at most $1+(u-3)\theta$, while any unused pair contributes at most $u-2$. Writing $c=|\mathcal C|$, we obtain
+Apply this to the graphs $L_x=\lbrace ab:xab\in A\rbrace$, and sum over $x\in U$. For a used pair $ab$, (III.B.12) implies $\mu_{ab}(L_x)\le1$ unless $x=\ell(ab)$. Thus this pair contributes at most $1+(u-3)\theta$, while any unused pair contributes at most $u-2$. Writing $c=|\mathcal C|$, we obtain
 
 $$
 3a+(u-3)(1-\theta)c\le3N_u+\frac{u(u-1)}{2\theta}.
@@ -1524,7 +1524,7 @@ Both forms are admissible, as verified in §III.C. ∎
 
 The following finite theorem is logically prior to the asymptotic conclusion. Its coarse estimate is proved in §I.1.
 
-**Theorem III.2 (rank-four local exactness).** Let $H$ be admissible on $W\cup\\{v\\}$, $w=|W|\ge1000$. Let $M$ be the triples missing from the $v$-star, $q=|M|$, and let $B$ be the outside family, $b=|B|$. If $q\le w^3/10000$, then
+**Theorem III.2 (rank-four local exactness).** Let $H$ be admissible on $W\cup\lbrace v\rbrace$, $w=|W|\ge1000$. Let $M$ be the triples missing from the $v$-star, $q=|M|$, and let $B$ be the outside family, $b=|B|$. If $q\le w^3/10000$, then
 
 $$
 |H|=\binom w3-q+b\le\binom w3+\lfloor w/4\rfloor. \tag{III.C.1}
@@ -1536,7 +1536,7 @@ If $|H|\ge\binom w3$, then $B$ is linear and $4b\le q+w$. Equality in (III.C.1) 
 
 #### III.C.1 The two incidence facts
 
-Write $\mu_k(P)=|\\{S\in M:P\subseteq S\\}|$.
+Write $\mu_k(P)=|\lbrace S\in M:P\subseteq S\rbrace|$.
 If outside edges $E,F$ intersect in $s$ vertices and $k=4-s$, then
 
 $$
@@ -1562,7 +1562,7 @@ Put
 
 $$
 \Lambda=\binom{w-5}2,\quad
-D=\\{a:\mu_1(a)\ge\Lambda/2\\},\quad d=|D|,\quad
+D=\lbrace a:\mu_1(a)\ge\Lambda/2\rbrace,\quad d=|D|,\quad
 U=W\setminus D,\quad u=|U|.
 $$
 
@@ -1666,12 +1666,12 @@ This part uses the finite coarse estimate of §I.1, then proves an exact local t
 
 ### IV.1 Notation and elementary trade lemmas
 
-An $r$-graph $F\subseteq\binom Vr$ is **admissible** if it has no four distinct edges $A,B,C,D$ such that $A\cap B=C\cap D=\varnothing$ and $A\cup B=C\cup D$. Write $n=|V|$, let $g_r(n)$ be the maximum size of an admissible $r$-graph on $n$ vertices, and put $d_F(S)=|\\{E\in F:S\subseteq E\\}|$, $D_j(F)=\max_{|S|=j}d_F(S)$, and $\partial F=\\{T:|T|=r-1,\ T\subset E\in F\\}$. For disjoint sets, concatenation such as $AP$ denotes $A\cup P$; a vertex in such an expression denotes its singleton. A facet is private if its degree is one. Throughout, $O_r$ constants depend only on $r$; any additional dependence is displayed.
+An $r$-graph $F\subseteq\binom Vr$ is **admissible** if it has no four distinct edges $A,B,C,D$ such that $A\cap B=C\cap D=\varnothing$ and $A\cup B=C\cup D$. Write $n=|V|$, let $g_r(n)$ be the maximum size of an admissible $r$-graph on $n$ vertices, and put $d_F(S)=|\lbrace E\in F:S\subseteq E\rbrace|$, $D_j(F)=\max_{|S|=j}d_F(S)$, and $\partial F=\lbrace T:|T|=r-1,\ T\subset E\in F\rbrace$. For disjoint sets, concatenation such as $AP$ denotes $A\cup P$; a vertex in such an expression denotes its singleton. A facet is private if its degree is one. Throughout, $O_r$ constants depend only on $r$; any additional dependence is displayed.
 
 For disjoint nonempty $s$-sets $P,Q$, put
 
 $$
-\mathcal C_s(P,Q;F)=\\{A\in\binom{V\setminus(P\cup Q)}{r-s}:A\cup P,A\cup Q\in F\\}.
+\mathcal C_s(P,Q;F)=\lbrace A\in\binom{V\setminus(P\cup Q)}{r-s}:A\cup P,A\cup Q\in F\rbrace.
 \tag{IV.1.1}
 $$
 
@@ -1708,14 +1708,14 @@ $$
 
 ### IV.2 An exact local theorem for every fixed $r\ge5$
 
-Fix $v$, let $W=V\setminus\\{v\\}$ and $w=|W|$. Let $M$ be the missing $(r-1)$-sets of the $v$-star, $q=|M|$, and let $B=\\{E\in F:v\notin E\\}$, $b=|B|$. Then
+Fix $v$, let $W=V\setminus\lbrace v\rbrace$ and $w=|W|$. Let $M$ be the missing $(r-1)$-sets of the $v$-star, $q=|M|$, and let $B=\lbrace E\in F:v\notin E\rbrace$, $b=|B|$. Then
 
 $$
 |F|=\binom w{r-1}-q+b.
 \tag{IV.2.1}
 $$
 
-For $P\in\binom Wk$ set $\mu_k(P)=|\\{S\in M:P\subseteq S\\}|$ and
+For $P\in\binom Wk$ set $\mu_k(P)=|\lbrace S\in M:P\subseteq S\rbrace|$ and
 
 $$
 \Lambda_k=\binom{w-r-k}{r-k-1}\qquad(1\le k\le r-1).
@@ -1737,7 +1737,7 @@ Call a $k$-set bad if $\mu_k(P)\ge\Lambda_k/2$, and write $\mathcal H_k$ for the
 
 $$
 |\mathcal H_k|\le\frac{2\binom{r-1}k q}{\Lambda_k}
-=O_r\\!\left(\frac q{w^{r-k-1}}\right),\qquad k\le r-2.
+=O_r\negthinspace\left(\frac q{w^{r-k-1}}\right),\qquad k\le r-2.
 \tag{IV.2.3}
 $$
 
@@ -1755,7 +1755,7 @@ Every $(r-1)$-set, even one meeting $D$, has at most one completion in $U$ to an
 We show that all but
 
 $$
-O_r\\!\left(\frac q w+\frac{q^2}{w^{r-1}}\right)
+O_r\negthinspace\left(\frac q w+\frac{q^2}{w^{r-1}}\right)
 \tag{IV.2.5}
 $$
 
@@ -1769,10 +1769,10 @@ Next count edges containing two disjoint bad pairs. For fixed such pairs their u
 
 For edges with at least two bad pairs but no two disjoint bad pairs, fix two bad pairs whose union $S$ has size three. No remaining tail $E\setminus S$ contains a bad pair, as that pair would be disjoint from either of the fixed pairs. Two tails cannot have distance one or two, by the same two arguments as above. Their size is $r-3$, so Lemma IV.1.2 bounds their number by $O_r(w^{r-5})$, with at most one when $r=5$. Summing over at most $h^2$ choices gives the same quadratic error. Multiple counting only enlarges these upper bounds. This exhausts edges containing a bad pair.
 
-For each remaining edge with a bad set of size at least three, let $k\in\\{3,\ldots,r-2\\}$ be its smallest bad-set size. Fix a bad $k$-set $P$. The tails of edges in this class through $P$ have size $r-k$ and mutual distance at least $k$: a smaller positive difference would have two nonbad sides and contradict (IV.2.2). Lemma IV.1.2 gives
+For each remaining edge with a bad set of size at least three, let $k\in\lbrace3,\ldots,r-2\rbrace$ be its smallest bad-set size. Fix a bad $k$-set $P$. The tails of edges in this class through $P$ have size $r-k$ and mutual distance at least $k$: a smaller positive difference would have two nonbad sides and contradict (IV.2.2). Lemma IV.1.2 gives
 
 $$
-O_r\bigl(w^{\max\\{r-2k+1,0\\}}\bigr)
+O_r\bigl(w^{\max\lbrace r-2k+1,0\rbrace}\bigr)
 $$
 
 tails. Multiplying by (IV.2.3) is $O_r(q/w)$: if $r-2k+1\ge0$, the exponent ratio is $w^{2-k}\le w^{-1}$; otherwise $r-k-1\ge1$. There are only finitely many $k$.
@@ -1786,7 +1786,7 @@ r|\mathcal T|\le u+|M\cap\binom U{r-1}|.
 \tag{IV.2.6}
 $$
 
-Count incidences $(E,a)$ by opposite facets $E\setminus\\{a\\}$. A missing facet has at most one completion in a linear family. At a fixed $a$, two present opposite facets would be disjoint members of $J_{va}(F)$, impossible. Hence at most one present incidence is charged to each vertex. Writing $q_U=|M\cap\binom U{r-1}|$ gives
+Count incidences $(E,a)$ by opposite facets $E\setminus\lbrace a\rbrace$. A missing facet has at most one completion in a linear family. At a fixed $a$, two present opposite facets would be disjoint members of $J_{va}(F)$, impossible. Hence at most one present incidence is charged to each vertex. Writing $q_U=|M\cap\binom U{r-1}|$ gives
 
 $$
 |B[U]|\le(q_U+u)/r+O_r(q/w+q^2/w^{r-1}).
@@ -1893,11 +1893,11 @@ $$
 
 The second inequality uses (IV.3.1), disjointness, and $(k-1)!\binom u{k-1}\le u^{k-1}$. Families of size zero may be omitted.
 
-**Lemma IV.3.2 (separating star shadows).** Let $z_1,\ldots,z_h$ lie outside $U$ and let $F$ be admissible. Set $k=r-1$ and $\mathcal A_i=\\{T\in\binom Uk:z_iT\in F\\}$. Deleting at most $O_r(hn^{k-1/2})$ colored members makes their $(k-1)$-shadows disjoint, where $|U|\le n$. If, in addition, $D_j(F)\le Rn^{r-j-1}$ for $j=2,3$, the deletion cost is at most $O_r(h\sqrt R\\,n^{r-2})$.
+**Lemma IV.3.2 (separating star shadows).** Let $z_1,\ldots,z_h$ lie outside $U$ and let $F$ be admissible. Set $k=r-1$ and $\mathcal A_i=\lbrace T\in\binom Uk:z_iT\in F\rbrace$. Deleting at most $O_r(hn^{k-1/2})$ colored members makes their $(k-1)$-shadows disjoint, where $|U|\le n$. If, in addition, $D_j(F)\le Rn^{r-j-1}$ for $j=2,3$, the deletion cost is at most $O_r(h\sqrt R\thinspace n^{r-2})$.
 
-**Proof.** For $P\in\binom U{k-1}$ let $d_i(P)=|\\{x:Px\in\mathcal A_i\\}|$. For $i\ne j$, equal completions in $\sum_Pd_i(P)d_j(P)$ contribute $k|\mathcal A_i\cap\mathcal A_j|$. This intersection is intersecting, so this term is $O_r(n^{k-1})$, or $O_r(D_2(F))$ by (IV.1.2).
+**Proof.** For $P\in\binom U{k-1}$ let $d_i(P)=|\lbrace x:Px\in\mathcal A_i\rbrace|$. For $i\ne j$, equal completions in $\sum_Pd_i(P)d_j(P)$ contribute $k|\mathcal A_i\cap\mathcal A_j|$. This intersection is intersecting, so this term is $O_r(n^{k-1})$, or $O_r(D_2(F))$ by (IV.1.2).
 
-For distinct completions $x,y\in U$, the possible $P$ form the intersecting common-core family of the disjoint roots $\\{z_i,x\\}$ and $\\{z_j,y\\}$. There are $O_r(n^{k-2})$ such $P$, or at most $(k-1)D_3(F)$ by (IV.1.2). Sum over $x,y$ to obtain
+For distinct completions $x,y\in U$, the possible $P$ form the intersecting common-core family of the disjoint roots $\lbrace z_i,x\rbrace$ and $\lbrace z_j,y\rbrace$. There are $O_r(n^{k-2})$ such $P$, or at most $(k-1)D_3(F)$ by (IV.1.2). Sum over $x,y$ to obtain
 
 $$
 \sum_Pd_i(P)d_j(P)=O_r(n^k),
@@ -1924,7 +1924,7 @@ The error is uniform in $F,X$ with the specified $h$.
 **Theorem IV.4.1 (one contraction round).** For fixed $r\ge4$, let
 
 $$
-\eta_r=\min\\{1/8,1/(2(r-1))\\}.
+\eta_r=\min\lbrace1/8,1/(2(r-1))\rbrace.
 $$
 
 There are constants $R_{\ast}(r),C_r$ such that if $R_{\ast}\le R\le n^{2/3}$ and an admissible family $H$ satisfies
@@ -1944,7 +1944,7 @@ $$
 
 The constants do not depend on $R$ or on the particular family.
 
-**Proof.** Put $T=R^{5/8}$. For each $s\in\\{1,\ldots,r-2\\}$, call an $s$-set heavy if its degree exceeds $Tn^{r-s-1}$. We first cover all such sets by $O_r(n/T)$ vertices.
+**Proof.** Put $T=R^{5/8}$. For each $s\in\lbrace1,\ldots,r-2\rbrace$, call an $s$-set heavy if its degree exceeds $Tn^{r-s-1}$. We first cover all such sets by $O_r(n/T)$ vertices.
 
 For a matching of $a$ heavy $s$-sets, put $q=r-s\ge2$ and select $d=\lfloor Tn^{q-1}\rfloor+1$ tails at each root. Each pair of selected tail families has intersection at most $qRn^{q-2}$ by (IV.1.2). Multiplicities on at most $n^q$ tails and Cauchy–Schwarz give
 
@@ -1961,7 +1961,7 @@ $$
 \tag{IV.4.3}
 $$
 
-For edges meeting $X$ exactly once, Lemma IV.3.2 deletes $O_r(h\sqrt R\\,n^{r-2})=O_r((\sqrt R/T)n^{r-1})$ colored members to separate their shadows. The surviving link sizes are each at most $D_1(H)\le Rn^{r-2}$. Equation (IV.3.2) bounds their total by
+For edges meeting $X$ exactly once, Lemma IV.3.2 deletes $O_r(h\sqrt R\thinspace n^{r-2})=O_r((\sqrt R/T)n^{r-1})$ colored members to separate their shadows. The surviving link sizes are each at most $D_1(H)\le Rn^{r-2}$. Equation (IV.3.2) bounds their total by
 
 $$
 O_r\bigl(n^{r-2}(Rn^{r-2})^{1/(r-1)}\bigr)
@@ -2003,7 +2003,7 @@ The proof controls actual deleted edges. Its shadow-allocation argument is a fin
 **Corollary IV.4.2 (iteration).** If the starting natural factor is $R_0\le n^{2/3}$, and $L=L(n)\to\infty$ with $L<R_0$, one can reach factor at most $L$ while losing
 
 $$
-O_r\\!\left(\frac{L^{-\eta_r}}{1-L^{-\eta_r/3}}\right)n^{r-1}=o(n^{r-1})
+O_r\negthinspace\left(\frac{L^{-\eta_r}}{1-L^{-\eta_r/3}}\right)n^{r-1}=o(n^{r-1})
 \tag{IV.4.8}
 $$
 
@@ -2019,7 +2019,7 @@ We first produce a positive-mass family in the range of Theorem IV.4.1.
 
 $$
 |F[V\setminus X_0]\setminus G|=o(n^{r-1}),\quad |G|\ge c_{r,\delta}n^{r-1},
-\quad D_j(G)\le C_r\sqrt n\log^3n\\,n^{r-j-1}.
+\quad D_j(G)\le C_r\sqrt n\log^3n\thinspace n^{r-j-1}.
 \tag{IV.5.1}
 $$
 
@@ -2063,14 +2063,14 @@ $$
 \tag{IV.5.4}
 $$
 
-**Proof.** For $x\in X$ let $L_x=\\{T\in\binom W{r-1}:xT\in F\\}$. First
+**Proof.** For $x\in X$ let $L_x=\lbrace T\in\binom W{r-1}:xT\in F\rbrace$. First
 
 $$
 |L_x\cap\partial K|\le(r-1)wD_2(K).
 \tag{IV.5.5}
 $$
 
-For each $y\in W$, the family $\\{T\in L_x:yT\in K\\}$ is intersecting, as a subfamily of $J_{xy}(F)$. Cover it by the $(r-1)$ stars through one of its members. Each star gives edges of $K$ through a fixed pair $yz$, so has at most $D_2(K)$ members. Summing over $y$ counts every member of $L_x\cap\partial K$ at least once and proves (IV.5.5).
+For each $y\in W$, the family $\lbrace T\in L_x:yT\in K\rbrace$ is intersecting, as a subfamily of $J_{xy}(F)$. Cover it by the $(r-1)$ stars through one of its members. Each star gives edges of $K$ through a fixed pair $yz$, so has at most $D_2(K)$ members. Summing over $y$ counts every member of $L_x\cap\partial K$ at least once and proves (IV.5.5).
 
 Also $L_x\cap L_{x'}$ is intersecting, so its size is at most $(r-1)\binom{w-1}{r-2}$. The elementary multiplicity inequality $a\le1+\binom a2$ for positive integers $a$ yields
 
@@ -2099,7 +2099,7 @@ The error bounds are uniform over the families for fixed $r,\delta$. In particul
 **Proof.** Use Lemma IV.5.1 and Corollary IV.4.2. They preserve a fixed positive fraction of the tail mass and delete $o(n^{r-1})$ edges from $F[V\setminus X_0]$. Apply Lemma IV.5.2 with this same initial $X_0$ and $K=H$. Its first error is
 
 $$
-O_r\bigl(h_0n\\,Rn^{r-3}\bigr)
+O_r\bigl(h_0n\thinspace Rn^{r-3}\bigr)
 =O_r(Rn^{r-3/2}/\log n)=o(n^{r-1}),
 $$
 
@@ -2118,13 +2118,13 @@ In a graph that is not monochromatic, therefore, every monochromatic clique has 
 **Lemma IV.6.2 (quantitative coloring lemma).** Partially color the edges of a complete graph on $m$ vertices using at most $q\ge2$ colors. Let $b$ be the number of uncolored edges and $\beta$ the number of fully colored bicolored triangles. Set
 
 $$
-h=\max\\{4,(q-1)^2+1\\}.
+h=\max\lbrace4,(q-1)^2+1\rbrace.
 $$
 
 If $m\ge h$, some color occupies all but at most
 
 $$
-\binom h2 b+\frac{3\binom h3}{m-2}\\,\beta
+\binom h2 b+\frac{3\binom h3}{m-2}\thinspace\beta
 \tag{IV.6.1}
 $$
 
@@ -2137,7 +2137,7 @@ $$
 \frac{\binom h3}{\binom m3}\beta.
 $$
 
-Every other $h$-set is monochromatic by Lemma IV.6.1. Take two independent uniformly chosen edges of the complete graph, permitting equality. Conditional on their union having size $t\in\\{2,3,4\\}$, their distribution can equivalently be generated by first choosing a uniform $h$-set and then a uniform ordered pair of its edges with union size $t$. Indeed every global ordered pair of that type lies in exactly $\binom{m-t}{h-t}$ such $h$-sets. Thus, for each type, the probability that the two edges are not both colored with the same color is at most $\delta$.
+Every other $h$-set is monochromatic by Lemma IV.6.1. Take two independent uniformly chosen edges of the complete graph, permitting equality. Conditional on their union having size $t\in\lbrace2,3,4\rbrace$, their distribution can equivalently be generated by first choosing a uniform $h$-set and then a uniform ordered pair of its edges with union size $t$. Indeed every global ordered pair of that type lies in exactly $\binom{m-t}{h-t}$ such $h$-sets. Thus, for each type, the probability that the two edges are not both colored with the same color is at most $\delta$.
 
 Let $p_i$ be the fraction of all edges having color $i$. Independence gives $\sum_i p_i^2\ge1-\delta$. Since $\sum_i p_i\le1$, $\max_i p_i\ge\sum_i p_i^2$. At most $\delta\binom m2$ edges fail to have a most frequent color. Expanding this expression gives (IV.6.1). If $\delta\ge1$ the claimed upper bound is trivial. ∎
 
@@ -2159,7 +2159,7 @@ $$
 More generally, if each $Q$ must contain a prescribed $p$-set $U$ disjoint from $Pz$, every such $A$ avoids $U$ and the second bound improves to $D_{k+p}$. Hence
 
 $$
-|\\{Q\in\mathcal N_z(P):U\subseteq Q\\}|
+|\lbrace Q\in\mathcal N_z(P):U\subseteq Q\rbrace|
 \le D_{s+1}D_{k+p}/t_s.
 \tag{IV.7.2}
 $$
@@ -2171,7 +2171,7 @@ In particular, prescribing one vertex gains a factor $n$ under the natural codeg
 For a $k$-set $A$ let $m_A=d_H(A)$. On its link
 
 $$
-\operatorname{lk}_H(A)=\\{P\in\binom{V\setminus A}s:AP\in H\\}
+\operatorname{lk}_H(A)=\lbrace P\in\binom{V\setminus A}s:AP\in H\rbrace
 $$
 
 form a complete graph, coloring $PQ$ by $c_s(P,Q)$ when the pair is disjoint and strong, and otherwise leaving it uncolored. Every color belongs to $A$, so at most $k$ colors occur.
@@ -2187,7 +2187,7 @@ $$
 
 $$
 \sum_A\beta_A\le
-T_s(t_s):=\binom{N_s}{2}\\,
+T_s(t_s):=\binom{N_s}{2}\thinspace
 \frac{D_kD_{s+1}D_{s+2}}{t_s}.
 \tag{IV.7.4}
 $$
@@ -2198,7 +2198,7 @@ For (IV.7.4), a bicolored triangle has a unique vertex incident to the two edges
 
 #### IV.7.3 A finite multilevel cleanup bound
 
-**Lemma IV.7.1.** Fix $2\le s\le r-3$, $k=r-s$, and parameters $0<\theta<1$ and $u\ge\max\\{4,(k-1)^2+1\\}$. One can delete at most
+**Lemma IV.7.1.** Fix $2\le s\le r-3$, $k=r-s$, and parameters $0<\theta<1$ and $u\ge\max\lbrace4,(k-1)^2+1\rbrace$. One can delete at most
 
 $$
 \binom nk u+
@@ -2238,7 +2238,7 @@ $$
 Next delete the three edges corresponding to every occurrence of a fully colored bicolored completion triangle. By (IV.7.4) the cost is at most
 
 $$
-3\binom n2\\,D_{r-1}D_2D_3/t_1.
+3\binom n2\thinspace D_{r-1}D_2D_3/t_1.
 \tag{IV.8.2}
 $$
 
@@ -2327,7 +2327,7 @@ Take the union of all the deletion sets. There are finitely many ranks, and all 
 
 We verify the incidence argument passing from Theorem IV.8.1 to the structural proof.
 
-Call $(E,A,a)$ bad if $E\in K_0$, $A\subset E$, $a\in A\setminus\\{z_A\\}$, and $z_{A-a}\ne z_A$. Allow $4\le|A|\le r-2$, and allow $|A|=r-1$ only when $A$ has at least two $K_0$-completions. Thus every center mentioned is defined. Put $\varepsilon=2\rho$ and $\alpha=16\rho$.
+Call $(E,A,a)$ bad if $E\in K_0$, $A\subset E$, $a\in A\setminus\lbrace z_A\rbrace$, and $z_{A-a}\ne z_A$. Allow $4\le|A|\le r-2$, and allow $|A|=r-1$ only when $A$ has at least two $K_0$-completions. Thus every center mentioned is defined. Put $\varepsilon=2\rho$ and $\alpha=16\rho$.
 
 For any fixed core size $j$, low-retention cores obey
 
@@ -2343,7 +2343,7 @@ $\sum_{|A|=j}d_H(A)=\binom rj|H|$. The number of bad incidences for which $A$ or
 For the others, put $B=A-a$, $|B|=k=r-s$, $2\le s\le r-3$, and $R_0=E-B$. A witness consists of two further retained roots $R_1,T$ such that
 
 $$
-R_0\cap R_1=\\{a\\},\quad T\cap(R_0\cup R_1)=\varnothing,
+R_0\cap R_1=\lbrace a\rbrace,\quad T\cap(R_0\cup R_1)=\varnothing,
 $$
 
 $$
@@ -2361,7 +2361,7 @@ Count all such witnesses from the other direction. Choose the ordered $(R_0,T)$ 
 $$
 \sum_{\text{high-retention bad }(E,A,a)}
 d_{K_0}(A)d_{K_0}(A-a)
-\le4s\binom ns^2\\,\frac{D_{k+1}D_{s+1}D_{s+2}}{t_s}.
+\le4s\binom ns^2\thinspace\frac{D_{k+1}D_{s+1}D_{s+2}}{t_s}.
 \tag{IV.9.3}
 $$
 
@@ -2444,30 +2444,30 @@ f(a)\ne b,\ f(b)\ne a\quad\Longrightarrow\quad f(a)=f(b)
 \tag{IV.A.1}
 $$
 
-There is a unique $v\in V$ with $f(a)=v$ for every $a\in U\setminus\\{v\\}$.
+There is a unique $v\in V$ with $f(a)=v$ for every $a\in U\setminus\lbrace v\rbrace$.
 
 **Proof.**
 
 Consider the directed function graph. A cycle of length at least four contradicts (IV.A.1) at two vertices two steps apart. A three-cycle $a\to b\to c\to a$ is impossible: any fourth vertex $u\in U$ would satisfy
-$f(u)\in\\{a,b\\}\cap\\{b,c\\}\cap\\{c,a\\}=\varnothing$.
+$f(u)\in\lbrace a,b\rbrace\cap\lbrace b,c\rbrace\cap\lbrace c,a\rbrace=\varnothing$.
 If there is a two-cycle $a\leftrightarrow b$, every other vertex points to $a$ or $b$, by comparison with both cycle vertices. Two such vertices cannot point to different endpoints, by (IV.A.1); they therefore all point to a common endpoint $v$, as does the other endpoint. This proves the assertion in this case.
 
-If there is no cycle, the unique possible outside vertex $w\in V\setminus U$ must exist and all paths end there. If every vertex points to $w$, take $v=w$. Otherwise choose a final two-step path $a\to b\to w$. Any $c\in U\setminus\\{a,b\\}$ satisfies
-$f(c)\in\\{a,b\\}\cap\\{b,w\\}=\\{b\\}$, so $v=b$ works. Finally two different proposed values of $v$ are excluded by any element of $U$ different from both. ∎
+If there is no cycle, the unique possible outside vertex $w\in V\setminus U$ must exist and all paths end there. If every vertex points to $w$, take $v=w$. Otherwise choose a final two-step path $a\to b\to w$. Any $c\in U\setminus\lbrace a,b\rbrace$ satisfies
+$f(c)\in\lbrace a,b\rbrace\cap\lbrace b,w\rbrace=\lbrace b\rbrace$, so $v=b$ works. Finally two different proposed values of $v$ are excluded by any element of $U$ different from both. ∎
 
 #### IV.A.2 Five vertices
 
 On a five-set $E$, designate $z_S\in S$ for each triple $S$. A four-set $A\subset E$ is coherent if some $w\in A$ satisfies
 
 $$
-z_{A-a}=w\qquad(a\in A\setminus\\{w\\}).
+z_{A-a}=w\qquad(a\in A\setminus\lbrace w\rbrace).
 \tag{IV.A.2}
 $$
 
 That $w$ is unique: a triple containing two proposed centers would have to have both. Call $v\in E$ a root if every triple containing $v$ has center $v$; again a root is unique.
 
 There is a root if and only if at least four of the five four-sets are coherent. A root makes the four four-sets containing it coherent. Conversely, let
-$U=\\{a\in E:E-a\text{ is coherent}\\}$ and let $f(a)$ be the center of $E-a$. When $f(a)\ne b$ and $f(b)\ne a$, the shared triple $E-\\{a,b\\}$ has both centers, so (IV.A.1) holds. If $|U|\ge4$, Lemma IV.A.1 gives a vertex $v$. Any triple $S$ containing $v$ omits some $a\in U$; then $a\ne v$ and $S$ lies in the coherent four-set $E-a$ with center $v$. Thus $z_S=v$.
+$U=\lbrace a\in E:E-a\text{ is coherent}\rbrace$ and let $f(a)$ be the center of $E-a$. When $f(a)\ne b$ and $f(b)\ne a$, the shared triple $E-\lbrace a,b\rbrace$ has both centers, so (IV.A.1) holds. If $|U|\ge4$, Lemma IV.A.1 gives a vertex $v$. Any triple $S$ containing $v$ omits some $a\in U$; then $a\ne v$ and $S$ lies in the coherent four-set $E-a$ with center $v$. Thus $z_S=v$.
 
 Apply this to $L$ from §IV.9 at rank five. Every shared facet is coherent by inheritance. Hence each edge without a root has at least two noncoherent facets, which must be private. Different edges cannot own the same private facet. If $L_{\rm root}$ is the set of rooted edges,
 
@@ -2498,7 +2498,7 @@ $$
 $$
 N_3=\binom n3,\quad
 T_p=\tfrac12\binom np\binom{n-p}p,\quad
-B=\max\\{7,1+\varepsilon D\\},\quad
+B=\max\lbrace7,1+\varepsilon D\rbrace,\quad
 A_0=1+p(D_4-1).
 $$
 
@@ -2515,7 +2515,7 @@ It is also linear. Otherwise $abx,aby$ would be two common triples. The shared f
 
 A linear intersecting triple system without a common vertex has at most seven edges. Indeed a vertex on four edges would be common to every edge: an edge avoiding it would have to meet four disjoint two-element petals. Thus its maximum vertex degree is at most three. Fixing one edge, at most two other edges meet each of its three vertices, giving at most $1+3\cdot2=7$ edges.
 
-If instead $\mathcal C=\\{xS_1,\ldots,xS_m\\}$ has a common vertex, its two-set petals $S_i$ are pairwise disjoint. Let $A=Yx$ and $A'=Zx$. Their centers satisfy $z_A\in Y$, hence $z_A\notin A'$. Fix $i$. For each $j\ne i$, both $A$ and $A'$ are parent common cores of the roots $S_i,S_j$. If $S_j$ were a good parent partner for the retained edge $AS_i$ at $A$, its label would be $z_A$, and it would belong to every common core, including $A'$. This is impossible. All $m-1$ other petals are therefore bad partners, giving $m-1\le\varepsilon d_H(A)\le\varepsilon D$. We have proved
+If instead $\mathcal C=\lbrace xS_1,\ldots,xS_m\rbrace$ has a common vertex, its two-set petals $S_i$ are pairwise disjoint. Let $A=Yx$ and $A'=Zx$. Their centers satisfy $z_A\in Y$, hence $z_A\notin A'$. Fix $i$. For each $j\ne i$, both $A$ and $A'$ are parent common cores of the roots $S_i,S_j$. If $S_j$ were a good parent partner for the retained edge $AS_i$ at $A$, its label would be $z_A$, and it would belong to every common core, including $A'$. This is impossible. All $m-1$ other petals are therefore bad partners, giving $m-1\le\varepsilon d_H(A)\le\varepsilon D$. We have proved
 
 $$
 |\mathcal H_Y\cap\mathcal H_Z|\le B\qquad(Y\cap Z=\varnothing).
@@ -2550,7 +2550,7 @@ Solving the quadratic and using the natural codegrees gives
 $$
 \begin{aligned}
 M&\le A_0N_3+\sqrt{2N_3T_pB}\\
-&=O_r\\!\left(Rn^{r-2}+n^{r-3/2}+\sqrt{\rho R}\\,n^{r-1}\right).
+&=O_r\negthinspace\left(Rn^{r-2}+n^{r-3/2}+\sqrt{\rho R}\thinspace n^{r-1}\right).
 \end{aligned}
 \tag{IV.B.4}
 $$
