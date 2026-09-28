@@ -1636,18 +1636,18 @@ For $w\ge1000$ and $q/w^3\le10^{-4}$, the bracket is at most
 
 $$
 \frac23+\frac{205}{4000}+\frac{27}{200}
-+\frac{480}{10000}+\frac{442368}{10^8}<\frac{11}{12}.
++\frac{480}{10000}+\frac{442368}{10^8}\lt\frac{11}{12}.
 $$
 
 #### III.C.4 Exact linearization
 
-Assume $|H|\ge\binom w3$, so $b\ge q$. Equation (III.C.8) gives $q\le3w$; then $d\le72/w<1$, so $D$ is empty. Equation (III.C.5) gives $h\le18$ by integrality. Now (III.C.6) implies
+Assume $|H|\ge\binom{w}{3}$, so $b\ge q$. Equation (III.C.8) gives $q\le3w$; then $d\le\frac{72}{w}\lt1$, so $D$ is empty. Equation (III.C.5) gives $h\le18$ by integrality. Now (III.C.6) implies
 
 $$
-b\le(q+w)/4+61,\qquad q\le(w+244)/3<w-6.
+b\le\frac{q+w}{4}+61,\qquad q\le\frac{w+244}{3}\lt w-6.
 $$
 
-Any outside intersection of size two would contradict (III.C.2), and intersections of size three are already excluded. Thus $B$ is linear. Equation (III.C.3) gives $4b\le q+w$, proving (III.C.1). If $|H|<\binom w3$, (III.C.1) is immediate.
+Any outside intersection of size two would contradict (III.C.2), and intersections of size three are already excluded. Thus $B$ is linear. Equation (III.C.3) gives $4b\le q+w$, proving (III.C.1). If $|H|\lt\binom{w}{3}$, (III.C.1) is immediate.
 
 #### III.C.5 Equality and admissibility of both forms
 
