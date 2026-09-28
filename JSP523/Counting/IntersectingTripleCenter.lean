@@ -4,9 +4,9 @@ import Mathlib.Algebra.Order.BigOperators.Group.Finset
 /-!
 # Large intersecting triple systems have a center
 
-This is the nine-pair covering argument in the first section of the new
-rank-four preprocessing proof.  It is stated independently of rank, so the
-same finite lemma can be used for common triple systems elsewhere.
+This is the nine-pair covering argument of `paper/proof.pdf`, §III.A.1.
+It is stated independently of rank, so the same finite lemma can be used
+for common triple systems elsewhere.
 -/
 
 namespace JSP523

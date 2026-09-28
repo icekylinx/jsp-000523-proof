@@ -279,7 +279,7 @@ theorem actual_local_defect_ge_marked_graph_gain
       hH hUniform hab hac hbc)
     hx hy hz hAB hAC hrDegree hsDegree hr hs hDisj
 
-/-- Equation (5)'s local signed defect is nonnegative for every actual
+/-- Equation (II.5)'s local signed defect is nonnegative for every actual
 triple in an admissible rank-three family.  This is the full §II.A
 input to the global support ledger. -/
 theorem localSignedDefect_nonneg_of_admissible_triple

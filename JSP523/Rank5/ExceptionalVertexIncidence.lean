@@ -6,7 +6,7 @@ import Mathlib.Algebra.BigOperators.Ring.Finset
 
 This file proves the finite double counts and the exceptional-vertex
 missing-facet estimate (IV.2.8) of
-`jsp-000523-proof/paper/proof.md`. The factor-two formulation keeps all
+`paper/proof.pdf`. The factor-two formulation keeps all
 terms in natural numbers.
 -/
 

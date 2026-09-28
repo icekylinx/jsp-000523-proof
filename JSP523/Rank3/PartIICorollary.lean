@@ -6,7 +6,7 @@ import JSP523.Rank3.PartIILowerBound
 
 The upper bound follows from Theorem II.1 for a maximizing admissible
 triple system. The lower bound is the full triple star through any vertex
-of the ambient set, as in `jsp-000523-proof/paper/proof.md`.
+of the ambient set, as in `paper/proof.pdf`.
 -/
 
 namespace JSP523.Rank3

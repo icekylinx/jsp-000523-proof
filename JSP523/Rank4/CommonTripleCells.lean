@@ -5,9 +5,9 @@ import JSP523.Counting.ThreeDisjointTails
 /-!
 # Common triple cells at rank four
 
-These are the cells `J_{ab}` in §III.A.1 of the all-rank manuscript from the
-reviewed rank-four proof.  The forbidden switch and the nine-pair covering
-lemma provide a center for every sufficiently large cell.
+These are the cells `J_{ab}` in `paper/proof.pdf`, §III.A.1.
+The forbidden switch and the nine-pair covering lemma provide a center
+for every sufficiently large cell.
 -/
 
 namespace JSP523.Rank4

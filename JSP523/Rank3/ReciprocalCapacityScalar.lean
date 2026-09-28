@@ -6,7 +6,7 @@ import Mathlib.Tactic.Linarith
 # Scalar receiver capacities in the rank-three charging proof
 
 These are the numerical steps of §§II.5–II.6 in
-`jsp-000523-proof/paper/proof.md`.
+`paper/proof.pdf`.
 They do not construct the reciprocal receiver grouping; each theorem states
 its finite numerical hypotheses explicitly.
 -/

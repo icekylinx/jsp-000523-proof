@@ -4,7 +4,7 @@ import JSP523.Counting.BadSetIncidence
 # Ordinary outside edges cannot differ in one vertex
 
 This is the distance-one exclusion repeatedly used in the tail-packing
-argument of §IV.2.1 in `jsp-000523-proof/paper/proof.md`. The proof is the
+argument of §IV.2.1 in `paper/proof.pdf`. The proof is the
 actual unique-completion consequence of (IV.2.2), with no abstract
 distance assumption.
 -/

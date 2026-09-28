@@ -6,7 +6,7 @@ import Mathlib.Algebra.BigOperators.Ring.Finset
 # Incidence bound for high-multiplicity missing sets
 
 This formalizes the finite double count behind (IV.2.3) of
-`jsp-000523-proof/paper/proof.md`.
+`paper/proof.pdf`.
 For a uniform family of missing star facets, the sum of its `k`-set
 multiplicities is exactly `choose(t,k)` times its size.  Any set of `k`-sets
 whose multiplicities are at least half a threshold has the corresponding

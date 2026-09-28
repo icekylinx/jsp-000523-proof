@@ -8,7 +8,7 @@ The finite incidence estimate (IV.2.3) and an explicit binomial lower
 bound give denominator-free polynomial estimates for every bad-root
 size. The constant is deliberately coarse and depends only on the fixed
 rank. These are the arithmetic inputs to the `O_r` deletion estimate
-in §IV.2.1 of `jsp-000523-proof/paper/proof.md`.
+in §IV.2.1 of `paper/proof.pdf`.
 -/
 
 namespace JSP523

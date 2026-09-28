@@ -6,7 +6,7 @@ import JSP523.Rank5.ExceptionalMultiVertex
 # Partition of outside edges by exceptional-vertex count
 
 This is the finite layer decomposition used in §IV.2.2 of
-`jsp-000523-proof/paper/proof.md`. The four classes are the ordinary
+`paper/proof.pdf`. The four classes are the ordinary
 outside family `B[U]`, the one-exceptional-vertex class `b₁`, the mixed
 classes `b₂+⋯+b_{r-1}`, and the all-exceptional class `b_r`.
 -/

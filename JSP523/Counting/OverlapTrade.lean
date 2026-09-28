@@ -4,7 +4,7 @@ import JSP523.Counting.LinearNearStar
 # Overlap trades and missing star facets at arbitrary rank
 
 This is the finite trade and exact binomial deficit estimate (IV.2.2) in
-`jsp-000523-proof/paper/proof.md`.
+`paper/proof.pdf`.
 The proof works at every rank for which the stated overlap exists.
 -/
 

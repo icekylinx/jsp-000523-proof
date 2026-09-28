@@ -4,7 +4,7 @@ import JSP523.Counting.LinearNearStar
 # Exact star and outside decomposition at arbitrary rank
 
 This proves the finite counting identity (IV.2.1) of
-`jsp-000523-proof/paper/proof.md`.
+`paper/proof.pdf`.
 It also provides the rank-four specialization used in §III.C.
 -/
 

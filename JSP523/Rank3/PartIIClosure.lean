@@ -8,7 +8,7 @@ import JSP523.Rank3.BlockFreeBridge
 # Theorem II.1: actual rank-three support inequality
 
 This module assembles the independently proved geometric steps of Part II in
-`jsp-000523-proof/paper/proof.md`: actual receiver capacity (II.8), removal of
+`paper/proof.pdf`: actual receiver capacity (II.8), removal of
 near-complete five-blocks, nonduplication of positive bridge demands, local
 bridge payment, and the signed support ledger (II.9).
 -/

@@ -5,10 +5,10 @@ import Mathlib.Data.Fintype.EquivFin
 /-!
 # Theorem I.1: finite coarse bound in every rank
 
-This closes Part I of the current manuscript at
-`jsp-000523-proof/paper/proof.md`, §I.1.  The graph deletion and rainbow
-triple-system lemmas follow its proof.  In the final alignment step, write
-the manuscript's rank as `r = s₀ + 2` for the first `s₀` classes.  Here
+This proves Theorem I.1 of `paper/proof.pdf`, §I.1. The proof uses the graph
+deletion and rainbow triple-system lemmas from that section. In the final
+alignment step, write the paper's rank as `r = s₀ + 2` for the first `s₀`
+classes. Here
 the Lean offset is `s = r - 3`, so those classes are `s+1` and a difference
 vector has `s` coordinates.  The manuscript averages over bijections and
 gets alignment probability `n⁻ˢ`; this development instead partitions the

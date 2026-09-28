@@ -6,7 +6,7 @@ import JSP523.Matching
 # Exact linearity criteria near a star
 
 These are direct finite consequences of the missing-facet bound (IV.2.2)
-in `jsp-000523-proof/paper/proof.md`.
+in `paper/proof.pdf`.
 They make explicit the binomial threshold used in the linearization and
 equality arguments of §§III.C and IV.2.
 -/

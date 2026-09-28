@@ -6,7 +6,7 @@ import JSP523.Coarse.GroundBound
 # Outside edges with several exceptional vertices
 
 This is the injective-facet count for the `b₂+⋯+b_{r-1}` term in
-§IV.2.2 of `jsp-000523-proof/paper/proof.md`. We delete one ordinary
+§IV.2.2 of `paper/proof.pdf`. We delete one ordinary
 vertex from each such edge. Unique ordinary completion makes the map
 injective, and the resulting facet contains at least two bad vertices.
 -/

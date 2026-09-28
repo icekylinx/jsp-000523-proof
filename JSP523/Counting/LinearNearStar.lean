@@ -7,7 +7,7 @@ import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
 # Linear outside edges near a star
 
 The incidence injection below proves (IV.2.6) of
-`jsp-000523-proof/paper/proof.md`
+`paper/proof.pdf`
 for every rank `r ≥ 3`.  At rank four it also recovers (III.C.3).
 Each incidence `(E,a)` is sent either to its missing opposite star facet
 or to the vertex `a`.  The forbidden switch supplies injectivity in the

@@ -10,7 +10,7 @@ For each `k ≥ 3`, this module uses the actual outside edges on `U` that
 contain no bad set of smaller positive size.  It applies the finite
 incidence count and fixed-root tail packing already proved in
 `LocalExactDeletion` to this concrete stratum.  This is the higher-root
-part of (IV.2.5) in `jsp-000523-proof/paper/proof.md`.
+part of (IV.2.5) in `paper/proof.pdf`.
 -/
 
 namespace JSP523

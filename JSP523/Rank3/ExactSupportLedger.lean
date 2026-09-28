@@ -99,7 +99,8 @@ private theorem card_filter_eq_sum_indicator
     congrArg (fun n : ℕ => (n : ℚ)) (Finset.card_filter P s)
 
 /-- The quadratic pair-degree identity summed over actual used pairs.
-    This is equation (1)'s first input, with no abstract ledger parameters. -/
+    This is the first counting input to equation (II.1) in `paper/proof.pdf`,
+    with no abstract ledger parameters. -/
 theorem actual_pair_budget_ledger
     (H : Family α) (V : Edge α)
     (hUniform : Uniform 3 H)
@@ -200,7 +201,7 @@ theorem actual_link_surplus_ledger (H : Family α) (V : Edge α) :
   rw [hR, hOne, hTwo] at hpoint
   simpa only [actualLinkSurplus, C, c] using hpoint
 
-/-- The manuscript's exact support identity (equation (1)) for the real
+/-- The exact support identity (II.1) of `paper/proof.pdf` for the real
     pair and cell supports of a uniform triple family. -/
 theorem actual_support_ledger
     (H : Family α) (V : Edge α)

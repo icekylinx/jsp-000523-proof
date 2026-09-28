@@ -6,7 +6,7 @@ set_option maxHeartbeats 800000
 /-!
 # Exceptional receiver excess and bridge demands
 
-This file proves the finite charging step (II.10) in the complete manuscript:
+This file proves the finite charging step (II.10) in `paper/proof.pdf`:
 the excess of each actual triangle-exception receiver is covered by the two
 demands on its bridge triples. It then sums that inequality to bound `actualXi`.
 -/

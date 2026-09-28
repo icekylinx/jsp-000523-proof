@@ -4,7 +4,7 @@ import Mathlib.Tactic.Abel
 
 /-!
 # Cyclic-coordinate alignment for Part I (§I.1 of
-`jsp-000523-proof/paper/proof.md`)
+`paper/proof.pdf`)
 
 The manuscript averages independent bijections of the first `r-2` color
 classes with an `n`-element index set.  With `r = s+3`, there are `s+1`

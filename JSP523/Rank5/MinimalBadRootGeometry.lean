@@ -3,7 +3,7 @@ import JSP523.Counting.BadSetIncidence
 /-!
 # Minimal bad roots force distant outside edges
 
-In §IV.2.1 of `jsp-000523-proof/paper/proof.md`, edges carrying a minimal
+In §IV.2.1 of `paper/proof.pdf`, edges carrying a minimal
 bad `k`-set are grouped by that root. If neither edge contains a smaller
 bad set, their remaining tails have distance at least `k`. The theorem
 below proves the actual edge-level statement directly from (IV.2.2).

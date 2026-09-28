@@ -9,9 +9,10 @@ import Lean.Elab.Tactic.Omega
 /-!
 # Actual signed weights on root links of a triple family
 
-This instantiates the manuscript's weight (2) and deficit (3) using the
-actual completion vertices.  The common-neighbor sets come from genuine
-triples, and each deficit summand is nonnegative because it is bounded by
+This instantiates the weight (II.2) and deficit (II.3) of
+`paper/proof.pdf`, §II.3, using the actual completion vertices.
+The common-neighbor sets come from genuine triples, and each deficit
+summand is nonnegative because it is bounded by
 its endpoint's completion degree.
 -/
 
@@ -133,7 +134,7 @@ theorem rootCommonNeighbors_eq_inter_rootNeighbors
     · rw [← triple_rotate z u t]
       exact hutz
 
-/-- Formula (2) of the manuscript, for an oriented edge `{x,y}` of a
+/-- Formula (II.2) of `paper/proof.pdf`, for an oriented edge `{x,y}` of a
     root link.  The formula itself is meaningful even outside that link. -/
 def rootedSignedWeight
     (H : Family α) (V : Edge α) (z x y : α) : ℚ :=
@@ -248,7 +249,7 @@ theorem mem_rootNeighbors_iff_mem_rootLink
       simp [h] at hp2
     exact (rootLink_edge_in_endpoint_neighbors H V hxy hxyNe).1
 
-/-- Formula (3) of the manuscript for an actual root-link edge. -/
+/-- Formula (II.3) of `paper/proof.pdf` for an actual root-link edge. -/
 theorem rootedSignedWeight_eq_base_sub_deficit
     (H : Family α) (V : Edge α) {z x y : α}
     (hxy : ({x, y} : Edge α) ∈ rootLink H V z)

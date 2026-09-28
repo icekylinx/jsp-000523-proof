@@ -5,7 +5,7 @@ import JSP523.Counting.DistancePacking
 # Exact tail counts for the bad-pair deletion step
 
 These are the finite binomial forms of the first two tail counts in
-§IV.2.1 of `jsp-000523-proof/paper/proof.md`.  The hypotheses `hDistance`
+§IV.2.1 of `paper/proof.pdf`.  The hypotheses `hDistance`
 are the geometric conclusions to be supplied when tails are extracted from
 outside edges: distance at least three for a single bad pair, and at least
 two for a fixed pair of disjoint bad pairs.

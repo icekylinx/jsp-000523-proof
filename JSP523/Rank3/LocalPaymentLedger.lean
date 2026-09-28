@@ -237,7 +237,7 @@ theorem sum_local_oriented_negative_eq_global
   exact triple_incidence_eq_root_link_sum H V hUniform hground
     (fun z x y => negativeRootedWeight H V z x y)
 
-/-- Equation (5)'s exact global ledger: local defects sum to absolute
+/-- Equation (II.5)'s exact global ledger: local defects sum to absolute
     negative weight minus the actual pair budget, under the orientation
     normalization used throughout this formalization. -/
 theorem sum_localSignedDefect_eq_negative_sub_budget
@@ -294,7 +294,7 @@ theorem oriented_signed_eq_positive_sub_negative
       simp only [orientedPositiveWeightTotal, orientedNegativeWeightTotal,
         Finset.sum_sub_distrib]
 
-/-- Equation (6) of the manuscript on actual finite supports.  The factor
+/-- Equation (II.6) of `paper/proof.pdf` on actual finite supports. The factor
     `1/2` converts the positive oriented total to its unoriented value. -/
 theorem signed_payment_identity_on_actual_supports
     {H : Family α} (V : Edge α)
