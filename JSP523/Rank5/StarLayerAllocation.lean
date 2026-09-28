@@ -143,6 +143,56 @@ theorem star_layer_ownership_card_partition
 its proved collision budget, the survivors are genuine sublinks with
 pairwise disjoint shadows, and the original count includes that exact loss.
 The integer radius is the sole link-size input. -/
+theorem actual_star_layer_radius_bound_on_ground
+    {n r D₂ D₃ L : ℕ} [Inhabited (Fin n)]
+    {H : Family (Fin n)} {U Centers : Edge (Fin n)}
+    (hH : Admissible H) (hCenters : ∀ z ∈ Centers, z ∉ U)
+    (hr : 4 ≤ r)
+    (hD₂ : ∀ S : Edge (Fin n), S.card = 2 →
+      (H.filter (fun E => S ⊆ E)).card ≤ D₂)
+    (hD₃ : ∀ S : Edge (Fin n), S.card = 3 →
+      (H.filter (fun E => S ⊆ E)).card ≤ D₃)
+    (hSize : ∀ z ∈ Centers,
+      (r - 1).factorial * (actualStarLink H U z r).card ≤ L ^ (r - 1)) :
+    ∃ owner : Edge (Fin n) → Fin n,
+      (lostStarObjects H U Centers r owner).card ^ 2 ≤
+        (U.powersetCard (r - 2)).card *
+          (Centers.card * (Centers.card - 1) *
+            ((r - 1) * (r - 1) * D₂ +
+              U.card * (U.card - 1) * (r - 2) * D₃)) ∧
+      (∀ z ∈ Centers, ∀ w ∈ Centers, z ≠ w →
+        Disjoint (Finset.shadow (ownedStarLink H U r owner z))
+          (Finset.shadow (ownedStarLink H U r owner w))) ∧
+      (r - 1) * (actualStarLayerObjects H U Centers r).card ≤
+        (r - 1) * (lostStarObjects H U Centers r owner).card +
+          (L + (r - 1)) * U.card.choose (r - 2) := by
+  classical
+  obtain ⟨owner, hLoss⟩ := actualStarLayerOwnershipDeletion_card_sq_le_exists_max
+    hH hCenters hr hD₂ hD₃
+  refine ⟨owner, ?_, ?_, ?_⟩
+  · simpa [lostStarObjects, starMemberLost] using hLoss
+  · intro z hz w hw hzw
+    exact ownedStarLink_shadows_disjoint H U r owner hzw
+  · have hAlloc := disjoint_shadow_radius_allocation_on_ground U Centers
+      (ownedStarLink H U r owner) (by omega : 2 ≤ r - 1)
+      (by intro z hz; exact ownedStarLink_uniform H U r owner z)
+      (by
+        intro z hz T hT
+        have hActual := ownedStarLink_subset H U r owner z hT
+        exact (Finset.mem_filter.mp hActual).1)
+      (by
+        intro z hz
+        exact (Nat.mul_le_mul_left _ (Finset.card_le_card
+          (ownedStarLink_subset H U r owner z))).trans (hSize z hz))
+      (by
+        intro z hz w hw hzw
+        exact ownedStarLink_shadows_disjoint H U r owner hzw)
+    have hIndex : r - 1 - 1 = r - 2 := by omega
+    rw [hIndex] at hAlloc
+    rw [← star_layer_ownership_card_partition H U Centers r owner, Nat.mul_add]
+    exact Nat.add_le_add_left hAlloc _
+
+/-- The ambient-size form used by the finite regularization interface. -/
 theorem actual_star_layer_radius_bound
     {n r D₂ D₃ L : ℕ} [Inhabited (Fin n)]
     {H : Family (Fin n)} {U Centers : Edge (Fin n)}
@@ -166,26 +216,15 @@ theorem actual_star_layer_radius_bound
       (r - 1) * (actualStarLayerObjects H U Centers r).card ≤
         (r - 1) * (lostStarObjects H U Centers r owner).card +
           (L + (r - 1)) * n.choose (r - 2) := by
-  classical
-  obtain ⟨owner, hLoss⟩ := actualStarLayerOwnershipDeletion_card_sq_le_exists_max
-    hH hCenters hr hD₂ hD₃
-  refine ⟨owner, ?_, ?_, ?_⟩
-  · simpa [lostStarObjects, starMemberLost] using hLoss
-  · intro z hz w hw hzw
-    exact ownedStarLink_shadows_disjoint H U r owner hzw
-  · have hAlloc := disjoint_shadow_radius_allocation Centers
-      (ownedStarLink H U r owner) (by omega : 2 ≤ r - 1)
-      (by intro z hz; exact ownedStarLink_uniform H U r owner z)
-      (by
-        intro z hz
-        exact (Nat.mul_le_mul_left _ (Finset.card_le_card
-          (ownedStarLink_subset H U r owner z))).trans (hSize z hz))
-      (by
-        intro z hz w hw hzw
-        exact ownedStarLink_shadows_disjoint H U r owner hzw)
-    have hIndex : r - 1 - 1 = r - 2 := by omega
-    rw [hIndex] at hAlloc
-    rw [← star_layer_ownership_card_partition H U Centers r owner, Nat.mul_add]
-    exact Nat.add_le_add_left hAlloc _
+  obtain ⟨owner, hLoss, hDisjoint, hBound⟩ :=
+    actual_star_layer_radius_bound_on_ground hH hCenters hr hD₂ hD₃ hSize
+  refine ⟨owner, hLoss, hDisjoint, ?_⟩
+  have hCard : U.card ≤ n := by
+    simpa only [Finset.card_univ, Fintype.card_fin] using
+      Finset.card_le_card (Finset.subset_univ U)
+  have hChoose : U.card.choose (r - 2) ≤ n.choose (r - 2) :=
+    Nat.choose_le_choose (r - 2) hCard
+  exact hBound.trans
+    (Nat.add_le_add_left (Nat.mul_le_mul_left _ hChoose) _)
 
 end JSP523.Rank5

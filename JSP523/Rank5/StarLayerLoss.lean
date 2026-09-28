@@ -90,6 +90,67 @@ theorem star_collision_budget_mono
 
 /-- The entire layer touching `X` is bounded from actual codegrees.
 There is no hypothesis about the layer cardinality itself. -/
+theorem removed_layer_bound_from_codegrees_on_ground
+    {n : ℕ} [Inhabited (Fin n)]
+    (H : Family (Fin n)) (V X : Edge (Fin n))
+    (r h D₁ D₂ D₃ L b : ℕ)
+    (hAdm : Admissible H) (hUniform : Uniform r H)
+    (hGround : ∀ E ∈ H, E ⊆ V) (hr : 4 ≤ r) (hX : X.card ≤ h)
+    (hD₁ : ∀ z : Fin n, (H.filter (fun E => z ∈ E)).card ≤ D₁)
+    (hD₂ : ∀ S : Edge (Fin n), S.card = 2 →
+      (H.filter (fun E => S ⊆ E)).card ≤ D₂)
+    (hD₃ : ∀ S : Edge (Fin n), S.card = 3 →
+      (H.filter (fun E => S ⊆ E)).card ≤ D₃)
+    (hRadius : (r - 1).factorial * D₁ ≤ L ^ (r - 1))
+    (hCollision : n.choose (r - 2) * (h * (h - 1) *
+      ((r - 1) * (r - 1) * D₂ + n * (n - 1) * (r - 2) * D₃)) ≤ b ^ 2) :
+    H.card - (H.filter (fun E => Disjoint E X)).card ≤
+      b + ((L + (r - 1)) * (V \ X).card.choose (r - 2)) / (r - 1) +
+        h.choose 2 * D₂ := by
+  classical
+  let U := V \ X
+  have hCenters : ∀ z ∈ X, z ∉ U := by
+    intro z hz hzU
+    exact (Finset.mem_sdiff.mp hzU).2 hz
+  have hSize : ∀ z ∈ X,
+      (r - 1).factorial * (actualStarLink H U z r).card ≤ L ^ (r - 1) := by
+    intro z hz
+    exact (Nat.mul_le_mul_left _ ((actual_star_link_card_le_vertex_degree
+      H U z r (hCenters z hz)).trans (hD₁ z))).trans hRadius
+  obtain ⟨owner, hLossSq, _, hOriginal⟩ :=
+    actual_star_layer_radius_bound_on_ground hAdm hCenters hr hD₂ hD₃ hSize
+  have hu : U.card ≤ n := by
+    simpa only [Finset.card_univ, Fintype.card_fin] using
+      Finset.card_le_card (Finset.subset_univ U)
+  have hBudget := star_collision_budget_mono U.card n h X.card r D₂ D₃ hu hX
+  rw [Finset.card_powersetCard] at hLossSq
+  have hLossSq' : (lostStarObjects H U X r owner).card ^ 2 ≤ b ^ 2 :=
+    hLossSq.trans (hBudget.trans hCollision)
+  have hLoss : (lostStarObjects H U X r owner).card ≤ b := by nlinarith
+  have hPartition := star_layer_ownership_card_partition H U X r owner
+  let kept := ∑ z ∈ X, (ownedStarLink H U r owner z).card
+  have hKeptMul : (r - 1) * kept ≤
+      (L + (r - 1)) * U.card.choose (r - 2) := by
+    dsimp [kept]
+    rw [← hPartition, Nat.mul_add] at hOriginal
+    omega
+  have hKept : kept ≤
+      ((L + (r - 1)) * U.card.choose (r - 2)) / (r - 1) := by
+    apply (Nat.le_div_iff_mul_le (by omega : 0 < r - 1)).2
+    simpa only [Nat.mul_comm] using hKeptMul
+  have hObjects : (actualStarLayerObjects H U X r).card ≤
+      b + ((L + (r - 1)) * U.card.choose (r - 2)) / (r - 1) := by
+    change (lostStarObjects H U X r owner).card + kept = _ at hPartition
+    omega
+  have hOne := (one_hit_edges_le_actual_star_objects H V X r hUniform hGround).trans
+    hObjects
+  have hLayer := avoidX_layer_le_one_hit_plus_pair_budget H X D₂
+    (by intro Q hQ; exact hD₂ Q (Finset.mem_powersetCard.mp hQ).2)
+  have hPairs : X.card.choose 2 * D₂ ≤ h.choose 2 * D₂ :=
+    Nat.mul_le_mul_right _ (Nat.choose_le_choose 2 hX)
+  exact hLayer.trans (Nat.add_le_add hOne hPairs)
+
+/-- The ambient-size version used by the finite regularization round. -/
 theorem removed_layer_bound_from_codegrees
     {n : ℕ} [Inhabited (Fin n)]
     (H : Family (Fin n)) (V X : Edge (Fin n))
@@ -107,45 +168,18 @@ theorem removed_layer_bound_from_codegrees
     H.card - (H.filter (fun E => Disjoint E X)).card ≤
       b + ((L + (r - 1)) * n.choose (r - 2)) / (r - 1) +
         h.choose 2 * D₂ := by
-  classical
-  let U := V \ X
-  have hCenters : ∀ z ∈ X, z ∉ U := by
-    intro z hz hzU
-    exact (Finset.mem_sdiff.mp hzU).2 hz
-  have hSize : ∀ z ∈ X,
-      (r - 1).factorial * (actualStarLink H U z r).card ≤ L ^ (r - 1) := by
-    intro z hz
-    exact (Nat.mul_le_mul_left _ ((actual_star_link_card_le_vertex_degree
-      H U z r (hCenters z hz)).trans (hD₁ z))).trans hRadius
-  obtain ⟨owner, hLossSq, _, hOriginal⟩ :=
-    actual_star_layer_radius_bound hAdm hCenters hr hD₂ hD₃ hSize
-  have hu : U.card ≤ n := by
+  have hGroundBound := removed_layer_bound_from_codegrees_on_ground H V X
+    r h D₁ D₂ D₃ L b hAdm hUniform hGround hr hX hD₁ hD₂ hD₃
+    hRadius hCollision
+  have hCard : (V \ X).card ≤ n := by
     simpa only [Finset.card_univ, Fintype.card_fin] using
-      Finset.card_le_card (Finset.subset_univ U)
-  have hBudget := star_collision_budget_mono U.card n h X.card r D₂ D₃ hu hX
-  rw [Finset.card_powersetCard] at hLossSq
-  have hLossSq' : (lostStarObjects H U X r owner).card ^ 2 ≤ b ^ 2 :=
-    hLossSq.trans (hBudget.trans hCollision)
-  have hLoss : (lostStarObjects H U X r owner).card ≤ b := by nlinarith
-  have hPartition := star_layer_ownership_card_partition H U X r owner
-  let kept := ∑ z ∈ X, (ownedStarLink H U r owner z).card
-  have hKeptMul : (r - 1) * kept ≤ (L + (r - 1)) * n.choose (r - 2) := by
-    dsimp [kept]
-    rw [← hPartition, Nat.mul_add] at hOriginal
-    omega
-  have hKept : kept ≤ ((L + (r - 1)) * n.choose (r - 2)) / (r - 1) := by
-    apply (Nat.le_div_iff_mul_le (by omega : 0 < r - 1)).2
-    simpa only [Nat.mul_comm] using hKeptMul
-  have hObjects : (actualStarLayerObjects H U X r).card ≤
-      b + ((L + (r - 1)) * n.choose (r - 2)) / (r - 1) := by
-    change (lostStarObjects H U X r owner).card + kept = _ at hPartition
-    omega
-  have hOne := (one_hit_edges_le_actual_star_objects H V X r hUniform hGround).trans
-    hObjects
-  have hLayer := avoidX_layer_le_one_hit_plus_pair_budget H X D₂
-    (by intro Q hQ; exact hD₂ Q (Finset.mem_powersetCard.mp hQ).2)
-  have hPairs : X.card.choose 2 * D₂ ≤ h.choose 2 * D₂ :=
-    Nat.mul_le_mul_right _ (Nat.choose_le_choose 2 hX)
-  exact hLayer.trans (Nat.add_le_add hOne hPairs)
+      Finset.card_le_card (Finset.subset_univ (V \ X))
+  have hChoose : (V \ X).card.choose (r - 2) ≤ n.choose (r - 2) :=
+    Nat.choose_le_choose (r - 2) hCard
+  have hMul := Nat.mul_le_mul_left (L + (r - 1)) hChoose
+  have hDiv : ((L + (r - 1)) * (V \ X).card.choose (r - 2)) / (r - 1) ≤
+      ((L + (r - 1)) * n.choose (r - 2)) / (r - 1) :=
+    Nat.div_le_div_right hMul
+  exact hGroundBound.trans (by omega)
 
 end JSP523.Rank5

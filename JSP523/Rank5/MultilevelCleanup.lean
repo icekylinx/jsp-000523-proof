@@ -17,7 +17,7 @@ noncomputable def actualCoreLink (H : Family α) (V A : Edge α) (s : ℕ) : Fam
   classical
   exact (V.powersetCard s).filter fun P => Disjoint P A ∧ A ∪ P ∈ H
 
-theorem mem_actualCoreLink {H : Family α} {V A P : Edge α} {s : ℕ} :
+theorem mem_actual_core_link {H : Family α} {V A P : Edge α} {s : ℕ} :
     P ∈ actualCoreLink H V A s ↔
       P ⊆ V ∧ P.card = s ∧ Disjoint P A ∧ A ∪ P ∈ H := by
   simp only [actualCoreLink, Finset.mem_filter, Finset.mem_powersetCard]
@@ -55,7 +55,7 @@ noncomputable def multilevelDeletedEdges
   exact C.biUnion fun A => (cleanupTails H V A s u q bad).image (fun P => A ∪ P)
 
 /-- Every deleted edge is an edge of the fixed parent family. -/
-theorem multilevelDeletedEdges_subset_parent
+theorem multilevel_deleted_edges_subset_parent
     {H : Family α} {V : Edge α} {C : Family α} {s u q : ℕ}
     {bad : Edge α → Edge α → Edge α → Prop} :
     multilevelDeletedEdges H V C s u q bad ⊆ H := by
@@ -69,7 +69,7 @@ theorem multilevelDeletedEdges_subset_parent
     · have hP' := hP
       simp [cleanupTails, hLow] at hP'
       exact hP'.1
-  exact (mem_actualCoreLink.mp hPLink).2.2.2
+  exact (mem_actual_core_link.mp hPLink).2.2.2
 
 /-- High fibers in a finite incidence system have total size controlled by
 its total number of incidences. -/

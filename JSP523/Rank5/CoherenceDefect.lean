@@ -84,13 +84,13 @@ noncomputable def badUnrootedEdges (all : Family α) (z : Edge α → α) : Fami
   classical
   exact (unrootedEdges all z).filter (fun E => ¬ SharedFacesCoherent all z E)
 
-theorem goodUnrootedEdges_subset_unrooted (all : Family α) (z : Edge α → α) :
+theorem good_unrooted_edges_subset_unrooted (all : Family α) (z : Edge α → α) :
     goodUnrootedEdges all z ⊆ unrootedEdges all z := by
   classical
   intro E hE
   exact (Finset.mem_filter.mp hE).1
 
-theorem badUnrootedEdges_subset_unrooted (all : Family α) (z : Edge α → α) :
+theorem bad_unrooted_edges_subset_unrooted (all : Family α) (z : Edge α → α) :
     badUnrootedEdges all z ⊆ unrootedEdges all z := by
   classical
   intro E hE
@@ -104,8 +104,8 @@ theorem good_bad_unrooted_union (all : Family α) (z : Edge α → α) :
   constructor
   · intro hE
     rcases Finset.mem_union.mp hE with hg | hb
-    · exact goodUnrootedEdges_subset_unrooted all z hg
-    · exact badUnrootedEdges_subset_unrooted all z hb
+    · exact good_unrooted_edges_subset_unrooted all z hg
+    · exact bad_unrooted_edges_subset_unrooted all z hb
   · intro hE
     by_cases hgood : SharedFacesCoherent all z E
     · exact Finset.mem_union.mpr (Or.inl
@@ -129,7 +129,7 @@ theorem unrooted_good_bad_card_partition (all : Family α) (z : Edge α → α) 
   rw [good_bad_unrooted_union all z] at hcard
   exact hcard
 
-theorem badUnrootedEdges_eq_empty_of_shared_facet_inheritance
+theorem bad_unrooted_edges_eq_empty_of_shared_facet_inheritance
     (all : Family α) (z : Edge α → α) (center : Edge α → α)
     (hUniform : Uniform 5 all)
     (hcenter : SharedFacetCenterInheritance all z center) :
@@ -157,7 +157,7 @@ theorem private_four_shadow_bound_of_good_unrooted
   have hsub : good ⊆ all := by
     intro E hE
     exact unrootedEdges_subset all z
-      (goodUnrootedEdges_subset_unrooted all z hE)
+      (good_unrooted_edges_subset_unrooted all z hE)
   have hbound :
       2 * good.card ≤ (privateFourShadow all).card := by
     have hraw := shadow_bound_of_private_pairs
@@ -166,7 +166,7 @@ theorem private_four_shadow_bound_of_good_unrooted
       (by simp) (Finset.Subset.rfl) (by
         intro E hE
         have hU : E ∈ unrootedEdges all z :=
-          goodUnrootedEdges_subset_unrooted all z hE
+          good_unrooted_edges_subset_unrooted all z hE
         have hcoh : SharedFacesCoherent all z E :=
           (Finset.mem_filter.mp hE).2
         obtain ⟨a, ha, b, hb, _, hne, _, _, hprivA, hprivB⟩ :=
@@ -213,7 +213,7 @@ theorem four_shadow_bound_of_shared_facet_inheritance
     2 * all.card + (sharedFourShadow all).card ≤
       (fourShadow all).card + 2 * (rootedEdges all z).card := by
   have h := four_shadow_bound_with_coherence_defect all z hUniform
-  rw [badUnrootedEdges_eq_empty_of_shared_facet_inheritance
+  rw [bad_unrooted_edges_eq_empty_of_shared_facet_inheritance
     all z center hUniform hcenter] at h
   simpa using h
 

@@ -1,13 +1,12 @@
+import JSP523.Rank5.ShadowBinomialBracket
 import Mathlib.Combinatorics.SetFamily.KruskalKatona
 import Mathlib.Tactic
 
 /-!
-# Lovasz-threshold case of the sharp shadow-power bound
+# Binomial-threshold and finite-error shadow-power bounds
 
-This records a rigorous all-ranks consequence of Mathlib's Lovasz form of
-Kruskal--Katona. It establishes IV.3.1 when the family size is exactly a
-binomial threshold. The remaining arbitrary-size interpolation is discussed
-in the accompanying task report.
+The threshold case follows from the integer Lovasz form of
+Kruskal--Katona. A finite-error estimate also covers arbitrary family sizes.
 -/
 
 namespace JSP523.Rank5
@@ -66,5 +65,95 @@ theorem shadow_power_at_binomial_threshold
     _ ≤ ((k - 1).factorial * Nat.choose m (k - 1)) ^ k := hArith
     _ ≤ ((k - 1).factorial * (Finset.shadow A).card) ^ k :=
       Nat.pow_le_pow_left (Nat.mul_le_mul_left _ hShadow) _
+
+/-- One Pascal step gives a lower-order error at the actual binomial
+radius `m`, independent of the ambient ground size. -/
+theorem shadow_power_with_radius_error
+    {n m k : ℕ} (A : Finset (Finset (Fin n)))
+    (hSized : (A : Set (Finset (Fin n))).Sized k)
+    (hk : 2 ≤ k) (hkm : k ≤ m) (hmn : m + 1 ≤ n)
+    (hBelow : m.choose k ≤ A.card)
+    (hAbove : A.card ≤ (m + 1).choose k) :
+    (k.factorial * A.card) ^ (k - 1) ≤
+      ((k - 1).factorial *
+        ((Finset.shadow A).card + m.choose (k - 2))) ^ k := by
+  have hShadow : m.choose (k - 1) ≤ (Finset.shadow A).card := by
+    exact shadow_card_ge_choose_threshold A hSized hk hkm
+      (by omega) hBelow
+  have hPascal : (m + 1).choose (k - 1) =
+      m.choose (k - 2) + m.choose (k - 1) := by
+    have hk' : k - 2 + 1 = k - 1 := by omega
+    simpa [hk', Nat.add_comm] using Nat.choose_succ_succ' m (k - 2)
+  have hShadowBound : (m + 1).choose (k - 1) ≤
+      (Finset.shadow A).card + m.choose (k - 2) := by
+    rw [hPascal]
+    omega
+  have hThreshold := factorial_choose_power_threshold hk
+    (show k ≤ m + 1 by omega)
+  calc
+    (k.factorial * A.card) ^ (k - 1) ≤
+        (k.factorial * (m + 1).choose k) ^ (k - 1) :=
+      Nat.pow_le_pow_left (Nat.mul_le_mul_left _ hAbove) _
+    _ ≤ ((k - 1).factorial * (m + 1).choose (k - 1)) ^ k := hThreshold
+    _ ≤ ((k - 1).factorial *
+        ((Finset.shadow A).card + m.choose (k - 2))) ^ k :=
+      Nat.pow_le_pow_left (Nat.mul_le_mul_left _ hShadowBound) _
+
+/-- Every nonempty uniform family admits a binomial radius with the
+finite-error shadow-power estimate. -/
+theorem exists_shadow_power_radius_error
+    {n k : ℕ} (A : Finset (Finset (Fin n)))
+    (hSized : (A : Set (Finset (Fin n))).Sized k)
+    (hk : 2 ≤ k) (hNonempty : A.Nonempty) :
+    ∃ m : ℕ, k ≤ m ∧ m ≤ n ∧
+    (k.factorial * A.card) ^ (k - 1) ≤
+      ((k - 1).factorial *
+        ((Finset.shadow A).card + m.choose (k - 2))) ^ k := by
+  classical
+  obtain ⟨m, hkm, hmN, hBelow, hAbove⟩ :=
+    exists_binomial_card_bracket A hSized hNonempty
+  have hSupport : A ⊆ (Finset.univ : Finset (Fin n)).powersetCard k := by
+    intro F hF
+    exact Finset.mem_powersetCard.mpr
+      ⟨Finset.subset_univ F, hSized hF⟩
+  have hCardMax : A.card ≤ n.choose k := by
+    have h := Finset.card_le_card hSupport
+    simpa [Finset.card_powersetCard] using h
+  refine ⟨m, hkm, hmN, ?_⟩
+  by_cases hTop : m = n
+  · have hEq : A.card = n.choose k := by
+      rw [hTop] at hBelow
+      omega
+    have hkN : k ≤ n := by omega
+    have hExact := shadow_power_at_binomial_threshold A hSized hk
+      hkN (le_refl n) hEq
+    have hExtra : (Finset.shadow A).card ≤
+        (Finset.shadow A).card + m.choose (k - 2) := Nat.le_add_right ..
+    exact hExact.trans
+      (Nat.pow_le_pow_left (Nat.mul_le_mul_left _ hExtra) _)
+  · have hmn : m + 1 ≤ n := by omega
+    exact shadow_power_with_radius_error A hSized hk hkm
+      hmn hBelow hAbove
+
+/-- The ambient form follows by comparing the radius to `n`. -/
+theorem shadow_power_all_sizes_with_lower_order_error
+    {n k : ℕ} (A : Finset (Finset (Fin n)))
+    (hSized : (A : Set (Finset (Fin n))).Sized k)
+    (hk : 2 ≤ k) :
+    (k.factorial * A.card) ^ (k - 1) ≤
+      ((k - 1).factorial *
+        ((Finset.shadow A).card + n.choose (k - 2))) ^ k := by
+  classical
+  by_cases hEmpty : A = ∅
+  · have hExp : 0 < k - 1 := by omega
+    simp [hEmpty, hExp]
+  obtain ⟨m, _, hmN, hBound⟩ :=
+    exists_shadow_power_radius_error A hSized hk
+      (Finset.nonempty_iff_ne_empty.mpr hEmpty)
+  have hChoose : m.choose (k - 2) ≤ n.choose (k - 2) :=
+    Nat.choose_le_choose (k - 2) hmN
+  exact hBound.trans
+    (Nat.pow_le_pow_left
+      (Nat.mul_le_mul_left _ (Nat.add_le_add_left hChoose _)) _)
 
 end JSP523.Rank5
