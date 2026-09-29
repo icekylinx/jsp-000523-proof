@@ -96,7 +96,7 @@ theorem clear_used_parent_then_reciprocal_loss_le_c4_graph_budget
     (h_facet : ∀ T : Edge α, T.card = 3 →
       (D.K.filter fun E => T ⊆ E).card ≤ Dcap)
     (h_label : ∀ a b : α,
-      (reciprocalLabelFiber D a b).card ≤ Kstar)
+      (reciprocalUsedLabelFiber D a b).card ≤ Kstar)
     (h_tail : ∀ a b r s : α,
       (reciprocalWitnessTailFiber D a b r s).card ≤ C_D) :
     ∃ color : ∀ x : α,
@@ -133,14 +133,14 @@ theorem clear_used_parent_then_reciprocal_loss_le_c4_graph_budget
   linarith
 
 /-- The corrected parent-label pair-degree input is supplied by the
-original label-fiber cap, leaving no independent Q-degree premise. -/
+used center-graph fiber cap, leaving no independent Q-degree premise. -/
 theorem clear_used_parent_then_reciprocal_loss_le_c4_graph_budget_of_label_fibers
     (D : FiniteCompletionCliqueData α) (Dcap Kstar C_D : ℕ)
     (h_ground : ∀ E ∈ D.K, E ⊆ D.ground)
     (h_facet : ∀ T : Edge α, T.card = 3 →
       (D.K.filter fun E => T ⊆ E).card ≤ Dcap)
     (h_label : ∀ a b : α,
-      (reciprocalLabelFiber D a b).card ≤ Kstar)
+      (reciprocalUsedLabelFiber D a b).card ≤ Kstar)
     (h_tail : ∀ a b r s : α,
       (reciprocalWitnessTailFiber D a b r s).card ≤ C_D) :
     ∃ color : ∀ x : α,
@@ -158,7 +158,7 @@ theorem clear_used_parent_then_reciprocal_loss_le_c4_graph_budget_of_label_fiber
     D Dcap (2 + 4 * Kstar) Kstar C_D hκ h_ground hPair
       h_facet h_label h_tail
 
-/-- The actual three-round cleanup now needs only the initial label-fiber
+/-- The actual three-round cleanup now needs only the initial used center-graph
 and triple-degree caps; Q pair-degree and reciprocal tail caps are derived. -/
 theorem clear_used_parent_then_reciprocal_loss_le_c4_graph_budget_of_degree_caps
     (D : FiniteCompletionCliqueData α) (Dcap Kstar : ℕ)
@@ -166,7 +166,7 @@ theorem clear_used_parent_then_reciprocal_loss_le_c4_graph_budget_of_degree_caps
     (h_facet : ∀ T : Edge α, T.card = 3 →
       (D.K.filter fun E => T ⊆ E).card ≤ Dcap)
     (h_label : ∀ a b : α,
-      (reciprocalLabelFiber D a b).card ≤ Kstar) :
+      (reciprocalUsedLabelFiber D a b).card ≤ Kstar) :
     ∃ color : ∀ x : α,
         fixedCenterPairNodes (reciprocalUsedParentLabelTriples D)
           D.ground x → Fin (2 * (2 + 4 * Kstar) - 1),

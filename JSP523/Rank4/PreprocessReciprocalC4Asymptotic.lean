@@ -121,7 +121,7 @@ theorem clear_used_parent_then_reciprocal_loss_ratio_tendsto_zero
     (h_facet : ∀ n : ℕ, ∀ T : Edge (Fin n), T.card = 3 →
       ((D n).K.filter fun E => T ⊆ E).card ≤ Dcap)
     (h_label : ∀ n : ℕ, ∀ a b : Fin n,
-      (reciprocalLabelFiber (D n) a b).card ≤ Kstar) :
+      (reciprocalUsedLabelFiber (D n) a b).card ≤ Kstar) :
     Filter.Tendsto
       (fun n : ℕ =>
         (((D n).K \ (clearUsedParentThenReciprocal (D n)).K).card : ℝ) /
@@ -260,7 +260,7 @@ theorem clear_used_parent_then_reciprocal_loss_choose_ratio_tendsto_zero
     (h_facet : ∀ n : ℕ, ∀ T : Edge (Fin n), T.card = 3 →
       ((D n).K.filter fun E => T ⊆ E).card ≤ Dcap)
     (h_label : ∀ n : ℕ, ∀ a b : Fin n,
-      (reciprocalLabelFiber (D n) a b).card ≤ Kstar) :
+      (reciprocalUsedLabelFiber (D n) a b).card ≤ Kstar) :
     Filter.Tendsto
       (fun n : ℕ =>
         (((D n).K \ (clearUsedParentThenReciprocal (D n)).K).card : ℝ) /

@@ -17,7 +17,7 @@ theorem rank_four_extremal_ratio_tendsto_one_of_actual_reciprocal_cleanup
     (h_facet : ∀ n : ℕ, ∀ T : Edge (Fin n), T.card = 3 →
       ((D n).K.filter fun E => T ⊆ E).card ≤ Dcap)
     (h_label : ∀ n : ℕ, ∀ a b : Fin n,
-      (reciprocalLabelFiber (D n) a b).card ≤ Kstar)
+      (reciprocalUsedLabelFiber (D n) a b).card ≤ Kstar)
     (h_star_lower : ∀ᶠ n in Filter.atTop,
       1 ≤ rankFourExtremalRatio g₄ n)
     (h_upper : ∀ ε : ℝ, 0 < ε →
@@ -63,7 +63,7 @@ theorem rank_four_stability_ratio_tendsto_zero_of_actual_reciprocal_cleanup
     (h_facet : ∀ n : ℕ, ∀ T : Edge (Fin n), T.card = 3 →
       ((D n).K.filter fun E => T ⊆ E).card ≤ Dcap)
     (h_label : ∀ n : ℕ, ∀ a b : Fin n,
-      (reciprocalLabelFiber (D n) a b).card ≤ Kstar)
+      (reciprocalUsedLabelFiber (D n) a b).card ≤ Kstar)
     (h_nonneg : ∀ᶠ n in Filter.atTop, 0 ≤ bad_ratio n)
     (h_parameter_cleanup : ∀ ε : ℝ, 0 < ε →
       ∃ τ M ν : ℝ, ∃ r : ℕ → ℝ,

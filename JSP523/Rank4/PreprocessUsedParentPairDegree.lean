@@ -1,4 +1,5 @@
 import JSP523.Rank4.PreprocessUsedParentWedgeBudget
+import JSP523.Rank4.PreprocessParentTails
 
 /-! # Pair-degree of the corrected used-parent label system -/
 
@@ -48,15 +49,15 @@ noncomputable def usedParentSourceCandidates
     Finset (α × α) := by
   classical
   exact ({(a, b), (b, a)} : Finset (α × α)) ∪
-    ((reciprocalLabelFiber D a b).image fun c => (a, c)) ∪
-    ((reciprocalLabelFiber D a b).image fun c => (c, a)) ∪
-    ((reciprocalLabelFiber D b a).image fun c => (b, c)) ∪
-    ((reciprocalLabelFiber D b a).image fun c => (c, b))
+    ((reciprocalUsedLabelFiber D a b).image fun c => (a, c)) ∪
+    ((reciprocalUsedLabelFiber D a b).image fun c => (c, a)) ∪
+    ((reciprocalUsedLabelFiber D b a).image fun c => (b, c)) ∪
+    ((reciprocalUsedLabelFiber D b a).image fun c => (c, b))
 
 theorem used_parent_source_candidates_card_le
     (D : FiniteCompletionCliqueData α) (a b : α) (Kstar : ℕ)
     (h_label : ∀ x y : α,
-      (reciprocalLabelFiber D x y).card ≤ Kstar) :
+      (reciprocalUsedLabelFiber D x y).card ≤ Kstar) :
     (usedParentSourceCandidates D a b).card ≤ 2 + 4 * Kstar := by
   classical
   unfold usedParentSourceCandidates
@@ -65,29 +66,29 @@ theorem used_parent_source_candidates_card_le
       (by simp)
   have h1 := Finset.card_union_le
     ({(a, b), (b, a)} : Finset (α × α))
-    ((reciprocalLabelFiber D a b).image fun c => (a, c))
+    ((reciprocalUsedLabelFiber D a b).image fun c => (a, c))
   have h2 := Finset.card_union_le
     (({(a, b), (b, a)} : Finset (α × α)) ∪
-      ((reciprocalLabelFiber D a b).image fun c => (a, c)))
-    ((reciprocalLabelFiber D a b).image fun c => (c, a))
+      ((reciprocalUsedLabelFiber D a b).image fun c => (a, c)))
+    ((reciprocalUsedLabelFiber D a b).image fun c => (c, a))
   have h3 := Finset.card_union_le
     ((({(a, b), (b, a)} : Finset (α × α)) ∪
-      ((reciprocalLabelFiber D a b).image fun c => (a, c))) ∪
-      ((reciprocalLabelFiber D a b).image fun c => (c, a)))
-    ((reciprocalLabelFiber D b a).image fun c => (b, c))
+      ((reciprocalUsedLabelFiber D a b).image fun c => (a, c))) ∪
+      ((reciprocalUsedLabelFiber D a b).image fun c => (c, a)))
+    ((reciprocalUsedLabelFiber D b a).image fun c => (b, c))
   have h4 := Finset.card_union_le
     (((({(a, b), (b, a)} : Finset (α × α)) ∪
-      ((reciprocalLabelFiber D a b).image fun c => (a, c))) ∪
-      ((reciprocalLabelFiber D a b).image fun c => (c, a))) ∪
-      ((reciprocalLabelFiber D b a).image fun c => (b, c)))
-    ((reciprocalLabelFiber D b a).image fun c => (c, b))
-  have hIab : ((reciprocalLabelFiber D a b).image fun c => (a, c)).card ≤ Kstar :=
+      ((reciprocalUsedLabelFiber D a b).image fun c => (a, c))) ∪
+      ((reciprocalUsedLabelFiber D a b).image fun c => (c, a))) ∪
+      ((reciprocalUsedLabelFiber D b a).image fun c => (b, c)))
+    ((reciprocalUsedLabelFiber D b a).image fun c => (c, b))
+  have hIab : ((reciprocalUsedLabelFiber D a b).image fun c => (a, c)).card ≤ Kstar :=
     (Finset.card_image_le).trans (h_label a b)
-  have hIba : ((reciprocalLabelFiber D a b).image fun c => (c, a)).card ≤ Kstar :=
+  have hIba : ((reciprocalUsedLabelFiber D a b).image fun c => (c, a)).card ≤ Kstar :=
     (Finset.card_image_le).trans (h_label a b)
-  have hJab : ((reciprocalLabelFiber D b a).image fun c => (b, c)).card ≤ Kstar :=
+  have hJab : ((reciprocalUsedLabelFiber D b a).image fun c => (b, c)).card ≤ Kstar :=
     (Finset.card_image_le).trans (h_label b a)
-  have hJba : ((reciprocalLabelFiber D b a).image fun c => (c, b)).card ≤ Kstar :=
+  have hJba : ((reciprocalUsedLabelFiber D b a).image fun c => (c, b)).card ≤ Kstar :=
     (Finset.card_image_le).trans (h_label b a)
   omega
 
@@ -99,14 +100,14 @@ private theorem source_candidate_direct
 
 private theorem source_candidate_fiber_left
     (D : FiniteCompletionCliqueData α) (a b c : α)
-    (hc : c ∈ reciprocalLabelFiber D a b) :
+    (hc : c ∈ reciprocalUsedLabelFiber D a b) :
     (a, c) ∈ usedParentSourceCandidates D a b ∧
       (c, a) ∈ usedParentSourceCandidates D a b := by
   constructor <;> simp [usedParentSourceCandidates, hc]
 
 private theorem source_candidate_fiber_right
     (D : FiniteCompletionCliqueData α) (a b c : α)
-    (hc : c ∈ reciprocalLabelFiber D b a) :
+    (hc : c ∈ reciprocalUsedLabelFiber D b a) :
     (b, c) ∈ usedParentSourceCandidates D a b ∧
       (c, b) ∈ usedParentSourceCandidates D a b := by
   constructor <;> simp [usedParentSourceCandidates, hc]
@@ -122,6 +123,11 @@ theorem used_parent_sources_subset_candidates
   have hu : u ∈ D.ground := (Finset.mem_product.mp hParts.1).1
   have hv : v ∈ D.ground := (Finset.mem_product.mp hParts.1).2
   have huv : u ≠ v := hParts.2.1
+  have hUsed : (commonTripleCell D.K D.ground u v).Nonempty :=
+    hParts.2.2.1
+  have hUsedSwap : (commonTripleCell D.K D.ground v u).Nonempty := by
+    rw [← common_triple_cell_swap D.K D.ground u v]
+    exact hUsed
   have hsub := hParts.2.2.2
   have ha : a = D.label u v ∨ a = u ∨ a = v := by
     have h := hsub (by simp : a ∈ ({a, b} : Edge α))
@@ -132,40 +138,52 @@ theorem used_parent_sources_subset_candidates
   rcases ha with ha | ha | ha
   · rcases hb with hb | hb | hb
     · exact (hab (ha.trans hb.symm)).elim
-    · have hFiber : v ∈ reciprocalLabelFiber D b a := by
+    · have hFiber : v ∈ reciprocalUsedLabelFiber D b a := by
         apply Finset.mem_filter.mpr
-        refine ⟨hv, ?_, ?_⟩
-        · simpa [hb] using huv
-        · simpa [hb] using ha.symm
+        constructor
+        · apply Finset.mem_filter.mpr
+          refine ⟨hv, ?_, ?_⟩
+          · simpa [hb] using huv
+          · simpa [hb] using ha.symm
+        · simpa [hb] using hUsed
       simpa only [hb] using
         (source_candidate_fiber_right D a b v hFiber).1
-    · have hFiber : u ∈ reciprocalLabelFiber D b a := by
+    · have hFiber : u ∈ reciprocalUsedLabelFiber D b a := by
         apply Finset.mem_filter.mpr
-        refine ⟨hu, ?_, ?_⟩
-        · simpa [hb] using huv.symm
-        · have hlabel : D.label v u = a := by
-            simpa [D.label_symm] using ha.symm
-          simpa [hb] using hlabel
+        constructor
+        · apply Finset.mem_filter.mpr
+          refine ⟨hu, ?_, ?_⟩
+          · simpa [hb] using huv.symm
+          · have hlabel : D.label v u = a := by
+              simpa [D.label_symm] using ha.symm
+            simpa [hb] using hlabel
+        · simpa [hb] using hUsedSwap
       simpa only [hb] using
         (source_candidate_fiber_right D a b u hFiber).2
   · rcases hb with hb | hb | hb
-    · have hFiber : v ∈ reciprocalLabelFiber D a b := by
+    · have hFiber : v ∈ reciprocalUsedLabelFiber D a b := by
         apply Finset.mem_filter.mpr
-        refine ⟨hv, ?_, ?_⟩
-        · simpa [ha] using huv
-        · simpa [ha] using hb.symm
+        constructor
+        · apply Finset.mem_filter.mpr
+          refine ⟨hv, ?_, ?_⟩
+          · simpa [ha] using huv
+          · simpa [ha] using hb.symm
+        · simpa [ha] using hUsed
       simpa only [ha] using
         (source_candidate_fiber_left D a b v hFiber).1
     · exact (hab (ha.trans hb.symm)).elim
     · simpa only [ha, hb] using (source_candidate_direct D a b).1
   · rcases hb with hb | hb | hb
-    · have hFiber : u ∈ reciprocalLabelFiber D a b := by
+    · have hFiber : u ∈ reciprocalUsedLabelFiber D a b := by
         apply Finset.mem_filter.mpr
-        refine ⟨hu, ?_, ?_⟩
-        · simpa [ha] using huv.symm
-        · have hlabel : D.label v u = b := by
-            simpa [D.label_symm] using hb.symm
-          simpa [ha] using hlabel
+        constructor
+        · apply Finset.mem_filter.mpr
+          refine ⟨hu, ?_, ?_⟩
+          · simpa [ha] using huv.symm
+          · have hlabel : D.label v u = b := by
+              simpa [D.label_symm] using hb.symm
+            simpa [ha] using hlabel
+        · simpa [ha] using hUsedSwap
       simpa only [ha] using
         (source_candidate_fiber_left D a b u hFiber).2
     · simpa only [ha, hb] using (source_candidate_direct D a b).2
@@ -175,7 +193,7 @@ theorem reciprocal_used_parent_pair_degree_le_label_fibers
     (D : FiniteCompletionCliqueData α) (a b : α) (Kstar : ℕ)
     (hab : a ≠ b)
     (h_label : ∀ x y : α,
-      (reciprocalLabelFiber D x y).card ≤ Kstar) :
+      (reciprocalUsedLabelFiber D x y).card ≤ Kstar) :
     qPairDegree (reciprocalUsedParentLabelTriples D) {a, b} ≤
       2 + 4 * Kstar := by
   calc
@@ -190,7 +208,7 @@ theorem reciprocal_used_parent_pair_degree_le_label_fibers
 theorem reciprocal_used_parent_pair_degree_cap_of_label_fibers
     (D : FiniteCompletionCliqueData α) (Kstar : ℕ)
     (h_label : ∀ x y : α,
-      (reciprocalLabelFiber D x y).card ≤ Kstar) :
+      (reciprocalUsedLabelFiber D x y).card ≤ Kstar) :
     ∀ P ∈ D.ground.powersetCard 2,
       qPairDegree (reciprocalUsedParentLabelTriples D) P ≤
         2 + 4 * Kstar := by

@@ -1,6 +1,7 @@
 import JSP523.Rank4.PreprocessUsedParentCleanup
 import JSP523.Rank4.GraphReciprocalDegreeTwo
 import JSP523.Rank4.PreprocessUsedParentWedgeBudget
+import JSP523.Rank4.PreprocessParentTails
 
 /-!
 # Actual rank-four reciprocal preprocessing assembly
@@ -23,6 +24,26 @@ theorem reciprocal_label_fiber_eq_of_ground_label
     (a b : α) :
     reciprocalLabelFiber D' a b = reciprocalLabelFiber D a b := by
   simp only [reciprocalLabelFiber, h_ground, h_label]
+
+omit [Fintype α] in
+/-- Restricting the parent family can only shrink the used center-graph
+label fiber when the ground and label function are preserved. -/
+theorem reciprocal_used_label_fiber_mono_of_family
+    (D' D : FiniteCompletionCliqueData α)
+    (h_ground : D'.ground = D.ground)
+    (h_label : D'.label = D.label)
+    (h_family : D'.K ⊆ D.K) (a b : α) :
+    reciprocalUsedLabelFiber D' a b ⊆
+      reciprocalUsedLabelFiber D a b := by
+  intro r hr
+  have hparts := Finset.mem_filter.mp hr
+  apply Finset.mem_filter.mpr
+  refine ⟨?_, ?_⟩
+  · simpa only [reciprocal_label_fiber_eq_of_ground_label D' D
+      h_ground h_label] using hparts.1
+  · obtain ⟨T, hT⟩ := hparts.2
+    exact ⟨T, common_triple_cell_mono_family_ground h_family
+      (by rw [h_ground]) hT⟩
 
 omit [Fintype α] in
 theorem reciprocal_witness_tail_fiber_mono_data
@@ -163,7 +184,7 @@ theorem clear_used_parent_then_reciprocal_loss_card_le_degree_caps
     (h_facet : ∀ T : Edge α, T.card = 3 →
       (D.K.filter fun E => T ⊆ E).card ≤ Dcap)
     (h_label : ∀ a b : α,
-      (reciprocalLabelFiber D a b).card ≤ Kstar)
+      (reciprocalUsedLabelFiber D a b).card ≤ Kstar)
     (h_tail : ∀ a b r s : α,
       (reciprocalWitnessTailFiber D a b r s).card ≤ C_D) :
     (D.K \ (clearUsedParentThenReciprocal D).K).card ≤
@@ -180,10 +201,11 @@ theorem clear_used_parent_then_reciprocal_loss_card_le_degree_caps
   have hD₂sub : D₂.K ⊆ D.K :=
     (clear_reciprocal_different_witnesses_sub D₁).trans hD₁sub
   have hLabel₁ : ∀ a b : α,
-      (reciprocalLabelFiber D₁ a b).card ≤ Kstar := by
+      (reciprocalUsedLabelFiber D₁ a b).card ≤ Kstar := by
     intro a b
-    rw [reciprocal_label_fiber_eq_of_ground_label D₁ D rfl rfl]
-    exact h_label a b
+    exact (Finset.card_le_card
+      (reciprocal_used_label_fiber_mono_of_family D₁ D rfl rfl
+        hD₁sub a b)).trans (h_label a b)
   have hTail₁ : ∀ a b r s : α,
       (reciprocalWitnessTailFiber D₁ a b r s).card ≤ C_D := by
     intro a b r s

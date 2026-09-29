@@ -40,6 +40,56 @@ def reciprocalLabelFiber
     (D : FiniteCompletionCliqueData α) (a b : α) : Finset α :=
   D.ground.filter fun r => a ≠ r ∧ D.label a r = b
 
+/-- The center-graph fiber counts only completion pairs that actually
+occur in the parent. This is the `Γ_b` degree at `a` in §III.A.6. -/
+def reciprocalUsedLabelFiber
+    (D : FiniteCompletionCliqueData α) (a b : α) : Finset α :=
+  (reciprocalLabelFiber D a b).filter fun r =>
+    (commonTripleCell D.K D.ground a r).Nonempty
+
+omit [Fintype α] in
+/-- A reciprocal witness next to an actual target pair is a used
+completion pair, with common triple root `bP`. -/
+theorem reciprocal_witness_pair_used
+    (D : FiniteCompletionCliqueData α) (P : Edge α)
+    (a b r : α)
+    (hPsub : P ⊆ D.ground) (hPcard : P.card = 2)
+    (hAB : (completionPairLinkGraph D P).Adj a b)
+    (hBR : (completionPairLinkGraph D P).Adj b r) :
+    (commonTripleCell D.K D.ground a r).Nonempty := by
+  classical
+  have hAB' := hAB
+  have hBR' := hBR
+  change a ∉ P ∧ b ∉ P ∧ a ∈ D.ground ∧ b ∈ D.ground ∧
+    a ≠ b ∧ insert a (insert b P) ∈ D.K at hAB'
+  change b ∉ P ∧ r ∉ P ∧ b ∈ D.ground ∧ r ∈ D.ground ∧
+    b ≠ r ∧ insert b (insert r P) ∈ D.K at hBR'
+  let T : Edge α := insert b P
+  have hTcard : T.card = 3 := by
+    dsimp [T]
+    rw [Finset.card_insert_of_notMem hAB'.2.1, hPcard]
+  have hTsub : T ⊆ D.ground := by
+    intro x hx
+    rcases Finset.mem_insert.mp hx with rfl | hxP
+    · exact hAB'.2.2.2.1
+    · exact hPsub hxP
+  have hDisj : Disjoint T ({a, r} : Edge α) := by
+    apply Finset.disjoint_left.mpr
+    intro x hxT hxPair
+    rcases Finset.mem_insert.mp hxT with rfl | hxP
+    · simp only [Finset.mem_insert, Finset.mem_singleton] at hxPair
+      rcases hxPair with h | h
+      · exact hAB'.2.2.2.2.1 h.symm
+      · exact hBR'.2.2.2.2.1 h
+    · simp only [Finset.mem_insert, Finset.mem_singleton] at hxPair
+      rcases hxPair with h | h
+      · exact hAB'.1 (h ▸ hxP)
+      · exact hBR'.2.1 (h ▸ hxP)
+  refine ⟨T, (mem_common_triple_cell).2
+    ⟨hTsub, hTcard, hDisj, ?_, ?_⟩⟩
+  · exact hAB'.2.2.2.2.2
+  · simpa [T, Finset.insert_comm] using hBR'.2.2.2.2.2
+
 /-- Pair tails supporting a distinct-witness reciprocal. -/
 noncomputable def reciprocalWitnessTailFiber
     (D : FiniteCompletionCliqueData α) (a b r s : α) : Family α := by
@@ -56,8 +106,8 @@ noncomputable def reciprocalDifferentWitnessTuples
     Finset ((α × α) × ((α × α) × Edge α)) := by
   classical
   exact (D.ground.product D.ground).biUnion fun ab =>
-    ((reciprocalLabelFiber D ab.1 ab.2).product
-      (reciprocalLabelFiber D ab.2 ab.1)).biUnion fun rs =>
+    ((reciprocalUsedLabelFiber D ab.1 ab.2).product
+      (reciprocalUsedLabelFiber D ab.2 ab.1)).biUnion fun rs =>
         (reciprocalWitnessTailFiber D ab.1 ab.2 rs.1 rs.2).image
           fun P => (ab, (rs, P))
 
@@ -74,7 +124,7 @@ the disjoint-root common-tail fiber contributes `C_D` choices. -/
 theorem reciprocal_different_witness_tuples_card_le
     (D : FiniteCompletionCliqueData α) (Kstar C_D : ℕ)
     (hLabelFiber : ∀ a b : α,
-      (reciprocalLabelFiber D a b).card ≤ Kstar)
+      (reciprocalUsedLabelFiber D a b).card ≤ Kstar)
     (hTailFiber : ∀ a b r s : α,
       (reciprocalWitnessTailFiber D a b r s).card ≤ C_D) :
     (reciprocalDifferentWitnessTuples D).card ≤
@@ -82,13 +132,13 @@ theorem reciprocal_different_witness_tuples_card_le
   classical
   let pairs := D.ground.product D.ground
   have hPerPair : ∀ ab ∈ pairs,
-      (((reciprocalLabelFiber D ab.1 ab.2).product
-        (reciprocalLabelFiber D ab.2 ab.1)).biUnion fun rs =>
+      (((reciprocalUsedLabelFiber D ab.1 ab.2).product
+        (reciprocalUsedLabelFiber D ab.2 ab.1)).biUnion fun rs =>
           (reciprocalWitnessTailFiber D ab.1 ab.2 rs.1 rs.2).image
             fun P => (ab, (rs, P))).card ≤ Kstar * Kstar * C_D := by
     intro ab hab
-    let witnesses := (reciprocalLabelFiber D ab.1 ab.2).product
-      (reciprocalLabelFiber D ab.2 ab.1)
+    let witnesses := (reciprocalUsedLabelFiber D ab.1 ab.2).product
+      (reciprocalUsedLabelFiber D ab.2 ab.1)
     have hWitnessCard : witnesses.card ≤ Kstar * Kstar := by
       dsimp [witnesses]
       rw [Finset.card_product]
@@ -130,12 +180,21 @@ theorem reciprocal_different_witness_deletion_set_all_subset_tuple_edges
     b ≠ r ∧ insert b (insert r P) ∈ D.K at hBR'
   change a ∉ P ∧ s ∉ P ∧ a ∈ D.ground ∧ s ∈ D.ground ∧
     a ≠ s ∧ insert a (insert s P) ∈ D.K at hAS'
-  have hr : r ∈ reciprocalLabelFiber D a b := by
+  have hPparts := Finset.mem_powersetCard.mp hP
+  have hr : r ∈ reciprocalUsedLabelFiber D a b := by
     apply Finset.mem_filter.mpr
-    exact ⟨hBR'.2.2.2.1, hNeAR, hLabAR⟩
-  have hs : s ∈ reciprocalLabelFiber D b a := by
+    constructor
+    · exact Finset.mem_filter.mpr
+        ⟨hBR'.2.2.2.1, hNeAR, hLabAR⟩
+    · exact reciprocal_witness_pair_used D P a b r
+        hPparts.1 hPparts.2 hAB hBR
+  have hs : s ∈ reciprocalUsedLabelFiber D b a := by
     apply Finset.mem_filter.mpr
-    exact ⟨hAS'.2.2.2.1, hNeBS, hLabBS⟩
+    constructor
+    · exact Finset.mem_filter.mpr
+        ⟨hAS'.2.2.2.1, hNeBS, hLabBS⟩
+    · exact reciprocal_witness_pair_used D P b a s
+        hPparts.1 hPparts.2 hAB.symm hAS
   have hTuple : ((a, b), ((r, s), P)) ∈
       reciprocalDifferentWitnessTuples D := by
     apply Finset.mem_biUnion.mpr
@@ -158,7 +217,7 @@ With `Kstar = K_*` and `C_D = max(D,3)`, this is the stated
 theorem reciprocal_different_witness_deletion_set_all_card_le
     (D : FiniteCompletionCliqueData α) (Kstar C_D : ℕ)
     (hLabelFiber : ∀ a b : α,
-      (reciprocalLabelFiber D a b).card ≤ Kstar)
+      (reciprocalUsedLabelFiber D a b).card ≤ Kstar)
     (hTailFiber : ∀ a b r s : α,
       (reciprocalWitnessTailFiber D a b r s).card ≤ C_D) :
     (reciprocalDifferentWitnessDeletionSetAll D).card ≤
@@ -342,7 +401,7 @@ bounds. -/
 theorem clear_reciprocal_different_witnesses_loss_card_le_of_fibers
     (D : FiniteCompletionCliqueData α) (Kstar C_D : ℕ)
     (hLabelFiber : ∀ a b : α,
-      (reciprocalLabelFiber D a b).card ≤ Kstar)
+      (reciprocalUsedLabelFiber D a b).card ≤ Kstar)
     (hTailFiber : ∀ a b r s : α,
       (reciprocalWitnessTailFiber D a b r s).card ≤ C_D) :
     (D.K \ (clearReciprocalDifferentWitnesses D).K).card ≤
