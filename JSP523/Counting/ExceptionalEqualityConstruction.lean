@@ -188,7 +188,7 @@ theorem one_missing_star_exceptional_pair_card
   let S : Family α := (starFamily v r).erase (insert v P)
   let B : Family α := insert (insert x P) (insert (insert x Q) M)
   have hStarMem : insert v P ∈ starFamily v r := by
-    apply mem_starFamily.mpr
+    apply mem_star_family.mpr
     constructor
     · rw [Finset.card_insert_of_notMem hvP, hPcard]
       omega
@@ -231,7 +231,7 @@ theorem one_missing_star_exceptional_pair_card
     apply Finset.disjoint_left.mpr
     intro E hES hEB
     have hvE : v ∈ E :=
-      (mem_starFamily.mp (Finset.mem_erase.mp hES).2).2
+      (mem_star_family.mp (Finset.mem_erase.mp hES).2).2
     change E ∈ insert (insert x P) (insert (insert x Q) M) at hEB
     simp only [Finset.mem_insert] at hEB
     rcases hEB with rfl | rfl | hEM
@@ -270,7 +270,7 @@ theorem one_missing_star_exceptional_pair_admissible
     omega
   have hSU : Uniform r S := by
     intro E hE
-    exact (mem_starFamily.mp (Finset.mem_erase.mp hE).2).1
+    exact (mem_star_family.mp (Finset.mem_erase.mp hE).2).1
   have hBU : Uniform r B := by
     intro E hE
     change E ∈ insert (insert x P) (insert (insert x Q) M) at hE
@@ -281,7 +281,7 @@ theorem one_missing_star_exceptional_pair_admissible
     · exact hMU hEM
   have hCenter : ∀ E ∈ S, v ∈ E := by
     intro E hE
-    exact (mem_starFamily.mp (Finset.mem_erase.mp hE).2).2
+    exact (mem_star_family.mp (Finset.mem_erase.mp hE).2).2
   have hAvoid : ∀ E ∈ B, v ∉ E := by
     intro E hE
     change E ∈ insert (insert x P) (insert (insert x Q) M) at hE
@@ -411,7 +411,7 @@ theorem one_missing_star_exceptional_pair_missing_facets
     · have hTsub := (Finset.mem_powersetCard.mp hT).1
       have hvT : v ∉ T := fun hv => hvW (hTsub hv)
       have hStar : insert v T ∈ starFamily v r := by
-        apply mem_starFamily.mpr
+        apply mem_star_family.mpr
         constructor
         · rw [Finset.card_insert_of_notMem hvT,
             (Finset.mem_powersetCard.mp hT).2]

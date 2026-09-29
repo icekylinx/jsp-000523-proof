@@ -42,22 +42,14 @@ theorem eventually_uniform_of_rank_four_sequence_property
       n.choose 3 ≤ (H n).card ∧ ¬ P n (H n) := by
     simp only [H, dite_eq_left hb]
     exact Classical.choose_spec hb
-  have hAdm : ∀ n, Admissible (H n) := by
+  have hProperties : ∀ n, Admissible (H n) ∧ Uniform 4 (H n) ∧ n.choose 3 ≤ (H n).card := by
     intro n
     by_cases hb : bad n
-    · exact (hBad n hb).1
-    · simpa only [H, dite_eq_right hb] using (hGood n).1
-  have hUniform : ∀ n, Uniform 4 (H n) := by
-    intro n
-    by_cases hb : bad n
-    · exact (hBad n hb).2.1
-    · simpa only [H, dite_eq_right hb] using (hGood n).2.1
-  have hLower : ∀ n, n.choose 3 ≤ (H n).card := by
-    intro n
-    by_cases hb : bad n
-    · exact (hBad n hb).2.2.1
-    · simpa only [H, dite_eq_right hb] using (hGood n).2.2
-  filter_upwards [hEndpoint H hAdm hUniform hLower] with n hP
+    · have h := hBad n hb
+      exact ⟨h.1, h.2.1, h.2.2.1⟩
+    · simpa only [H, dite_eq_right hb] using hGood n
+  filter_upwards [hEndpoint H (fun n => (hProperties n).1)
+    (fun n => (hProperties n).2.1) (fun n => (hProperties n).2.2)] with n hP
   intro F hF hF4 hFLower
   by_contra hNot
   have hb : bad n := ⟨F, hF, hF4, hFLower, hNot⟩

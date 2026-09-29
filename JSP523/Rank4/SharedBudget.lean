@@ -46,15 +46,15 @@ theorem star_link_common_multiplicity_le_one
     (Finset.mem_filter.mp ht).2
   have hzy : z ∈ ({x, y} : Edge α) := by
     apply hLabel
-    · simpa only [JSP523.Coarse.tripleLinkGraph_adj,
+    · simpa only [JSP523.Coarse.triple_link_graph_adj,
         Finset.insert_comm] using hya.2
-    · simpa only [JSP523.Coarse.tripleLinkGraph_adj,
+    · simpa only [JSP523.Coarse.triple_link_graph_adj,
         Finset.insert_comm] using hyb.2
   have hzt : z ∈ ({x, t} : Edge α) := by
     apply hLabel
-    · simpa only [JSP523.Coarse.tripleLinkGraph_adj,
+    · simpa only [JSP523.Coarse.triple_link_graph_adj,
         Finset.insert_comm] using hta.2
-    · simpa only [JSP523.Coarse.tripleLinkGraph_adj,
+    · simpa only [JSP523.Coarse.triple_link_graph_adj,
         Finset.insert_comm] using htb.2
   simp only [Finset.mem_insert, Finset.mem_singleton] at hzy hzt
   rcases hzy with hzx | hzy
@@ -205,10 +205,10 @@ theorem star_link_common_neighbor_pair
       insert b ({x, y} : Edge α) ∈ A := by
   let P : Edge α := {x, y}
   have hAP : insert a P ∈ A := by
-    simpa only [JSP523.Coarse.tripleLinkGraph_adj,
+    simpa only [JSP523.Coarse.triple_link_graph_adj,
       Finset.insert_comm] using hya.2
   have hBP : insert b P ∈ A := by
-    simpa only [JSP523.Coarse.tripleLinkGraph_adj,
+    simpa only [JSP523.Coarse.triple_link_graph_adj,
       Finset.insert_comm] using hyb.2
   have hAcard : (insert a P).card = 3 := (hAU _ hAP).2
   have hBcard : (insert b P).card = 3 := (hAU _ hBP).2

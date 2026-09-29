@@ -89,7 +89,7 @@ theorem complete_star_plus_matching_extremal
     intro E hE
     simp only [H, Finset.mem_union] at hE
     rcases hE with hE | hE
-    · exact (mem_starFamily.mp hE).1
+    · exact (mem_star_family.mp hE).1
     · exact hMU hE
   have hSupport : ∀ E ∈ H, E ⊆ insert v W := by
     intro E hE
@@ -116,7 +116,7 @@ theorem complete_star_plus_matching_extremal
       have hTp := Finset.mem_powersetCard.mp hT
       have hvT : v ∉ T := fun hv => hvW (hTp.1 hv)
       have hStar : insert v T ∈ starFamily v r := by
-        apply mem_starFamily.mpr
+        apply mem_star_family.mpr
         constructor
         · rw [Finset.card_insert_of_notMem hvT, hTp.2]
           omega
@@ -129,7 +129,7 @@ theorem complete_star_plus_matching_extremal
   have hDisj : Disjoint (starFamily v r) M := by
     apply Finset.disjoint_left.mpr
     intro E hStar hM
-    exact hAvoid E hM (mem_starFamily.mp hStar).2
+    exact hAvoid E hM (mem_star_family.mp hStar).2
   have hCard : H.card = W.card.choose (r - 1) + W.card / r := by
     change (starFamily v r ∪ M).card = W.card.choose (r - 1) + W.card / r
     rw [Finset.card_union_of_disjoint hDisj,
@@ -177,7 +177,7 @@ theorem one_missing_star_exceptional_pair_equality_data
     intro E hE
     simp only [H, Finset.mem_union] at hE
     rcases hE with hE | hE
-    · exact (mem_starFamily.mp (Finset.mem_erase.mp hE).2).1
+    · exact (mem_star_family.mp (Finset.mem_erase.mp hE).2).1
     · change E ∈ insert (insert x P) (insert (insert x Q) M) at hE
       simp only [Finset.mem_insert] at hE
       rcases hE with rfl | rfl | hEM

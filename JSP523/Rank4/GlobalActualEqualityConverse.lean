@@ -17,14 +17,11 @@ theorem rank_four_global_equality_form_implies_card
     rcases hForm with h | h
     · omega
     · omega
-  have hCube : 10000 ≤ n ^ 3 := by
-    have h := Nat.pow_le_pow_left hn 3
-    norm_num at h
-    omega
   have hq : 10000 * (missingStarTriples H (Finset.univ.erase v) v).card ≤
       (Finset.univ.erase v : Edge (Fin (n + 1))).card ^ 3 := by
     rw [hW]
-    nlinarith
+    exact (Nat.mul_le_mul_left 10000 hMissing).trans
+      ((by norm_num : 10000 * 1 ≤ 1000 ^ 3).trans (Nat.pow_le_pow_left hn 3))
   have h := (rank_four_near_star_equality_iff hAdm hUniform hSupport
     (by simp) (by simpa only [hW] using hn) hq).mpr hForm
   simpa only [hW] using h

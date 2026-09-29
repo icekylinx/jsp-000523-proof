@@ -40,7 +40,7 @@ def nearStarCleanOutsideEdges (H : Family α) (W : Edge α) (v : α) : Family α
   (nearStarOrdinaryOutsideEdges H W v).filter fun E =>
     ∀ P ∈ nearStarBadPairs H W v, ¬ P ⊆ E
 
-@[simp] theorem mem_nearStarCleanOutsideEdges {H : Family α} {W : Edge α}
+@[simp] theorem mem_near_star_clean_outside_edges {H : Family α} {W : Edge α}
     {v : α} {E : Edge α} :
     E ∈ nearStarCleanOutsideEdges H W v ↔
       E ∈ nearStarOrdinaryOutsideEdges H W v ∧
@@ -137,8 +137,8 @@ theorem near_star_clean_outside_linear
     (hvW : v ∉ W) :
     LinearFamily (nearStarCleanOutsideEdges H W v) := by
   intro E F hE hF hEF
-  have hEdata := (mem_nearStarCleanOutsideEdges.mp hE)
-  have hFdata := (mem_nearStarCleanOutsideEdges.mp hF)
+  have hEdata := (mem_near_star_clean_outside_edges.mp hE)
+  have hFdata := (mem_near_star_clean_outside_edges.mp hF)
   have hEsub : E ⊆ W := by
     intro x hx
     exact (Finset.mem_sdiff.mp

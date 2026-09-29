@@ -73,6 +73,15 @@ theorem cleanup_loss_eq_parent_sdiff (d : ActualMasterStabilityData H) :
 
 end ActualMasterStabilityData
 
+/-- Ordinary initial caps on the original induced parent, before either
+the main cleanup or the auxiliary degree-tail cleanup. -/
+def actual_master_stability_initial_caps {n : ℕ} {H : Family (Fin (n + 1))}
+    (d : ActualMasterStabilityData H) (q : ℕ) : Prop :=
+  (∀ v, (d.parent.filter fun E => v ∈ E).card ≤ q ^ 8 * (n + 1) ^ 2) ∧
+  (∀ P : Edge (Fin (n + 1)), P.card = 2 → rankFourPairDegree d.parent P ≤ q ^ 8 * (n + 1)) ∧
+  (∀ T : Edge (Fin (n + 1)), T.card = 3 →
+    (facetCompletions d.parent Finset.univ T).card ≤ q ^ 8)
+
 /-- Choose the auxiliary degree-tail cleanup after τ, and apply the actual
 master to its own survivor. This supplies the complete finite stability
 bound without a small-parent or preassigned-center assumption. -/

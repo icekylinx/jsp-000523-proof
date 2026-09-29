@@ -116,11 +116,11 @@ def prefixOffset (δ : Fin s → β) : Fin (s + 1) → β :=
   Fin.cases 0 δ
 
 omit [Fintype β] [DecidableEq β] in
-@[simp] theorem prefixOffset_zero (δ : Fin s → β) :
+@[simp] theorem prefix_offset_zero (δ : Fin s → β) :
     prefixOffset δ 0 = 0 := rfl
 
 omit [Fintype β] [DecidableEq β] in
-@[simp] theorem prefixOffset_succ (δ : Fin s → β) (i : Fin s) :
+@[simp] theorem prefix_offset_succ (δ : Fin s → β) (i : Fin s) :
     prefixOffset δ (Fin.succ i) = δ i := rfl
 
 noncomputable def familyAnchor
@@ -150,7 +150,7 @@ theorem family_vertex_prefix_coordinate
   induction i using Fin.cases with
   | zero => simp [familyAnchor]
   | succ i =>
-      simp only [prefixOffset_succ, familyDifference]
+      simp only [prefix_offset_succ, familyDifference]
       abel
 
 noncomputable def prefixBlock

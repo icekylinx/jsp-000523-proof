@@ -29,7 +29,7 @@ def tripleLinkGraph (T : Family α) (z : α) : SimpleGraph α where
     exact h.1 rfl
 
 omit [Fintype α] in
-@[simp] theorem tripleLinkGraph_adj (T : Family α) (z u v : α) :
+@[simp] theorem triple_link_graph_adj (T : Family α) (z u v : α) :
     (tripleLinkGraph T z).Adj u v ↔
       u ≠ v ∧ ({z, u, v} : Edge α) ∈ T := Iff.rfl
 

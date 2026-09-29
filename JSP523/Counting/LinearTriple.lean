@@ -40,7 +40,7 @@ def NoGlobalCenter (H : Family α) : Prop :=
 def vertexEdges (H : Family α) (x : α) : Family α :=
   H.filter (fun E => x ∈ E)
 
-@[simp] theorem mem_vertexEdges {H : Family α} {x : α} {E : Edge α} :
+@[simp] theorem mem_vertex_edges {H : Family α} {x : α} {E : Edge α} :
     E ∈ vertexEdges H x ↔ E ∈ H ∧ x ∈ E := by
   simp [vertexEdges]
 
@@ -72,8 +72,8 @@ theorem vertex_degree_le_three
   have hmap : Set.MapsTo f (↑(vertexEdges H x) : Set (Edge α))
       (↑(W.powersetCard 1) : Set (Edge α)) := by
     intro F hF
-    have hFH : F ∈ H := (mem_vertexEdges.mp hF).1
-    have hxF : x ∈ F := (mem_vertexEdges.mp hF).2
+    have hFH : F ∈ H := (mem_vertex_edges.mp hF).1
+    have hxF : x ∈ F := (mem_vertex_edges.mp hF).2
     have hFW : F ≠ W := by
       intro hEq
       apply hxW
@@ -87,10 +87,10 @@ theorem vertex_degree_le_three
   have hinj : Set.InjOn f (↑(vertexEdges H x) : Set (Edge α)) := by
     intro F hF G hG hEq
     by_contra hFG
-    have hFH : F ∈ H := (mem_vertexEdges.mp hF).1
-    have hGH : G ∈ H := (mem_vertexEdges.mp hG).1
-    have hxF : x ∈ F := (mem_vertexEdges.mp hF).2
-    have hxG : x ∈ G := (mem_vertexEdges.mp hG).2
+    have hFH : F ∈ H := (mem_vertex_edges.mp hF).1
+    have hGH : G ∈ H := (mem_vertex_edges.mp hG).1
+    have hxF : x ∈ F := (mem_vertex_edges.mp hF).2
+    have hxG : x ∈ G := (mem_vertex_edges.mp hG).2
     have hFW : F ≠ W := by
       intro hEqFW
       apply hxW
@@ -164,7 +164,7 @@ theorem linear_intersecting_triples_card_le_seven
       obtain ⟨x, hbEq⟩ := Finset.card_eq_one.mp hbcard
       have hxb : x ∈ b := by simp [hbEq]
       have hxE : x ∈ E := hbsub hxb
-      have hEvert : E ∈ vertexEdges H x := mem_vertexEdges.mpr ⟨hEH, hxE⟩
+      have hEvert : E ∈ vertexEdges H x := mem_vertex_edges.mpr ⟨hEH, hxE⟩
       have hdeg : (vertexEdges H x).card ≤ 3 :=
         vertex_degree_le_three hU hI hL hN x
       have herase : ((vertexEdges H x).erase E).card ≤ 2 := by
@@ -182,7 +182,7 @@ theorem linear_intersecting_triples_card_le_seven
           rw [hg]
           exact hxb
         have hxF : x ∈ F := (Finset.mem_inter.mp hxInter).1
-        exact Finset.mem_erase.mpr ⟨hFne, mem_vertexEdges.mpr ⟨hFH, hxF⟩⟩
+        exact Finset.mem_erase.mpr ⟨hFne, mem_vertex_edges.mpr ⟨hFH, hxF⟩⟩
       exact (Finset.card_le_card hsub).trans herase
     have hSix : (H.erase E).card ≤ 6 := by
       have hBound :

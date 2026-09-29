@@ -293,7 +293,6 @@ import JSP523.Rank5.RegularizationLossAsymptotic
 import JSP523.ExtremalExactTransfer
 import JSP523.FinalDensity
 import JSP523.MainTheorem
-import JSP523.MainTheoremTransfer
 import JSP523.Rank4.GlobalActualEndToEndData
 import JSP523.Rank4.GlobalActualEndToEndError
 import JSP523.Rank4.GlobalActualEndToEndLimits

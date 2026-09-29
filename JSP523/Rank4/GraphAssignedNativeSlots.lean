@@ -101,7 +101,7 @@ theorem actual_eligible_pair_slot_vertices_eq_witness_slots
       (pair_label_witness_slots_mem
         D.K D.ground Q fallback (dataCenterAssignment D fallback) x).mp hxWitness
     have hxQ : x ∉ Q :=
-      ((rawPairLinkGraph_adj D.K D.ground Q x p).mp hxp).1
+      ((raw_pair_link_graph_adj D.K D.ground Q x p).mp hxp).1
     have hp : p ∈ C :=
       (raw_pair_link_slot_adj_iff_facet_completion
         D Q hQ x p hxU hxQ).1 hxp

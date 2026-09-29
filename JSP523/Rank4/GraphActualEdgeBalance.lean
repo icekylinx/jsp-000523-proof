@@ -16,7 +16,7 @@ variable {α : Type*} [Fintype α] [DecidableEq α]
 
 omit [Fintype α] in
 /-- Erasing one vertex of a four-set enumerates its four triple facets. -/
-theorem four_set_opposite_facets_eq_powersetCard
+theorem four_set_opposite_facets_eq_powerset_card
     (E : Edge α) (hE : E.card = 4) :
     E.image (fun a => E.erase a) = E.powersetCard 3 := by
   classical
@@ -42,7 +42,7 @@ theorem four_set_opposite_facet_sum
     (∑ a ∈ E, f (E.erase a)) =
       ∑ T ∈ E.powersetCard 3, f T := by
   classical
-  rw [← four_set_opposite_facets_eq_powersetCard E hE]
+  rw [← four_set_opposite_facets_eq_powerset_card E hE]
   symm
   exact Finset.sum_image (Finset.erase_injOn E)
 

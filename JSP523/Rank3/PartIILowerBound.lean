@@ -16,26 +16,26 @@ variable {α : Type*} [DecidableEq α]
 def tripleStar (V : Edge α) (c : α) : Family α :=
   (V.powersetCard 3).filter (fun E => c ∈ E)
 
-@[simp] theorem mem_tripleStar {V : Edge α} {c : α} {E : Edge α} :
+@[simp] theorem mem_triple_star {V : Edge α} {c : α} {E : Edge α} :
     E ∈ tripleStar V c ↔ E ⊆ V ∧ E.card = 3 ∧ c ∈ E := by
   simp [tripleStar, and_assoc]
 
 theorem triple_star_uniform (V : Edge α) (c : α) :
     Uniform 3 (tripleStar V c) := by
   intro E hE
-  exact (mem_tripleStar.mp hE).2.1
+  exact (mem_triple_star.mp hE).2.1
 
 theorem triple_star_supported (V : Edge α) (c : α) :
     tripleStar V c ⊆ V.powersetCard 3 := by
   intro E hE
   exact Finset.mem_powersetCard.mpr
-    ⟨(mem_tripleStar.mp hE).1, (mem_tripleStar.mp hE).2.1⟩
+    ⟨(mem_triple_star.mp hE).1, (mem_triple_star.mp hE).2.1⟩
 
 theorem triple_star_admissible (V : Edge α) (c : α) :
     Admissible (tripleStar V c) := by
   intro A B C D hA hB hC hD hq
-  have hcA : c ∈ A := (mem_tripleStar.mp hA).2.2
-  have hcB : c ∈ B := (mem_tripleStar.mp hB).2.2
+  have hcA : c ∈ A := (mem_triple_star.mp hA).2.2
+  have hcB : c ∈ B := (mem_triple_star.mp hB).2.2
   exact (Finset.disjoint_left.mp hq.disjAB) hcA hcB
 
 theorem triple_star_card (V : Edge α) (c : α) (hc : c ∈ V) :

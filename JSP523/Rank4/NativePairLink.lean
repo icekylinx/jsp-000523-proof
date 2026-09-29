@@ -35,7 +35,7 @@ instance rawPairLinkGraphDecidableRel
       a ≠ b ∧ insert a (insert b Q) ∈ K))
 
 omit [Fintype α] in
-@[simp] theorem rawPairLinkGraph_adj
+@[simp] theorem raw_pair_link_graph_adj
     (K : Family α) (U Q : Edge α) (a b : α) :
     (rawPairLinkGraph K U Q).Adj a b ↔
       a ∉ Q ∧ b ∉ Q ∧ a ∈ U ∧ b ∈ U ∧
@@ -87,8 +87,8 @@ theorem raw_pair_common_neighbor_iff_native_neighbor
     tauto
   constructor
   · rintro ⟨hax, hbx⟩
-    have hax' := (rawPairLinkGraph_adj K U Q a x).mp hax
-    have hbx' := (rawPairLinkGraph_adj K U Q b x).mp hbx
+    have hax' := (raw_pair_link_graph_adj K U Q a x).mp hax
+    have hbx' := (raw_pair_link_graph_adj K U Q b x).mp hbx
     obtain ⟨_, hxQ, _, hxU, _, hEa⟩ := hax'
     obtain ⟨_, _, _, _, _, hEb⟩ := hbx'
     have hzx : z ≠ x := by
@@ -157,9 +157,9 @@ theorem raw_pair_common_neighbor_iff_native_neighbor
       exact (four_facet_completion_not_in_facet K hUniform T hTcard b hEb)
         (h.symm ▸ hxT)
     constructor
-    · exact (rawPairLinkGraph_adj K U Q a x).2
+    · exact (raw_pair_link_graph_adj K U Q a x).2
         ⟨haQ, hxQ, haU, hxU, hax, by simpa [hTQ] using hEa⟩
-    · exact (rawPairLinkGraph_adj K U Q b x).2
+    · exact (raw_pair_link_graph_adj K U Q b x).2
         ⟨hbQ, hxQ, hbU, hxU, hbx, by simpa [hTQ] using hEb⟩
 
 /-- The raw pair-link common-neighbor multiplicity is exactly the degree
@@ -214,8 +214,8 @@ theorem raw_pair_common_multiplicity_le_one_off_label
     · exact (Finset.mem_singleton.mp ht) ▸ hbU
   have hCommon (x : α) (hax : F.Adj a x) (hbx : F.Adj b x) :
       x = z := by
-    have hax' := (rawPairLinkGraph_adj K U Q a x).mp hax
-    have hbx' := (rawPairLinkGraph_adj K U Q b x).mp hbx
+    have hax' := (raw_pair_link_graph_adj K U Q a x).mp hax
+    have hbx' := (raw_pair_link_graph_adj K U Q b x).mp hbx
     obtain ⟨_, hxQ, _, hxU, _, hEa⟩ := hax'
     obtain ⟨_, _, _, _, _, hEb⟩ := hbx'
     let T := insert x Q

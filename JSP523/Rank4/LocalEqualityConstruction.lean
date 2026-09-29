@@ -106,7 +106,7 @@ theorem complete_star_max_matching_extremal
   have hDisj : Disjoint (starFamily v 4) M := by
     apply Finset.disjoint_left.mpr
     intro E hStar hM
-    exact hAvoid E hM (mem_starFamily.mp hStar).2
+    exact hAvoid E hM (mem_star_family.mp hStar).2
   constructor
   · exact hAdmissible
   · rw [Finset.card_union_of_disjoint hDisj,

@@ -58,13 +58,8 @@ theorem eventually_rank_four_extremal_exact :
         H.card = (n - 1).choose 3 + (n - 1) / 4) ∧
       (∀ H : Family (Fin n), Admissible H → Uniform 4 H →
         H.card ≤ (n - 1).choose 3 + (n - 1) / 4) := by
-  obtain ⟨N, hN⟩ := eventually_atTop.mp eventually_rank_four_extremal_exact_succ
-  apply eventually_atTop.mpr
-  refine ⟨N + 1, ?_⟩
-  intro n hn
-  cases n with
-  | zero => omega
-  | succ m => simpa only [Nat.succ_eq_add_one, Nat.add_sub_cancel] using hN m (by omega)
+  rw [← map_add_atTop_eq_nat 1, eventually_map]
+  simpa only [Nat.add_sub_cancel] using eventually_rank_four_extremal_exact_succ
 
 /-- An extremizer on `n` vertices has exactly one of the two stated forms
 at some center, and each such form attains the extremal count. -/
@@ -85,12 +80,7 @@ theorem eventually_rank_four_extremal_equality_iff :
       exact ⟨actualGlobalMainCenter H, (hClass H hAdm hUniform).mp hEquality⟩
     · rintro ⟨v, hForm⟩
       exact rank_four_global_equality_form_implies_card H v hn hAdm hUniform hForm
-  obtain ⟨N, hN⟩ := eventually_atTop.mp hSucc
-  apply eventually_atTop.mpr
-  refine ⟨N + 1, ?_⟩
-  intro n hn
-  cases n with
-  | zero => omega
-  | succ m => simpa only [Nat.succ_eq_add_one, Nat.add_sub_cancel] using hN m (by omega)
+  rw [← map_add_atTop_eq_nat 1, eventually_map]
+  simpa only [Nat.add_sub_cancel] using hSucc
 
 end JSP523.Rank4

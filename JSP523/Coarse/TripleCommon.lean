@@ -42,9 +42,9 @@ private theorem link_edges_from_common_pair
     simp only [Finset.mem_union, Finset.mem_insert, Finset.mem_singleton]
     tauto
   constructor
-  · exact (tripleLinkGraph_adj T z x w).2
+  · exact (triple_link_graph_adj T z x w).2
       ⟨hxw, by simpa only [hperm] using hpX⟩
-  · exact (tripleLinkGraph_adj T z y w).2
+  · exact (triple_link_graph_adj T z y w).2
       ⟨hyw, by simpa only [hperm] using hpY⟩
 
 /-- Once all ordinary vertex links are four-cycle-free, every actual

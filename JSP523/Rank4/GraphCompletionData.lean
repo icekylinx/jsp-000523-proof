@@ -317,7 +317,7 @@ def completionK4RecordKeys (D : FiniteCompletionCliqueData α)
       completionTriangleRecordKeys D T v i := by
   rfl
 
-@[simp] theorem actual_K4_index_record_key
+@[simp] theorem actual_k4_index_record_key
     (D : FiniteCompletionCliqueData α) (T : Edge α) (v : Fin 4 → α)
     (i : Fin 6) (hTcard : T.card = 3) (hTsub : T ⊆ D.ground)
     (hCompletion : ∀ j, v j ∈ graphFacetCompletions D.K D.ground T)

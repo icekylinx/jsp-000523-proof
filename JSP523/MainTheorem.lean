@@ -1,4 +1,4 @@
-import JSP523.MainTheoremTransfer
+import JSP523.Rank5.FinalMaxThreshold
 import JSP523.Rank4.GlobalActualUnconditional
 import JSP523.Rank4.GlobalActualNearExtremal
 import JSP523.Rank3.ForcingThreshold
@@ -24,9 +24,13 @@ theorem eventually_fixed_rank_at_least_four_max_exact
     (r : ℕ) (hr : 4 ≤ r) :
     ∀ᶠ n : ℕ in atTop,
       maxAvoidingCard (Finset.univ : Edge (Fin n)) r =
-        (n - 1).choose (r - 1) + (n - 1) / r :=
-  eventually_fixed_rank_at_least_four_max_exact_of_rank_four
-    Rank4.eventually_rank_four_extremal_exact_succ r hr
+        (n - 1).choose (r - 1) + (n - 1) / r := by
+  by_cases hFour : r = 4
+  · subst r
+    filter_upwards [Rank4.eventually_rank_four_extremal_exact] with n hn
+    exact max_avoiding_card_fin_eq_of_family_exact n 4
+      ((n - 1).choose 3 + (n - 1) / 4) hn.1 hn.2
+  · exact Rank5.eventually_rank_at_least_five_max_avoiding_card_exact r (by omega)
 
 /-- The exact least forcing threshold for every fixed rank at least four. -/
 theorem eventually_fixed_rank_at_least_four_forcing_exact
@@ -35,9 +39,9 @@ theorem eventually_fixed_rank_at_least_four_forcing_exact
       IsForcingThreshold (Finset.univ : Edge (Fin n)) r
         ((n - 1).choose (r - 1) + (n - 1) / r + 1) ∧
       (∀ k, IsForcingThreshold (Finset.univ : Edge (Fin n)) r k →
-        (n - 1).choose (r - 1) + (n - 1) / r + 1 ≤ k) :=
-  eventually_fixed_rank_at_least_four_forcing_exact_of_rank_four
-    Rank4.eventually_rank_four_extremal_exact_succ r hr
+        (n - 1).choose (r - 1) + (n - 1) / r + 1 ≤ k) := by
+  filter_upwards [eventually_fixed_rank_at_least_four_max_exact r hr] with n hn
+  simpa only [hn] using forcing_threshold_exact (Finset.univ : Edge (Fin n)) r
 
 /-- The avoiding maximum has coefficient one at every fixed rank at least
 three. -/

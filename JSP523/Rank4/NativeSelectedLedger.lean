@@ -32,7 +32,7 @@ instance selectedRawPairLinkGraphDecidableRel
     (rawPairLinkGraph K U Q).Adj a b ∧ a ∈ S ∧ b ∈ S))
 
 omit [Fintype α] in
-@[simp] theorem selectedRawPairLinkGraph_adj
+@[simp] theorem selected_raw_pair_link_graph_adj
     (K : Family α) (U Q : Edge α) (S : Finset α) (a b : α) :
     (selectedRawPairLinkGraph K U Q S).Adj a b ↔
       (rawPairLinkGraph K U Q).Adj a b ∧ a ∈ S ∧ b ∈ S :=

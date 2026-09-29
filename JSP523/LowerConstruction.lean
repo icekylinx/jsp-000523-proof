@@ -24,7 +24,7 @@ variable {α : Type*} [DecidableEq α] [Fintype α]
 def starFamily (c : α) (r : ℕ) : Family α :=
   (Finset.univ.powersetCard r).filter (fun E => c ∈ E)
 
-@[simp] theorem mem_starFamily {c : α} {r : ℕ} {E : Edge α} :
+@[simp] theorem mem_star_family {c : α} {r : ℕ} {E : Edge α} :
     E ∈ starFamily c r ↔ E.card = r ∧ c ∈ E := by
   simp [starFamily]
 
@@ -39,7 +39,7 @@ theorem star_plus_matching_uniform
   intro E hE
   simp only [starPlusMatching, Finset.mem_union] at hE
   rcases hE with hEs | hEm
-  · exact (mem_starFamily.mp hEs).1
+  · exact (mem_star_family.mp hEs).1
   · exact hU hEm
 
 /-- Two star edges through the same center cannot be disjoint. -/
@@ -47,7 +47,7 @@ theorem star_edges_not_disjoint {c : α} {r : ℕ} {A B : Edge α}
     (hA : A ∈ starFamily c r) (hB : B ∈ starFamily c r) :
     ¬ Disjoint A B := by
   intro hAB
-  exact (Finset.disjoint_left.mp hAB) (mem_starFamily.mp hA).2 (mem_starFamily.mp hB).2
+  exact (Finset.disjoint_left.mp hAB) (mem_star_family.mp hA).2 (mem_star_family.mp hB).2
 
 /--
 If two distinct matching blocks occur on the matching sides of two equal-union
@@ -75,9 +75,9 @@ theorem mixed_equal_union_impossible
   have hEq : M₁ = S₂ := by
     apply Finset.eq_of_subset_of_card_le hsub
     have hMcard : M₁.card = r := hU hM₁
-    have hScard : S₂.card = r := (mem_starFamily.mp hS₂).1
+    have hScard : S₂.card = r := (mem_star_family.mp hS₂).1
     exact le_of_eq (hScard.trans hMcard.symm)
-  have hcS₂ : c ∈ S₂ := (mem_starFamily.mp hS₂).2
+  have hcS₂ : c ∈ S₂ := (mem_star_family.mp hS₂).2
   have hcM₁ : c ∉ M₁ := hAvoid hM₁
   apply hcM₁
   rw [hEq]
@@ -97,7 +97,7 @@ theorem matching_union_avoids_center
 theorem center_mem_union_of_star_left
     {c : α} {r : ℕ} {S E : Edge α}
     (hS : S ∈ starFamily c r) : c ∈ S ∪ E := by
-  exact Finset.mem_union.mpr (Or.inl (mem_starFamily.mp hS).2)
+  exact Finset.mem_union.mpr (Or.inl (mem_star_family.mp hS).2)
 
 /-- The full star-plus-matching lower construction is admissible. -/
 theorem star_plus_matching_admissible
@@ -141,7 +141,7 @@ theorem star_plus_matching_admissible
       ((Finset.union_comm B A).trans
         (hq.sameUnion.trans (Finset.union_comm C D)))
   · have hcLeft : c ∈ A ∪ B :=
-      Finset.mem_union.mpr (Or.inr (mem_starFamily.mp hBs).2)
+      Finset.mem_union.mpr (Or.inr (mem_star_family.mp hBs).2)
     have hcRight : c ∉ C ∪ D := matching_union_avoids_center hAvoid hCm hDm
     apply hcRight
     rw [← hq.sameUnion]
@@ -154,7 +154,7 @@ theorem star_plus_matching_admissible
     exact hcRight
   · have hcLeft : c ∉ A ∪ B := matching_union_avoids_center hAvoid hAm hBm
     have hcRight : c ∈ C ∪ D :=
-      Finset.mem_union.mpr (Or.inr (mem_starFamily.mp hDs).2)
+      Finset.mem_union.mpr (Or.inr (mem_star_family.mp hDs).2)
     apply hcLeft
     rw [hq.sameUnion]
     exact hcRight
@@ -187,7 +187,7 @@ theorem exists_star_plus_matching_exact (c : α) (r : ℕ) (hr : 0 < r) :
   have hDisj : Disjoint (starFamily c r) M := by
     apply Finset.disjoint_left.mpr
     intro E hStar hM
-    exact hAvoid hM (mem_starFamily.mp hStar).2
+    exact hAvoid hM (mem_star_family.mp hStar).2
   refine ⟨starPlusMatching c r M,
     star_plus_matching_uniform hMU,
     star_plus_matching_admissible hr hMU hMatch hAvoid, ?_⟩

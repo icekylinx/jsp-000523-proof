@@ -28,9 +28,8 @@ theorem eventually_rank_at_least_five_forcing_threshold_exact
         ((n - 1).choose (r - 1) + (n - 1) / r + 1) ∧
       (∀ k, IsForcingThreshold (Finset.univ : Edge (Fin n)) r k →
         (n - 1).choose (r - 1) + (n - 1) / r + 1 ≤ k) := by
-  filter_upwards [eventually_rank_at_least_five_extremal_exact r hr]
+  filter_upwards [eventually_rank_at_least_five_max_avoiding_card_exact r hr]
     with n hn
-  exact forcing_threshold_fin_exact_of_family_exact n r
-    ((n - 1).choose (r - 1) + (n - 1) / r) hn.1 hn.2
+  simpa only [hn] using forcing_threshold_exact (Finset.univ : Edge (Fin n)) r
 
 end JSP523.Rank5

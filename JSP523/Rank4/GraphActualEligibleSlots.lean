@@ -97,7 +97,7 @@ theorem raw_pair_link_slot_adj_iff_facet_completion
     rw [Finset.card_insert_of_notMem hxQ, hQcard]
   constructor
   · intro hAdj
-    have hParts := (rawPairLinkGraph_adj D.K D.ground Q x a).mp hAdj
+    have hParts := (raw_pair_link_graph_adj D.K D.ground Q x a).mp hAdj
     exact Finset.mem_filter.mpr
       ⟨hParts.2.2.2.1, by
         simpa only [Finset.insert_comm] using hParts.2.2.2.2.2⟩
@@ -112,7 +112,7 @@ theorem raw_pair_link_slot_adj_iff_facet_completion
     have hxa : x ≠ a := by
       intro h
       exact haNot (h.symm ▸ Finset.mem_insert_self x Q)
-    exact (rawPairLinkGraph_adj D.K D.ground Q x a).2
+    exact (raw_pair_link_graph_adj D.K D.ground Q x a).2
       ⟨hxQ, haQ, hxU, ha'.1, hxa,
         by simpa only [Finset.insert_comm] using ha'.2⟩
 
@@ -202,7 +202,7 @@ theorem actual_eligible_pair_slot_vertices_eq_witness_slots
       (pair_label_witness_slots_mem
         D.K D.ground Q fallback hCenters x).mp hxWitness
     have hxQ : x ∉ Q :=
-      ((rawPairLinkGraph_adj D.K D.ground Q x p).mp hxp).1
+      ((raw_pair_link_graph_adj D.K D.ground Q x p).mp hxp).1
     have hp : p ∈ C :=
       (raw_pair_link_slot_adj_iff_facet_completion
         D Q hQ x p hxU hxQ).1 hxp

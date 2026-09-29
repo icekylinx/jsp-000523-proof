@@ -13,7 +13,7 @@ variable {α : Type*} [DecidableEq α]
 def badPairDirtyEdges (B₀ Bad : Family α) : Family α :=
   B₀.filter fun E => ∃ P ∈ Bad, P ⊆ E
 
-@[simp] theorem mem_badPairDirtyEdges {B₀ Bad : Family α} {E : Edge α} :
+@[simp] theorem mem_bad_pair_dirty_edges {B₀ Bad : Family α} {E : Edge α} :
     E ∈ badPairDirtyEdges B₀ Bad ↔ E ∈ B₀ ∧ ∃ P ∈ Bad, P ⊆ E := by
   simp [badPairDirtyEdges]
 
@@ -193,7 +193,7 @@ def nearStarDirtyOutsideEdges (H : Family α) (W : Edge α) (v : α) : Family α
   (nearStarOrdinaryOutsideEdges H W v).filter fun E =>
     ∃ P ∈ nearStarBadPairs H W v, P ⊆ E
 
-@[simp] theorem mem_nearStarDirtyOutsideEdges {H : Family α} {W : Edge α}
+@[simp] theorem mem_near_star_dirty_outside_edges {H : Family α} {W : Edge α}
     {v : α} {E : Edge α} :
     E ∈ nearStarDirtyOutsideEdges H W v ↔
       E ∈ nearStarOrdinaryOutsideEdges H W v ∧

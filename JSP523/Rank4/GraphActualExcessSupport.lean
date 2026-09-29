@@ -82,9 +82,9 @@ theorem actual_selected_common_positive_implies_used
   have hRawAx : (rawPairLinkGraph D.K D.ground Q).Adj a x := hAx.1
   have hRawBx : (rawPairLinkGraph D.K D.ground Q).Adj b x := hBx.1
   have haU : a ∈ D.ground :=
-    ((rawPairLinkGraph_adj D.K D.ground Q a x).mp hRawAx).2.2.1
+    ((raw_pair_link_graph_adj D.K D.ground Q a x).mp hRawAx).2.2.1
   have hbU : b ∈ D.ground :=
-    ((rawPairLinkGraph_adj D.K D.ground Q b x).mp hRawBx).2.2.1
+    ((raw_pair_link_graph_adj D.K D.ground Q b x).mp hRawBx).2.2.1
   have hCell := raw_pair_common_neighbor_gives_cell
     D.K D.ground Q D.uniform_four hQ a b x haU hbU hab
     hRawAx hRawBx

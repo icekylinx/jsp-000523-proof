@@ -1,4 +1,5 @@
 import JSP523.Rank4.GlobalActualNearExtremalLimit
+import JSP523.Rank4.GlobalActualEndToEndSequence
 
 namespace JSP523.Rank4
 

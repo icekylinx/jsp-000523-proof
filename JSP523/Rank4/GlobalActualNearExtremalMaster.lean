@@ -1,5 +1,4 @@
-import JSP523.Rank4.GlobalActualEndToEndSequence
-import JSP523.Rank4.GlobalActualMasterStabilityEndToEnd
+import JSP523.Rank4.GlobalActualMasterStabilityFinite
 
 /-! # Actual master stability with a vanishing deficit below the star -/
 namespace JSP523.Rank4

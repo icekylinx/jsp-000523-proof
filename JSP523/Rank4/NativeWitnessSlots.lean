@@ -35,8 +35,8 @@ theorem raw_pair_common_neighbor_gives_cell
     rcases Finset.mem_insert.mp ht with rfl | ht
     · exact haU
     · exact (Finset.mem_singleton.mp ht) ▸ hbU
-  have hax' := (rawPairLinkGraph_adj K U Q a x).mp hax
-  have hbx' := (rawPairLinkGraph_adj K U Q b x).mp hbx
+  have hax' := (raw_pair_link_graph_adj K U Q a x).mp hax
+  have hbx' := (raw_pair_link_graph_adj K U Q b x).mp hbx
   obtain ⟨_, hxQ, _, hxU, _, hEa⟩ := hax'
   obtain ⟨_, _, _, _, _, hEb⟩ := hbx'
   have hQ' := Finset.mem_powersetCard.mp hQ
@@ -167,7 +167,7 @@ theorem native_high_degree_witness_slots_saturate
   have hCommonSelected (x : α) (hax : F.Adj a x)
       (hbx : F.Adj b x) : x ∈ S := by
     have hxU : x ∈ U :=
-      ((rawPairLinkGraph_adj K U Q a x).mp hax).2.2.2.1
+      ((raw_pair_link_graph_adj K U Q a x).mp hax).2.2.2.1
     exact (pair_label_witness_slots_mem K U Q fallback hCenters x).2
       ⟨hxU, a, b, hab, hax.symm, hbx.symm, by
         simpa only [hLabel] using hzQ⟩
@@ -186,9 +186,9 @@ theorem native_high_degree_witness_slots_saturate
       K U hUniform a b z w y haU hbU hzU hwU
       hab hzw haQ hbQ).2 hGy
   have hxU : x ∈ U :=
-    ((rawPairLinkGraph_adj K U Q a x).mp hCommonX.1).2.2.2.1
+    ((raw_pair_link_graph_adj K U Q a x).mp hCommonX.1).2.2.2.1
   have hyU : y ∈ U :=
-    ((rawPairLinkGraph_adj K U Q a y).mp hCommonY.1).2.2.2.1
+    ((raw_pair_link_graph_adj K U Q a y).mp hCommonY.1).2.2.2.1
   have hxyLabel : chosenCommonRootLabel K U fallback hCenters
       ({x, y} : Edge α) ∈ Q :=
     raw_pair_two_common_neighbors_force_label_in_base

@@ -634,7 +634,7 @@ theorem completion_k4_record_key_eq_implies_facet_eq
   let p := completionK4ActualIndex D T v i hTcard hTsub hTCompletion hv
   let q := completionK4ActualIndex D T' w j hT'card hT'sub hT'Completion hw
   have hEq : actualCompletionRecord D p = actualCompletionRecord D q := by
-    rw [actual_K4_index_record_key, actual_K4_index_record_key]
+    rw [actual_k4_index_record_key, actual_k4_index_record_key]
     exact hKey
   have hIndices := actual_completion_record_injective D hEq
   exact congrArg (fun p : CompletionRecordIndex D => p.val.1) hIndices
