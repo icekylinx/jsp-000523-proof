@@ -281,4 +281,90 @@ theorem actual_graph_payment_of_zero_common_excess
   have hBase := actual_facet_base_payment_rat D hGround
   simpa [hZero] using hBase
 
+/-- The extra `2b` in the facet budget pays any actual common-pair
+multiplicity excess bounded by the number of nonprivate facets. -/
+theorem actual_graph_payment_of_common_excess_le_nonprivate_facets
+    (D : FiniteCompletionCliqueData α)
+    (hGround : ∀ E ∈ D.K, E ⊆ D.ground)
+    (hExcess : actualSelectedCommonExcessTotal D ≤
+      (rankFourNonprivateFacets D.K D.ground).card) :
+    18 * (D.K.card : ℚ) +
+      ((rankFourNonprivateFacets D.K D.ground).card : ℚ) +
+      6 * ((rankFourAllPrivateEdges D.K D.ground).card : ℚ) +
+      actualSelectedDegreeSquareTotal D +
+      actualSelectedActiveVertexTotal D ≤
+    2 * actualFacetCompletionDegreeSquareTotal D +
+      4 * (actualSelectedEdgeTotal D : ℚ) +
+      2 * actualSelectedPotentialTotal D +
+      4 * ((rankFourFacetShadow D.K D.ground).card : ℚ) := by
+  apply (actual_graph_payment_iff_common_excess_bound D).2
+  have hBase := actual_facet_strong_base_payment_rat
+    D D.uniform_four hGround
+  have hExcessRat :
+      (actualSelectedCommonExcessTotal D : ℚ) ≤
+        ((rankFourNonprivateFacets D.K D.ground).card : ℚ) := by
+    exact_mod_cast hExcess
+  linarith
+
+/-- A concrete sufficient condition for the manuscript's finite rank-four
+deficit, stated directly in the actual selected pair-link ledger. -/
+theorem rank_four_actual_deficit_of_common_excess_le_nonprivate_facets
+    (D : FiniteCompletionCliqueData α) (fallback : α)
+    (hGround : ∀ E ∈ D.K, E ⊆ D.ground)
+    (hCenters : UniqueCommonRootCenters D.K D.ground)
+    (hExcess : actualSelectedCommonExcessTotal D ≤
+      (rankFourNonprivateFacets D.K D.ground).card) :
+    10 * D.K.card +
+      (rankFourNonprivateFacets D.K D.ground).card +
+      6 * (rankFourAllPrivateEdges D.K D.ground).card ≤
+    2 * nativeTailVertexTotal D.K D.ground
+      (nonemptyCommonRoots D.K D.ground)
+        (chosenCommonRootLabel D.K D.ground fallback hCenters) +
+    4 * (rankFourFacetShadow D.K D.ground).card := by
+  exact rank_four_actual_deficit_of_graph_payment D fallback hGround hCenters
+    (actual_graph_payment_of_common_excess_le_nonprivate_facets
+      D hGround hExcess)
+
+/-- The actual cleaned master estimate follows from a bound on the
+repeated common-pair multiplicities in the selected pair links. -/
+theorem rank_four_actual_cleaned_master_of_common_excess_le_nonprivate_facets
+    (D : FiniteCompletionCliqueData α)
+    (H B : Family α) (V : Edge α) (L : α → Family α)
+    (centers : Finset α) (owner : Edge α → α)
+    (fallback : α) (parent_overlap : ℕ)
+    (hGround : ∀ E ∈ D.K, E ⊆ D.ground)
+    (hCenters : UniqueCommonRootCenters D.K D.ground)
+    (hH : Admissible H)
+    (hGroundVertices : D.ground ⊆ V)
+    (hCentersVertices : ∀ c ∈ centers, c ∈ V)
+    (hCentersOutside : ∀ c ∈ centers, c ∉ D.ground)
+    (hLayerEdges : ∀ c ∈ centers, ∀ Q ∈ L c, insert c Q ∈ H)
+    (hLayerGround : ∀ c ∈ centers, ∀ Q ∈ L c,
+      Q ∈ D.ground.powersetCard 3)
+    (hGroundSize : 3 ≤ D.ground.card)
+    (hTails : ∀ a ∈ D.ground, ∀ b ∈ D.ground.erase a,
+      ({a, b} : Edge α) ∈ nonemptyCommonRoots D.K D.ground →
+        HasThreeParentTails H V D.ground a b
+          (chosenCommonRootLabel D.K D.ground fallback hCenters
+            ({a, b} : Edge α)))
+    (hCoreParent : D.K ⊆ B)
+    (hOverlap :
+      ((centers.biUnion (pairOwnerCleanedLink L owner)) ∩
+        rankFourFacetShadow B D.ground).card ≤ parent_overlap)
+    (hExcess : actualSelectedCommonExcessTotal D ≤
+      (rankFourNonprivateFacets D.K D.ground).card) :
+    10 * ((centers.biUnion (pairOwnerCleanedLink L owner)).card +
+      D.K.card) +
+      (rankFourNonprivateFacets D.K D.ground).card +
+      6 * (rankFourAllPrivateEdges D.K D.ground).card ≤
+    10 * D.ground.card.choose 3 +
+      2 * (D.ground.card ^ 2 * (Nat.sqrt D.ground.card + 1)) +
+      4 * parent_overlap := by
+  exact rank_four_actual_cleaned_master D H B V L centers owner fallback
+    parent_overlap hCenters hH hGroundVertices hCentersVertices
+    hCentersOutside hLayerEdges hLayerGround hGroundSize hTails
+    hCoreParent hOverlap
+    (rank_four_actual_deficit_of_common_excess_le_nonprivate_facets
+      D fallback hGround hCenters hExcess)
+
 end JSP523.Rank4
