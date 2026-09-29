@@ -233,7 +233,8 @@ theorem initial_polynomial_rounds_and_shadow_extraction
           discreteRoundAdditiveLoss n r
             (discreteRoundIterate (initialPolynomialScale n) i)) ≤
         m * α * (n - 1).choose (r - 1)) :
-    ∃ K₀ K : Family (Fin n), K ⊆ K₀ ∧ K₀ ⊆ H ∧
+    ∃ K₀ K : Family (Fin n), K ⊆ K₀ ∧
+      K₀ ⊆ outsideFamily H (Finset.univ \ X) ∧ K₀ ⊆ H ∧
       Admissible K ∧ Uniform r K ∧
       (∀ j, 1 ≤ j → j ≤ r - 1 →
         ∀ S : Edge (Fin n), S.card = j →
@@ -255,7 +256,9 @@ theorem initial_polynomial_rounds_and_shadow_extraction
           (((outsideFamily H (Finset.univ \ X)) \ K₀).card : ℤ) +
           (X.card.choose 2 * ((n - 2).choose (r - 2)) : ℕ) +
           (X.card * ((Finset.univ \ X).card *
-            ((r - 1) * (initialPolynomialScale n * n ^ (r - 3)))) : ℕ) +
+            ((r - 1) *
+              (discreteRoundIterate (initialPolynomialScale n) steps *
+                n ^ (r - 3)))) : ℕ) +
           (X.card.choose 2 * ((r - 1) *
             ((Finset.univ \ X).card - 1).choose (r - 2)) : ℕ)) := by
   classical
@@ -286,13 +289,15 @@ theorem initial_polynomial_rounds_and_shadow_extraction
     intro z hzE
     exact Finset.mem_sdiff.mpr ⟨Finset.mem_univ z,
       fun hzX => (Finset.disjoint_left.mp (hAvoid E hE)) hzE hzX⟩
+  have hKOut : K ⊆ outsideFamily H W := hKK₀.trans hK₀Out
   have hPair : ∀ Q : Edge (Fin n), Q.card = 2 →
-      (K₀.filter fun E => Q ⊆ E).card ≤
-        initialPolynomialScale n * n ^ (r - 3) := by
+      (K.filter fun E => Q ⊆ E).card ≤
+        discreteRoundIterate (initialPolynomialScale n) steps *
+          n ^ (r - 3) := by
     intro Q hQ
     have hTwo : 2 ≤ r - 1 := by omega
     have he : r - 2 - 1 = r - 3 := by omega
-    simpa only [he] using hCaps₀ 2 (by omega) hTwo Q hQ
+    simpa only [he] using hCapsK 2 (by omega) hTwo Q hQ
   have hV : (Finset.univ : Edge (Fin n)) = W ∪ X := by
     ext z
     constructor
@@ -332,14 +337,21 @@ theorem initial_polynomial_rounds_and_shadow_extraction
     rw [hOutsideEq] at hCard ⊢
     omega
   have hLedger := finite_shadow_surplus_star_baseline
-    (F := H) (K := K₀) (H := K) (W := W) (X := X)
+    (F := H) (K := K) (H := K) (W := W) (X := X)
     (V := Finset.univ) (r := r)
-    (D := initialPolynomialScale n * n ^ (r - 3))
-    hAdm hUniform hSupport hXW hK₀Out hKK₀
+    (D := discreteRoundIterate (initialPolynomialScale n) steps *
+      n ^ (r - 3))
+    hAdm hUniform hSupport hXW hKOut (Finset.Subset.rfl)
     (by omega : 2 ≤ r) hPair hV hWX hX
   have hStarCard : ((Finset.univ : Edge (Fin n)).card - 1).choose
       (r - 1) = (n - 1).choose (r - 1) := by simp
   rw [hStarCard] at hLedger
+  have hOutCard := Finset.card_sdiff_add_card_eq_card hKOut
+  have hK₀Card := Finset.card_sdiff_add_card_eq_card hKK₀
+  have hOutK₀Card := Finset.card_sdiff_add_card_eq_card hK₀Out
+  have hDiscardSplit : ((outsideFamily H W) \ K).card =
+      (K₀ \ K).card + ((outsideFamily H W) \ K₀).card := by
+    omega
   have hRoundMass :
       m * α * (n - 1).choose (r - 1) ≤ 4 * m * β * K.card := by
     have hA := Nat.mul_le_mul_left (2 * m * β) hRoundLoss
@@ -350,9 +362,11 @@ theorem initial_polynomial_rounds_and_shadow_extraction
           (discreteRoundIterate (initialPolynomialScale n) i) := by
     have hCard := Finset.card_sdiff_add_card_eq_card hKK₀
     omega
-  refine ⟨K₀, K, hKK₀, hK₀H, hAdmK, hUniformK,
+  refine ⟨K₀, K, hKK₀, hK₀Out, hK₀H, hAdmK, hUniformK,
     hCapsK, hRoundMass, hDiscard, hRoundDiscard, ?_⟩
-  simpa only [W, Finset.card_univ, Fintype.card_fin] using hLedger
+  simpa only [W, Finset.card_univ, Fintype.card_fin,
+    hDiscardSplit, Finset.sdiff_self, Finset.card_empty,
+    Nat.cast_zero, zero_add, add_zero, Nat.cast_add, add_assoc] using hLedger
 
 /-- An actual admissible far-star sequence with a fixed maximum-degree
 gap reaches the positive-mass, regularized, coefficient-one extraction
@@ -370,7 +384,10 @@ theorem eventually_initial_polynomial_extraction_of_degree_gap
       (n - 1).choose (r - 1) ≤ (H n).card) :
     ∃ α β m : ℕ, 0 < α ∧ 0 < β ∧ 0 < m ∧
       ∀ᶠ n : ℕ in atTop,
-        ∃ K₀ K : Family (Fin n), K ⊆ K₀ ∧ K₀ ⊆ H n ∧
+        ∃ K₀ K : Family (Fin n), K ⊆ K₀ ∧
+          K₀ ⊆ outsideFamily (H n)
+            (Finset.univ \ initialPolynomialChosenCover r H hUniform n) ∧
+          K₀ ⊆ H n ∧
           Admissible K ∧ Uniform r K ∧
           (∀ j, 1 ≤ j → j ≤ r - 1 →
             ∀ S : Edge (Fin n), S.card = j →
@@ -401,7 +418,8 @@ theorem eventually_initial_polynomial_extraction_of_degree_gap
               ((initialPolynomialChosenCover r H hUniform n).card *
                 ((Finset.univ \ initialPolynomialChosenCover r H hUniform n).card *
                   ((r - 1) *
-                    (initialPolynomialScale n * n ^ (r - 3)))) : ℕ) +
+                    (discreteRoundIterate (initialPolynomialScale n) steps *
+                      n ^ (r - 3)))) : ℕ) +
               ((initialPolynomialChosenCover r H hUniform n).card.choose 2 *
                 ((r - 1) *
                   (((Finset.univ \ initialPolynomialChosenCover r H hUniform n).card - 1).choose
