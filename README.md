@@ -4,7 +4,7 @@ The mathematical proof of JSP-000523 is [paper/proof.pdf](paper/proof.pdf). Yili
 
 ## Lean formalization
 
-**Status: partial; formalization is in progress.** The [formalization status](FORMALIZATION_STATUS.md) records the proved interfaces and the remaining global connections. The toolchain is Lean 4.34.0; Mathlib and its dependencies are pinned in [lake-manifest.json](lake-manifest.json).
+**Status: partial; formalization is in progress.** The current review estimates are about **70% for rank four** and **60% for ranks at least five**; these describe the work toward unconditional global Lean theorems, not a count of files or lines. The [formalization status](FORMALIZATION_STATUS.md) gives the completed interfaces and remaining proof obligations. The toolchain is Lean 4.34.0; Mathlib and its dependencies are pinned in [lake-manifest.json](lake-manifest.json).
 
 | Manuscript result | Lean theorem or module | Scope |
 | --- | --- | --- |
@@ -17,11 +17,11 @@ The mathematical proof of JSP-000523 is [paper/proof.pdf](paper/proof.pdf). Yili
 | Lemma IV.1.2, distance packing | `JSP523.distance_packing_at_most_one`, `JSP523.distance_packing_choose_bound` | Finite distance-packing count for all `t,d`. |
 | Theorem IV.2.1 and its equality cases | `JSP523.quantitative_near_star_exact`, `JSP523.quantitative_local_equality_classification`, `JSP523.Rank5.exists_high_rank_exceptional_equality_family` | Fixed-rank local bound, classification and exceptional construction for `r ≥ 5` under explicit conditions. |
 | Equality construction shared by ranks four and above | `JSP523.star_plus_linear_outside_admissible`, `JSP523.one_missing_star_exceptional_pair_admissible`, `JSP523.exists_exceptional_equality_family` | Shared admissibility, cardinality and residue-class existence proofs. |
-| Rank-four graph and colored-slot lemmas | `JSP523.Rank4.graph_deficit_marked`, `JSP523.Rank4.colored_family_payment` | Finite components of the simplified rank-four deficit argument. |
-| Rank-four global interfaces | `JSP523.Rank4.GraphActualDeficit`, `JSP523.Rank4.GraphReciprocalAccounting`, `JSP523.Rank4.GlobalActualMaster`, `JSP523.Rank4.GlobalAsymptotic` | Actual facet and reciprocal counts, plus conditional global budget and stability results. |
-| Higher-rank global interfaces | `JSP523.Rank5.ShadowPowerGeneral`, `JSP523.Rank5.FarStarTail`, `JSP523.Rank5.InitialCodegreeCleanup`, `JSP523.Rank5.InheritanceWitness`, `JSP523.Rank5.MultilevelCleanup` | Finite shadow, far-star, codegree, and inherited-center counts with their stated hypotheses. |
+| Rank-four graph and colored-facet payment | `JSP523.Rank4.GraphActualMixedColoredRecords`, `JSP523.Rank4.GraphActualColoredMarks`, `JSP523.Rank4.GraphActualColoredFamilyPayment` | Actual selected pair links pay mixed rainbow-triangle and proper-`K₄` records and full-degree marks for finite canonical facet families. |
+| Rank-four reciprocal cleanup and global interfaces | `JSP523.Rank4.PreprocessReciprocalC4Asymptotic`, `JSP523.Rank4.GlobalReciprocalAsymptotic`, `JSP523.Rank4.GraphActualPaymentBridge`, `JSP523.Rank4.GlobalActualMaster` | Actual three-stage cleanup has loss `o(\binom n3)` under fixed degree and label-fiber caps; the global finite payment and stability interfaces retain hypotheses. |
+| Higher-rank regularization and inheritance | `JSP523.Rank5.FarStarAsymptotic`, `JSP523.Rank5.InitialPolynomialScale`, `JSP523.Rank5.RegularizationLossAsymptotic`, `JSP523.Rank5.InheritanceLowRetention` | Positive far-star mass from a fixed gap, an explicit polynomial initial scale, fixed-round regularization loss `o(\binom{n-1}{r-1})`, and actual lower/upper facet cleanup interfaces. |
 
-The manuscript's Theorem 1, rank-four Theorem III.1, and the global argument in Part IV are not yet assembled as unconditional Lean theorems. The rank-four preprocessing and aggregate deficit, and the higher-rank regularization, extraction, and cleanup, retain explicit inputs.
+The manuscript's Theorem 1, rank-four Theorem III.1, and the global argument in Part IV are not yet assembled as unconditional Lean theorems. See the status page for the exact remaining inputs.
 
 ## Reproduce
 
