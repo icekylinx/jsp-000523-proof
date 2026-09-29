@@ -1,4 +1,4 @@
-import JSP523.Rank5.LocalExactTheorem
+import JSP523.Rank5.LocalEqualityExact
 
 /-!
 # From a high-degree vertex to the local exact theorem
@@ -51,18 +51,18 @@ theorem present_star_facets_card_eq_vertex_degree
     simpa only using hPartition
   exact Nat.add_right_cancel (hSplit'.symm.trans hPartition'.symm)
 
-/-- A vertex whose degree is within the explicit local density of the
-complete star forces the sharp near-star cardinal bound. -/
-theorem near_star_exact_of_high_vertex_degree
+/-- A high-degree vertex has the required small missing-star density. -/
+theorem missing_star_density_of_high_vertex_degree
     {n r : ℕ} (H : Family (Fin n)) (v : Fin n)
-    (hAdm : Admissible H) (hUniform : Uniform r H)
+    (hUniform : Uniform r H)
     (hr : 5 ≤ r)
-    (hn : localExactGroundThreshold r + 1 ≤ n)
     (hDegree :
       (1 - localExactDensity r) *
         ((n - 1).choose (r - 1) : ℝ) ≤
           ((H.filter fun E => v ∈ E).card : ℝ)) :
-    H.card ≤ (n - 1).choose (r - 1) + (n - 1) / r := by
+    ((missingStarFacets H (Finset.univ.erase v) v r).card : ℝ) ≤
+      localExactDensity r * ((Finset.univ.erase v : Edge (Fin n)).card : ℝ) ^
+        (r - 1) := by
   classical
   let W : Edge (Fin n) := Finset.univ.erase v
   have hWcard : W.card = n - 1 := by simp [W]
@@ -86,14 +86,37 @@ theorem near_star_exact_of_high_vertex_degree
     exact_mod_cast Nat.choose_le_pow W.card (r - 1)
   have hδpos := local_exact_density_pos r hr
   have hδnonneg : 0 ≤ localExactDensity r := hδpos.le
-  have hDensity : ((missingStarFacets H W v r).card : ℝ) ≤
-      localExactDensity r * (W.card : ℝ) ^ (r - 1) := by
-    have hDegree' :
-        (1 - localExactDensity r) * (W.card.choose (r - 1) : ℝ) ≤
-          ((presentStarFacets H W v r).card : ℝ) := by
-      simpa only [hWcard, hPresentW] using hDegree
-    have hMult := mul_le_mul_of_nonneg_left hPow hδnonneg
-    nlinarith [hFacetR, hDegree', hMult]
+  have hDegree' :
+      (1 - localExactDensity r) * (W.card.choose (r - 1) : ℝ) ≤
+        ((presentStarFacets H W v r).card : ℝ) := by
+    simpa only [hWcard, hPresentW] using hDegree
+  have hMult := mul_le_mul_of_nonneg_left hPow hδnonneg
+  nlinarith [hFacetR, hDegree', hMult]
+
+/-- A vertex whose degree is within the explicit local density of the
+complete star forces the sharp near-star cardinal bound. -/
+theorem near_star_exact_of_high_vertex_degree
+    {n r : ℕ} (H : Family (Fin n)) (v : Fin n)
+    (hAdm : Admissible H) (hUniform : Uniform r H)
+    (hr : 5 ≤ r)
+    (hn : localExactGroundThreshold r + 1 ≤ n)
+    (hDegree :
+      (1 - localExactDensity r) *
+        ((n - 1).choose (r - 1) : ℝ) ≤
+          ((H.filter fun E => v ∈ E).card : ℝ)) :
+    H.card ≤ (n - 1).choose (r - 1) + (n - 1) / r := by
+  classical
+  let W : Edge (Fin n) := Finset.univ.erase v
+  have hWcard : W.card = n - 1 := by simp [W]
+  have hvW : v ∉ W := by simp [W]
+  have hSupport : ∀ E ∈ H, E ⊆ insert v W := by
+    intro E _ x hx
+    by_cases hxv : x = v
+    · exact hxv ▸ Finset.mem_insert_self v W
+    · exact Finset.mem_insert_of_mem
+        (Finset.mem_erase.mpr ⟨hxv, Finset.mem_univ x⟩)
+  have hDensity := missing_star_density_of_high_vertex_degree
+    H v hUniform hr hDegree
   have hw : localExactGroundThreshold r ≤ W.card := by
     rw [hWcard]
     omega
