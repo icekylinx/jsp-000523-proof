@@ -91,7 +91,7 @@ theorem reciprocal_triangle_attachment_is_mono_or_rainbow
     apply Finset.mem_filter.mpr
     refine ⟨hAT'.2.2.2.1, ?_⟩
     simpa [T, Finset.insert_comm] using hAT'.2.2.2.2.2
-  rcases completion_triangle_mono_or_rainbow D T b w t
+  rcases completion_triangle_mono_or_rainbow D T hTcard b w t
       hbComp hwComp htComp hab hat hwt with hMono | hRainbow
   · rcases hMono with ⟨hBWbt, hBWwt⟩
     rw [hBWlabel] at hBWbt hBWwt

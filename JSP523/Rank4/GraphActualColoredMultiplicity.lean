@@ -162,7 +162,7 @@ theorem actual_colored_slot_common_multiplicity_le_two
   have hNoMono := divergent_completion_facet_no_monochromatic_triangle
     D (insert x Q) hTcard hTsub hColored
   have hRainbow := completion_facet_triangle_rainbow_of_no_mono
-    D (insert x Q) hNoMono
+    D (insert x Q) hTcard hNoMono
   exact rainbow_slot_selected_common_multiplicity_le_two
     D (actualEligiblePairSlotVertices D Q) Q hQ
       x y hxU hxQ hyU hyQ hxy hRainbow

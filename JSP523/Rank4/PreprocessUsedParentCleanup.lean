@@ -42,7 +42,7 @@ noncomputable def clearUsedParentPairSeparation
     exact D.label_center x y hxy P (mem_common_triple_cell.mpr
       ⟨hCell.1, hCell.2.1, hCell.2.2.1,
         h_sub hCell.2.2.2.1, h_sub hCell.2.2.2.2⟩)
-  · intro T x hx y hy z hz hxy hxz hyz
+  · intro T hTcard x hx y hy z hz hxy hxz hyz
     have hx' : x ∈ graphFacetCompletions D.K D.ground T := by
       exact Finset.mem_filter.mpr
         ⟨(Finset.mem_filter.mp hx).1,
@@ -55,7 +55,7 @@ noncomputable def clearUsedParentPairSeparation
       exact Finset.mem_filter.mpr
         ⟨(Finset.mem_filter.mp hz).1,
           h_sub (Finset.mem_filter.mp hz).2⟩
-    exact D.no_bicolored_triangle T x hx' y hy' z hz' hxy hxz hyz
+    exact D.no_bicolored_triangle T hTcard x hx' y hy' z hz' hxy hxz hyz
 
 omit [Fintype α] in
 theorem clear_used_parent_pair_separation_sub

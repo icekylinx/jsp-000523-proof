@@ -93,7 +93,7 @@ noncomputable def clearReciprocalWrongCommonWitnesses
     exact D.label_center x y hxy P (mem_common_triple_cell.mpr
       ⟨hCell.1, hCell.2.1, hCell.2.2.1,
         h_sub hCell.2.2.2.1, h_sub hCell.2.2.2.2⟩)
-  · intro T x hx y hy z hz hxy hxz hyz
+  · intro T hTcard x hx y hy z hz hxy hxz hyz
     have hx' : x ∈ graphFacetCompletions D.K D.ground T := by
       apply Finset.mem_filter.mpr
       exact ⟨(Finset.mem_filter.mp hx).1,
@@ -106,7 +106,7 @@ noncomputable def clearReciprocalWrongCommonWitnesses
       apply Finset.mem_filter.mpr
       exact ⟨(Finset.mem_filter.mp hz).1,
         h_sub (Finset.mem_filter.mp hz).2⟩
-    exact D.no_bicolored_triangle T x hx' y hy' z hz' hxy hxz hyz
+    exact D.no_bicolored_triangle T hTcard x hx' y hy' z hz' hxy hxz hyz
 
 theorem clear_reciprocal_wrong_common_witnesses_sub
     (D : FiniteCompletionCliqueData α) :
@@ -300,7 +300,7 @@ theorem reciprocal_wrong_common_witness_deletion_card_le_triple_cap
     _ = D.ground.card * D.ground.card * Dcap := by
       simp [Finset.card_product, Nat.mul_assoc]
 
-/-- Explicit `u² K_* D` budget for the missing §III.A.6 deletion,
+/-- Explicit `u² K_* D` budget for the wrong common-witness deletion in §III.A.6,
 under the actual label-fiber and triple-degree caps. -/
 theorem reciprocal_wrong_common_witness_deletion_card_le
     (D : FiniteCompletionCliqueData α) (Kstar Dcap : ℕ)

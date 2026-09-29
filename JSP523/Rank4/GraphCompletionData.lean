@@ -47,7 +47,7 @@ structure FiniteCompletionCliqueData (α : Type*) [DecidableEq α] where
   label_symm : ∀ x y, label x y = label y x
   label_center : ∀ x y, x ≠ y →
     ∀ P ∈ commonTripleCell K ground x y, label x y ∈ P
-  no_bicolored_triangle : ∀ T : Edge α, ∀ x ∈ graphFacetCompletions K ground T,
+  no_bicolored_triangle : ∀ T : Edge α, T.card = 3 → ∀ x ∈ graphFacetCompletions K ground T,
     ∀ y ∈ graphFacetCompletions K ground T,
     ∀ z ∈ graphFacetCompletions K ground T,
       x ≠ y → x ≠ z → y ≠ z →
@@ -56,7 +56,7 @@ structure FiniteCompletionCliqueData (α : Type*) [DecidableEq α] where
 /-- The no-bicolored condition gives the monochromatic/rainbow
 alternative for every actual completion triangle. -/
 theorem completion_triangle_mono_or_rainbow
-    (D : FiniteCompletionCliqueData α) (T : Edge α)
+    (D : FiniteCompletionCliqueData α) (T : Edge α) (hTcard : T.card = 3)
     (x y z : α) (hx : x ∈ graphFacetCompletions D.K D.ground T)
     (hy : y ∈ graphFacetCompletions D.K D.ground T)
     (hz : z ∈ graphFacetCompletions D.K D.ground T)
@@ -70,13 +70,13 @@ theorem completion_triangle_mono_or_rainbow
   by_cases hab : a = b
   · by_cases hac : a = c
     · exact Or.inl ⟨hab, hac⟩
-    · exact False.elim (D.no_bicolored_triangle T x hx y hy z hz
+    · exact False.elim (D.no_bicolored_triangle T hTcard x hx y hy z hz
         hxy hxz hyz (Or.inl ⟨hab, hac⟩))
   · by_cases hac : a = c
-    · exact False.elim (D.no_bicolored_triangle T x hx y hy z hz
+    · exact False.elim (D.no_bicolored_triangle T hTcard x hx y hy z hz
         hxy hxz hyz (Or.inr (Or.inl ⟨hac, hab⟩)))
     · by_cases hbc : b = c
-      · exact False.elim (D.no_bicolored_triangle T x hx y hy z hz
+      · exact False.elim (D.no_bicolored_triangle T hTcard x hx y hy z hz
           hxy hxz hyz (Or.inr (Or.inr ⟨hbc, by
             intro h
             exact hab (by simpa [a, b, c] using h.symm)⟩)))

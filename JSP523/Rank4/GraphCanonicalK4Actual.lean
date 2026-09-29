@@ -82,7 +82,7 @@ theorem canonical_k4_labels_are_proper_pattern
           (completion_pair_label_mem_facet D T hTcard hTsub _ _ (hmem i) (hmem k) (hneq hik)))
         (facetLabelColor T hTcard (D.label (v j) (v k))
           (completion_pair_label_mem_facet D T hTcard hTsub _ _ (hmem j) (hmem k) (hneq hjk))) := by
-    have h := completion_triangle_mono_or_rainbow D T (v i) (v j) (v k)
+    have h := completion_triangle_mono_or_rainbow D T hTcard (v i) (v j) (v k)
       (hmem i) (hmem j) (hmem k) (hneq hij) (hneq hik) (hneq hjk)
     rcases h with hmono | hrain
     · exact Or.inl ⟨by simp [hmono.1], by simp [hmono.1.symm, hmono.2]⟩

@@ -290,14 +290,189 @@ import JSP523.Rank5.FarStarConstants
 import JSP523.Rank5.InitialPolynomialScale
 import JSP523.Rank5.RegularizationLossAsymptotic
 
-/-!
-# JSP-000523: partial Lean formalization
+import JSP523.ExtremalExactTransfer
+import JSP523.FinalDensity
+import JSP523.MainTheorem
+import JSP523.MainTheoremTransfer
+import JSP523.Rank4.GlobalActualEndToEndData
+import JSP523.Rank4.GlobalActualEndToEndError
+import JSP523.Rank4.GlobalActualEndToEndLimits
+import JSP523.Rank4.GlobalActualEndToEndOuter
+import JSP523.Rank4.GlobalActualEndToEndParameters
+import JSP523.Rank4.GlobalActualEndToEndSelection
+import JSP523.Rank4.GlobalActualEndToEndSequence
+import JSP523.Rank4.GlobalActualEndToEndSucc
+import JSP523.Rank4.GlobalActualEqualityConverse
+import JSP523.Rank4.GlobalActualErrorLimits
+import JSP523.Rank4.GlobalActualInitialOuterData
+import JSP523.Rank4.GlobalActualInitialOuterUncleaned
+import JSP523.Rank4.GlobalActualLeadingLimit
+import JSP523.Rank4.GlobalActualMasterNormalization
+import JSP523.Rank4.GlobalActualMasterStabilityEndToEnd
+import JSP523.Rank4.GlobalActualMasterStabilityFinite
+import JSP523.Rank4.GlobalActualMasterStabilityLimit
+import JSP523.Rank4.GlobalActualMasterStabilityShift
+import JSP523.Rank4.GlobalActualNearExtremal
+import JSP523.Rank4.GlobalActualNearExtremalLimit
+import JSP523.Rank4.GlobalActualNearExtremalMaster
+import JSP523.Rank4.GlobalActualOuterLimits
+import JSP523.Rank4.GlobalActualOuterOverlap
+import JSP523.Rank4.GlobalActualOuterOverlapScale
+import JSP523.Rank4.GlobalActualParameterChoice
+import JSP523.Rank4.GlobalActualParentStability
+import JSP523.Rank4.GlobalActualSelectedStability
+import JSP523.Rank4.GlobalActualSequenceUniformization
+import JSP523.Rank4.GlobalActualSingleCenterEndpoint
+import JSP523.Rank4.GlobalActualSingleCenterFinite
+import JSP523.Rank4.GlobalActualSingleCenterLimit
+import JSP523.Rank4.GlobalActualSingleCenterMaster
+import JSP523.Rank4.GlobalActualSingleCenterNearExtremal
+import JSP523.Rank4.GlobalActualUnconditional
+import JSP523.Rank4.GlobalActualUniformization
+import JSP523.Rank4.GlobalNearStarThreshold
+import JSP523.Rank4.GlobalReciprocalCenterGraph
+import JSP523.Rank4.GraphActualColoredSlackBridge
+import JSP523.Rank4.GraphActualEdgeBalance
+import JSP523.Rank4.GraphActualEdgeOccurrence
+import JSP523.Rank4.GraphActualEdgeReindex
+import JSP523.Rank4.GraphActualEdgeSlack
+import JSP523.Rank4.GraphActualFacetBracket
+import JSP523.Rank4.GraphActualFacetSlotReindex
+import JSP523.Rank4.GraphActualFullPayment
+import JSP523.Rank4.GraphActualMasterClosed
+import JSP523.Rank4.GraphActualReciprocalCharge
+import JSP523.Rank4.GraphActualSignedPayment
+import JSP523.Rank4.GraphAssignedNativeCenters
+import JSP523.Rank4.GraphAssignedNativeIdentity
+import JSP523.Rank4.GraphAssignedNativeInheritance
+import JSP523.Rank4.GraphAssignedNativeMaster
+import JSP523.Rank4.GraphAssignedNativePayment
+import JSP523.Rank4.GraphAssignedNativeSlots
+import JSP523.Rank4.PreprocessActualCompletionAssembly
+import JSP523.Rank4.PreprocessActualContractionStep
+import JSP523.Rank4.PreprocessActualDegreeTailChoice
+import JSP523.Rank4.PreprocessActualGeometricRegularization
+import JSP523.Rank4.PreprocessBicoloredCompletionData
+import JSP523.Rank4.PreprocessBicoloredWedgeBudget
+import JSP523.Rank4.PreprocessCappedCrossMoment
+import JSP523.Rank4.PreprocessCenterGraphDegree
+import JSP523.Rank4.PreprocessCompletionDegreeCaps
+import JSP523.Rank4.PreprocessContractionDegrees
+import JSP523.Rank4.PreprocessContractionScalar
+import JSP523.Rank4.PreprocessEndToEndMaster
+import JSP523.Rank4.PreprocessInitialOuterBudgetScale
+import JSP523.Rank4.PreprocessInitialOuterCover
+import JSP523.Rank4.PreprocessInitialOuterCoverBudget
+import JSP523.Rank4.PreprocessInitialOuterCoverDecomposition
+import JSP523.Rank4.PreprocessInitialOuterCoverOwner
+import JSP523.Rank4.PreprocessInitialOuterCoverRegularization
+import JSP523.Rank4.PreprocessInitialOuterCoverScale
+import JSP523.Rank4.PreprocessInitialOuterCoverTouching
+import JSP523.Rank4.PreprocessInitialOuterCoverTriples
+import JSP523.Rank4.PreprocessInitialOuterPairCap
+import JSP523.Rank4.PreprocessQuantitativePairCover
+import JSP523.Rank4.PreprocessRawCenterGraphBudget
+import JSP523.Rank4.PreprocessRegularizedCompletionAssembly
+import JSP523.Rank4.PreprocessStarAllocation
+import JSP523.Rank4.PreprocessTouchingLoss
+import JSP523.Rank4.PreprocessWeakCellThresholdData
+import JSP523.Rank5.BicoloredOrientation
+import JSP523.Rank5.CleanupFiniteCost
+import JSP523.Rank5.ColorCleanSamples
+import JSP523.Rank5.ColorMajorityPairs
+import JSP523.Rank5.ColorQuantitativeFixedPalette
+import JSP523.Rank5.ColorQuantitativeFixedPaletteBudget
+import JSP523.Rank5.ColorQuantitativeFixedPaletteCleanup
+import JSP523.Rank5.ColorQuantitativeFixedPaletteCore
+import JSP523.Rank5.ColorQuantitativeFixedPaletteDegree
+import JSP523.Rank5.ColorQuantitativeFixedPaletteInteger
+import JSP523.Rank5.ColorQuantitativeFixedPaletteOverlap
+import JSP523.Rank5.ColorQuantitativeFixedPaletteScale
+import JSP523.Rank5.ColorQuantitativeFixedPaletteTriangleReindex
+import JSP523.Rank5.ColorQuantitativeFixedPaletteTriangles
+import JSP523.Rank5.ColorQuantitativeFixedPaletteUncolored
+import JSP523.Rank5.ColorQuantitativeFixedPaletteUncoloredReindex
+import JSP523.Rank5.ColorQuantitativeRankThree
+import JSP523.Rank5.ColorQuantitativeSamples
+import JSP523.Rank5.ConditionalExtraction
+import JSP523.Rank5.ConditionalFarStar
+import JSP523.Rank5.ConditionalRankFive
+import JSP523.Rank5.FinalAllRanksGlobal
+import JSP523.Rank5.FinalExtractionContradiction
+import JSP523.Rank5.FinalExtractionError
+import JSP523.Rank5.FinalMaxThreshold
+import JSP523.Rank5.FinalNearStarBridge
+import JSP523.Rank5.FinalParameterError
+import JSP523.Rank5.FinalParameterFeasibility
+import JSP523.Rank5.FinalParameterRoot
+import JSP523.Rank5.FinalRankFiveGlobal
+import JSP523.Rank5.HigherRankActualCleanup
+import JSP523.Rank5.HigherRankActualPrefix
+import JSP523.Rank5.HigherRankActualRepairScale
+import JSP523.Rank5.HigherRankCleanup
+import JSP523.Rank5.HigherRankConditionalGlobal
+import JSP523.Rank5.HigherRankConditionalGlobalEndpoint
+import JSP523.Rank5.HigherRankConditionalGlobalScalar
+import JSP523.Rank5.HigherRankConditionalGlobalScale
+import JSP523.Rank5.HigherRankCoreRetention
+import JSP523.Rank5.HigherRankFacetActual
+import JSP523.Rank5.HigherRankFacetBudget
+import JSP523.Rank5.HigherRankFacetPrefix
+import JSP523.Rank5.HigherRankFacetRetention
+import JSP523.Rank5.HigherRankFacetWitness
+import JSP523.Rank5.HigherRankInheritance
+import JSP523.Rank5.HigherRankLowerActual
+import JSP523.Rank5.HigherRankLowerBudget
+import JSP523.Rank5.HigherRankLowerFirstWitness
+import JSP523.Rank5.HigherRankLowerRetention
+import JSP523.Rank5.HigherRankLowerWeighted
+import JSP523.Rank5.HigherRankLowerWitness
+import JSP523.Rank5.HigherRankMajorityScale
+import JSP523.Rank5.HigherRankParameterError
+import JSP523.Rank5.HigherRankParameterFeasibility
+import JSP523.Rank5.HigherRankPartnerLabel
+import JSP523.Rank5.HigherRankPartnerRetention
+import JSP523.Rank5.HigherRankPrefixBound
+import JSP523.Rank5.HigherRankPrefixScale
+import JSP523.Rank5.HigherRankRepairedLoss
+import JSP523.Rank5.HigherRankRepairedPrefix
+import JSP523.Rank5.HigherRankStructuralScale
+import JSP523.Rank5.HigherRankUpperBudget
+import JSP523.Rank5.HigherRankUpperColor
+import JSP523.Rank5.HigherRankUpperLabel
+import JSP523.Rank5.HigherRankUpperParameter
+import JSP523.Rank5.HigherRankUpperRepair
+import JSP523.Rank5.HigherRankUpperSharp
+import JSP523.Rank5.InitialPolynomialExtraction
+import JSP523.Rank5.LowerBicoloredBudget
+import JSP523.Rank5.LowerBicoloredReindex
+import JSP523.Rank5.LowerCleanupBudget
+import JSP523.Rank5.LowerCoreColoring
+import JSP523.Rank5.LowerCoreExceptionDegree
+import JSP523.Rank5.LowerMajorityCleanup
+import JSP523.Rank5.LowerPairLabel
+import JSP523.Rank5.LowerPartnerRetention
+import JSP523.Rank5.LowerUncoloredBudget
+import JSP523.Rank5.LowerUncoloredReindex
+import JSP523.Rank5.OccurringCenterTower
+import JSP523.Rank5.RootedPrefixBound
+import JSP523.Rank5.RootedPrefixEndpoint
+import JSP523.Rank5.RootedPrefixPairLabel
+import JSP523.Rank5.RootedPrefixSelection
+import JSP523.Rank5.StructuralFinite
+import JSP523.Rank5.StructuralIntegerEndpoint
+import JSP523.Rank5.UniformDegreeGap
+import JSP523.Rank5.UpperFacetEndpoint
+import JSP523.Rank5.UpperFacetInheritance
+import JSP523.Rank5.UpperFacetPairLabel
+import JSP523.Rank5.UpperFacetRepairColor
+import JSP523.Rank5.UpperFacetSharp
 
-This is a partial formalization of `paper/proof.pdf`, maintained by Yilin Liu.
-The imports cover the finite modules for Parts I–IV, including Theorems I.1,
-II.1, III.2, and IV.2.1, the rank-four global interfaces, and the
-higher-rank regularization, extraction, cleanup, and prefix interfaces.
-Several global conclusions retain explicit hypotheses; the manuscript’s
-Theorem 1, the global rank-four argument of Theorem III.1, and the
-global rank-at-least-five argument of Part IV are not yet assembled in Lean.
+/-!
+# JSP-000523 Lean proof
+
+This entry point imports every module. `JSP523.MainTheorem` assembles the
+rank-three bound, the exact formula at each fixed rank at least four, and
+the coefficient-one forcing asymptotic. The rank-four near-extremal
+stability and the eventual equality classifications are also imported.
 -/

@@ -158,11 +158,11 @@ theorem divergent_completion_facet_no_monochromatic_triangle
     have hxT : x ∈ T := hLabelMem p hp d hd hpd
     have hyT : y ∈ T := hLabelMem q hq d hd hqd
     have hwT : w ∈ T := hLabelMem r hr d hd hrd
-    have hPqd := completion_triangle_mono_or_rainbow D T p q d hp hq hd
+    have hPqd := completion_triangle_mono_or_rainbow D T hTcard p q d hp hq hd
       hpq hpd hqd
-    have hPrd := completion_triangle_mono_or_rainbow D T p r d hp hr hd
+    have hPrd := completion_triangle_mono_or_rainbow D T hTcard p r d hp hr hd
       hpr hpd hrd
-    have hQrd := completion_triangle_mono_or_rainbow D T q r d hq hr hd
+    have hQrd := completion_triangle_mono_or_rainbow D T hTcard q r d hq hr hd
       hqr hqd hrd
     by_cases hxz : x = z
     · have hyz : y = z := by
@@ -216,7 +216,7 @@ theorem divergent_completion_facet_no_monochromatic_triangle
       exact hSpoke a ha hap
     have hpa := hSpoke a ha hap
     have hpb := hSpoke b hb hbp
-    have hTri := completion_triangle_mono_or_rainbow D T p a b hp ha hb
+    have hTri := completion_triangle_mono_or_rainbow D T hTcard p a b hp ha hb
       (by intro h; exact hap h.symm) (by intro h; exact hbp h.symm) hab
     rcases hTri with hmono | hrain
     · exact hmono.2.symm.trans hpa
@@ -283,7 +283,7 @@ theorem canonical_triangle_mark_mem_facet [Fintype α]
 
 
 theorem completion_facet_triangle_rainbow_of_no_mono
-    (D : FiniteCompletionCliqueData α) (T : Edge α)
+    (D : FiniteCompletionCliqueData α) (T : Edge α) (hTcard : T.card = 3)
     (hNoMono : ∀ a ∈ graphFacetCompletions D.K D.ground T,
       ∀ b ∈ graphFacetCompletions D.K D.ground T,
       ∀ c ∈ graphFacetCompletions D.K D.ground T,
@@ -291,7 +291,7 @@ theorem completion_facet_triangle_rainbow_of_no_mono
           ¬ (D.label a b = D.label a c ∧ D.label a b = D.label b c)) :
     CompletionTriangleRainbow D (graphFacetCompletions D.K D.ground T) := by
   intro a ha b hb c hc hab hac hbc
-  rcases completion_triangle_mono_or_rainbow D T a b c ha hb hc hab hac hbc with
+  rcases completion_triangle_mono_or_rainbow D T hTcard a b c ha hb hc hab hac hbc with
     hmono | hrainbow
   · exact False.elim (hNoMono a ha b hb c hc hab hac hbc hmono)
   · exact hrainbow
@@ -378,7 +378,7 @@ theorem colored_completion_facet_classification
         CompletionLabelsInFacet D T C) := by
   let C := graphFacetCompletions D.K D.ground T
   have hRainbow := completion_facet_triangle_rainbow_of_no_mono
-    D T hNoMono
+    D T hTcard hNoMono
   have hle := colored_completion_facet_card_le_four D T hTcard hTsub hRainbow
   have hLabels := completion_labels_in_facet D T hTcard hTsub
   change 3 ≤ C.card at hLarge
