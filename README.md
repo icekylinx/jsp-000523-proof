@@ -12,6 +12,7 @@ With `elan` installed, run from the repository root:
 lake exe cache get
 lake build JSP523
 bash scripts/check_no_sorry.sh
+lake env lean verification/Submission.lean
 ```
 
-Lean 4.34.0 and Mathlib dependencies are pinned. `JSP523.lean` imports all modules and is built by CI on pushes and pull requests.
+Lean 4.34.0 and Mathlib dependencies are pinned. `JSP523.lean` imports all proof modules and is built by CI on pushes and pull requests. The final command reports the axiom dependencies of the submission's four theorem interfaces.
