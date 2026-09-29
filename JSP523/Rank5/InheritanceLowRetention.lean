@@ -37,6 +37,76 @@ theorem retained_pair_root_survives_multilevel_cleanup
       ⟨B, hBC, Finset.mem_image.mpr ⟨R, hTail, rfl⟩⟩
   exact (Finset.disjoint_left.mp hSurvive) hParts.2.2.2 hDeleted
 
+/-- Low-degree cores lose their entire links, so every surviving root
+    certifies the parent degree threshold. -/
+theorem retained_pair_root_parent_degree_ge
+    (K H : Family α) (V : Edge α) (C : Family α)
+    (u q : ℕ) (bad : Edge α → Edge α → Edge α → Prop)
+    (hKH : K ⊆ H)
+    (hSurvive : Disjoint K (multilevelDeletedEdges H V C 2 u q bad))
+    {B R : Edge α} (hBC : B ∈ C)
+    (hR : R ∈ parentPairLink K V B) :
+    u ≤ (actualCoreLink H V B 2).card := by
+  classical
+  have hKeep := retained_pair_root_survives_multilevel_cleanup
+    K H V C u q bad hKH hSurvive hBC hR
+  by_contra h
+  have hLow : (actualCoreLink H V B 2).card < u := Nat.lt_of_not_ge h
+  exact hKeep.2 (by simpa [cleanupTails, hLow] using hKeep.1)
+
+/-- A surviving triple core has its designated label inside the core.
+    Otherwise every parent partner is exceptional, contrary to `q < u`.
+    Thus label membership follows from the actual deletion test. -/
+theorem actual_triple_labels_of_multilevel_cleanup
+    (K H : Family α) (V : Edge α) (t u q : ℕ)
+    (tripleLabel : Edge α → α)
+    (hKH : K ⊆ H) (hUniformK : Uniform 5 K)
+    (hAmbientK : ∀ E ∈ K, E ⊆ V) (hqu : q < u)
+    (hSurvive : Disjoint K
+      (multilevelDeletedEdges H V (V.powersetCard 3) 2 u q
+        (fun B R T => ¬ ActualStrongPartner H V R T 2 3 t
+          (tripleLabel B)))) : ActualTripleLabels K tripleLabel := by
+  classical
+  intro B hB hBcard
+  obtain ⟨E, hEK, hBE⟩ := hB
+  have hBV : B ⊆ V := hBE.trans (hAmbientK E hEK)
+  have hBC : B ∈ V.powersetCard 3 := Finset.mem_powersetCard.mpr ⟨hBV, hBcard⟩
+  let R := E \ B
+  have hRcard : R.card = 2 := by
+    dsimp [R]
+    rw [Finset.card_sdiff_of_subset hBE, hUniformK hEK, hBcard]
+  have hRecon : B ∪ R = E := Finset.union_sdiff_of_subset hBE
+  have hR : R ∈ parentPairLink K V B := mem_parent_pair_link.mpr
+    ⟨Finset.sdiff_subset.trans (hAmbientK E hEK), hRcard,
+      Finset.sdiff_disjoint, hRecon.symm ▸ hEK⟩
+  let bad := fun B R T => ¬ ActualStrongPartner H V R T 2 3 t (tripleLabel B)
+  have hKeep := retained_pair_root_survives_multilevel_cleanup K H V
+    (V.powersetCard 3) u q bad hKH hSurvive hBC hR
+  have hDegree := retained_pair_root_parent_degree_ge K H V
+    (V.powersetCard 3) u q bad hKH hSurvive hBC hR
+  have hBad := retained_tail_exception_degree_le H V B R 2 u q bad
+    hKeep.1 hDegree hKeep.2
+  by_contra hz
+  have hAll : ∀ T ∈ actualCoreLink H V B 2, bad B R T := by
+    intro T hT hStrong
+    have hp := mem_actual_core_link.mp hKeep.1
+    have ht := mem_actual_core_link.mp hT
+    have hCell : B ∈ commonPrefixTails H V R T 3 :=
+      mem_common_prefix_tails.mpr ⟨hBV, hBcard,
+        Finset.disjoint_union_right.mpr ⟨hp.2.2.1.symm, ht.2.2.1.symm⟩,
+        by simpa only [Finset.union_comm] using hp.2.2.2,
+        by simpa only [Finset.union_comm] using ht.2.2.2⟩
+    exact hz (hStrong.2.2.2.1 B hCell)
+  have hBadEq : actualBadPartnerDegree H V B 2 bad R =
+      (actualCoreLink H V B 2).card := by
+    unfold actualBadPartnerDegree
+    congr 1
+    ext T
+    simp only [Finset.mem_filter]
+    exact ⟨And.left, fun hT => ⟨hT, hAll T hT⟩⟩
+  rw [hBadEq] at hBad
+  omega
+
 /-- At a triple core, actual pair roots and parent edges are in bijection. -/
 theorem triple_parent_pair_link_card_eq_codegree
     (K : Family α) (V B : Edge α)
@@ -721,8 +791,8 @@ theorem upper_uncolored_facet_edges_card_le_ambient_square
 theorem upper_uncolored_pair_cell_bound
     (H : Family α) (V : Edge α) (tUpper D : ℕ)
     (hAdm : Admissible H)
-    (hCap : ∀ x : α, ∀ Q : Edge α, Q.card = 2 →
-      (H.filter fun E => ({x} : Edge α) ∪ Q ⊆ E).card ≤ D)
+    (hCap : ∀ S : Edge α, S.card = 3 →
+      (H.filter fun E => S ⊆ E).card ≤ D)
     {x y : α} (_hx : x ∈ V) (_hy : y ∈ V) (hxy : x ≠ y)
     (hNone : upperSingletonPairColor H V tUpper x y = none) :
     (commonPrefixTails H V ({x} : Edge α) ({y} : Edge α) 4).card ≤
@@ -748,11 +818,29 @@ theorem upper_uncolored_pair_cell_bound
   have hZ : ({y} : Edge α).Nonempty := by simp
   have hDisj : Disjoint ({x} : Edge α) ({y} : Edge α) := by
     simpa [Finset.disjoint_singleton] using hxy
+  have hCellCap : ∀ Q : Edge α, Q.card = 2 →
+      (cell.filter fun A => Q ⊆ A).card ≤ D := by
+    intro Q hQ
+    by_cases hxQ : x ∈ Q
+    · have hEmpty : (cell.filter fun A => Q ⊆ A) = ∅ := by
+        apply Finset.eq_empty_iff_forall_notMem.mpr
+        intro A hA
+        have hd := Finset.mem_filter.mp hA
+        have hc := mem_common_prefix_tails.mp hd.1
+        exact (Finset.disjoint_left.mp hc.2.2.1) (hd.2 hxQ)
+          (Finset.mem_union_left _ (Finset.mem_singleton_self x))
+      simp [hEmpty]
+    · have hCard : (({x} : Edge α) ∪ Q).card = 3 := by
+        rw [Finset.singleton_union, Finset.card_insert_of_notMem hxQ, hQ]
+      exact (JSP523.common_prefix_tails_fiber_le_parent_degree
+        (H := H) (W := V) (Y := ({x} : Edge α))
+        (Z := ({y} : Edge α)) (S := Q) (t := 4)).trans
+          (hCap _ hCard)
   by_cases hNoCenter : NoGlobalCenter cell
-  · have hBound := JSP523.common_prefix_tails_card_le_pair_degree_no_center
-      (H := H) (W := V) (Y := ({x} : Edge α))
-      (Z := ({y} : Edge α)) (A := A) (t := 4) (D := D)
-      hAdm hY hZ hDisj (by omega) hA hNoCenter (hCap x)
+  · have hBound := JSP523.intersecting_card_le_pair_cap
+      (fun P hP => (mem_common_prefix_tails.mp hP).2.1)
+      (JSP523.common_prefix_tails_intersecting hAdm hY hZ hDisj (by omega : 1 ≤ 4))
+      hNoCenter hA (by omega) hCellCap
     change cell.card ≤ 4 * 4 * D at hBound
     omega
   · have hCenter : ∃ z : α, ∀ B ∈ cell, z ∈ B := by
@@ -770,10 +858,8 @@ theorem upper_uncolored_pair_cell_bound
       by_contra hwz
       exact h ⟨w, hwz, hw⟩
     obtain ⟨w, hwz, hw⟩ := hAnother
-    have hBound := JSP523.common_prefix_tails_card_le_pair_degree_common_pair
-      (H := H) (W := V) (Y := ({x} : Edge α))
-      (Z := ({y} : Edge α)) (t := 4) (D := D)
-      (x := z) (y := w) hwz.symm hz hw (hCap x)
+    have hBound := JSP523.intersecting_card_le_common_pair_cap
+      hwz.symm hz hw hCellCap
     change cell.card ≤ D at hBound
     omega
 
@@ -783,8 +869,8 @@ theorem upper_uncolored_pair_cell_bound
 theorem upper_uncolored_facet_edges_actual_budget
     (H : Family α) (V : Edge α) (tUpper D : ℕ)
     (hAdm : Admissible H)
-    (hCap : ∀ x : α, ∀ Q : Edge α, Q.card = 2 →
-      (H.filter fun E => ({x} : Edge α) ∪ Q ⊆ E).card ≤ D) :
+    (hCap : ∀ S : Edge α, S.card = 3 →
+      (H.filter fun E => S ⊆ E).card ≤ D) :
     (upperUncoloredFacetEdges H V tUpper).card ≤
       2 * V.card ^ 2 * (tUpper + 16 * D) := by
   apply upper_uncolored_facet_edges_card_le_ambient_square
@@ -1416,8 +1502,8 @@ noncomputable def upperFacetColorCleanupEdges
 theorem upper_facet_color_cleanup_edges_coarse_budget
     (H : Family α) (V : Edge α) (tUpper D D₃ D₄ : ℕ)
     (hAdm : Admissible H)
-    (hPairCap : ∀ x : α, ∀ Q : Edge α, Q.card = 2 →
-      (H.filter fun E => ({x} : Edge α) ∪ Q ⊆ E).card ≤ D)
+    (hPairCap : ∀ S : Edge α, S.card = 3 →
+      (H.filter fun E => S ⊆ E).card ≤ D)
     (hD₃ : ∀ S : Edge α, S.card = 3 →
       (H.filter fun E => S ⊆ E).card ≤ D₃)
     (hD₄ : ∀ S : Edge α, S.card = 4 →

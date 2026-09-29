@@ -23,15 +23,9 @@ theorem eventually_rank_five_global_upper :
   have hδ := local_exact_density_pos 5 (by omega)
   have hCenter := eventually_uniform_rank_five_degree_concentration
     (localExactDensity 5) hδ
-  filter_upwards [hCenter,
-    eventually_ge_atTop (localExactGroundThreshold 5 + 1)]
-    with n hCenterN hn
-  intro H hAdm hUniform
-  by_cases hMass : (n - 1).choose 4 ≤ H.card
-  · obtain ⟨v, hv⟩ := hCenterN H hAdm hUniform hMass
-    exact near_star_exact_of_high_vertex_degree H v
-      hAdm hUniform (by omega) hn hv.le
-  · omega
+  simpa only [show 5 - 1 = 4 by omega] using
+    eventually_fixed_rank_global_upper_of_degree_concentration
+      5 (by omega) hCenter
 
 /-- The exact extremal value is attained by a complete star together
 with an outside matching. -/

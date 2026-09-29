@@ -1,4 +1,5 @@
 import JSP523.Rank5.LocalEqualityExact
+import JSP523.LowerConstruction
 
 /-!
 # From a high-degree vertex to the local exact theorem
@@ -123,5 +124,60 @@ theorem near_star_exact_of_high_vertex_degree
   have hFinal := quantitative_near_star_exact H W v r
     hAdm hUniform hSupport hvW hr hw hDensity
   simpa only [hWcard] using hFinal
+
+
+/-- A uniform high-degree conclusion at a fixed rank closes the global
+upper bound through the finite local theorem. -/
+theorem eventually_fixed_rank_global_upper_of_degree_concentration
+    (r : ℕ) (hr : 5 ≤ r)
+    (hCenter :
+      ∀ᶠ n : ℕ in Filter.atTop, ∀ H : Family (Fin n),
+        Admissible H → Uniform r H →
+        (n - 1).choose (r - 1) ≤ H.card →
+        ∃ v : Fin n,
+          (1 - localExactDensity r) *
+              ((n - 1).choose (r - 1) : ℝ) <
+            ((H.filter fun E => v ∈ E).card : ℝ)) :
+    ∀ᶠ n : ℕ in Filter.atTop, ∀ H : Family (Fin n),
+      Admissible H → Uniform r H →
+      H.card ≤ (n - 1).choose (r - 1) + (n - 1) / r := by
+  filter_upwards [hCenter,
+    Filter.eventually_ge_atTop (localExactGroundThreshold r + 1)]
+    with n hCenterN hn
+  intro H hAdm hUniform
+  by_cases hMass : (n - 1).choose (r - 1) ≤ H.card
+  · obtain ⟨v, hv⟩ := hCenterN H hAdm hUniform hMass
+    exact near_star_exact_of_high_vertex_degree H v
+      hAdm hUniform hr hn hv.le
+  · exact (Nat.lt_of_not_ge hMass).le.trans (Nat.le_add_right _ _)
+
+
+/-- The star-plus-matching construction and a uniform high-degree
+conclusion determine the exact extremal value at any fixed rank. -/
+theorem eventually_fixed_rank_extremal_exact_of_degree_concentration
+    (r : ℕ) (hr : 5 ≤ r)
+    (hCenter :
+      ∀ᶠ n : ℕ in Filter.atTop, ∀ H : Family (Fin n),
+        Admissible H → Uniform r H →
+        (n - 1).choose (r - 1) ≤ H.card →
+        ∃ v : Fin n,
+          (1 - localExactDensity r) *
+              ((n - 1).choose (r - 1) : ℝ) <
+            ((H.filter fun E => v ∈ E).card : ℝ)) :
+    ∀ᶠ n : ℕ in Filter.atTop,
+      (∃ H : Family (Fin n), Admissible H ∧ Uniform r H ∧
+        H.card = (n - 1).choose (r - 1) + (n - 1) / r) ∧
+      (∀ H : Family (Fin n), Admissible H → Uniform r H →
+        H.card ≤ (n - 1).choose (r - 1) + (n - 1) / r) := by
+  have hUpper := eventually_fixed_rank_global_upper_of_degree_concentration
+    r hr hCenter
+  filter_upwards [hUpper, Filter.eventually_ge_atTop 1]
+    with n hUpperN hn
+  let v : Fin n := ⟨0, by omega⟩
+  obtain ⟨H, hUniform, hAdm, hCard⟩ :=
+    JSP523.exists_star_plus_matching_exact v r (by omega)
+  refine ⟨⟨H, hAdm, hUniform, ?_⟩, hUpperN⟩
+  simpa only [Finset.card_erase_of_mem (Finset.mem_univ v),
+    Finset.card_univ, Fintype.card_fin] using hCard
 
 end JSP523.Rank5
